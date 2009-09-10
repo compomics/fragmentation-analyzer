@@ -1,0 +1,384 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<HTML>
+    <HEAD>
+        <TITLE></TITLE>
+    </HEAD>
+    <BODY>
+        <a name="#top"/>
+        <H2>FragmentationAnalyzer</H2>
+        FragmentationAnalyzer is a tool that analyses MS//MS fragmentation data.
+        <br><br>
+        Project home page: <a href="http://fragmentation-analyzer.googlecode.com">http://fragmentation-analyzer.googlecode.com</a>.
+        <br><br>
+
+        Contents:
+        <dl>
+            <dt><a href='#inputData'>Supported Input Data</a></dt>
+            <dt><a href='#tutorial'>Tutorial</a></dt>
+            <dt><a href='#importData'>Importing Data</a></dt>
+            <dt><a href='#textFileFormat'>Text File Format</a></dt>
+        </dl>
+
+        <br>
+        <hr>
+        <A name='#inputData'></A>
+        <H3>Supported Input Data</H3>
+        <p align="justify">
+            FragmentationAnalyzer currently supports three input formats:
+        </p>
+        <ul>
+            <li>ms_lims 7</li>
+            <li>Mascot Dat Files</li>
+            <li>OMSSA OMX Files</li>
+        </ul>
+        <p align="justify">
+            In addition any files that can be converted to the <a href='#textFileFormat'>supported text
+                file format</a> can be used. (See the <a href='#importData'>importing data</a>
+                section for details on how to import data.)
+        </p>
+        <br>
+        <a href="#top">Go to top of page</a><br><br>
+
+        <br>
+        <hr>
+        <A name='#tutorial'></A>
+        <H3>Tutorial</H3>
+
+        <dl>
+            <dd><a href='#loadDataSets'>Loading Data Sets</a></dd>
+            <dd><a href='#searchParameters'>Selecting Search Parameters</a></dd>
+            <dd><a href='#generalSearch'>General Search</a></dd>
+            <dd><a href='#searchResults'>Search Results</a></dd>
+            <dd><a href='#individualSpectra'>Individual Spectra</a></dd>
+            <dd><a href='#analyzePlot'>Analyze/Plot</a></dd>
+            <dd><a href='#resizingPlots'>Resizing Plots</a></dd>
+            <dd><a href='#plotTypes'>Plot Types</a></dd>
+            <dd><a href='#plotOptions'>Plot Options</a></dd>
+            <dd><a href='#plotToolBars'>Plot Tool Bars</a></dd>
+            <dd><a href='#spectrumPlotOptions'>Spectrum Plot Options</a></dd>
+            <dd><a href='#removeAllPlots'>Remove All Plots</a></dd>
+            <dd><a href='#modificationSearch'>Modification Search</a></dd>
+            <dd><a href='#identificationPairs'>Identification/Sequence Pairs</a></dd>
+            <dd><a href='#intensityBoxPlots'>Intensity Box Plots</a></dd>
+            <dd><a href='#normalization'>Normalization</a></dd>
+        </dl>
+
+
+        <p align="justify">
+            <A name='#loadDataSets'></A>
+            <b>Loading Data Sets</b><br>
+            This section contains a brief tutorial on how to use FragmentationAnalyzer.
+            After starting the tool the data selection dialog will be shown. (The
+            dialog can also be opened from the File menu by selection 'Open'.) You
+            can either import new data sets from one of the three supported formats,
+            or use one of the already imported data sets. For this tutorial we will
+            use the example data set provided with the tool. See the 
+            <a href='#importData'>Import Data section </a> for details on how to 
+            import data. For now, select 'example data set' in the list of
+            available data sets and click on 'Load Data'.
+            <br><br>
+            The tool will now load the data set. Note that depending on the
+            size of the data set this can take some time. When finished a dialog
+            verifying that the data has been loaded will be shown and the drop
+            down menus in the left part of the screen will be updated with the
+            data from the loaded data set.
+            <br><br>
+            <A name='#searchParameters'></A>
+            <b>Selecting Search Parameters</b><br>
+            To perform a search select the properties of the identifications
+            you are searching for in the lists. For example: instrument as ESI-QUAD-TOF,
+            N-term as NH2, C-term as COOH and charge as 2. The numbers behind the
+            terms are the total number of occurrences of that particular term in
+            the data set. Note that these numbers are for the whole data set and
+            not for the subset of the data set that you are currently selecting.
+            So even though all your selections have a high occurrence number, this
+            does not automatically result in identifications matching all your
+            selections. Leave the modification selection empty for now.
+            <br><br>
+            <A name='#generalSearch'></A>
+            <b>General Search</b><br>
+            There are two search options available: general search or modification
+            search. We will first look at general search which basically returns
+            all identifications matching all the selected parameters. Click on
+            the 'Search' button in the lower left corner to start the search.
+            (Again note that depending on the size of the data set the process
+            might take some time completing.)
+            <br><br>
+            <A name='#searchResults'></A>
+            <b>Search Results</b><br>
+            When the search is completed a dialog presenting the main findings
+            will be shown, number of matches etc, and the results will be
+            inserted into the 'Search Results' table at the upper right part
+            of the screen. The results are sorted on the number of occurrences
+            of each identification, such that the most frequent are at the top
+            of the list.
+            <br><br>
+            <A name='#individualSpectra'></A>
+            <b>Individual Spectra</b><br>
+            Select a subset of the identifications by clicking in the rightmost
+            column of the table. Then select an analysis type in the  'Select Analysis Type'
+            drop down menu. First try 'List Individual Identifications'. Then
+            click the 'Analyze / Plot' button to the right of the drop down menu.
+            The list of individual spectra is then shown in the 'Individual Spectra'
+            table in the middle of the right part of the screen.
+            <br><br>
+            <A name='#analyzePlot'></A>
+            <b>Analyze/Plot</b><br>
+            Select a couple of the items in this table and again select an
+            analysis type in the 'Select Analysis Type' drop down menu for
+            the 'Individual Spectra' table, for example 'View Spectra'. Then
+            click the 'Analyze / Plot' button for the 'Individual Spectra' table.
+            The 'Search Results' and 'Individual Spectra' section will then
+            close and the 'Plot / Analyses' section will be expanded showing
+            the just created plot(s). The closed sections can easily be opened
+            again by clicking on the section header. Clicking ones more will
+            again close the section. Make sure that the 'Plot / Analyses' section
+            is visible before continuing.
+            <br><br>
+            <A name='#resizingPlots'></A>
+            <b>Resizing Plots</b><br>
+            In the plots section each plot is located in its own separate
+            frame. The frames can be resized and maximized individually. To
+            maximize a plot click on the plots maximize button in the upper
+            right corner (or double click on the title bar).
+            <br><br>
+            <A name='#plotTypes'></A>
+            <b>Plot Types</b><br>
+            Currently four different plot types are supported:
+        </p>
+        <ul>
+            <li>Spectra Plots - visualize the MS/MS spectra with fragment ion 
+                annotation, zooming and manual de-novo-sequencing.</li>
+            <li>Intensity Box Plots - analyze intensity variation for a set of
+                identification of the same peptide.</li>
+            <li>Mass Error Scatter Plots - visualize the mass error spread in a
+                set of selected identifications/spectra.</li>
+            <li>Mass Error Bubble Plots - visualize the mass error spread in a
+                set of selected identifications/spectra with the peak intensity
+                adding to the presented information.</li>
+        </ul
+        <p align="justify">
+            <A name='#plotOptions'></A>
+            <b>Plot Options</b><br>
+            For the scatter and bubble plots two additional options are available.
+            First, the results can either be combined into one plot, or each
+            selected row can result in one plot. Chosen by selecting either
+            'Single' or 'Combine' in the drop down menu next to the 'Select
+            Analysis Type' menus. Second, is the option of using absolute
+            (Dalton) or relative (ppm) distance measurement when plotting.
+            Again selected in a drop down menu next to the 'Select
+            Analysis Type' menus.
+            <br><br>
+            The size of the bubbles (the scaling factor) can be altered by
+            selecting 'Preferences' on the 'Edit' menu. Note that any changes
+            only affect future plots. Existing plots are not updated.
+            <br><br>
+            <A name='#plotToolBars'></A>
+            <b>Plot Tool Bars</b><br>
+            Each plotting type also has a separate tool bar menu, which
+            accessed by right clicking on the title bar of the plot's frame.
+            The tool bars provides additional options for refining the
+            data shown, by turning on or off the different data series.
+            <br><br>
+            The non-spectrum plots also have an additional set of options
+            that can be accessed by right clicking on the plot itself.
+            These options include zooming, export/save plot amongst others.
+            <br><br>
+            <A name='#spectrumPlotOptions'></A>
+            <b>Spectrum Plot Options</b><br>
+            To zoom in a spectrum plot click and hold the left mouse
+            button where you want to start the zoom, and then drag in
+            the direction you want to zoom, marking the area to be
+            zoomed. Note that all the spectra plots are linked, so
+            zooming in one will result in zooming for all spectra. To
+            do manual de-novo-sequencing click on one peak. The distance
+            and amino acids matching this distance (if any) will then
+            be shown. To add the sequencing, click on the second peak.
+            Repeat the process to sequence more peaks. An added sequence
+            is removed by holding down the Ctrl button when clicking on
+            the sequence. To "store" a sequence, hold down the Alt button
+            and click on the sequence, the sequence turns red. To
+            remove such "stored" sequences, hold down Ctrl and Alt and
+            click in the sequence.
+            <br><br>
+            <A name='#removeAllPlots'></A>
+            <b>Remove All Plots</b><br>
+            To remove all the plots in one operation, right click on the
+            title bar of one of the plots and select the 'Remove All' option
+            from the appearing popup menu.
+            <br><br>
+            <A name='#modificationSearch'></A>
+            <b>Modification Search</b><br>
+            While the general search simply finds all identifications matching
+            the selected parameters, the modification search is a little more
+            advanced. Use the same parameters as for the general search example
+            (instrument as ESI-QUAD-TOF, N-term as NH2, C-term as COOH and charge
+            as 2) but this time select '&lt;Mox&gt;' in the Alt 1 modification
+            parameters drop down menu, select 'Modification Search' and click
+            the 'Search Button'.
+            <br><br>
+            <A name='#identificationPairs'></A>
+            <b>Identification/Sequence Pairs</b><br>
+            For modification searches you are trying to find identification pairs
+            where one of them are modified with the selected modification and
+            the other is unmodified. You therefore have to select the minimum
+            number of such pairs required before a pair is used. Generally
+            you want as many matches as possible, e.g., 30+, but the data set
+            used in this tutorial is not big enough for that, so reduce the
+            number to 2.
+            <br><br>
+            <A name='#intensityBoxPlots'></A>
+            <b>Intensity Box Plots</b><br>
+            When the search completes you will get one match. Select this
+            match, select the 'Intensity Box Plot' analysis type and create
+            the plot. The created plot presents the difference in relative
+            intensity between the different fragment ion types, for both
+            the modified and the unmodified identifications.
+            <br><br>
+            <A name='#normalization'></A>
+            <b>Normalization</b><br>
+            In order to be able to compare the identifications coming from
+            spectra with varying total intensity total intensity normalization
+            is used to normalize the intensity of the used fragment ions
+            before the comparison is made.
+        </p>
+
+        <br>
+        <a href="#top">Go to top of page</a><br><br>
+
+        <br>
+        <hr>
+        <A name='#importData'></A>
+        <H3>Importing Data</H3>
+        Data can be imported from three different sources:
+        <dl>
+            <dd><a href='#ms_lims'>ms_lims</a></dd>
+            <dd><a href='#mascotDatFiles'>Mascot Dat Files</a></dd>
+            <dd><a href='#omssaOmxFiles'>OMSSA OMX Files</a></dd>
+        </dl>
+        <p align="justify">
+            <A name='#ms_lims'></A>
+            <b>ms_lims</b><br>
+            For <a href="http://genesis.ugent.be/ms_lims/">ms_lims</a> one
+            logs on to the ms_lims database via a dialog
+            in the tool using ones normal login details. When connected all the
+            required details about the identifications will be downloaded, while
+            some details, e.g., the fragment ion information, is not downloaded
+            but extracted when needed. The database connection will therefore
+            be required during the use of the tool. Please note that depending
+            on the size of the database the process of importing data from
+            ms_lims might take a while. However, the progress of the import
+            will be monitored closely and presented to the user.
+            <br><br>
+            <A name='#mascotDatFiles'></A>
+            <b>Mascot Dat Files</b><br>
+            When importing <a href="www.matrixscience.com/">Mascot dat files</a>
+            one simply selects the set of dat
+            files to import and select the Mascot confidence level to use
+            for the identifications. Only identifications above the selected
+            confidence will be imported.
+            <br><br>
+            <A name='#omssaOmxFiles'></A>
+            <b>OMSSA OMX Files</b><br>
+            Importing <a href="http://pubchem.ncbi.nlm.nih.gov/omssa/">OMSSA</a>
+            omx files is done in the same way as for Mascot dat
+            files (except for the setting of the Mascot confidence level of course).
+            However, the instrument name is not included in the omx file and has
+            to be provided manually by the user for each imported file. Also note
+            that the omx file includes very little details about the amino acid
+            modifications, only a number &lt;1&gt;, &lt;2&gt; etc. The OMMSA
+            installation folder (containing the mods.xml and usermods.xml files)
+            therefore also has to be provided.
+        </p>
+
+        <br>
+        <a href="#top">Go to top of page</a><br><br>
+
+        <br>
+        <hr>
+        <A name='#textFileFormat'></A>
+        <H3>Text File Format</H3>
+        <p align="justify">
+            When a data set is imported into FragmentationAnalyzer it is divided
+            into three parts:
+        </p>
+        <ul>
+            <li><a href='#identificationsTxt'>identifications.txt</a> - details about the peptide identifications</li>
+            <li><a href='#fragmentIonsTxt'>fragmentIons.txt</a> - details about the fragment ions</li>
+            <li><a href='#spectraFolder'>a folder of pkl files</a> - details about the spectra</li>
+        </ul
+
+        <p align="justify">
+            <A name='#identificationsTxt'></A>
+            <b>identifications.txt</b><br>
+            For ms_lims data only the identifications.txt file is created. The
+            remaining information is extracted from the database when needed.
+            However, a file called 'ms_lims.prop' is also created containing 
+            information about the database used.
+            <br><br>
+            identifications.txt is a tab separated text file where the first
+            line includes the number of lines in the file, i.e., the number of 
+            identifications. The rest of the file consists of one row per identification
+            with the following elements:
+        </p>
+        <ul>
+            <li>a unique identification index - [Integer]</li>
+            <li>the identified peptide sequence (without terminals and modifications) - [String]</li>
+            <li>the modified peptide sequence (with terminals and modifications) - [String]</li>
+            <li>peptide precursor charge - [Integer]</li>
+            <li>name of instrument used - [String]</li>
+            <li>name of corresponding pkl spectrum file (see below) - [String]</li>
+            <li>spectrum file id (if in ms_lims database) - [Integer]</li>
+            <li>the total intensity of all the peaks in the spectrum - [Double]</li>
+            <li>original file name (a reference to the original spectrum file) - [String]</li>
+        </ul>
+        <p align="justify">
+            Either spectrum file name or spectrum id has to be provided, but the
+            other can be set to "null".
+            <br><br>
+            <A name='#fragmentIonsTxt'></A>
+            <b>fragmentIons.txt</b><br>
+            fragmentIons.txt is also a tab separated consisting of one row per
+            fragment ion with the following elements:
+        </p>
+        <ul>
+            <li>a unique fragment ion index - [Integer]</li>
+            <li>identification index (a reference to the identification the
+                fragment comes from - [Integer]</li>
+            <li>fragment ion type, e.g., y2, b3-H20 etc. - [String]</li>
+            <li>fragment ion m/z value - [Double]</li>
+            <li>fragment ion intensity - [Double]</li>
+            <li>fragment ion number, e.g., y2 has the fragment ion number 2 - [Double]</li>
+            <li>fragment ion mass error (the (absolute) distance between the theoretical
+                and the experimental mass of the fragment ion (experimental mass - theoretical mass)) - [Double]</li>
+        </ul>
+        <p align="justify">
+            <A name='#fragmentIonTypes'></A>
+            The following fragment ion type names are recommended and will
+            result in the best integration with the tool:
+        </p>
+        <ul>
+            <li>Standard fragment ions, singly charged: b1, b2, y1, y2, etc.</li>
+            <li>Neutral loss ions: y[5]-H2O, y[4]-NH3, etc.</li>
+            <li>Doubly charged fragment ions: b[2]++, b[4]++-NH3, etc.</li>
+            <li>Precursor ions: Prec, Prec-H2O 2+, etc.</li>
+            <li>Immonium ions: iA, iC, etc. </li>
+        </ul>
+        <p align="justify">
+            <A name='#spectraFolder'></A>
+            <b>Spectra Folder</b><br>
+            For non-ms_lims data sets the spectra are stored as
+            <a href="www.matrixscience.com/help/data_file_help.html#QTOF">pkl files</a> in a folder
+            called 'spectra'. One file per spectrum. The first line in each file contains
+            the precursor m/z, intensity and charge. Next follows one line per peak
+            in the spectrum with the m/z and intensity values.
+            <br><br>
+            For more details see the example data set or the source code.
+        </p>
+
+        <br>
+        <a href="#top">Go to top of page</a><br><br>
+
+    </BODY>
+</HTML>
