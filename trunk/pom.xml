@@ -114,9 +114,9 @@
                     </execution>
                 </executions>
             </plugin>
-
         </plugins>
     </build>
+
 
     <!-- Repositores -->
     <repositories>
@@ -131,7 +131,27 @@
             <snapshots>
             </snapshots>
         </repository>
+
+        <!-- JBoss Repository - beeded for JFreeChart -->
+        <repository>
+            <id>JBOSS</id>
+            <name>JBoss Repository</name>
+            <url>http://repository.jboss.org/maven2/</url>
+        </repository>
+
+        <!-- EBI repository - needed for ommsa-parser -->
+        <repository>
+            <id>ebi-repo</id>
+            <name>The EBI Maven2 repository</name>
+            <url>http://www.ebi.ac.uk/~maven/m2repo</url>
+            <releases>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
     </repositories>
+
 
     <!-- Dependencies -->
     <dependencies>
@@ -149,11 +169,6 @@
                     <groupId>junit</groupId>
                 </exclusion>
             </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>jcommon</groupId>
-            <artifactId>jcommon</artifactId>
-            <version>1.0.16</version>
         </dependency>
         <dependency>
             <groupId>de.proteinms.omxparser</groupId>
