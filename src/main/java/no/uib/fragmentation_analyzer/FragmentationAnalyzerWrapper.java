@@ -24,7 +24,7 @@ public class FragmentationAnalyzerWrapper {
      * The name of the omssa parser jar file. Must be equal to the name 
      * given in the pom file.
      */
-    private String jarFileName = "FragmentationAnalyzer-0.1.jar";
+    private String jarFileName = "FragmentationAnalyzer-1.0.jar";
 
     /**
      * Starts the launcher by calling the launch method. Use this as the 
@@ -154,8 +154,8 @@ public class FragmentationAnalyzerWrapper {
                         "Try reducing it and see if this helps.\n\n" +
                         "For more details see:\n" +
                         System.getProperty("user.home") +
-                        File.separator + "fragmentation_analyzer.log\n\n",
-                        //+ "Or see \'Troubleshooting\' at http://code.google.com/p/omssa-parser",
+                        File.separator + "fragmentation_analyzer.log\n\n"
+                        + "Or see \'Troubleshooting\' at http://fragmentation-analyzer.googlecode.com",
                         "FragmentationAnalyzer - Startup Failed", JOptionPane.OK_OPTION);
 
                 File logFile = new File(System.getProperty("user.home") +
