@@ -3,4 +3,7 @@
 
 ----
 
-(in development)
+*Changes in FragmentationAnalyzer v1.0 - (Sep. 10. 2009):*
+ * (initial version)
+
+----
