@@ -5263,7 +5263,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
             boolean deprecatedOrDeleted = false;
 
             URL downloadPage = new URL(
-                    "http://code.google.com/p/fragmentation-analyzer/downloads/detail?name=FragmentationAnalyzer_" +
+                    "http://code.google.com/p/fragmentation-analyzer/downloads/detail?name=FragmentationAnalyzer-" +
                     getFragmentationAnalyzerVersionNumber() + ".zip");
             int respons = ((java.net.HttpURLConnection) downloadPage.openConnection()).getResponseCode();
 
