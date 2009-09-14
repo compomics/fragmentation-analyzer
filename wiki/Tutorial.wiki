@@ -1,3 +1,6 @@
+#summary A tutorial explaining the features of FragmentationAnalyzer.
+
+----
 
 =Tutorial=
 
@@ -18,7 +21,7 @@
  * [#Intensity_Box_Plots Intensity Box Plots]
  * [#Normalization Normalization]
 
-
+----
 
 ==Loading Data Sets==
 This section contains a brief tutorial on how to use Fragmentation Analyzer.
