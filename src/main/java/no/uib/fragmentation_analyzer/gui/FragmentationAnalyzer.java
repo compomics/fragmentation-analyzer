@@ -136,6 +136,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
     private ArrayList<SpectrumTableRow> currentlySelectedRowsInSpectraTable = new ArrayList<SpectrumTableRow>();
     private int internalFrameUniqueIdCounter = 0;
     private boolean cancelProgress = false;
+    private boolean searchEnabled = false;
 
     /**
      * Creates a new FragmentationAnalyzer frame and makes it visible. Then opens
@@ -859,7 +860,6 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
         searchJButton.setMnemonic('S');
         searchJButton.setText("Search");
-        searchJButton.setEnabled(false);
         searchJButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 searchJButtonActionPerformed(evt);
@@ -1962,12 +1962,21 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         // has to be done like this due to the variable being used inside the thread
         final int searchType = tempSearchType;
 
-        if (searchType == MODIFICATION_SEARCH) {
+        // verify that all the required parameters have been selected
+        if(!searchEnabled){
+            JOptionPane.showMessageDialog(null,
+                        "At least one instrument, the terminals and the charge has to be selected.",
+                        "Search Parameters", JOptionPane.INFORMATION_MESSAGE);
+            cancelProgress = true;
+        }
 
+
+        // if modification search, verify that at least one modification has been selected
+        if (searchType == MODIFICATION_SEARCH && !cancelProgress) {
             if (!modificationSelected()) {
                 JOptionPane.showMessageDialog(null,
                         "For Modification Searches you have to select at least one modification.",
-                        "Modification Search Error", JOptionPane.INFORMATION_MESSAGE);
+                        "Modification Search", JOptionPane.INFORMATION_MESSAGE);
                 cancelProgress = true;
             } else {
                 // get the minimum number of sequence pairs required for a pair to be included in the results
@@ -1975,19 +1984,19 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
             }
         }
 
-        // has to be final to be used inside the thread
-        final int minimumNumberOfModificationPairs = userProperties.getMinimumIdentificationPairCounter();
-
-
-        // open or close the involved panes to make the search results visible
-        resultsJScrollPane.getVerticalScrollBar().setValue(0);
-        searchResultsJScrollPane.getVerticalScrollBar().setValue(0);
-        resultsJScrollPane.repaint();
-        searchResultsJXTaskPane.setExpanded(false);
-        spectraJXTaskPane.setExpanded(false);
-
-
+        
         if (!cancelProgress) {
+
+            // has to be final to be used inside the thread
+            final int minimumNumberOfModificationPairs = userProperties.getMinimumIdentificationPairCounter();
+
+
+            // open or close the involved panes to make the search results visible
+            resultsJScrollPane.getVerticalScrollBar().setValue(0);
+            searchResultsJScrollPane.getVerticalScrollBar().setValue(0);
+            resultsJScrollPane.repaint();
+            searchResultsJXTaskPane.setExpanded(false);
+            spectraJXTaskPane.setExpanded(false);
 
             progressDialog = new ProgressDialog(this, this, true);
 
@@ -2410,9 +2419,9 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                 nTermJComboBox.getSelectedIndex() != 0 &&
                 cTermJComboBox.getSelectedIndex() != 0 &&
                 chargeJComboBox.getSelectedIndex() != 0) {
-            searchJButton.setEnabled(dataLoaded);
+            searchEnabled = dataLoaded;
         } else {
-            searchJButton.setEnabled(false);
+            searchEnabled = false;
         }
     }
 
@@ -2425,7 +2434,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         if (instrument1JComboBox.getSelectedIndex() == 0) {
             instrument2JComboBox.setEnabled(false);
             instrument3JComboBox.setEnabled(false);
-            searchJButton.setEnabled(false);
+            searchEnabled = false;
         } else {
             instrument2JComboBox.setEnabled(true);
             instrument2JComboBoxActionPerformed(null);
@@ -5332,7 +5341,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         spectraJXTaskPane.setExpanded(false);
         spectraJButton.setEnabled(false);
         searchResultsJButton.setEnabled(false);
-        searchJButton.setEnabled(false);
+        searchEnabled = false;
 
         // close the old database connection (if any)
         closeDataBaseConnection();
