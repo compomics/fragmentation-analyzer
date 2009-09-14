@@ -29,8 +29,7 @@ After starting the tool the data selection dialog will be shown. (The
 dialog can also be opened from the File menu by selection 'Open'.) You
 can either import new data sets from one of the three supported formats,
 or use one of the already imported data sets. For this tutorial we will
-use the example data set provided with the tool. See the 
-[#Importing_Data Importing Data] for details on how to 
+use the example data set provided with the tool. See the [http://code.google.com/p/fragmentation-analyzer/#Importing_Data Importing Data] for details on how to 
 import data. For now, select 'example data set' in the list of
 available data sets and click on 'Load Data'.
  
