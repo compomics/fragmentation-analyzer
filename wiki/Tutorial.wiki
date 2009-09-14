@@ -1,4 +1,5 @@
 #summary A tutorial explaining the features of FragmentationAnalyzer.
+#labels Featured
 
 ----
 
