@@ -9,28 +9,44 @@
         <H2>FragmentationAnalyzer</H2>
         FragmentationAnalyzer is a tool that analyses MS//MS fragmentation data.
         <br><br>
+        Currently four different analysis types are supported:
+
+        <ul>
+            <li>Spectra Visualization - visualize the MS/MS spectra with fragment ion annotation, zooming and manual de-novo-sequencing.</li>
+            <li>Intensity Box Plots - analyze intensity variation for a set of identification of the same peptide.</li>
+            <li>Mass Error Scatter Plots - visualize the mass error spread in a set of selected identifications/spectra.</li>
+            <li>Mass Error Bubble Plots - same as Mass Error Scatter Plots but with peak intensities added.</li>
+        </ul>
+
+        <br><br>
         Project home page: <a href="http://fragmentation-analyzer.googlecode.com">http://fragmentation-analyzer.googlecode.com</a>.
         <br><br>
+        <br>
+        <hr>
+        <br>
 
-        Contents:
-        <dl>
-            <dt><a href='#inputData'>Supported Input Data</a></dt>
-            <dt><a href='#tutorial'>Tutorial</a></dt>
-            <dt><a href='#importData'>Importing Data</a></dt>
-            <dt><a href='#textFileFormat'>Text File Format</a></dt>
-        </dl>
+        <H3>Contents</H3>
+        <ul>
+            <li><a href='#inputData'>Supported Input Data</a></li>
+            <li><a href='#tutorial'>Tutorial</a></li>
+            <li><a href='#importData'>Importing Data</a></li>
+            <li><a href='#textFileFormat'>Text File Format</a></li>
+        </ul>
 
         <br>
         <hr>
+
+
+
         <A name='#inputData'></A>
         <H3>Supported Input Data</H3>
         <p align="justify">
             FragmentationAnalyzer currently supports three input formats:
         </p>
         <ul>
-            <li>ms_lims 7</li>
-            <li>Mascot Dat Files</li>
-            <li>OMSSA OMX Files</li>
+            <li><a href="http://genesis.ugent.be/ms_lims/">ms_lims</a></li>
+            <li><a href="www.matrixscience.com/">Mascot dat files</a></li>
+            <li><a href="http://pubchem.ncbi.nlm.nih.gov/omssa/">OMSSA</a></li>
         </ul>
         <p align="justify">
             In addition any files that can be converted to the <a href='#textFileFormat'>supported text
@@ -42,27 +58,30 @@
 
         <br>
         <hr>
+
+
+
         <A name='#tutorial'></A>
         <H3>Tutorial</H3>
 
-        <dl>
-            <dd><a href='#loadDataSets'>Loading Data Sets</a></dd>
-            <dd><a href='#searchParameters'>Selecting Search Parameters</a></dd>
-            <dd><a href='#generalSearch'>General Search</a></dd>
-            <dd><a href='#searchResults'>Search Results</a></dd>
-            <dd><a href='#individualSpectra'>Individual Spectra</a></dd>
-            <dd><a href='#analyzePlot'>Analyze/Plot</a></dd>
-            <dd><a href='#resizingPlots'>Resizing Plots</a></dd>
-            <dd><a href='#plotTypes'>Plot Types</a></dd>
-            <dd><a href='#plotOptions'>Plot Options</a></dd>
-            <dd><a href='#plotToolBars'>Plot Tool Bars</a></dd>
-            <dd><a href='#spectrumPlotOptions'>Spectrum Plot Options</a></dd>
-            <dd><a href='#removeAllPlots'>Remove All Plots</a></dd>
-            <dd><a href='#modificationSearch'>Modification Search</a></dd>
-            <dd><a href='#identificationPairs'>Identification/Sequence Pairs</a></dd>
-            <dd><a href='#intensityBoxPlots'>Intensity Box Plots</a></dd>
-            <dd><a href='#normalization'>Normalization</a></dd>
-        </dl>
+        <ul>
+            <li><a href='#loadDataSets'>Loading Data Sets</a></li>
+            <li><a href='#searchParameters'>Selecting Search Parameters</a></li>
+            <li><a href='#generalSearch'>General Search</a></li>
+            <li><a href='#searchResults'>Search Results</a></li>
+            <li><a href='#individualSpectra'>Individual Spectra</a></li>
+            <li><a href='#analyzePlot'>Analyze/Plot</a></li>
+            <li><a href='#resizingPlots'>Resizing Plots</a></li>
+            <li><a href='#plotTypes'>Plot Types</a></li>
+            <li><a href='#plotOptions'>Plot Options</a></li>
+            <li><a href='#plotToolBars'>Plot Tool Bars</a></li>
+            <li><a href='#spectrumPlotOptions'>Spectrum Plot Options</a></li>
+            <li><a href='#removeAllPlots'>Remove All Plots</a></li>
+            <li><a href='#modificationSearch'>Modification Search</a></li>
+            <li><a href='#identificationPairs'>Identification/Sequence Pairs</a></li>
+            <li><a href='#intensityBoxPlots'>Intensity Box Plots</a></li>
+            <li><a href='#normalization'>Normalization</a></li>
+        </ul>
 
 
         <p align="justify">
@@ -147,6 +166,7 @@
             <b>Plot Types</b><br>
             Currently four different plot types are supported:
         </p>
+
         <ul>
             <li>Spectra Plots - visualize the MS/MS spectra with fragment ion 
                 annotation, zooming and manual de-novo-sequencing.</li>
@@ -158,6 +178,7 @@
                 set of selected identifications/spectra with the peak intensity
                 adding to the presented information.</li>
         </ul
+
         <p align="justify">
             <A name='#plotOptions'></A>
             <b>Plot Options</b><br>
@@ -249,14 +270,19 @@
 
         <br>
         <hr>
+
+
+
         <A name='#importData'></A>
         <H3>Importing Data</H3>
         Data can be imported from three different sources:
-        <dl>
-            <dd><a href='#ms_lims'>ms_lims</a></dd>
-            <dd><a href='#mascotDatFiles'>Mascot Dat Files</a></dd>
-            <dd><a href='#omssaOmxFiles'>OMSSA OMX Files</a></dd>
-        </dl>
+
+        <ul>
+            <li><a href='#ms_lims'>ms_lims</a></li>
+            <li><a href='#mascotDatFiles'>Mascot Dat Files</a></li>
+            <li><a href='#omssaOmxFiles'>OMSSA OMX Files</a></li>
+        </ul>
+
         <p align="justify">
             <A name='#ms_lims'></A>
             <b>ms_lims</b><br>
@@ -297,12 +323,16 @@
 
         <br>
         <hr>
+
+
+
         <A name='#textFileFormat'></A>
         <H3>Text File Format</H3>
         <p align="justify">
             When a data set is imported into FragmentationAnalyzer it is divided
             into three parts:
         </p>
+
         <ul>
             <li><a href='#identificationsTxt'>identifications.txt</a> - details about the peptide identifications</li>
             <li><a href='#fragmentIonsTxt'>fragmentIons.txt</a> - details about the fragment ions</li>
@@ -322,6 +352,7 @@
             identifications. The rest of the file consists of one row per identification
             with the following elements:
         </p>
+
         <ul>
             <li>a unique identification index - [Integer]</li>
             <li>the identified peptide sequence (without terminals and modifications) - [String]</li>
@@ -333,6 +364,7 @@
             <li>the total intensity of all the peaks in the spectrum - [Double]</li>
             <li>original file name (a reference to the original spectrum file) - [String]</li>
         </ul>
+
         <p align="justify">
             Either spectrum file name or spectrum id has to be provided, but the
             other can be set to "null".
@@ -342,6 +374,7 @@
             fragmentIons.txt is also a tab separated consisting of one row per
             fragment ion with the following elements:
         </p>
+
         <ul>
             <li>a unique fragment ion index - [Integer]</li>
             <li>identification index (a reference to the identification the
@@ -353,11 +386,13 @@
             <li>fragment ion mass error (the (absolute) distance between the theoretical
                 and the experimental mass of the fragment ion (experimental mass - theoretical mass)) - [Double]</li>
         </ul>
+
         <p align="justify">
             <A name='#fragmentIonTypes'></A>
             The following fragment ion type names are recommended and will
             result in the best integration with the tool:
         </p>
+
         <ul>
             <li>Standard fragment ions, singly charged: b1, b2, y1, y2, etc.</li>
             <li>Neutral loss ions: y[5]-H2O, y[4]-NH3, etc.</li>
@@ -365,6 +400,7 @@
             <li>Precursor ions: Prec, Prec-H2O 2+, etc.</li>
             <li>Immonium ions: iA, iC, etc. </li>
         </ul>
+
         <p align="justify">
             <A name='#spectraFolder'></A>
             <b>Spectra Folder</b><br>
