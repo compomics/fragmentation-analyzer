@@ -3,7 +3,16 @@
 
 ----
 
+*Changes in FragmentationAnalyzer v1.0.1 - (Sep. 17. 2009):*
+ * FEATURE IMPROVEMENT: The search button is now always enabled, and instead a message is shown if the required parameters are not selected.
+ * FEATURE IMPROVEMENT: Minor updates of the help files.
+ * BUG FIX: Fixed a bug where the ms_lims database connection was closed before it could be used.
+
+----
+
 *Changes in FragmentationAnalyzer v1.0 - (Sep. 10. 2009):*
  * (initial version)
+
+Download count: 2
 
 ----
