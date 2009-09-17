@@ -4,7 +4,7 @@
     <groupId>no.uib</groupId>
     <artifactId>FragmentationAnalyzer</artifactId>
     <packaging>jar</packaging>
-    <version>1.0</version>
+    <version>1.0.1</version>
     <name>FragmentationAnalyzer</name>
     <description>FragmentationAnalyzer is a tool for analyzing and visualizing MS/MS fragmentation data.</description>
     <url>http://fragmentation-analyzer.googlecode.com</url>

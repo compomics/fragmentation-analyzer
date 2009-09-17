@@ -101,7 +101,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
     private static boolean useErrorLog = true;
     private static Connection conn = null;
     private static String analyzerName = "FragmentationAnalyzer";
-    private static String versionNumber = "1.0";
+    private static String versionNumber = "1.0.1";
     private static UserProperties userProperties;
     private static Properties properties;
     private static ProgressDialog progressDialog;
@@ -1781,7 +1781,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
      */
     private void exitJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitJMenuItemActionPerformed
         userProperties.saveUserPropertiesToFile();
-        closeDataBaseConnection();
+        closeDatabaseConnection();
         System.exit(0);
     }//GEN-LAST:event_exitJMenuItemActionPerformed
 
@@ -5343,9 +5343,6 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         searchResultsJButton.setEnabled(false);
         searchEnabled = false;
 
-        // close the old database connection (if any)
-        closeDataBaseConnection();
-
         // empty the tables
         ((DefaultTableModel) searchResultsJXTable.getModel()).setRowCount(0);
         ((DefaultTableModel) spectraJXTable.getModel()).setRowCount(0);
@@ -5451,7 +5448,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                             setTitle(analyzerName + " " + versionNumber + " - " + new File(currentDataSetFolder).getName());
                         } else {
                             // cancel loading of the data set
-                            closeDataBaseConnection();
+                            closeDatabaseConnection();
                         }
                     } catch (FileNotFoundException e) {
                         JOptionPane.showMessageDialog(null,
@@ -5460,7 +5457,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                 "Error Opening Identifications File", JOptionPane.ERROR_MESSAGE);
                         Util.writeToErrorLog("Error opening identifications file:");
                         e.printStackTrace();
-                        closeDataBaseConnection();
+                        closeDatabaseConnection();
                     } catch (IOException e) {
                         JOptionPane.showMessageDialog(null,
                                 "An error occured when trying to open the identifications.txt file.\n" +
@@ -5468,7 +5465,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                 "Error Opening Identifications File", JOptionPane.ERROR_MESSAGE);
                         Util.writeToErrorLog("Error opening identifications file:");
                         e.printStackTrace();
-                        closeDataBaseConnection();
+                        closeDatabaseConnection();
                     }
                 } else {
                     JOptionPane.showMessageDialog(null,
@@ -5477,7 +5474,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                             "Error Opening Data Set", JOptionPane.ERROR_MESSAGE);
                     Util.writeToErrorLog("Error Opening Data Set: the identifications file " + currentDataSetFolder +
                             "/identifications.txt" + " does not exist!");
-                    closeDataBaseConnection();
+                    closeDatabaseConnection();
                 }
 
                 progressDialog.setVisible(false);
@@ -5866,7 +5863,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                         "and upgrade if necessary: http://genesis.ugent.be/ms_lims.",
                         "Database Error", JOptionPane.ERROR_MESSAGE);
                 connectionSuccessfull = false;
-                closeDataBaseConnection();
+                closeDatabaseConnection();
             }
         } catch (Exception e) {
 
@@ -5886,7 +5883,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
     /**
      * Closes the database connection.
      */
-    public static void closeDataBaseConnection() {
+    public static void closeDatabaseConnection() {
 
         // Close DB connection.
         if (conn != null) {
