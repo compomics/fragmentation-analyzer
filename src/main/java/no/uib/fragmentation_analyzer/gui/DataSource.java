@@ -419,7 +419,7 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
      * @param evt
      */
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-        fragmentationAnalyzer.closeDataBaseConnection();
+        fragmentationAnalyzer.closeDatabaseConnection();
         this.setVisible(false);
         this.dispose();
     }//GEN-LAST:event_formWindowClosing
@@ -648,7 +648,7 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
                                         } else {
                                             // delete the created project folder and close any open database connections
                                             Util.deleteDir(new File(fragmentationAnalyzer.getCurrentDataSetFolder()));
-                                            fragmentationAnalyzer.closeDataBaseConnection();
+                                            fragmentationAnalyzer.closeDatabaseConnection();
                                         }
 
                                         progressDialog.setVisible(false);
@@ -658,12 +658,12 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
                             } else {
                                 // delete the created project folder and close any open database connections
                                 Util.deleteDir(new File(fragmentationAnalyzer.getCurrentDataSetFolder()));
-                                fragmentationAnalyzer.closeDataBaseConnection();
+                                fragmentationAnalyzer.closeDatabaseConnection();
                             }
                         } else {
                             // delete the created project folder and close any open database connections
                             Util.deleteDir(new File(fragmentationAnalyzer.getCurrentDataSetFolder()));
-                            fragmentationAnalyzer.closeDataBaseConnection();
+                            fragmentationAnalyzer.closeDatabaseConnection();
                         }
                     }
                 }
@@ -1404,6 +1404,8 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
 
             } else if (new File(currentDatasetFolder + "/mods.xml").exists()) {
 
+                fragmentationAnalyzer.closeDatabaseConnection();
+
                 // extracted from OMSSA
                 fragmentationAnalyzer.setCurrentDataSetFolder(currentDatasetFolder);
                 this.setVisible(false);
@@ -1411,6 +1413,9 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
                 fragmentationAnalyzer.loadDataSet(false);
                 this.dispose();
             } else {
+
+                fragmentationAnalyzer.closeDatabaseConnection();
+
                 // extracted from Mascot Dat Files or created from scratch
                 fragmentationAnalyzer.setCurrentDataSetFolder(currentDatasetFolder);
                 this.setVisible(false);
@@ -1450,6 +1455,8 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
                     fragmentationAnalyzer.getConn() != null) {
                 // do nothing, allready connected
             } else {
+
+                fragmentationAnalyzer.closeDatabaseConnection();
 
                 fragmentationAnalyzer.getUserProperties().setUserName(userName);
                 fragmentationAnalyzer.getUserProperties().setServerHost(serverHost);
@@ -1595,7 +1602,7 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
                             "Error Extracting Data", JOptionPane.ERROR_MESSAGE);
                     Util.writeToErrorLog("Error extracting data from database: ");
                     e.printStackTrace();
-                    fragmentationAnalyzer.closeDataBaseConnection();
+                    fragmentationAnalyzer.closeDatabaseConnection();
                 }
 
                 //long end = System.currentTimeMillis();

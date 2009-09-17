@@ -297,7 +297,7 @@ public class DatabaseDialog extends javax.swing.JDialog {
 
         saveInsertedInformation();
 
-        fragmentationAnalyzer.closeDataBaseConnection();
+        fragmentationAnalyzer.closeDatabaseConnection();
         boolean connectionError = !fragmentationAnalyzer.connectToDatabase();
 
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
