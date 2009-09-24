@@ -2,4 +2,4 @@
 
 ----
 
- * Fixed an incorrect default subject in the mailto links.
+ * BUG FIX: Fixed an incorrect default subject in the mailto links.
