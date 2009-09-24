@@ -2,4 +2,4 @@
 
 ----
 
-(currently no changes)
+ * Fixed an incorrect default subject in the mailto links.
