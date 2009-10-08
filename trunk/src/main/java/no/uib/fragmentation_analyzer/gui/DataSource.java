@@ -1452,7 +1452,7 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
 
             if (fragmentationAnalyzer.getUserProperties().getSchema().equalsIgnoreCase(schema) &&
                     fragmentationAnalyzer.getUserProperties().getServerHost().equalsIgnoreCase(serverHost) &&
-                    fragmentationAnalyzer.getConn() != null) {
+                    fragmentationAnalyzer.getConnection() != null) {
                 // do nothing, allready connected
             } else {
 
@@ -1646,7 +1646,7 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
      */
     private int getMaxIdentificationId() throws SQLException {
 
-        ps = fragmentationAnalyzer.getConn().prepareStatement(
+        ps = fragmentationAnalyzer.getConnection().prepareStatement(
                 //"select count(*) from identification");
                 "select max(identificationid) from identification;");
         rs = ps.executeQuery();
@@ -1666,7 +1666,7 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
      */
     private int getIdentificationCount() throws SQLException {
 
-        ps = fragmentationAnalyzer.getConn().prepareStatement(
+        ps = fragmentationAnalyzer.getConnection().prepareStatement(
                 "select count(*) from identification");
         rs = ps.executeQuery();
         rs.next();
@@ -1685,7 +1685,7 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
      */
     private int getSpectrumFileCount() throws SQLException {
 
-        ps = fragmentationAnalyzer.getConn().prepareStatement(
+        ps = fragmentationAnalyzer.getConnection().prepareStatement(
                 "select count(*) from spectrumfile");
         rs = ps.executeQuery();
         rs.next();
@@ -1706,7 +1706,7 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
         progressDialog.setTitle("Retrieving Instrument Details. Please Wait...");
         progressDialog.setIntermidiate(true);
 
-        Instrument[] tempAllInstruments = Instrument.getAllInstruments(fragmentationAnalyzer.getConn());
+        Instrument[] tempAllInstruments = Instrument.getAllInstruments(fragmentationAnalyzer.getConnection());
 
         for (int i = 0; i < tempAllInstruments.length; i++) {
             allInstruments.put(tempAllInstruments[i].getInstrumentid(), tempAllInstruments[i].getName());
@@ -1738,7 +1738,7 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
 
         int incorrectModifiedSequenceCounter = 0;
 
-        ps = fragmentationAnalyzer.getConn().prepareStatement(
+        ps = fragmentationAnalyzer.getConnection().prepareStatement(
                 "select identificationid, l_spectrumfileid, " +
                 "modified_sequence, " +
                 "charge, sequence from identification " +
@@ -1806,7 +1806,7 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
 
         // can't use a prepared statment as the in clause is too long, and seems to
         // get cut by the insertString method
-        Statement s = fragmentationAnalyzer.getConn().createStatement();
+        Statement s = fragmentationAnalyzer.getConnection().createStatement();
 
         int querrySize = 10000;
 
@@ -1913,7 +1913,7 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
         FileWriter f = new FileWriter(fragmentationAnalyzer.getCurrentDataSetFolder() + "/fragment_ions.txt");
         BufferedWriter b = new BufferedWriter(f);
 
-        ps = fragmentationAnalyzer.getConn().prepareStatement(
+        ps = fragmentationAnalyzer.getConnection().prepareStatement(
                 "select fragmentionid, l_identificationid, mz, intensity, ionname, fragmentionnumber, massdelta " +
                 "from fragmention where " +
                 "l_identificationid in (?)");

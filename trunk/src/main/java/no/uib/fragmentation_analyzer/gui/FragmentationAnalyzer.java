@@ -101,7 +101,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
     private static boolean useErrorLog = true;
     private static Connection conn = null;
     private static String analyzerName = "FragmentationAnalyzer";
-    private static String versionNumber = "1.0.1";
+    private static String versionNumber = "1.0.2";
     private static UserProperties userProperties;
     private static Properties properties;
     private static ProgressDialog progressDialog;
@@ -232,8 +232,6 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         plotsAnalysesJXTaskPane.setExpanded(false);
         spectraJXTaskPane.setExpanded(false);
 
-        searchResultsJXTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-
         linkedSpectrumPanels = new HashMap<Integer, SpectrumPanel>();
         allAnnotations = new HashMap<Integer, Vector<DefaultSpectrumAnnotation>>();
         allInternalFrames = new HashMap<Integer, FragmentationAnalyzerJInternalFrame>();
@@ -345,12 +343,18 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         showBoxPlotToolBarJMenuItem = new javax.swing.JMenuItem();
         showScatterPlotToolBarJMenuItem = new javax.swing.JMenuItem();
         showBubblePlotToolBarJMenuItem = new javax.swing.JMenuItem();
-        selectAllIdentificationsJPopupMenu = new javax.swing.JPopupMenu();
+        selectIdentificationsJPopupMenu = new javax.swing.JPopupMenu();
         selectAllIdentificationsJMenuItem = new javax.swing.JMenuItem();
         invertSelectionIdentificationsJMenuItem = new javax.swing.JMenuItem();
-        selectAllSpectraJPopupMenu = new javax.swing.JPopupMenu();
+        highlightIdentificationsJMenu = new javax.swing.JMenu();
+        selectHighlightedIdentificationsJMenuItem = new javax.swing.JMenuItem();
+        deselectHighlightedIdentificationsJMenuItem = new javax.swing.JMenuItem();
+        selectSpectraJPopupMenu = new javax.swing.JPopupMenu();
         selectAllSpectrtaJMenuItem = new javax.swing.JMenuItem();
         invertSelectionSpectraJMenuItem = new javax.swing.JMenuItem();
+        highlightSelectionSpectraJMenu = new javax.swing.JMenu();
+        selectHighlightedSpectraJMenuItem = new javax.swing.JMenuItem();
+        deselectHighlightedSpectraJMenuItem = new javax.swing.JMenuItem();
         searchSettingsJScrollPane = new javax.swing.JScrollPane();
         searchSettingsJXTaskPaneContainer = new org.jdesktop.swingx.JXTaskPaneContainer();
         instrumentJXTaskPane = new org.jdesktop.swingx.JXTaskPane();
@@ -515,14 +519,13 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         });
         internalFramesJPopupMenu.add(showBubblePlotToolBarJMenuItem);
 
-        selectAllIdentificationsJMenuItem.setMnemonic('A');
         selectAllIdentificationsJMenuItem.setText("Select/Deselect All");
         selectAllIdentificationsJMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 selectAllIdentificationsJMenuItemActionPerformed(evt);
             }
         });
-        selectAllIdentificationsJPopupMenu.add(selectAllIdentificationsJMenuItem);
+        selectIdentificationsJPopupMenu.add(selectAllIdentificationsJMenuItem);
 
         invertSelectionIdentificationsJMenuItem.setText("Invert Selection");
         invertSelectionIdentificationsJMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -530,16 +533,35 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                 invertSelectionIdentificationsJMenuItemActionPerformed(evt);
             }
         });
-        selectAllIdentificationsJPopupMenu.add(invertSelectionIdentificationsJMenuItem);
+        selectIdentificationsJPopupMenu.add(invertSelectionIdentificationsJMenuItem);
 
-        selectAllSpectrtaJMenuItem.setMnemonic('A');
+        highlightIdentificationsJMenu.setText("Highlight Selection");
+
+        selectHighlightedIdentificationsJMenuItem.setText("Select Highlighted");
+        selectHighlightedIdentificationsJMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                selectHighlightedIdentificationsJMenuItemActionPerformed(evt);
+            }
+        });
+        highlightIdentificationsJMenu.add(selectHighlightedIdentificationsJMenuItem);
+
+        deselectHighlightedIdentificationsJMenuItem.setText("Deselect Highlighted");
+        deselectHighlightedIdentificationsJMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deselectHighlightedIdentificationsJMenuItemActionPerformed(evt);
+            }
+        });
+        highlightIdentificationsJMenu.add(deselectHighlightedIdentificationsJMenuItem);
+
+        selectIdentificationsJPopupMenu.add(highlightIdentificationsJMenu);
+
         selectAllSpectrtaJMenuItem.setText("Select/Deselect All");
         selectAllSpectrtaJMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 selectAllSpectrtaJMenuItemActionPerformed(evt);
             }
         });
-        selectAllSpectraJPopupMenu.add(selectAllSpectrtaJMenuItem);
+        selectSpectraJPopupMenu.add(selectAllSpectrtaJMenuItem);
 
         invertSelectionSpectraJMenuItem.setText("Invert Selection");
         invertSelectionSpectraJMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -547,7 +569,27 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                 invertSelectionSpectraJMenuItemActionPerformed(evt);
             }
         });
-        selectAllSpectraJPopupMenu.add(invertSelectionSpectraJMenuItem);
+        selectSpectraJPopupMenu.add(invertSelectionSpectraJMenuItem);
+
+        highlightSelectionSpectraJMenu.setText("Highlight Selection");
+
+        selectHighlightedSpectraJMenuItem.setText("Select Highlighted");
+        selectHighlightedSpectraJMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                selectHighlightedSpectraJMenuItemActionPerformed(evt);
+            }
+        });
+        highlightSelectionSpectraJMenu.add(selectHighlightedSpectraJMenuItem);
+
+        deselectHighlightedSpectraJMenuItem.setText("Deselect Highlighted");
+        deselectHighlightedSpectraJMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deselectHighlightedSpectraJMenuItemActionPerformed(evt);
+            }
+        });
+        highlightSelectionSpectraJMenu.add(deselectHighlightedSpectraJMenuItem);
+
+        selectSpectraJPopupMenu.add(highlightSelectionSpectraJMenu);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("FragmentationAnalyzer");
@@ -1963,10 +2005,10 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         final int searchType = tempSearchType;
 
         // verify that all the required parameters have been selected
-        if(!searchEnabled){
+        if (!searchEnabled) {
             JOptionPane.showMessageDialog(null,
-                        "At least one instrument, the terminals and the charge has to be selected.",
-                        "Search Parameters", JOptionPane.INFORMATION_MESSAGE);
+                    "At least one instrument, the terminals and the charge has to be selected.",
+                    "Search Parameters", JOptionPane.INFORMATION_MESSAGE);
             cancelProgress = true;
         }
 
@@ -1984,7 +2026,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
             }
         }
 
-        
+
         if (!cancelProgress) {
 
             // has to be final to be used inside the thread
@@ -2573,8 +2615,10 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
                     spectraJXTaskPane.setExpanded(true);
 
+                    // empty the spectra table
                     ((DefaultTableModel) spectraJXTable.getModel()).setRowCount(0);
                     spectraJScrollPane.getVerticalScrollBar().setValue(0);
+                    spectraJXTable.resetSortOrder();
                     currentlySelectedRowsInSpectraTable = new ArrayList<SpectrumTableRow>();
                     selectAllSpectra = true;
                     spectraJComboBoxActionPerformed(null);
@@ -3553,7 +3597,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
     }
 
     /**
-     * Enables or disables the spectra analyis button based on the selected item in the
+     * Enables or disables the spectra analysis button based on the selected item in the
      * spectra analysis combo box and the number of selected rows in the table.
      *
      * @param evt
@@ -4275,7 +4319,9 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
         for (int i = 0; i < searchResultsJXTable.getRowCount(); i++) {
             searchResultsJXTable.setValueAt(
-                    new Boolean(!((Boolean) searchResultsJXTable.getValueAt(i, 5)).booleanValue()), i, searchResultsJXTable.getColumnCount() - 1);
+                    new Boolean(!((Boolean) searchResultsJXTable.getValueAt(
+                    i, searchResultsJXTable.getColumnCount() - 1)).booleanValue()),
+                    i, searchResultsJXTable.getColumnCount() - 1);
 
             if (((Boolean) searchResultsJXTable.getValueAt(i, searchResultsJXTable.getColumnCount() - 1)).booleanValue()) {
 
@@ -4459,8 +4505,8 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                 } else {
                     searchResultsJButton.setEnabled(false);
                 }
-            } else if (evt.getButton() == java.awt.event.MouseEvent.BUTTON3 && column == searchResultsJXTable.getColumnCount() - 1) {
-                selectAllIdentificationsJPopupMenu.show(evt.getComponent(), evt.getX(), evt.getY());
+            } else if (evt.getButton() == java.awt.event.MouseEvent.BUTTON3) {
+                selectIdentificationsJPopupMenu.show(evt.getComponent(), evt.getX(), evt.getY());
             }
         }
     }//GEN-LAST:event_searchResultsJXTableMouseReleased
@@ -4504,8 +4550,8 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                 } else {
                     spectraJButton.setEnabled(false);
                 }
-            } else if (evt.getButton() == java.awt.event.MouseEvent.BUTTON3 && column == spectraJXTable.getColumnCount() - 1) {
-                selectAllSpectraJPopupMenu.show(evt.getComponent(), evt.getX(), evt.getY());
+            } else if (evt.getButton() == java.awt.event.MouseEvent.BUTTON3) {
+                selectSpectraJPopupMenu.show(evt.getComponent(), evt.getX(), evt.getY());
             }
         }
     }//GEN-LAST:event_spectraJXTableMouseReleased
@@ -4670,6 +4716,173 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
             spectraJXTaskPane.setExpanded(false);
         }
     }//GEN-LAST:event_plotsAnalysesJXTaskPaneMouseClicked
+
+    /**
+     * Selects all the higlighted rows in the search results table.
+     *
+     * @param evt
+     */
+    private void selectHighlightedIdentificationsJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectHighlightedIdentificationsJMenuItemActionPerformed
+        selectHighlightedIdentifications(true);
+    }//GEN-LAST:event_selectHighlightedIdentificationsJMenuItemActionPerformed
+
+    /**
+     * Selects or deselects all the higlighted rows in the search results table.
+     * 
+     * @param select if true the rows are selected, if false the rows are deselected
+     */
+    private void selectHighlightedIdentifications(boolean select){
+                this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
+
+        selectAllIdentifications = true;
+
+        boolean columnWasSorted = false;
+        int sortedTableColumn = -1;
+        SortOrder sortOrder = null;
+
+        if (searchResultsJXTable.getSortedColumn() != null) {
+            sortedTableColumn = searchResultsJXTable.getSortedColumn().getModelIndex();
+            sortOrder = searchResultsJXTable.getSortOrder(sortedTableColumn);
+            searchResultsJXTable.setSortable(false);
+            columnWasSorted = true;
+        }
+
+        int column = searchResultsJXTable.getColumnCount() - 1;
+
+        int[] selectedRows = searchResultsJXTable.getSelectedRows();
+
+        for (int i = 0; i < selectedRows.length; i++) {
+
+            int currentRow = selectedRows[i];
+
+            Integer countB = null;
+
+            if (searchResultsJXTable.getColumnCount(false) == 6) {
+                countB = (Integer) searchResultsJXTable.getValueAt(currentRow, 4);
+            }
+
+            IdentificationTableRow temp = new IdentificationTableRow(
+                    (String) searchResultsJXTable.getValueAt(currentRow, 1),
+                    (String) searchResultsJXTable.getValueAt(currentRow, 2),
+                    (Integer) searchResultsJXTable.getValueAt(currentRow, 3),
+                    countB);
+
+            // select the row
+            searchResultsJXTable.setValueAt(new Boolean(select), currentRow, column);
+
+            // add the row to the list of selected rows
+            if (((Boolean) searchResultsJXTable.getValueAt(currentRow, column)).booleanValue()) {
+                if (!currentlySelectedRowsInSearchTable.contains(temp)) {
+                    currentlySelectedRowsInSearchTable.add(temp);
+                }
+            } else {
+                currentlySelectedRowsInSearchTable.remove(temp);
+            }
+        }
+
+        if (currentlySelectedRowsInSearchTable.size() > 0) {
+            searchResultsJComboBoxActionPerformed(null);
+        } else {
+            searchResultsJButton.setEnabled(false);
+        }
+
+        if (columnWasSorted) {
+            searchResultsJXTable.setSortable(true);
+            searchResultsJXTable.setSortOrder(sortedTableColumn, sortOrder);
+        }
+
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }
+
+    /**
+     * Selects all the higlighted rows in the spectra table.
+     *
+     * @param evt
+     */
+    private void selectHighlightedSpectraJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectHighlightedSpectraJMenuItemActionPerformed
+        selectHighlightedSpectra(true);
+    }//GEN-LAST:event_selectHighlightedSpectraJMenuItemActionPerformed
+
+    /**
+     * Selects or deselects all the higlighted rows in the spectra table.
+     * 
+     * @param select if true the rows are selected, if false the rows are deselected
+     */
+    private void selectHighlightedSpectra(boolean select){
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
+
+        selectAllSpectra = true;
+
+        boolean columnWasSorted = false;
+        int sortedTableColumn = -1;
+        SortOrder sortOrder = null;
+
+        if (spectraJXTable.getSortedColumn() != null) {
+            sortedTableColumn = spectraJXTable.getSortedColumn().getModelIndex();
+            sortOrder = spectraJXTable.getSortOrder(sortedTableColumn);
+            spectraJXTable.setSortable(false);
+            columnWasSorted = true;
+        }
+
+        int column = spectraJXTable.getColumnCount() - 1;
+
+        int[] selectedRows = spectraJXTable.getSelectedRows();
+
+        for (int i = 0; i < selectedRows.length; i++) {
+
+            int currentRow = selectedRows[i];
+
+            SpectrumTableRow temp = new SpectrumTableRow(
+                    (Integer) spectraJXTable.getValueAt(currentRow, 1),
+                    (Integer) spectraJXTable.getValueAt(currentRow, 2),
+                    (String) spectraJXTable.getValueAt(currentRow, 3),
+                    (String) spectraJXTable.getValueAt(currentRow, 4),
+                    (String) spectraJXTable.getValueAt(currentRow, 5));
+
+            // select the row
+            spectraJXTable.setValueAt(new Boolean(select), currentRow, column);
+
+            // add the row to the list of selected rows
+            if (((Boolean) spectraJXTable.getValueAt(currentRow, column)).booleanValue()) {
+                if (!currentlySelectedRowsInSpectraTable.contains(temp)) {
+                    currentlySelectedRowsInSpectraTable.add(temp);
+                }
+            } else {
+                currentlySelectedRowsInSpectraTable.remove(temp);
+            }
+        }
+
+        if (currentlySelectedRowsInSpectraTable.size() > 0) {
+            spectraJComboBoxActionPerformed(null);
+        } else {
+            spectraJButton.setEnabled(false);
+        }
+
+        if (columnWasSorted) {
+            spectraJXTable.setSortable(true);
+            spectraJXTable.setSortOrder(sortedTableColumn, sortOrder);
+        }
+
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }
+
+    /**
+     * Deselects all the higlighted rows in the search results table.
+     *
+     * @param evt
+     */
+    private void deselectHighlightedIdentificationsJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deselectHighlightedIdentificationsJMenuItemActionPerformed
+        selectHighlightedIdentifications(false);
+    }//GEN-LAST:event_deselectHighlightedIdentificationsJMenuItemActionPerformed
+
+    /**
+     * Deselects all the higlighted rows in the spectra table.
+     *
+     * @param evt
+     */
+    private void deselectHighlightedSpectraJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deselectHighlightedSpectraJMenuItemActionPerformed
+        selectHighlightedSpectra(false);
+    }//GEN-LAST:event_deselectHighlightedSpectraJMenuItemActionPerformed
 
     /**
      * Makes sure that only the selected data series are visible.
@@ -5445,6 +5658,8 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                     "Data set loaded successfully.",
                                     "Data Set Loaded", JOptionPane.INFORMATION_MESSAGE);
 
+                            repaint();
+
                             setTitle(analyzerName + " " + versionNumber + " - " + new File(currentDataSetFolder).getName());
                         } else {
                             // cancel loading of the data set
@@ -5920,11 +6135,24 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
     }
 
     /**
-     * Returns the ms_lims database connection.
+     * Returns the ms_lims database connection or null if no connection.
      *
      * @return the ms_lims database connection
      */
-    public Connection getConn() {
+    public Connection getConnection() {
+
+        if (conn != null) {
+            try {
+                // try to validate the connection
+                if (!conn.isValid(60)) {
+                    conn = null;
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+                conn = null;
+            }
+        }
+
         return conn;
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -5951,12 +6179,16 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
     private javax.swing.JComboBox combineSpectraJComboBox;
     private javax.swing.JComboBox daOrPpmSearchResultsJComboBox;
     private javax.swing.JComboBox daOrPpmSpectraJComboBox;
+    private javax.swing.JMenuItem deselectHighlightedIdentificationsJMenuItem;
+    private javax.swing.JMenuItem deselectHighlightedSpectraJMenuItem;
     private javax.swing.JMenu editMenu;
     private javax.swing.JMenuItem exitJMenuItem;
     private javax.swing.JMenu fileJMenu;
     private javax.swing.JRadioButton generalSearchJRadioButton;
     private javax.swing.JMenu helpJMenu;
     private javax.swing.JMenuItem helpJMenuItem;
+    private javax.swing.JMenu highlightIdentificationsJMenu;
+    private javax.swing.JMenu highlightSelectionSpectraJMenu;
     private javax.swing.JComboBox instrument1JComboBox;
     private javax.swing.JComboBox instrument2JComboBox;
     private javax.swing.JComboBox instrument3JComboBox;
@@ -6017,9 +6249,11 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
     private org.jdesktop.swingx.JXTaskPaneContainer searchSettingsJXTaskPaneContainer;
     private org.jdesktop.swingx.JXPanel searchTypeJXPanel;
     private javax.swing.JMenuItem selectAllIdentificationsJMenuItem;
-    private javax.swing.JPopupMenu selectAllIdentificationsJPopupMenu;
-    private javax.swing.JPopupMenu selectAllSpectraJPopupMenu;
     private javax.swing.JMenuItem selectAllSpectrtaJMenuItem;
+    private javax.swing.JMenuItem selectHighlightedIdentificationsJMenuItem;
+    private javax.swing.JMenuItem selectHighlightedSpectraJMenuItem;
+    private javax.swing.JPopupMenu selectIdentificationsJPopupMenu;
+    private javax.swing.JPopupMenu selectSpectraJPopupMenu;
     private javax.swing.JMenuItem showBoxPlotToolBarJMenuItem;
     private javax.swing.JMenuItem showBubblePlotToolBarJMenuItem;
     private javax.swing.JMenuItem showScatterPlotToolBarJMenuItem;
