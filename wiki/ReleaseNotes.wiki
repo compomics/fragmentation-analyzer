@@ -3,16 +3,28 @@
 
 ----
 
+*Changes in FragmentationAnalyzer v1.0.2 - (Oct. 08. 2009):*
+ * NEW FEATURE: Added support for selecting/deselecting highlighted rows in the tables.
+ * FEATURE IMPROVEMENT: The selection popup menus are now available for all columns and not just the selection column.
+ * BUG FIX: Fixed a bug in the inverse selection in the search results table.
+ * BUG FIX: Turned off sorting in the spectra table when inserting new rows, which makes inserting new rows much faster.
+ * BUG FIX: If the ms_lims connection goes down, reloading the dataset now resets the connection.
+ * BUG FIX: Fixed an incorrect default subject in the mailto links.
+
+----
+
 *Changes in FragmentationAnalyzer v1.0.1 - (Sep. 17. 2009):*
  * FEATURE IMPROVEMENT: The search button is now always enabled, and instead a message is shown if the required parameters are not selected.
  * FEATURE IMPROVEMENT: Minor updates of the help files.
  * BUG FIX: Fixed a bug where the ms_lims database connection was closed before it could be used.
+
+Download Count: 21
 
 ----
 
 *Changes in FragmentationAnalyzer v1.0 - (Sep. 10. 2009):*
  * (initial version)
 
-Download count: 2
+Download Count: 2
 
 ----
