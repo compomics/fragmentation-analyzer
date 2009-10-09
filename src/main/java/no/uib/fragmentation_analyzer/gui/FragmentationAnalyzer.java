@@ -77,6 +77,7 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.CategoryAxis;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.labels.BoxAndWhiskerToolTipGenerator;
+import org.jfree.chart.labels.StandardXYToolTipGenerator;
 import org.jfree.chart.plot.CategoryMarker;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
@@ -137,6 +138,8 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
     private int internalFrameUniqueIdCounter = 0;
     private boolean cancelProgress = false;
     private boolean searchEnabled = false;
+    public static final int PLOT_LABEL_TYPE_INSTRUMENT = 0, PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE_ALL = 1;
+    private int currentLabelType = PLOT_LABEL_TYPE_INSTRUMENT;
 
     /**
      * Creates a new FragmentationAnalyzer frame and makes it visible. Then opens
@@ -2577,456 +2580,69 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
         cancelProgress = false;
 
-        progressDialog = new ProgressDialog(this, this, true);
-
-        new Thread(new Runnable() {
-
-            public void run() {
-                progressDialog.setIntermidiate(false);
-                progressDialog.setValue(0);
-                progressDialog.setTitle("Running Analysis. Please Wait...");
-                progressDialog.setVisible(true);
-            }
-        }, "ProgressDialog").start();
-
-        // Wait until progress dialog is visible.
-        //
-        // The following is not needed in Java 1.6, but seemed to be needed in 1.5.
-        //
-        // Not including the lines _used to_ result in a crash on Windows, but not anymore.
-        // Including the lines results in a crash on Linux and Mac.
-        if (System.getProperty("os.name").toLowerCase().lastIndexOf("windows") != -1) {
-            while (!progressDialog.isVisible()) {
-            }
+        // get the wanted plot label type from the user
+        if (searchResultsJComboBox.getSelectedIndex() == SEARCH_RESULTS_MASS_ERROR_SCATTER_PLOT ||
+                searchResultsJComboBox.getSelectedIndex() == SEARCH_RESULTS_MASS_ERROR_BUBBLE_PLOT) {
+            new PlotLabelSelection(this, true);
         }
 
-        new Thread("SearchThread") {
+        if (!cancelProgress) {
 
-            @Override
-            public void run() {
+            progressDialog = new ProgressDialog(this, this, true);
 
-                int rowCounter = 0;
-                boolean singleSearch = !searchResultsJXTable.getColumnExt("#2").isVisible();
+            new Thread(new Runnable() {
 
-                progressDialog.setValue(0);
-                progressDialog.setMax(currentlySelectedRowsInSearchTable.size());
+                public void run() {
+                    progressDialog.setIntermidiate(false);
+                    progressDialog.setValue(0);
+                    progressDialog.setTitle("Running Analysis. Please Wait...");
+                    progressDialog.setVisible(true);
+                }
+            }, "ProgressDialog").start();
 
-                if (searchResultsJComboBox.getSelectedIndex() == SEARCH_RESULTS_SHOW_INDIVIDUAL_SPECTRA) {
+            // Wait until progress dialog is visible.
+            //
+            // The following is not needed in Java 1.6, but seemed to be needed in 1.5.
+            //
+            // Not including the lines _used to_ result in a crash on Windows, but not anymore.
+            // Including the lines results in a crash on Linux and Mac.
+            if (System.getProperty("os.name").toLowerCase().lastIndexOf("windows") != -1) {
+                while (!progressDialog.isVisible()) {
+                }
+            }
 
-                    spectraJXTaskPane.setExpanded(true);
+            new Thread("SearchThread") {
 
-                    // empty the spectra table
-                    ((DefaultTableModel) spectraJXTable.getModel()).setRowCount(0);
-                    spectraJScrollPane.getVerticalScrollBar().setValue(0);
-                    spectraJXTable.resetSortOrder();
-                    currentlySelectedRowsInSpectraTable = new ArrayList<SpectrumTableRow>();
-                    selectAllSpectra = true;
-                    spectraJComboBoxActionPerformed(null);
+                @Override
+                public void run() {
 
-                    for (int i = 0; i < currentlySelectedRowsInSearchTable.size() && !cancelProgress; i++) {
+                    int rowCounter = 0;
+                    boolean singleSearch = !searchResultsJXTable.getColumnExt("#2").isVisible();
 
-                        IdentificationTableRow currentlySelectedRow = currentlySelectedRowsInSearchTable.get(i);
-                        String currentSequence = currentlySelectedRow.getSequence();
-                        String currentModifiedSequence = currentlySelectedRow.getModifiedSequence();
+                    progressDialog.setValue(0);
+                    progressDialog.setMax(currentlySelectedRowsInSearchTable.size());
 
-                        progressDialog.setString("" + (i + 1) + "/" + currentlySelectedRowsInSearchTable.size());
+                    if (searchResultsJComboBox.getSelectedIndex() == SEARCH_RESULTS_SHOW_INDIVIDUAL_SPECTRA) {
 
-                        int localCounter = 0;
+                        spectraJXTaskPane.setExpanded(true);
 
-                        // check for search type. if count 2 exists there are more than one id per line
-                        if (!singleSearch) {
-
-                            progressDialog.setMax(currentlySelectedRow.getCountA() + currentlySelectedRow.getCountB());
-                            progressDialog.setValue(localCounter);
-
-                            ArrayList<ReducedIdentification> currentIdentifications = identificationMap.get(currentSequence);
-
-                            // add the unmodified sequences
-                            for (int j = 0; j < currentIdentifications.size() && !cancelProgress; j++) {
-
-                                ReducedIdentification currentId = currentIdentifications.get(j);
-
-                                if (!currentId.isModified()) {
-
-                                    progressDialog.setValue(++localCounter);
-
-                                    ((DefaultTableModel) spectraJXTable.getModel()).insertRow(rowCounter++,
-                                            new Object[]{rowCounter,
-                                                currentId.getIdentificationId(),
-                                                currentId.getSpectrumFileId(),
-                                                currentId.getSequence(),
-                                                currentId.getModifiedSequence(),
-                                                currentId.getInstrumentName(),
-                                                new Boolean(false)
-                                            });
-                                }
-                            }
-
-                            // add the modified sequences
-                            for (int j = 0; j < currentIdentifications.size() && !cancelProgress; j++) {
-
-                                ReducedIdentification currentId = currentIdentifications.get(j);
-
-                                if (currentId.getModifiedSequence().equalsIgnoreCase(currentModifiedSequence)) {
-
-                                    progressDialog.setValue(++localCounter);
-
-                                    ((DefaultTableModel) spectraJXTable.getModel()).insertRow(rowCounter++,
-                                            new Object[]{rowCounter,
-                                                currentId.getIdentificationId(),
-                                                currentId.getSpectrumFileId(),
-                                                currentId.getSequence(),
-                                                currentId.getModifiedSequence(),
-                                                currentId.getInstrumentName(),
-                                                new Boolean(false)
-                                            });
-                                }
-                            }
-                        } else {
-                            ArrayList<ReducedIdentification> currentIdentifications = identificationMap.get(currentModifiedSequence);
-
-                            progressDialog.setMax(currentlySelectedRow.getCountA());
-                            progressDialog.setValue(localCounter);
-
-                            for (int j = 0; j < currentIdentifications.size() && !cancelProgress; j++) {
-
-                                ReducedIdentification currentId = currentIdentifications.get(j);
-
-                                progressDialog.setValue(++localCounter);
-
-                                ((DefaultTableModel) spectraJXTable.getModel()).insertRow(rowCounter++,
-                                        new Object[]{rowCounter,
-                                            currentId.getIdentificationId(),
-                                            currentId.getSpectrumFileId(),
-                                            currentId.getSequence(),
-                                            currentId.getModifiedSequence(),
-                                            currentId.getInstrumentName(),
-                                            new Boolean(false)
-                                        });
-                            }
-                        }
-                    }
-
-                    if (!cancelProgress) {
-                        spectraJXTable.setRowSelectionInterval(0, 0);
-                        resultsJScrollPane.getVerticalScrollBar().setValue(0);
-                    } else {
+                        // empty the spectra table
                         ((DefaultTableModel) spectraJXTable.getModel()).setRowCount(0);
+                        spectraJScrollPane.getVerticalScrollBar().setValue(0);
+                        spectraJXTable.resetSortOrder();
                         currentlySelectedRowsInSpectraTable = new ArrayList<SpectrumTableRow>();
                         selectAllSpectra = true;
                         spectraJComboBoxActionPerformed(null);
-                    }
-                } else if (searchResultsJComboBox.getSelectedIndex() == SEARCH_RESULTS_INTENSITY_BOX_PLOT) {
-
-                    plotsAnalysesJXTaskPane.setExpanded(true);
-                    searchResultsJXTaskPane.setExpanded(false);
-                    spectraJXTaskPane.setExpanded(false);
-
-                    normalize = true;
-
-                    try {
 
                         for (int i = 0; i < currentlySelectedRowsInSearchTable.size() && !cancelProgress; i++) {
 
-                            progressDialog.setIntermidiate(false);
-                            progressDialog.setTitle("Running Analysis. Please Wait...");
-                            progressDialog.setValue(i + 1);
-                            progressDialog.setString("(" + (i + 1) + "/" + currentlySelectedRowsInSearchTable.size() + ")");
-
                             IdentificationTableRow currentlySelectedRow = currentlySelectedRowsInSearchTable.get(i);
                             String currentSequence = currentlySelectedRow.getSequence();
                             String currentModifiedSequence = currentlySelectedRow.getModifiedSequence();
-
-                            DefaultBoxAndWhiskerCategoryDataset dataSet = new DefaultBoxAndWhiskerCategoryDataset();
-
-                            int unmodifiedCounter = 0;
-                            int modifiedCounter = 0;
-
-                            // check for search type
-                            if (!singleSearch) {
-
-                                ArrayList<ReducedIdentification> currentIdentifications = identificationMap.get(currentSequence);
-
-                                unmodifiedCounter = 0;
-                                modifiedCounter = 0;
-
-                                // find the number of unmodified sequence
-                                for (int j = 0; j < currentIdentifications.size(); j++) {
-                                    ReducedIdentification currentId = currentIdentifications.get(j);
-
-                                    if (!currentId.isModified()) {
-                                        unmodifiedCounter++;
-                                    }
-                                }
-
-                                // find the number of modified sequences
-                                for (int j = 0; j < currentIdentifications.size(); j++) {
-                                    ReducedIdentification currentId = currentIdentifications.get(j);
-
-                                    if (currentId.getModifiedSequence().equalsIgnoreCase(currentModifiedSequence)) {
-                                        modifiedCounter++;
-                                    }
-                                }
-
-                                double[][] bUnmodIntensities = new double[currentSequence.length()][unmodifiedCounter];
-                                double[][] bModIntensities = new double[currentSequence.length()][modifiedCounter];
-                                double[][] yUnmodIntensities = new double[currentSequence.length()][unmodifiedCounter];
-                                double[][] yModIntensities = new double[currentSequence.length()][modifiedCounter];
-
-                                progressDialog.setTitle("Extracting Fragment Ions - Unmodifed. Please Wait...");
-                                progressDialog.setMax(unmodifiedCounter);
-                                progressDialog.setValue(0);
-
-                                unmodifiedCounter = 0;
-
-                                // add the unmodified sequences
-                                for (int j = 0; j < currentIdentifications.size() && !cancelProgress; j++) {
-
-                                    ReducedIdentification currentId = currentIdentifications.get(j);
-
-                                    if (!currentId.isModified()) {
-
-                                        progressDialog.setValue(unmodifiedCounter + 1);
-
-                                        if (currentDataSetIsFromMsLims) {
-                                            // get all unmodified b fragments
-                                            getAllFragmentsFromMsLims(currentId, bUnmodIntensities, unmodifiedCounter, B_ION);
-
-                                            // get all unmodified y fragments
-                                            getAllFragmentsFromMsLims(currentId, yUnmodIntensities, unmodifiedCounter, Y_ION);
-                                        } else {
-                                            // get all unmodified b fragments
-                                            getAllFragmentsFromFragmentIonsFile(currentId, bUnmodIntensities, unmodifiedCounter, "b");
-
-                                            // get all unmodified y fragments
-                                            getAllFragmentsFromFragmentIonsFile(currentId, yUnmodIntensities, unmodifiedCounter, "y");
-                                        }
-
-                                        unmodifiedCounter++;
-                                    }
-                                }
-
-                                progressDialog.setTitle("Extracting Fragment Ions - Modified. Please Wait...");
-                                progressDialog.setMax(modifiedCounter);
-                                progressDialog.setValue(0);
-
-                                modifiedCounter = 0;
-
-                                // add the modified sequences
-                                for (int j = 0; j < currentIdentifications.size() && !cancelProgress; j++) {
-
-                                    ReducedIdentification currentId = currentIdentifications.get(j);
-
-                                    if (currentId.getModifiedSequence().equalsIgnoreCase(currentModifiedSequence)) {
-
-                                        progressDialog.setValue(modifiedCounter + 1);
-
-                                        if (currentDataSetIsFromMsLims) {
-                                            // get all modified b fragments
-                                            getAllFragmentsFromMsLims(currentId, bModIntensities, modifiedCounter, B_ION);
-
-                                            // get all modified y fragments
-                                            getAllFragmentsFromMsLims(currentId, yModIntensities, modifiedCounter, Y_ION);
-                                        } else {
-                                            // get all modified b fragments
-                                            getAllFragmentsFromFragmentIonsFile(currentId, bModIntensities, modifiedCounter, "b");
-
-                                            // get all modified y fragments
-                                            getAllFragmentsFromFragmentIonsFile(currentId, yModIntensities, modifiedCounter, "y");
-                                        }
-
-                                        modifiedCounter++;
-                                    }
-                                }
-
-                                progressDialog.setIntermidiate(true);
-                                progressDialog.setString("(" + (i + 1) + "/" + currentlySelectedRowsInSearchTable.size() + ")");
-                                progressDialog.setTitle("Creating Box Plot. Please Wait...");
-
-                                // lists of all non null b and y values
-                                ArrayList<Double> nonNullBUnmodValues = new ArrayList<Double>();
-                                ArrayList<Double> nonNullBModValues = new ArrayList<Double>();
-                                ArrayList<Double> nonNullYUnmodValues = new ArrayList<Double>();
-                                ArrayList<Double> nonNullYModValues = new ArrayList<Double>();
-
-                                for (int k = 0; k < yUnmodIntensities.length; k++) {
-
-                                    nonNullBUnmodValues = new ArrayList<Double>();
-                                    nonNullBModValues = new ArrayList<Double>();
-                                    nonNullYUnmodValues = new ArrayList<Double>();
-                                    nonNullYModValues = new ArrayList<Double>();
-
-                                    // get the list of non null b and y values, and get the average values
-                                    // NB: the y fragments are flipped in the returned lists to make it
-                                    //     easier to compare b and y ions in the same plot, i.e. y 1 becomes y n,
-                                    //     y 2 becomes y (n-1), etc.
-                                    double averageBUnmodValue = getNonNullBFragments(nonNullBUnmodValues, bUnmodIntensities, k);
-                                    double averageBModValue = getNonNullBFragments(nonNullBModValues, bModIntensities, k);
-                                    double averageYUnmodValue = getNonNullYFragments(nonNullYUnmodValues, yUnmodIntensities, k);
-                                    double averageYModValue = getNonNullYFragments(nonNullYModValues, yModIntensities, k);
-
-                                    String currentCategory = "" + currentSequence.charAt(k) + (k + 1);
-
-                                    // add the b ions to the box plot data set
-                                    double[] bUnmodValues = addValuesToBoxPlot(dataSet, nonNullBUnmodValues, "b ions - unmod.",
-                                            currentCategory);
-                                    double[] bModValues = addValuesToBoxPlot(dataSet, nonNullBModValues, "b ions - mod.",
-                                            currentCategory);
-
-                                    // add the y ions to the box plot data set
-                                    double[] yUnmodValues = addValuesToBoxPlot(dataSet, nonNullYUnmodValues, "y ions - unmod.",
-                                            currentCategory);
-                                    double[] yModValues = addValuesToBoxPlot(dataSet, nonNullYModValues, "y ions - mod.",
-                                            currentCategory);
-                                }
-                            } else {
-                                ArrayList<ReducedIdentification> currentIdentifications = identificationMap.get(currentModifiedSequence);
-
-                                double[][] bIntensities = new double[currentSequence.length()][currentIdentifications.size()];
-                                double[][] yIntensities = new double[currentSequence.length()][currentIdentifications.size()];
-
-                                progressDialog.setTitle("Extracting Fragment Ions. Please Wait...");
-                                progressDialog.setMax(currentIdentifications.size());
-                                progressDialog.setValue(0);
-
-                                // get all b and y fragment ions and store them in
-                                // the bIntensities and yIntensities tables, one row per identification
-                                for (int j = 0; j < currentIdentifications.size() && !cancelProgress; j++) {
-
-                                    progressDialog.setValue(j);
-
-                                    if (currentDataSetIsFromMsLims) {
-                                        // get all b fragments
-                                        getAllFragmentsFromMsLims(currentIdentifications.get(j), bIntensities, j, B_ION);
-
-                                        // get all y fragments
-                                        getAllFragmentsFromMsLims(currentIdentifications.get(j), yIntensities, j, Y_ION);
-                                    } else {
-                                        // get all b fragments
-                                        getAllFragmentsFromFragmentIonsFile(currentIdentifications.get(j), bIntensities, j, "b");
-
-                                        // get all y fragments
-                                        getAllFragmentsFromFragmentIonsFile(currentIdentifications.get(j), yIntensities, j, "y");
-                                    }
-                                }
-
-                                progressDialog.setIntermidiate(true);
-                                progressDialog.setString("(" + (i + 1) + "/" + currentlySelectedRowsInSearchTable.size() + ")");
-                                progressDialog.setTitle("Creating Box Plot. Please Wait...");
-
-                                // lists of all non null B and Y values
-                                ArrayList<Double> nonNullBValues = new ArrayList<Double>();
-                                ArrayList<Double> nonNullYValues = new ArrayList<Double>();
-
-                                for (int k = 0; k < yIntensities.length; k++) {
-
-                                    nonNullBValues = new ArrayList<Double>();
-                                    nonNullYValues = new ArrayList<Double>();
-
-                                    // get the list of non null b and y values, and get the average values
-                                    // NB: the y fragments are flipped in the returned lists to make it
-                                    //     easier to compare b and y ions in the same plot, i.e. y 1 becomes y n,
-                                    //     y 2 becomes y (n-1), etc.
-                                    double averageBValue = getNonNullBFragments(nonNullBValues, bIntensities, k);
-                                    double averageYValue = getNonNullYFragments(nonNullYValues, yIntensities, k);
-
-                                    // add the b ions to the box plot data set
-                                    double[] bValues = addValuesToBoxPlot(dataSet, nonNullBValues, "b ions",
-                                            "" + currentSequence.charAt(k) + (k + 1));
-
-                                    // add the y ions to the box plot data set
-                                    double[] yValues = addValuesToBoxPlot(dataSet, nonNullYValues, "y ions",
-                                            "" + currentSequence.charAt(k) + (k + 1));
-                                }
-                            }
-
-                            CategoryPlot plot = getCategoryPlot(dataSet);
-
-                            // add a category marker for the modified residue
-                            if (!singleSearch) {
-                                addModificationMarker(currentModifiedSequence, plot);
-                            }
-
-                            if (!cancelProgress) {
-                                JFreeChart chart = new JFreeChart(
-                                        null,
-                                        new Font("SansSerif", Font.BOLD, 10),
-                                        plot,
-                                        true);
-
-                                chart.getLegend().setItemFont(new Font("SansSerif", Font.PLAIN, 10));
-                                chart.getLegend().setPosition(RectangleEdge.BOTTOM);
-
-                                ChartPanel chartPanel = new ChartPanel(chart);
-
-                                String internalFrameTitle = "" + currentModifiedSequence;
-                                String plotType = "BoxPlot";
-
-                                // if modification_search add number of unmodified and modifed spectra to title
-                                if (!singleSearch) {
-                                    internalFrameTitle += " (" + unmodifiedCounter + " u/" + modifiedCounter + " m)";
-                                    plotType = "BoxPlot_modification";
-                                }
-
-                                FragmentationAnalyzerJInternalFrame internalFrame = new FragmentationAnalyzerJInternalFrame(
-                                        internalFrameTitle, true, true, true, plotType, internalFrameUniqueIdCounter);
-                                internalFrame.add(chartPanel);
-
-                                insertInternalFrame(internalFrame);
-                                allChartFrames.put(internalFrameUniqueIdCounter, chart);
-                                internalFrameUniqueIdCounter++;
-
-                                // update the visible box plot fragment ion selection
-                                updateVisibleFragmentIonBoxPlotSelection();
-                            }
-                        }
-                    } catch (SQLException e) {
-                        JOptionPane.showMessageDialog(null,
-                                "An error occured when accessing the database.\n" +
-                                "See ../Properties/ErrorLog.txt for more details.",
-                                "Error Accessing Database", JOptionPane.ERROR_MESSAGE);
-                        Util.writeToErrorLog("Error when extracing fragment ions: ");
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        JOptionPane.showMessageDialog(null,
-                                "An error occured when building a box plot.\n" +
-                                "See ../Properties/ErrorLog.txt for more details.",
-                                "Error Building Box Plot", JOptionPane.ERROR_MESSAGE);
-                        Util.writeToErrorLog("Error when building box plot: ");
-                        e.printStackTrace();
-                    }
-                } else if (searchResultsJComboBox.getSelectedIndex() == SEARCH_RESULTS_MASS_ERROR_SCATTER_PLOT ||
-                        searchResultsJComboBox.getSelectedIndex() == SEARCH_RESULTS_MASS_ERROR_BUBBLE_PLOT) {
-
-                    boolean isBubblePlot = false;
-
-                    if (searchResultsJComboBox.getSelectedIndex() == SEARCH_RESULTS_MASS_ERROR_BUBBLE_PLOT) {
-                        isBubblePlot = true;
-                    }
-
-                    int bubbleScaling = userProperties.getDefaultBubbleScaling();
-
-                    if (daOrPpmSearchResultsJComboBox.getSelectedIndex() == 1 && isBubblePlot) {
-                        bubbleScaling = userProperties.getPpmBubbleScaling();
-                    }
-
-
-                    plotsAnalysesJXTaskPane.setExpanded(true);
-                    searchResultsJXTaskPane.setExpanded(false);
-                    spectraJXTaskPane.setExpanded(false);
-
-                    HashMap<String, ArrayList<XYZDataPoint>> data = new HashMap<String, ArrayList<XYZDataPoint>>();
-
-                    for (int i = 0; i < currentlySelectedRowsInSearchTable.size() && !cancelProgress; i++) {
-
-                        try {
 
                             progressDialog.setString("" + (i + 1) + "/" + currentlySelectedRowsInSearchTable.size());
-                            int localCounter = 0;
 
-                            IdentificationTableRow currentlySelectedRow = currentlySelectedRowsInSearchTable.get(i);
-                            String currentSequence = currentlySelectedRow.getSequence();
-                            String currentModifiedSequence = currentlySelectedRow.getModifiedSequence();
+                            int localCounter = 0;
 
                             // check for search type. if count 2 exists there are more than one id per line
                             if (!singleSearch) {
@@ -3042,9 +2658,18 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                     ReducedIdentification currentId = currentIdentifications.get(j);
 
                                     if (!currentId.isModified()) {
-                                        addFragmentIonsToXYZPlotDataSeries(data, currentId, isBubblePlot, bubbleScaling, isBubblePlot,
-                                                daOrPpmSearchResultsJComboBox.getSelectedIndex() == 1);
+
                                         progressDialog.setValue(++localCounter);
+
+                                        ((DefaultTableModel) spectraJXTable.getModel()).insertRow(rowCounter++,
+                                                new Object[]{rowCounter,
+                                                    currentId.getIdentificationId(),
+                                                    currentId.getSpectrumFileId(),
+                                                    currentId.getSequence(),
+                                                    currentId.getModifiedSequence(),
+                                                    currentId.getInstrumentName(),
+                                                    new Boolean(false)
+                                                });
                                     }
                                 }
 
@@ -3054,77 +2679,464 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                     ReducedIdentification currentId = currentIdentifications.get(j);
 
                                     if (currentId.getModifiedSequence().equalsIgnoreCase(currentModifiedSequence)) {
-                                        addFragmentIonsToXYZPlotDataSeries(data, currentId, isBubblePlot, bubbleScaling, isBubblePlot,
-                                                daOrPpmSearchResultsJComboBox.getSelectedIndex() == 1);
+
                                         progressDialog.setValue(++localCounter);
+
+                                        ((DefaultTableModel) spectraJXTable.getModel()).insertRow(rowCounter++,
+                                                new Object[]{rowCounter,
+                                                    currentId.getIdentificationId(),
+                                                    currentId.getSpectrumFileId(),
+                                                    currentId.getSequence(),
+                                                    currentId.getModifiedSequence(),
+                                                    currentId.getInstrumentName(),
+                                                    new Boolean(false)
+                                                });
                                     }
                                 }
                             } else {
+                                ArrayList<ReducedIdentification> currentIdentifications = identificationMap.get(currentModifiedSequence);
 
                                 progressDialog.setMax(currentlySelectedRow.getCountA());
                                 progressDialog.setValue(localCounter);
 
-                                ArrayList<ReducedIdentification> currentIdentifications = identificationMap.get(currentModifiedSequence);
-
                                 for (int j = 0; j < currentIdentifications.size() && !cancelProgress; j++) {
+
                                     ReducedIdentification currentId = currentIdentifications.get(j);
-                                    addFragmentIonsToXYZPlotDataSeries(data, currentId, isBubblePlot, bubbleScaling, isBubblePlot,
-                                            daOrPpmSearchResultsJComboBox.getSelectedIndex() == 1);
+
                                     progressDialog.setValue(++localCounter);
+
+                                    ((DefaultTableModel) spectraJXTable.getModel()).insertRow(rowCounter++,
+                                            new Object[]{rowCounter,
+                                                currentId.getIdentificationId(),
+                                                currentId.getSpectrumFileId(),
+                                                currentId.getSequence(),
+                                                currentId.getModifiedSequence(),
+                                                currentId.getInstrumentName(),
+                                                new Boolean(false)
+                                            });
                                 }
                             }
+                        }
 
-                            // if single plot is selected create the plot now
-                            if (combineSearchResultsJComboBox.getSelectedIndex() == 0) {
+                        if (!cancelProgress) {
+                            spectraJXTable.setRowSelectionInterval(0, 0);
+                            resultsJScrollPane.getVerticalScrollBar().setValue(0);
+                        } else {
+                            ((DefaultTableModel) spectraJXTable.getModel()).setRowCount(0);
+                            currentlySelectedRowsInSpectraTable = new ArrayList<SpectrumTableRow>();
+                            selectAllSpectra = true;
+                            spectraJComboBoxActionPerformed(null);
+                        }
+                    } else if (searchResultsJComboBox.getSelectedIndex() == SEARCH_RESULTS_INTENSITY_BOX_PLOT) {
 
-                                String internalFrameTitle = "Mass Error Plot";
+                        plotsAnalysesJXTaskPane.setExpanded(true);
+                        searchResultsJXTaskPane.setExpanded(false);
+                        spectraJXTaskPane.setExpanded(false);
 
-                                if (singleSearch) {
-                                    internalFrameTitle = currentModifiedSequence +
-                                            " (" + currentlySelectedRow.getCountA() + ")";
+                        normalize = true;
+
+                        try {
+
+                            for (int i = 0; i < currentlySelectedRowsInSearchTable.size() && !cancelProgress; i++) {
+
+                                progressDialog.setIntermidiate(false);
+                                progressDialog.setTitle("Running Analysis. Please Wait...");
+                                progressDialog.setValue(i + 1);
+                                progressDialog.setString("(" + (i + 1) + "/" + currentlySelectedRowsInSearchTable.size() + ")");
+
+                                IdentificationTableRow currentlySelectedRow = currentlySelectedRowsInSearchTable.get(i);
+                                String currentSequence = currentlySelectedRow.getSequence();
+                                String currentModifiedSequence = currentlySelectedRow.getModifiedSequence();
+
+                                DefaultBoxAndWhiskerCategoryDataset dataSet = new DefaultBoxAndWhiskerCategoryDataset();
+
+                                int unmodifiedCounter = 0;
+                                int modifiedCounter = 0;
+
+                                // check for search type
+                                if (!singleSearch) {
+
+                                    ArrayList<ReducedIdentification> currentIdentifications = identificationMap.get(currentSequence);
+
+                                    unmodifiedCounter = 0;
+                                    modifiedCounter = 0;
+
+                                    // find the number of unmodified sequence
+                                    for (int j = 0; j < currentIdentifications.size(); j++) {
+                                        ReducedIdentification currentId = currentIdentifications.get(j);
+
+                                        if (!currentId.isModified()) {
+                                            unmodifiedCounter++;
+                                        }
+                                    }
+
+                                    // find the number of modified sequences
+                                    for (int j = 0; j < currentIdentifications.size(); j++) {
+                                        ReducedIdentification currentId = currentIdentifications.get(j);
+
+                                        if (currentId.getModifiedSequence().equalsIgnoreCase(currentModifiedSequence)) {
+                                            modifiedCounter++;
+                                        }
+                                    }
+
+                                    double[][] bUnmodIntensities = new double[currentSequence.length()][unmodifiedCounter];
+                                    double[][] bModIntensities = new double[currentSequence.length()][modifiedCounter];
+                                    double[][] yUnmodIntensities = new double[currentSequence.length()][unmodifiedCounter];
+                                    double[][] yModIntensities = new double[currentSequence.length()][modifiedCounter];
+
+                                    progressDialog.setTitle("Extracting Fragment Ions - Unmodifed. Please Wait...");
+                                    progressDialog.setMax(unmodifiedCounter);
+                                    progressDialog.setValue(0);
+
+                                    unmodifiedCounter = 0;
+
+                                    // add the unmodified sequences
+                                    for (int j = 0; j < currentIdentifications.size() && !cancelProgress; j++) {
+
+                                        ReducedIdentification currentId = currentIdentifications.get(j);
+
+                                        if (!currentId.isModified()) {
+
+                                            progressDialog.setValue(unmodifiedCounter + 1);
+
+                                            if (currentDataSetIsFromMsLims) {
+                                                // get all unmodified b fragments
+                                                getAllFragmentsFromMsLims(currentId, bUnmodIntensities, unmodifiedCounter, B_ION);
+
+                                                // get all unmodified y fragments
+                                                getAllFragmentsFromMsLims(currentId, yUnmodIntensities, unmodifiedCounter, Y_ION);
+                                            } else {
+                                                // get all unmodified b fragments
+                                                getAllFragmentsFromFragmentIonsFile(currentId, bUnmodIntensities, unmodifiedCounter, "b");
+
+                                                // get all unmodified y fragments
+                                                getAllFragmentsFromFragmentIonsFile(currentId, yUnmodIntensities, unmodifiedCounter, "y");
+                                            }
+
+                                            unmodifiedCounter++;
+                                        }
+                                    }
+
+                                    progressDialog.setTitle("Extracting Fragment Ions - Modified. Please Wait...");
+                                    progressDialog.setMax(modifiedCounter);
+                                    progressDialog.setValue(0);
+
+                                    modifiedCounter = 0;
+
+                                    // add the modified sequences
+                                    for (int j = 0; j < currentIdentifications.size() && !cancelProgress; j++) {
+
+                                        ReducedIdentification currentId = currentIdentifications.get(j);
+
+                                        if (currentId.getModifiedSequence().equalsIgnoreCase(currentModifiedSequence)) {
+
+                                            progressDialog.setValue(modifiedCounter + 1);
+
+                                            if (currentDataSetIsFromMsLims) {
+                                                // get all modified b fragments
+                                                getAllFragmentsFromMsLims(currentId, bModIntensities, modifiedCounter, B_ION);
+
+                                                // get all modified y fragments
+                                                getAllFragmentsFromMsLims(currentId, yModIntensities, modifiedCounter, Y_ION);
+                                            } else {
+                                                // get all modified b fragments
+                                                getAllFragmentsFromFragmentIonsFile(currentId, bModIntensities, modifiedCounter, "b");
+
+                                                // get all modified y fragments
+                                                getAllFragmentsFromFragmentIonsFile(currentId, yModIntensities, modifiedCounter, "y");
+                                            }
+
+                                            modifiedCounter++;
+                                        }
+                                    }
+
+                                    progressDialog.setIntermidiate(true);
+                                    progressDialog.setString("(" + (i + 1) + "/" + currentlySelectedRowsInSearchTable.size() + ")");
+                                    progressDialog.setTitle("Creating Box Plot. Please Wait...");
+
+                                    // lists of all non null b and y values
+                                    ArrayList<Double> nonNullBUnmodValues = new ArrayList<Double>();
+                                    ArrayList<Double> nonNullBModValues = new ArrayList<Double>();
+                                    ArrayList<Double> nonNullYUnmodValues = new ArrayList<Double>();
+                                    ArrayList<Double> nonNullYModValues = new ArrayList<Double>();
+
+                                    for (int k = 0; k < yUnmodIntensities.length; k++) {
+
+                                        nonNullBUnmodValues = new ArrayList<Double>();
+                                        nonNullBModValues = new ArrayList<Double>();
+                                        nonNullYUnmodValues = new ArrayList<Double>();
+                                        nonNullYModValues = new ArrayList<Double>();
+
+                                        // get the list of non null b and y values, and get the average values
+                                        // NB: the y fragments are flipped in the returned lists to make it
+                                        //     easier to compare b and y ions in the same plot, i.e. y 1 becomes y n,
+                                        //     y 2 becomes y (n-1), etc.
+                                        double averageBUnmodValue = getNonNullBFragments(nonNullBUnmodValues, bUnmodIntensities, k);
+                                        double averageBModValue = getNonNullBFragments(nonNullBModValues, bModIntensities, k);
+                                        double averageYUnmodValue = getNonNullYFragments(nonNullYUnmodValues, yUnmodIntensities, k);
+                                        double averageYModValue = getNonNullYFragments(nonNullYModValues, yModIntensities, k);
+
+                                        String currentCategory = "" + currentSequence.charAt(k) + (k + 1);
+
+                                        // add the b ions to the box plot data set
+                                        double[] bUnmodValues = addValuesToBoxPlot(dataSet, nonNullBUnmodValues, "b ions - unmod.",
+                                                currentCategory);
+                                        double[] bModValues = addValuesToBoxPlot(dataSet, nonNullBModValues, "b ions - mod.",
+                                                currentCategory);
+
+                                        // add the y ions to the box plot data set
+                                        double[] yUnmodValues = addValuesToBoxPlot(dataSet, nonNullYUnmodValues, "y ions - unmod.",
+                                                currentCategory);
+                                        double[] yModValues = addValuesToBoxPlot(dataSet, nonNullYModValues, "y ions - mod.",
+                                                currentCategory);
+                                    }
                                 } else {
-                                    internalFrameTitle = currentModifiedSequence +
-                                            " (" + currentlySelectedRow.getCountA() + " u/" +
-                                            currentlySelectedRow.getCountB() + " m)";
+                                    ArrayList<ReducedIdentification> currentIdentifications = identificationMap.get(currentModifiedSequence);
+
+                                    double[][] bIntensities = new double[currentSequence.length()][currentIdentifications.size()];
+                                    double[][] yIntensities = new double[currentSequence.length()][currentIdentifications.size()];
+
+                                    progressDialog.setTitle("Extracting Fragment Ions. Please Wait...");
+                                    progressDialog.setMax(currentIdentifications.size());
+                                    progressDialog.setValue(0);
+
+                                    // get all b and y fragment ions and store them in
+                                    // the bIntensities and yIntensities tables, one row per identification
+                                    for (int j = 0; j < currentIdentifications.size() && !cancelProgress; j++) {
+
+                                        progressDialog.setValue(j);
+
+                                        if (currentDataSetIsFromMsLims) {
+                                            // get all b fragments
+                                            getAllFragmentsFromMsLims(currentIdentifications.get(j), bIntensities, j, B_ION);
+
+                                            // get all y fragments
+                                            getAllFragmentsFromMsLims(currentIdentifications.get(j), yIntensities, j, Y_ION);
+                                        } else {
+                                            // get all b fragments
+                                            getAllFragmentsFromFragmentIonsFile(currentIdentifications.get(j), bIntensities, j, "b");
+
+                                            // get all y fragments
+                                            getAllFragmentsFromFragmentIonsFile(currentIdentifications.get(j), yIntensities, j, "y");
+                                        }
+                                    }
+
+                                    progressDialog.setIntermidiate(true);
+                                    progressDialog.setString("(" + (i + 1) + "/" + currentlySelectedRowsInSearchTable.size() + ")");
+                                    progressDialog.setTitle("Creating Box Plot. Please Wait...");
+
+                                    // lists of all non null B and Y values
+                                    ArrayList<Double> nonNullBValues = new ArrayList<Double>();
+                                    ArrayList<Double> nonNullYValues = new ArrayList<Double>();
+
+                                    for (int k = 0; k < yIntensities.length; k++) {
+
+                                        nonNullBValues = new ArrayList<Double>();
+                                        nonNullYValues = new ArrayList<Double>();
+
+                                        // get the list of non null b and y values, and get the average values
+                                        // NB: the y fragments are flipped in the returned lists to make it
+                                        //     easier to compare b and y ions in the same plot, i.e. y 1 becomes y n,
+                                        //     y 2 becomes y (n-1), etc.
+                                        double averageBValue = getNonNullBFragments(nonNullBValues, bIntensities, k);
+                                        double averageYValue = getNonNullYFragments(nonNullYValues, yIntensities, k);
+
+                                        // add the b ions to the box plot data set
+                                        double[] bValues = addValuesToBoxPlot(dataSet, nonNullBValues, "b ions",
+                                                "" + currentSequence.charAt(k) + (k + 1));
+
+                                        // add the y ions to the box plot data set
+                                        double[] yValues = addValuesToBoxPlot(dataSet, nonNullYValues, "y ions",
+                                                "" + currentSequence.charAt(k) + (k + 1));
+                                    }
                                 }
 
-                                insertMassErrorPlot(isBubblePlot, data, internalFrameTitle,
-                                        daOrPpmSearchResultsJComboBox.getSelectedIndex() == 1);
+                                CategoryPlot plot = getCategoryPlot(dataSet);
 
-                                data = new HashMap<String, ArrayList<XYZDataPoint>>();
+                                // add a category marker for the modified residue
+                                if (!singleSearch) {
+                                    addModificationMarker(currentModifiedSequence, plot);
+                                }
+
+                                if (!cancelProgress) {
+                                    JFreeChart chart = new JFreeChart(
+                                            null,
+                                            new Font("SansSerif", Font.BOLD, 10),
+                                            plot,
+                                            true);
+
+                                    chart.getLegend().setItemFont(new Font("SansSerif", Font.PLAIN, 10));
+                                    chart.getLegend().setPosition(RectangleEdge.BOTTOM);
+
+                                    ChartPanel chartPanel = new ChartPanel(chart);
+
+                                    String internalFrameTitle = "" + currentModifiedSequence;
+                                    String plotType = "BoxPlot";
+
+                                    // if modification_search add number of unmodified and modifed spectra to title
+                                    if (!singleSearch) {
+                                        internalFrameTitle += " (" + unmodifiedCounter + " u/" + modifiedCounter + " m)";
+                                        plotType = "BoxPlot_modification";
+                                    }
+
+                                    FragmentationAnalyzerJInternalFrame internalFrame = new FragmentationAnalyzerJInternalFrame(
+                                            internalFrameTitle, true, true, true, plotType, internalFrameUniqueIdCounter);
+                                    internalFrame.add(chartPanel);
+
+                                    insertInternalFrame(internalFrame);
+                                    allChartFrames.put(internalFrameUniqueIdCounter, chart);
+                                    internalFrameUniqueIdCounter++;
+
+                                    // update the visible box plot fragment ion selection
+                                    updateVisibleFragmentIonBoxPlotSelection();
+                                }
                             }
-
-                        } catch (IOException e) {
-                            JOptionPane.showMessageDialog(null,
-                                    "An error occured when trying to create a plot.\n" +
-                                    "See ../Properties/ErrorLog.txt for more details.",
-                                    "Error Creating Plot", JOptionPane.ERROR_MESSAGE);
-                            Util.writeToErrorLog("Error when creating plot: ");
-                            e.printStackTrace();
                         } catch (SQLException e) {
                             JOptionPane.showMessageDialog(null,
                                     "An error occured when accessing the database.\n" +
                                     "See ../Properties/ErrorLog.txt for more details.",
                                     "Error Accessing Database", JOptionPane.ERROR_MESSAGE);
-                            Util.writeToErrorLog("Error when accessing databse: ");
+                            Util.writeToErrorLog("Error when extracing fragment ions: ");
                             e.printStackTrace();
+                        } catch (IOException e) {
+                            JOptionPane.showMessageDialog(null,
+                                    "An error occured when building a box plot.\n" +
+                                    "See ../Properties/ErrorLog.txt for more details.",
+                                    "Error Building Box Plot", JOptionPane.ERROR_MESSAGE);
+                            Util.writeToErrorLog("Error when building box plot: ");
+                            e.printStackTrace();
+                        }
+                    } else if (searchResultsJComboBox.getSelectedIndex() == SEARCH_RESULTS_MASS_ERROR_SCATTER_PLOT ||
+                            searchResultsJComboBox.getSelectedIndex() == SEARCH_RESULTS_MASS_ERROR_BUBBLE_PLOT) {
+
+                        boolean isBubblePlot = false;
+
+                        if (searchResultsJComboBox.getSelectedIndex() == SEARCH_RESULTS_MASS_ERROR_BUBBLE_PLOT) {
+                            isBubblePlot = true;
+                        }
+
+                        int bubbleScaling = userProperties.getDefaultBubbleScaling();
+
+                        if (daOrPpmSearchResultsJComboBox.getSelectedIndex() == 1 && isBubblePlot) {
+                            bubbleScaling = userProperties.getPpmBubbleScaling();
+                        }
+
+
+                        plotsAnalysesJXTaskPane.setExpanded(true);
+                        searchResultsJXTaskPane.setExpanded(false);
+                        spectraJXTaskPane.setExpanded(false);
+
+                        HashMap<String, ArrayList<XYZDataPoint>> data = new HashMap<String, ArrayList<XYZDataPoint>>();
+
+                        for (int i = 0; i < currentlySelectedRowsInSearchTable.size() && !cancelProgress; i++) {
+
+                            try {
+
+                                progressDialog.setString("" + (i + 1) + "/" + currentlySelectedRowsInSearchTable.size());
+                                int localCounter = 0;
+
+                                IdentificationTableRow currentlySelectedRow = currentlySelectedRowsInSearchTable.get(i);
+                                String currentSequence = currentlySelectedRow.getSequence();
+                                String currentModifiedSequence = currentlySelectedRow.getModifiedSequence();
+
+                                // check for search type. if count 2 exists there are more than one id per line
+                                if (!singleSearch) {
+
+                                    progressDialog.setMax(currentlySelectedRow.getCountA() + currentlySelectedRow.getCountB());
+                                    progressDialog.setValue(localCounter);
+
+                                    ArrayList<ReducedIdentification> currentIdentifications = identificationMap.get(currentSequence);
+
+                                    // add the unmodified sequences
+                                    for (int j = 0; j < currentIdentifications.size() && !cancelProgress; j++) {
+
+                                        ReducedIdentification currentId = currentIdentifications.get(j);
+
+                                        if (!currentId.isModified()) {
+                                            addFragmentIonsToXYZPlotDataSeries(data, currentId, isBubblePlot, bubbleScaling, isBubblePlot,
+                                                    daOrPpmSearchResultsJComboBox.getSelectedIndex() == 1);
+                                            progressDialog.setValue(++localCounter);
+                                        }
+                                    }
+
+                                    // add the modified sequences
+                                    for (int j = 0; j < currentIdentifications.size() && !cancelProgress; j++) {
+
+                                        ReducedIdentification currentId = currentIdentifications.get(j);
+
+                                        if (currentId.getModifiedSequence().equalsIgnoreCase(currentModifiedSequence)) {
+                                            addFragmentIonsToXYZPlotDataSeries(data, currentId, isBubblePlot, bubbleScaling, isBubblePlot,
+                                                    daOrPpmSearchResultsJComboBox.getSelectedIndex() == 1);
+                                            progressDialog.setValue(++localCounter);
+                                        }
+                                    }
+                                } else {
+
+                                    progressDialog.setMax(currentlySelectedRow.getCountA());
+                                    progressDialog.setValue(localCounter);
+
+                                    ArrayList<ReducedIdentification> currentIdentifications = identificationMap.get(currentModifiedSequence);
+
+                                    for (int j = 0; j < currentIdentifications.size() && !cancelProgress; j++) {
+                                        ReducedIdentification currentId = currentIdentifications.get(j);
+                                        addFragmentIonsToXYZPlotDataSeries(data, currentId, isBubblePlot, bubbleScaling, isBubblePlot,
+                                                daOrPpmSearchResultsJComboBox.getSelectedIndex() == 1);
+                                        progressDialog.setValue(++localCounter);
+                                    }
+                                }
+
+                                // if single plot is selected create the plot now
+                                if (combineSearchResultsJComboBox.getSelectedIndex() == 0) {
+
+                                    String internalFrameTitle = "Mass Error Plot";
+
+                                    if (singleSearch) {
+                                        internalFrameTitle = currentModifiedSequence +
+                                                " (" + currentlySelectedRow.getCountA() + ")";
+                                    } else {
+                                        internalFrameTitle = currentModifiedSequence +
+                                                " (" + currentlySelectedRow.getCountA() + " u/" +
+                                                currentlySelectedRow.getCountB() + " m)";
+                                    }
+
+                                    insertMassErrorPlot(isBubblePlot, data, internalFrameTitle,
+                                            daOrPpmSearchResultsJComboBox.getSelectedIndex() == 1);
+
+                                    data = new HashMap<String, ArrayList<XYZDataPoint>>();
+                                }
+
+                            } catch (IOException e) {
+                                JOptionPane.showMessageDialog(null,
+                                        "An error occured when trying to create a plot.\n" +
+                                        "See ../Properties/ErrorLog.txt for more details.",
+                                        "Error Creating Plot", JOptionPane.ERROR_MESSAGE);
+                                Util.writeToErrorLog("Error when creating plot: ");
+                                e.printStackTrace();
+                            } catch (SQLException e) {
+                                JOptionPane.showMessageDialog(null,
+                                        "An error occured when accessing the database.\n" +
+                                        "See ../Properties/ErrorLog.txt for more details.",
+                                        "Error Accessing Database", JOptionPane.ERROR_MESSAGE);
+                                Util.writeToErrorLog("Error when accessing databse: ");
+                                e.printStackTrace();
+                            }
+                        }
+
+                        // if combine plot is selected than create the plot now
+                        if (combineSearchResultsJComboBox.getSelectedIndex() == 1) {
+
+                            String internalFrameTitle = "Mass Error Plot";
+
+                            insertMassErrorPlot(isBubblePlot, data, internalFrameTitle,
+                                    daOrPpmSearchResultsJComboBox.getSelectedIndex() == 1);
                         }
                     }
 
-                    // if combine plot is selected than create the plot now
-                    if (combineSearchResultsJComboBox.getSelectedIndex() == 1) {
-
-                        String internalFrameTitle = "Mass Error Plot";
-
-                        insertMassErrorPlot(isBubblePlot, data, internalFrameTitle,
-                                daOrPpmSearchResultsJComboBox.getSelectedIndex() == 1);
-                    }
+                    progressDialog.setVisible(false);
+                    progressDialog.dispose();
                 }
-
-                progressDialog.setVisible(false);
-                progressDialog.dispose();
-            }
-        }.start();
+            }.start();
+        }
 
 }//GEN-LAST:event_searchResultsJButtonActionPerformed
 
@@ -3142,15 +3154,21 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         JFreeChart chart = null;
         ChartPanel chartPanel = null;
         String plotType = "";
+        
+        boolean showLegend = true;
+
+        if(currentLabelType == PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE_ALL){
+            showLegend = false;
+        }
 
         if (isBubblePlot) {
             DefaultXYZDataset dataset = addXYZDataSeries(data);
-            chart = getBubbleChart(dataset, usePpm);
+            chart = getBubbleChart(dataset, usePpm, showLegend);
             chartPanel = new ChartPanel(chart);
             plotType = "MassErrorBubblePlot";
         } else {
             DefaultXYDataset dataSet = addXYDataSeries(data);
-            chart = getScatterPlotChart(dataSet, usePpm);
+            chart = getScatterPlotChart(dataSet, usePpm, showLegend);
             chartPanel = new ChartPanel(chart);
             plotType = "MassErrorScatterPlot";
         }
@@ -3279,6 +3297,18 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                 double intensity = fragmentIons.get(j).getIntensity();
                 double massError = fragmentIons.get(j).getMassdelta().doubleValue();
 
+                String fragmentIonType = fragmentIons.get(j).getIonname();
+                int fragmentIonNumber = (int) fragmentIons.get(j).getFragmentionnumber();
+
+                if (fragmentIonType.startsWith("a") || fragmentIonType.startsWith("b") || fragmentIonType.startsWith("c") ||
+                        fragmentIonType.startsWith("x") || fragmentIonType.startsWith("y") || fragmentIonType.startsWith("z")) {
+                    if (fragmentIonType.length() > 1) {
+                        fragmentIonType = fragmentIonType.substring(0, 1) + "[" + fragmentIonNumber + "]" + fragmentIonType.substring(1);
+                    } else {
+                        fragmentIonType = fragmentIonType.substring(0, 1) + fragmentIonNumber;
+                    }
+                }
+
                 if (usePpmForMassError) {
                     massError = getPpmError(mzValue, massError);
                 }
@@ -3299,7 +3329,11 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                     intensity = intensity / totalIntensity;
                 }
 
-                addXYZDataPoint(data, currentIdentification.getInstrumentName(), switchYandZAxis, mzValue, massError, intensity, bubbleScaling);
+                if (currentLabelType == PLOT_LABEL_TYPE_INSTRUMENT) {
+                    addXYZDataPoint(data, currentIdentification.getInstrumentName(), switchYandZAxis, mzValue, massError, intensity, bubbleScaling);
+                } else if (currentLabelType == PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE_ALL) {
+                    addXYZDataPoint(data, fragmentIonType, switchYandZAxis, mzValue, massError, intensity, bubbleScaling);
+                }
             }
         } else {
             // get the fragment ions
@@ -3310,6 +3344,8 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                 double intensity = fragmentIons.get(k).getFragmentIonIntensity().doubleValue();
                 double massError = fragmentIons.get(k).getFragmentIonMassError().doubleValue();
 
+                String fragmentIonType = fragmentIons.get(k).getFragmentIonType();
+
                 if (usePpmForMassError) {
                     massError = getPpmError(mzValue, massError);
                 }
@@ -3319,8 +3355,12 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                     intensity = intensity / currentIdentification.getTotalIntensity();
                 }
 
-                addXYZDataPoint(data, currentIdentification.getInstrumentName(), switchYandZAxis, mzValue,
-                        massError, intensity, bubbleScaling);
+                if (currentLabelType == PLOT_LABEL_TYPE_INSTRUMENT) {
+                    addXYZDataPoint(data, currentIdentification.getInstrumentName(), switchYandZAxis, mzValue,
+                            massError, intensity, bubbleScaling);
+                } else if (currentLabelType == PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE_ALL) {
+                    addXYZDataPoint(data, fragmentIonType, switchYandZAxis, mzValue, massError, intensity, bubbleScaling);
+                }
             }
         }
     }
@@ -3363,9 +3403,11 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
      * Returns a scatter plot if tbe provided data set.
      *
      * @param dataSet
+     * @param usePpm if true ppm is used when plotting, otherwise Dalton is used
+     * @param showLegend if true the legend is visible
      * @return the created chart
      */
-    private JFreeChart getScatterPlotChart(DefaultXYDataset dataSet, boolean usePpm) {
+    private JFreeChart getScatterPlotChart(DefaultXYDataset dataSet, boolean usePpm, boolean showLegend) {
 
         NumberAxis xAxis = new NumberAxis();
         xAxis.setLabelFont(new Font("SansSerif", Font.PLAIN, 10));
@@ -3387,6 +3429,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
         DefaultXYItemRenderer renderer = new DefaultXYItemRenderer();
         renderer.setBaseLinesVisible(false);
+        renderer.setBaseToolTipGenerator(new StandardXYToolTipGenerator());
 
         XYPlot plot = new XYPlot(dataSet, xAxis, yAxis, renderer);
         plot.setForegroundAlpha(0.5f);
@@ -3398,6 +3441,10 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
         chart.setBackgroundPaint(new Color(225, 225, 225));
         chart.getLegend().setItemFont(new Font("SansSerif", Font.PLAIN, 10));
+
+        if (!showLegend) {
+            chart.removeLegend();
+        }
 
         return chart;
     }
@@ -3620,7 +3667,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
     /**
      * Starts the analysis type selected in the spectra anakysis combo box.
-     * Inserts the result into the analysis&/plot frame.
+     * Inserts the result into the analysis/plot frame.
      *
      * @param evt
      */
@@ -3628,188 +3675,197 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
         cancelProgress = false;
 
-        plotsAnalysesJXTaskPane.setExpanded(true);
-        searchResultsJXTaskPane.setExpanded(false);
-        spectraJXTaskPane.setExpanded(false);
-
-        progressDialog = new ProgressDialog(this, this, true);
-
-        new Thread(new Runnable() {
-
-            public void run() {
-                progressDialog.setIntermidiate(false);
-                progressDialog.setValue(0);
-                progressDialog.setTitle("Running Analysis. Please Wait...");
-                progressDialog.setVisible(true);
-            }
-        }, "ProgressDialog").start();
-
-        // Wait until progress dialog is visible.
-        //
-        // The following is not needed in Java 1.6, but seemed to be needed in 1.5.
-        //
-        // Not including the lines _used to_ result in a crash on Windows, but not anymore.
-        // Including the lines results in a crash on Linux and Mac.
-        if (System.getProperty("os.name").toLowerCase().lastIndexOf("windows") != -1) {
-            while (!progressDialog.isVisible()) {
-            }
+        // get the wanted label type from the user
+        if (spectraJComboBox.getSelectedIndex() == SPECTRA_MASS_ERROR_BUBBLE_PLOT ||
+                spectraJComboBox.getSelectedIndex() == SPECTRA_MASS_ERROR_SCATTER_PLOT) {
+            new PlotLabelSelection(this, true);
         }
 
-        new Thread("SpectraThread") {
+        if (!cancelProgress) {
 
-            @Override
-            public void run() {
+            plotsAnalysesJXTaskPane.setExpanded(true);
+            searchResultsJXTaskPane.setExpanded(false);
+            spectraJXTaskPane.setExpanded(false);
 
-                progressDialog.setMax(currentlySelectedRowsInSpectraTable.size());
+            progressDialog = new ProgressDialog(this, this, true);
 
-                resultsJScrollPane.getVerticalScrollBar().setValue(resultsJScrollPane.getVerticalScrollBar().getVisibleAmount());
+            new Thread(new Runnable() {
 
-                if (spectraJComboBox.getSelectedIndex() == SPECTRA_VIEW_SPECTRUM) {
+                public void run() {
+                    progressDialog.setIntermidiate(false);
+                    progressDialog.setValue(0);
+                    progressDialog.setTitle("Running Analysis. Please Wait...");
+                    progressDialog.setVisible(true);
+                }
+            }, "ProgressDialog").start();
 
-                    for (int i = 0; i < currentlySelectedRowsInSpectraTable.size() && !cancelProgress; i++) {
+            // Wait until progress dialog is visible.
+            //
+            // The following is not needed in Java 1.6, but seemed to be needed in 1.5.
+            //
+            // Not including the lines _used to_ result in a crash on Windows, but not anymore.
+            // Including the lines results in a crash on Linux and Mac.
+            if (System.getProperty("os.name").toLowerCase().lastIndexOf("windows") != -1) {
+                while (!progressDialog.isVisible()) {
+                }
+            }
 
-                        SpectrumTableRow currentRow = currentlySelectedRowsInSpectraTable.get(i);
-                        Integer currentId = currentRow.getIdentificationId();
-                        Integer currentSpectrumId = currentRow.getSpectrumId();
+            new Thread("SpectraThread") {
 
-                        String internalFrameTitle = currentRow.getModifiedSequence() + " (SID: " + currentSpectrumId + ")";
+                @Override
+                public void run() {
 
-                        progressDialog.setValue(i + 1);
+                    progressDialog.setMax(currentlySelectedRowsInSpectraTable.size());
 
-                        if (currentDataSetIsFromMsLims) {
+                    resultsJScrollPane.getVerticalScrollBar().setValue(resultsJScrollPane.getVerticalScrollBar().getVisibleAmount());
 
-                            try {
-                                // TODO could be replaced by a select that only extracts the file
-                                Spectrumfile spectrumFile = Spectrumfile.findFromID((long) currentSpectrumId, conn);
-                                Vector<Fragmention> fragmentIons = (Vector<Fragmention>) Fragmention.getAllFragmentions(conn, (long) currentId);
+                    if (spectraJComboBox.getSelectedIndex() == SPECTRA_VIEW_SPECTRUM) {
 
-                                FragmentationAnalyzerJInternalFrame internalFrame = new FragmentationAnalyzerJInternalFrame(
-                                        internalFrameTitle, true, true, true, "SpectrumPanel", internalFrameUniqueIdCounter);
-                                internalFrame.add(getSpectrumPanel(spectrumFile, fragmentIons));
+                        for (int i = 0; i < currentlySelectedRowsInSpectraTable.size() && !cancelProgress; i++) {
 
-                                insertInternalFrame(internalFrame);
-                                internalFrameUniqueIdCounter++;
+                            SpectrumTableRow currentRow = currentlySelectedRowsInSpectraTable.get(i);
+                            Integer currentId = currentRow.getIdentificationId();
+                            Integer currentSpectrumId = currentRow.getSpectrumId();
 
-                                // update the fragment ions
-                                aIonsJCheckBoxActionPerformed(null);
-
-                            } catch (SQLException e) {
-                                JOptionPane.showMessageDialog(
-                                        null, "An error occured when accesing the database." +
-                                        "See ../Properties/ErrorLog.txt for more details.",
-                                        "Error Accessing Database", JOptionPane.ERROR_MESSAGE);
-                                Util.writeToErrorLog("Error when accessing database: ");
-                                e.printStackTrace();
-                            } catch (IOException e) {
-                                JOptionPane.showMessageDialog(
-                                        null, "An error occured when trying to view a spectrum." +
-                                        "See ../Properties/ErrorLog.txt for more details.",
-                                        "Error Viewing Spectrum", JOptionPane.ERROR_MESSAGE);
-                                Util.writeToErrorLog("Error when trying to view a spectrum: ");
-                                e.printStackTrace();
-                            }
-                        } else {
-
-                            try {
-
-                                File spectrumFile = new File(getCurrentDataSetFolder() + "/spectra/" + currentSpectrumId + ".pkl");
-                                PKLFile pklFile = parsePKLFile(spectrumFile);
-
-                                // get the fragment ions
-                                ArrayList<FragmentIon> fragmentIons = getFragmentIons(currentSpectrumId, null);
-
-                                FragmentationAnalyzerJInternalFrame internalFrame = new FragmentationAnalyzerJInternalFrame(
-                                        internalFrameTitle, true, true, true, "SpectrumPanel", internalFrameUniqueIdCounter);
-                                internalFrame.add(getSpectrumPanel(pklFile, fragmentIons));
-
-                                insertInternalFrame(internalFrame);
-                                internalFrameUniqueIdCounter++;
-
-                                // update the fragment ions
-                                aIonsJCheckBoxActionPerformed(null);
-
-                            } catch (IOException e) {
-                                JOptionPane.showMessageDialog(
-                                        null, "An error occured when trying to view a spectrum." +
-                                        "See ../Properties/ErrorLog.txt for more details.",
-                                        "Error Viewing Spectrum", JOptionPane.ERROR_MESSAGE);
-                                Util.writeToErrorLog("Error when trying to view a spectrum: ");
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-                } else if (spectraJComboBox.getSelectedIndex() == SPECTRA_MASS_ERROR_BUBBLE_PLOT ||
-                        spectraJComboBox.getSelectedIndex() == SPECTRA_MASS_ERROR_SCATTER_PLOT) {
-
-                    boolean isBubblePlot = false;
-
-                    if (spectraJComboBox.getSelectedIndex() == SPECTRA_MASS_ERROR_BUBBLE_PLOT) {
-                        isBubblePlot = true;
-                    }
-
-                    int bubbleScaling = userProperties.getDefaultBubbleScaling();
-
-                    if (daOrPpmSpectraJComboBox.getSelectedIndex() == 1 && isBubblePlot) {
-                        bubbleScaling = userProperties.getPpmBubbleScaling();
-                    }
-
-                    HashMap<String, ArrayList<XYZDataPoint>> data = new HashMap<String, ArrayList<XYZDataPoint>>();
-
-                    for (int i = 0; i < currentlySelectedRowsInSpectraTable.size() && !cancelProgress; i++) {
-
-                        try {
-                            Integer currentId = currentlySelectedRowsInSpectraTable.get(i).getIdentificationId();
-                            ReducedIdentification currentIdentification = allIdentifications.get(currentId);
+                            String internalFrameTitle = currentRow.getModifiedSequence() + " (SID: " + currentSpectrumId + ")";
 
                             progressDialog.setValue(i + 1);
 
-                            addFragmentIonsToXYZPlotDataSeries(data, currentIdentification, isBubblePlot, bubbleScaling, isBubblePlot,
-                                    daOrPpmSpectraJComboBox.getSelectedIndex() == 1);
+                            if (currentDataSetIsFromMsLims) {
 
+                                try {
+                                    // TODO could be replaced by a select that only extracts the file
+                                    Spectrumfile spectrumFile = Spectrumfile.findFromID((long) currentSpectrumId, conn);
+                                    Vector<Fragmention> fragmentIons = (Vector<Fragmention>) Fragmention.getAllFragmentions(conn, (long) currentId);
 
-                            // if not combine create plot
-                            if (combineSpectraJComboBox.getSelectedIndex() == 0) {
+                                    FragmentationAnalyzerJInternalFrame internalFrame = new FragmentationAnalyzerJInternalFrame(
+                                            internalFrameTitle, true, true, true, "SpectrumPanel", internalFrameUniqueIdCounter);
+                                    internalFrame.add(getSpectrumPanel(spectrumFile, fragmentIons));
 
-                                String internalFrameTitle = currentIdentification.getModifiedSequence() +
-                                        " (SID: " + currentIdentification.getSpectrumFileId() + ")";
+                                    insertInternalFrame(internalFrame);
+                                    internalFrameUniqueIdCounter++;
 
-                                insertMassErrorPlot(isBubblePlot, data, internalFrameTitle,
+                                    // update the fragment ions
+                                    aIonsJCheckBoxActionPerformed(null);
+
+                                } catch (SQLException e) {
+                                    JOptionPane.showMessageDialog(
+                                            null, "An error occured when accesing the database." +
+                                            "See ../Properties/ErrorLog.txt for more details.",
+                                            "Error Accessing Database", JOptionPane.ERROR_MESSAGE);
+                                    Util.writeToErrorLog("Error when accessing database: ");
+                                    e.printStackTrace();
+                                } catch (IOException e) {
+                                    JOptionPane.showMessageDialog(
+                                            null, "An error occured when trying to view a spectrum." +
+                                            "See ../Properties/ErrorLog.txt for more details.",
+                                            "Error Viewing Spectrum", JOptionPane.ERROR_MESSAGE);
+                                    Util.writeToErrorLog("Error when trying to view a spectrum: ");
+                                    e.printStackTrace();
+                                }
+                            } else {
+
+                                try {
+
+                                    File spectrumFile = new File(getCurrentDataSetFolder() + "/spectra/" + currentSpectrumId + ".pkl");
+                                    PKLFile pklFile = parsePKLFile(spectrumFile);
+
+                                    // get the fragment ions
+                                    ArrayList<FragmentIon> fragmentIons = getFragmentIons(currentSpectrumId, null);
+
+                                    FragmentationAnalyzerJInternalFrame internalFrame = new FragmentationAnalyzerJInternalFrame(
+                                            internalFrameTitle, true, true, true, "SpectrumPanel", internalFrameUniqueIdCounter);
+                                    internalFrame.add(getSpectrumPanel(pklFile, fragmentIons));
+
+                                    insertInternalFrame(internalFrame);
+                                    internalFrameUniqueIdCounter++;
+
+                                    // update the fragment ions
+                                    aIonsJCheckBoxActionPerformed(null);
+
+                                } catch (IOException e) {
+                                    JOptionPane.showMessageDialog(
+                                            null, "An error occured when trying to view a spectrum." +
+                                            "See ../Properties/ErrorLog.txt for more details.",
+                                            "Error Viewing Spectrum", JOptionPane.ERROR_MESSAGE);
+                                    Util.writeToErrorLog("Error when trying to view a spectrum: ");
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                    } else if (spectraJComboBox.getSelectedIndex() == SPECTRA_MASS_ERROR_BUBBLE_PLOT ||
+                            spectraJComboBox.getSelectedIndex() == SPECTRA_MASS_ERROR_SCATTER_PLOT) {
+
+                        boolean isBubblePlot = false;
+
+                        if (spectraJComboBox.getSelectedIndex() == SPECTRA_MASS_ERROR_BUBBLE_PLOT) {
+                            isBubblePlot = true;
+                        }
+
+                        int bubbleScaling = userProperties.getDefaultBubbleScaling();
+
+                        if (daOrPpmSpectraJComboBox.getSelectedIndex() == 1 && isBubblePlot) {
+                            bubbleScaling = userProperties.getPpmBubbleScaling();
+                        }
+
+                        HashMap<String, ArrayList<XYZDataPoint>> data = new HashMap<String, ArrayList<XYZDataPoint>>();
+
+                        for (int i = 0; i < currentlySelectedRowsInSpectraTable.size() && !cancelProgress; i++) {
+
+                            try {
+                                Integer currentId = currentlySelectedRowsInSpectraTable.get(i).getIdentificationId();
+                                ReducedIdentification currentIdentification = allIdentifications.get(currentId);
+
+                                progressDialog.setValue(i + 1);
+
+                                addFragmentIonsToXYZPlotDataSeries(data, currentIdentification, isBubblePlot, bubbleScaling, isBubblePlot,
                                         daOrPpmSpectraJComboBox.getSelectedIndex() == 1);
 
-                                data = new HashMap<String, ArrayList<XYZDataPoint>>();
+
+                                // if not combine create plot
+                                if (combineSpectraJComboBox.getSelectedIndex() == 0) {
+
+                                    String internalFrameTitle = currentIdentification.getModifiedSequence() +
+                                            " (SID: " + currentIdentification.getSpectrumFileId() + ")";
+
+                                    insertMassErrorPlot(isBubblePlot, data, internalFrameTitle,
+                                            daOrPpmSpectraJComboBox.getSelectedIndex() == 1);
+
+                                    data = new HashMap<String, ArrayList<XYZDataPoint>>();
+                                }
+                            } catch (SQLException e) {
+                                JOptionPane.showMessageDialog(
+                                        null, "An error occured when accessing the database." +
+                                        "See ../Properties/ErrorLog.txt for more details.",
+                                        "Error Accessing Database", JOptionPane.ERROR_MESSAGE);
+                                Util.writeToErrorLog("Error when accessing the database: ");
+                                e.printStackTrace();
+                            } catch (IOException e) {
+                                JOptionPane.showMessageDialog(
+                                        null, "An error occured when trying to create a mass error plot." +
+                                        "See ../Properties/ErrorLog.txt for more details.",
+                                        "Error Creating Mass Error Plot", JOptionPane.ERROR_MESSAGE);
+                                Util.writeToErrorLog("Error when creating mass error plot: ");
+                                e.printStackTrace();
                             }
-                        } catch (SQLException e) {
-                            JOptionPane.showMessageDialog(
-                                    null, "An error occured when accessing the database." +
-                                    "See ../Properties/ErrorLog.txt for more details.",
-                                    "Error Accessing Database", JOptionPane.ERROR_MESSAGE);
-                            Util.writeToErrorLog("Error when accessing the database: ");
-                            e.printStackTrace();
-                        } catch (IOException e) {
-                            JOptionPane.showMessageDialog(
-                                    null, "An error occured when trying to create a mass error plot." +
-                                    "See ../Properties/ErrorLog.txt for more details.",
-                                    "Error Creating Mass Error Plot", JOptionPane.ERROR_MESSAGE);
-                            Util.writeToErrorLog("Error when creating mass error plot: ");
-                            e.printStackTrace();
+                        }
+
+
+                        // if combine create plot here
+                        if (combineSpectraJComboBox.getSelectedIndex() == 1) {
+
+                            String internalFrameTitle = "Mass Error Plot";
+
+                            insertMassErrorPlot(isBubblePlot, data, internalFrameTitle,
+                                    daOrPpmSpectraJComboBox.getSelectedIndex() == 1);
                         }
                     }
 
-
-                    // if combine create plot here
-                    if (combineSpectraJComboBox.getSelectedIndex() == 1) {
-
-                        String internalFrameTitle = "Mass Error Plot";
-
-                        insertMassErrorPlot(isBubblePlot, data, internalFrameTitle,
-                                daOrPpmSpectraJComboBox.getSelectedIndex() == 1);
-                    }
+                    progressDialog.setVisible(false);
+                    progressDialog.dispose();
                 }
-
-                progressDialog.setVisible(false);
-                progressDialog.dispose();
-            }
-        }.start();
+            }.start();
+        }
 
     }//GEN-LAST:event_spectraJButtonActionPerformed
 
@@ -3881,10 +3937,12 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
     /**
      * Returns a bubble chart of the provided data set.
      *
-     * @param dataset
+     * @param dataset the data set to plot
+     * @param usePpm if true ppm is used when plotting, otherwise Dalton is used
+     * @param showLegend if true the legend is visible
      * @return the created chart
      */
-    private JFreeChart getBubbleChart(DefaultXYZDataset dataset, boolean usePpm) {
+    private JFreeChart getBubbleChart(DefaultXYZDataset dataset, boolean usePpm, boolean showLegend) {
 
         String yAxisLabel = "Mass Error (Da)";
 
@@ -3920,6 +3978,10 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
         chart.setBackgroundPaint(new Color(225, 225, 225));
         chart.getLegend().setItemFont(new Font("SansSerif", Font.PLAIN, 10));
+
+        if (!showLegend) {
+            chart.removeLegend();
+        }
 
         return chart;
     }
@@ -4731,8 +4793,8 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
      * 
      * @param select if true the rows are selected, if false the rows are deselected
      */
-    private void selectHighlightedIdentifications(boolean select){
-                this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
+    private void selectHighlightedIdentifications(boolean select) {
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
 
         selectAllIdentifications = true;
 
@@ -4808,7 +4870,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
      * 
      * @param select if true the rows are selected, if false the rows are deselected
      */
-    private void selectHighlightedSpectra(boolean select){
+    private void selectHighlightedSpectra(boolean select) {
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
 
         selectAllSpectra = true;
@@ -5256,7 +5318,6 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                 } else {
                     ionName = ionName.substring(0, 1) + fragmentIonNumber;
                 }
-
             }
 
             currentAnnotations.add(new DefaultSpectrumAnnotation(
@@ -6155,6 +6216,27 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
         return conn;
     }
+
+    /**
+     * Sets the label type to use in the scatter and bubble plots.
+     *
+     * @param labelType of the following: PLOT_LABEL_TYPE_INSTRUMENT, PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE_ALL
+     */
+    public void setLabelType(int labelType) {
+        currentLabelType = labelType;
+    }
+
+    /**
+     * Returns the currently used/last used label type. One of the following:
+     * PLOT_LABEL_TYPE_INSTRUMENT, PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE_ALL
+     *
+     * @return the current label type, one of the following:
+     *         PLOT_LABEL_TYPE_INSTRUMENT, PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE_ALL
+     */
+    public int getLabelType(){
+        return currentLabelType;
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox H2OIonsJCheckBox;
     private javax.swing.JCheckBox NH3IonsJCheckBox;
