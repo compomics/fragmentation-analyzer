@@ -2,4 +2,5 @@
 
 ----
 
-(currently no changes)
+ * NEW FEATURE: Tooltips have been added to both mass error plot types. 
+ * NEW FEATURE: Instrument or fragment ion type can now be selected as the data point label when plotting the mass error.
