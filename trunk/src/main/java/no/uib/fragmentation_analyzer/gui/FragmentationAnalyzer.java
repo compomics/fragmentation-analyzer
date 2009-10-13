@@ -80,10 +80,13 @@ import org.jfree.chart.labels.BoxAndWhiskerToolTipGenerator;
 import org.jfree.chart.labels.StandardXYToolTipGenerator;
 import org.jfree.chart.plot.CategoryMarker;
 import org.jfree.chart.plot.CategoryPlot;
+import org.jfree.chart.plot.IntervalMarker;
+import org.jfree.chart.plot.Marker;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.category.BoxAndWhiskerRenderer;
 import org.jfree.chart.renderer.xy.DefaultXYItemRenderer;
+import org.jfree.chart.title.LegendTitle;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.statistics.DefaultBoxAndWhiskerCategoryDataset;
 import org.jfree.data.xy.DefaultXYDataset;
@@ -91,6 +94,7 @@ import org.jfree.data.xy.DefaultXYZDataset;
 import org.jfree.ui.Layer;
 import org.jfree.ui.RectangleEdge;
 import org.jfree.ui.RectangleInsets;
+import org.jfree.ui.TextAnchor;
 
 /**
  * FragmentationAnalyzer is the main screen in the FragmentationAnalyzer tool.
@@ -140,6 +144,12 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
     private boolean searchEnabled = false;
     public static final int PLOT_LABEL_TYPE_INSTRUMENT = 0, PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE_ALL = 1;
     private int currentLabelType = PLOT_LABEL_TYPE_INSTRUMENT;
+    private boolean showLegend = true;
+    private boolean showMarkers = false;
+    private final Color defaultMarkerColor = new Color(0, 0, 255, 25);
+    private final float defaultVisibleMarkerAlpha = 1.0f;
+    private final float defaultNonVisibleMarkerAlpha = 0.0f;
+
 
     /**
      * Creates a new FragmentationAnalyzer frame and makes it visible. Then opens
@@ -342,6 +352,8 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         searchButtonGroup = new javax.swing.ButtonGroup();
         internalFramesJPopupMenu = new javax.swing.JPopupMenu();
         removeAllInternalFramesJMenuItem = new javax.swing.JMenuItem();
+        showLegendsJMenuItem = new javax.swing.JMenuItem();
+        showMarkersJMenuItem = new javax.swing.JMenuItem();
         showSpectrumToolBarJMenuItem = new javax.swing.JMenuItem();
         showBoxPlotToolBarJMenuItem = new javax.swing.JMenuItem();
         showScatterPlotToolBarJMenuItem = new javax.swing.JMenuItem();
@@ -490,6 +502,22 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         });
         internalFramesJPopupMenu.add(removeAllInternalFramesJMenuItem);
 
+        showLegendsJMenuItem.setText("Hide Legend");
+        showLegendsJMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                showLegendsJMenuItemActionPerformed(evt);
+            }
+        });
+        internalFramesJPopupMenu.add(showLegendsJMenuItem);
+
+        showMarkersJMenuItem.setText("Show Markers");
+        showMarkersJMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                showMarkersJMenuItemActionPerformed(evt);
+            }
+        });
+        internalFramesJPopupMenu.add(showMarkersJMenuItem);
+
         showSpectrumToolBarJMenuItem.setText("Show Spectrum Tool Bar");
         showSpectrumToolBarJMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -626,7 +654,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         jLabel3.setMinimumSize(new java.awt.Dimension(39, 14));
         jLabel3.setPreferredSize(new java.awt.Dimension(39, 14));
 
-        instrument1JComboBox.setMaximumRowCount(12);
+        instrument1JComboBox.setMaximumRowCount(20);
         instrument1JComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "- Select -" }));
         instrument1JComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -634,7 +662,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
             }
         });
 
-        instrument2JComboBox.setMaximumRowCount(12);
+        instrument2JComboBox.setMaximumRowCount(20);
         instrument2JComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "- Select -" }));
         instrument2JComboBox.setEnabled(false);
         instrument2JComboBox.addActionListener(new java.awt.event.ActionListener() {
@@ -643,7 +671,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
             }
         });
 
-        instrument3JComboBox.setMaximumRowCount(12);
+        instrument3JComboBox.setMaximumRowCount(20);
         instrument3JComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "- Select -" }));
         instrument3JComboBox.setEnabled(false);
 
@@ -708,7 +736,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
         jLabel17.setText("N-term:");
 
-        nTermJComboBox.setMaximumRowCount(12);
+        nTermJComboBox.setMaximumRowCount(20);
         nTermJComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "- Select -" }));
         nTermJComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -718,7 +746,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
         jLabel22.setText("C-term:");
 
-        cTermJComboBox.setMaximumRowCount(12);
+        cTermJComboBox.setMaximumRowCount(20);
         cTermJComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "- Select -" }));
         cTermJComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -728,7 +756,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
         jLabel2.setText("Charge:");
 
-        chargeJComboBox.setMaximumRowCount(12);
+        chargeJComboBox.setMaximumRowCount(20);
         chargeJComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "- Select -" }));
         chargeJComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -803,7 +831,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         jLabel5.setMinimumSize(new java.awt.Dimension(39, 14));
         jLabel5.setPreferredSize(new java.awt.Dimension(39, 14));
 
-        modification1JComboBox.setMaximumRowCount(12);
+        modification1JComboBox.setMaximumRowCount(20);
         modification1JComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "- Select -" }));
         modification1JComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -816,7 +844,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         jLabel6.setMinimumSize(new java.awt.Dimension(39, 14));
         jLabel6.setPreferredSize(new java.awt.Dimension(39, 14));
 
-        modification2JComboBox.setMaximumRowCount(12);
+        modification2JComboBox.setMaximumRowCount(20);
         modification2JComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "- Select -" }));
         modification2JComboBox.setEnabled(false);
         modification2JComboBox.addActionListener(new java.awt.event.ActionListener() {
@@ -830,7 +858,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         jLabel7.setMinimumSize(new java.awt.Dimension(39, 14));
         jLabel7.setPreferredSize(new java.awt.Dimension(39, 14));
 
-        modification3JComboBox.setMaximumRowCount(12);
+        modification3JComboBox.setMaximumRowCount(20);
         modification3JComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "- Select -" }));
         modification3JComboBox.setEnabled(false);
 
@@ -2478,7 +2506,9 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
     private void instrument1JComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_instrument1JComboBoxActionPerformed
         if (instrument1JComboBox.getSelectedIndex() == 0) {
             instrument2JComboBox.setEnabled(false);
+            instrument2JComboBox.setSelectedIndex(0);
             instrument3JComboBox.setEnabled(false);
+            instrument3JComboBox.setSelectedIndex(0);
             searchEnabled = false;
         } else {
             instrument2JComboBox.setEnabled(true);
@@ -2495,6 +2525,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
     private void instrument2JComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_instrument2JComboBoxActionPerformed
         if (instrument2JComboBox.getSelectedIndex() == 0) {
             instrument3JComboBox.setEnabled(false);
+            instrument3JComboBox.setSelectedIndex(0);
         } else {
             instrument3JComboBox.setEnabled(true);
         }
@@ -2508,7 +2539,9 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
     private void modification1JComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_modification1JComboBoxActionPerformed
         if (modification1JComboBox.getSelectedIndex() == 0) {
             modification2JComboBox.setEnabled(false);
+            modification2JComboBox.setSelectedIndex(0);
             modification3JComboBox.setEnabled(false);
+            modification3JComboBox.setSelectedIndex(0);
         } else {
             modification2JComboBox.setEnabled(true);
             modification2JComboBoxActionPerformed(null);
@@ -2523,6 +2556,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
     private void modification2JComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_modification2JComboBoxActionPerformed
         if (modification2JComboBox.getSelectedIndex() == 0) {
             modification3JComboBox.setEnabled(false);
+            modification3JComboBox.setSelectedIndex(0);
         } else {
             modification3JComboBox.setEnabled(true);
         }
@@ -2968,6 +3002,10 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                     chart.getLegend().setItemFont(new Font("SansSerif", Font.PLAIN, 10));
                                     chart.getLegend().setPosition(RectangleEdge.BOTTOM);
 
+                                    if (!showLegend) {
+                                        chart.getLegend().setVisible(false);
+                                    }
+
                                     ChartPanel chartPanel = new ChartPanel(chart);
 
                                     String internalFrameTitle = "" + currentModifiedSequence;
@@ -2980,7 +3018,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                     }
 
                                     FragmentationAnalyzerJInternalFrame internalFrame = new FragmentationAnalyzerJInternalFrame(
-                                            internalFrameTitle, true, true, true, plotType, internalFrameUniqueIdCounter);
+                                            internalFrameTitle, true, true, true, chartPanel, plotType, internalFrameUniqueIdCounter);
                                     internalFrame.add(chartPanel);
 
                                     insertInternalFrame(internalFrame);
@@ -3127,6 +3165,18 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
                             String internalFrameTitle = "Mass Error Plot";
 
+                            if (currentlySelectedRowsInSearchTable.size() == 1) {
+
+                                if (singleSearch) {
+                                    internalFrameTitle = currentlySelectedRowsInSearchTable.get(0).getModifiedSequence() +
+                                            " (" + currentlySelectedRowsInSearchTable.get(0).getCountA() + ")";
+                                } else {
+                                    internalFrameTitle = currentlySelectedRowsInSearchTable.get(0).getModifiedSequence() +
+                                            " (" + currentlySelectedRowsInSearchTable.get(0).getCountA() + " u/" +
+                                            currentlySelectedRowsInSearchTable.get(0).getCountB() + " m)";
+                                }
+                            }
+
                             insertMassErrorPlot(isBubblePlot, data, internalFrameTitle,
                                     daOrPpmSearchResultsJComboBox.getSelectedIndex() == 1);
                         }
@@ -3154,36 +3204,113 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         JFreeChart chart = null;
         ChartPanel chartPanel = null;
         String plotType = "";
-        
-        boolean showLegend = true;
 
-        if(currentLabelType == PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE_ALL){
-            showLegend = false;
+        boolean addLegend = true;
+
+        // fragment ion type plots do not have a legend because it's too big
+        if (currentLabelType == PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE_ALL) {
+            addLegend = false;
         }
 
+        // create the plot
         if (isBubblePlot) {
             DefaultXYZDataset dataset = addXYZDataSeries(data);
-            chart = getBubbleChart(dataset, usePpm, showLegend);
+            chart = getBubbleChart(dataset, usePpm, addLegend);
             chartPanel = new ChartPanel(chart);
             plotType = "MassErrorBubblePlot";
         } else {
             DefaultXYDataset dataSet = addXYDataSeries(data);
-            chart = getScatterPlotChart(dataSet, usePpm, showLegend);
+            chart = getScatterPlotChart(dataSet, usePpm, addLegend);
             chartPanel = new ChartPanel(chart);
             plotType = "MassErrorScatterPlot";
         }
 
+        // make sure the legend is not shown if 'hide legends' is currently selected
+        if (!showLegend) {
+            if (chart.getLegend() != null) {
+                chart.getLegend().setVisible(false);
+            }
+        }
+
+        // add fragment ion type markers
+        if (currentLabelType == PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE_ALL) {
+            Iterator<String> iterator = data.keySet().iterator();
+
+            while (iterator.hasNext()) {
+
+                String fragmentIonType = iterator.next();
+
+                ArrayList<XYZDataPoint> dataPoints = data.get(fragmentIonType);
+
+                XYZDataPoint currentDataPoint = dataPoints.get(0);
+
+                double currentXValue = currentDataPoint.getX();
+
+                IntervalMarker intervalMarker = new IntervalMarker(currentXValue - 5, currentXValue + 5, defaultMarkerColor);
+
+                if (showMarkers) {
+                    intervalMarker.setAlpha(defaultVisibleMarkerAlpha);
+                } else {
+                    intervalMarker.setAlpha(defaultNonVisibleMarkerAlpha);
+                }
+
+                intervalMarker.setLabel(fragmentIonType);
+                intervalMarker.setLabelFont(new Font("SansSerif", Font.PLAIN, 10));
+                intervalMarker.setLabelPaint(Color.GRAY);
+                intervalMarker.setLabelTextAnchor(TextAnchor.TOP_LEFT);
+
+                if(fragmentIonType.lastIndexOf("H2O") != -1){
+                    intervalMarker.setLabelOffset(new RectangleInsets(15, 0, 15, 0));
+                }
+
+                if(fragmentIonType.lastIndexOf("NH3") != -1){
+                    intervalMarker.setLabelOffset(new RectangleInsets(30, 0, 30, 0));
+                }
+
+                if(fragmentIonType.lastIndexOf("Prec") != -1){
+                    intervalMarker.setLabelOffset(new RectangleInsets(45, 0, 45, 0));
+
+                    if(fragmentIonType.lastIndexOf("H2O") != -1){
+                        intervalMarker.setLabelOffset(new RectangleInsets(60, 0, 60, 0));
+                    }
+
+                    if(fragmentIonType.lastIndexOf("NH3") != -1){
+                        intervalMarker.setLabelOffset(new RectangleInsets(75, 0, 75, 0));
+                    }
+                }
+
+                if(fragmentIonType.startsWith("i")){
+                    intervalMarker.setLabelOffset(new RectangleInsets(60, 0, 60, 0));
+                }
+
+                if(fragmentIonType.lastIndexOf("++") != -1){
+                    intervalMarker.setLabelOffset(new RectangleInsets(75, 0, 75, 0));
+                   
+                    if(fragmentIonType.lastIndexOf("H2O") != -1){
+                        intervalMarker.setLabelOffset(new RectangleInsets(100, 0, 100, 0));
+                    }
+
+                    if(fragmentIonType.lastIndexOf("NH3") != -1){
+                        intervalMarker.setLabelOffset(new RectangleInsets(115, 0, 115, 0));
+                    }
+                }
+
+                ((XYPlot) chart.getPlot()).addDomainMarker(intervalMarker, Layer.BACKGROUND);
+            }
+        }
+
+        // create the interal frame and add the plot
         FragmentationAnalyzerJInternalFrame internalFrame = new FragmentationAnalyzerJInternalFrame(
-                internalFrameTitle, true, true, true, plotType, internalFrameUniqueIdCounter);
+                internalFrameTitle, true, true, true, chartPanel, plotType, internalFrameUniqueIdCounter);
         internalFrame.add(chartPanel);
 
         insertInternalFrame(internalFrame);
 
-        // update the visible series selection
-        updateScatterAndBubblePlotVisibleSeriesSelection();
-
         allChartFrames.put(internalFrameUniqueIdCounter, chart);
         internalFrameUniqueIdCounter++;
+
+        // update the visible series selection
+        updateScatterAndBubblePlotVisibleSeriesSelection();
     }
 
     /**
@@ -3209,10 +3336,16 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         String modificationCategory = "" + tempModifiedSequence.charAt(modificationIndex) + (modificationIndex + 1);
 
         CategoryMarker marker = new CategoryMarker(modificationCategory,
-                new Color(0, 0, 255, 25), new BasicStroke(1.0f));
+                defaultMarkerColor, new BasicStroke(1.0f));
         marker.setDrawAsLine(false);
         marker.setLabelOffset(new RectangleInsets(2, 5, 2, 5));
         plot.addDomainMarker(marker, Layer.BACKGROUND);
+
+        if (showMarkers) {
+            marker.setAlpha(defaultVisibleMarkerAlpha);
+        } else {
+            marker.setAlpha(defaultNonVisibleMarkerAlpha);
+        }
     }
 
     /**
@@ -3369,7 +3502,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
      * Add an XYZ data point to the data series.
      *
      * @param data the data series to add the data to
-     * @param instrumentName the name of the instrument used for the identification
+     * @param dataPointLabel the data point label
      * @param switchYandZAxis if true the Y and Y values in the data set are switched
      * @param mzValue the m/z value of the data point
      * @param massError the mass error of the data point
@@ -3377,14 +3510,14 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
      * @param bubbleScaling the bubble scaling value
      */
     private void addXYZDataPoint(HashMap<String, ArrayList<XYZDataPoint>> data,
-            String instrumentName, boolean switchYandZAxis,
+            String dataPointLabel, boolean switchYandZAxis,
             double mzValue, double massError, double intensity, int bubbleScaling) {
 
-        if (data.get(instrumentName) != null) {
+        if (data.get(dataPointLabel) != null) {
             if (switchYandZAxis) {
-                data.get(instrumentName).add(new XYZDataPoint(mzValue, massError, intensity * bubbleScaling));
+                data.get(dataPointLabel).add(new XYZDataPoint(mzValue, massError, intensity * bubbleScaling));
             } else {
-                data.get(instrumentName).add(new XYZDataPoint(mzValue, intensity, massError * bubbleScaling));
+                data.get(dataPointLabel).add(new XYZDataPoint(mzValue, intensity, massError * bubbleScaling));
             }
         } else {
             ArrayList<XYZDataPoint> temp = new ArrayList<XYZDataPoint>();
@@ -3395,7 +3528,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                 temp.add(new XYZDataPoint(mzValue, intensity, massError * bubbleScaling));
             }
 
-            data.put(instrumentName, temp);
+            data.put(dataPointLabel, temp);
         }
     }
 
@@ -3404,10 +3537,10 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
      *
      * @param dataSet
      * @param usePpm if true ppm is used when plotting, otherwise Dalton is used
-     * @param showLegend if true the legend is visible
+     * @param addLegend if true the legend is visible
      * @return the created chart
      */
-    private JFreeChart getScatterPlotChart(DefaultXYDataset dataSet, boolean usePpm, boolean showLegend) {
+    private JFreeChart getScatterPlotChart(DefaultXYDataset dataSet, boolean usePpm, boolean addLegend) {
 
         NumberAxis xAxis = new NumberAxis();
         xAxis.setLabelFont(new Font("SansSerif", Font.PLAIN, 10));
@@ -3442,7 +3575,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         chart.setBackgroundPaint(new Color(225, 225, 225));
         chart.getLegend().setItemFont(new Font("SansSerif", Font.PLAIN, 10));
 
-        if (!showLegend) {
+        if (!addLegend) {
             chart.removeLegend();
         }
 
@@ -3739,7 +3872,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                     Vector<Fragmention> fragmentIons = (Vector<Fragmention>) Fragmention.getAllFragmentions(conn, (long) currentId);
 
                                     FragmentationAnalyzerJInternalFrame internalFrame = new FragmentationAnalyzerJInternalFrame(
-                                            internalFrameTitle, true, true, true, "SpectrumPanel", internalFrameUniqueIdCounter);
+                                            internalFrameTitle, true, true, true, null, "SpectrumPanel", internalFrameUniqueIdCounter);
                                     internalFrame.add(getSpectrumPanel(spectrumFile, fragmentIons));
 
                                     insertInternalFrame(internalFrame);
@@ -3774,7 +3907,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                     ArrayList<FragmentIon> fragmentIons = getFragmentIons(currentSpectrumId, null);
 
                                     FragmentationAnalyzerJInternalFrame internalFrame = new FragmentationAnalyzerJInternalFrame(
-                                            internalFrameTitle, true, true, true, "SpectrumPanel", internalFrameUniqueIdCounter);
+                                            internalFrameTitle, true, true, true, null, "SpectrumPanel", internalFrameUniqueIdCounter);
                                     internalFrame.add(getSpectrumPanel(pklFile, fragmentIons));
 
                                     insertInternalFrame(internalFrame);
@@ -3855,6 +3988,10 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                         if (combineSpectraJComboBox.getSelectedIndex() == 1) {
 
                             String internalFrameTitle = "Mass Error Plot";
+
+                            if (currentlySelectedRowsInSpectraTable.size() == 1) {
+                                internalFrameTitle = currentlySelectedRowsInSpectraTable.get(0).getModifiedSequence();
+                            }
 
                             insertMassErrorPlot(isBubblePlot, data, internalFrameTitle,
                                     daOrPpmSpectraJComboBox.getSelectedIndex() == 1);
@@ -3939,10 +4076,10 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
      *
      * @param dataset the data set to plot
      * @param usePpm if true ppm is used when plotting, otherwise Dalton is used
-     * @param showLegend if true the legend is visible
+     * @param addLegend if true the legend is visible
      * @return the created chart
      */
-    private JFreeChart getBubbleChart(DefaultXYZDataset dataset, boolean usePpm, boolean showLegend) {
+    private JFreeChart getBubbleChart(DefaultXYZDataset dataset, boolean usePpm, boolean addLegend) {
 
         String yAxisLabel = "Mass Error (Da)";
 
@@ -3979,7 +4116,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         chart.setBackgroundPaint(new Color(225, 225, 225));
         chart.getLegend().setItemFont(new Font("SansSerif", Font.PLAIN, 10));
 
-        if (!showLegend) {
+        if (!addLegend) {
             chart.removeLegend();
         }
 
@@ -4945,6 +5082,104 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
     private void deselectHighlightedSpectraJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deselectHighlightedSpectraJMenuItemActionPerformed
         selectHighlightedSpectra(false);
     }//GEN-LAST:event_deselectHighlightedSpectraJMenuItemActionPerformed
+
+    /**
+     * Turns on or off the displaying of the chart legends.
+     * 
+     * @param evt
+     */
+    private void showLegendsJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showLegendsJMenuItemActionPerformed
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
+
+        Iterator<Integer> iterator = allInternalFrames.keySet().iterator();
+
+        // store the keys in a list first to escape a ConcurrentModificationException
+        ArrayList<Integer> keys = new ArrayList<Integer>();
+
+        while (iterator.hasNext()) {
+            keys.add(iterator.next());
+        }
+
+        showLegend = !showLegend;
+
+        for (int i = 0; i < keys.size(); i++) {
+
+            ChartPanel tepmChartPanel = allInternalFrames.get(keys.get(i)).getChartPanel();
+
+            if (tepmChartPanel != null) {
+                LegendTitle tempLegend = tepmChartPanel.getChart().getLegend();
+
+                if (tempLegend != null) {
+                    tempLegend.setVisible(showLegend);
+                }
+            }
+        }
+
+        if (showLegend) {
+            showLegendsJMenuItem.setText("Hide Legends");
+        } else {
+            showLegendsJMenuItem.setText("Show Legends");
+        }
+
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_showLegendsJMenuItemActionPerformed
+
+    /**
+     * Turns on or off the displaying of the markers.
+     * 
+     * @param evt
+     */
+    private void showMarkersJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showMarkersJMenuItemActionPerformed
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
+
+        Iterator<Integer> internalFramesIterator = allInternalFrames.keySet().iterator();
+
+        // store the keys in a list first to escape a ConcurrentModificationException
+        ArrayList<Integer> keys = new ArrayList<Integer>();
+
+        while (internalFramesIterator.hasNext()) {
+            keys.add(internalFramesIterator.next());
+        }
+
+        showMarkers = !showMarkers;
+
+        for (int i = 0; i < keys.size(); i++) {
+
+            ChartPanel tepmChartPanel = allInternalFrames.get(keys.get(i)).getChartPanel();
+
+            if (tepmChartPanel != null) {
+
+                Collection markers = null;
+
+                if (tepmChartPanel.getChart().getPlot() instanceof XYPlot) {
+                    markers = ((XYPlot) tepmChartPanel.getChart().getPlot()).getDomainMarkers(Layer.BACKGROUND);
+                } else if (tepmChartPanel.getChart().getPlot() instanceof CategoryPlot) {
+                    markers = ((CategoryPlot) tepmChartPanel.getChart().getPlot()).getDomainMarkers(Layer.BACKGROUND);
+                }
+
+                if (markers != null) {
+                    Iterator markerIterator = markers.iterator();
+
+                    while (markerIterator.hasNext()) {
+
+                        if (showMarkers) {
+                            ((Marker) markerIterator.next()).setAlpha(defaultVisibleMarkerAlpha);
+                        } else {
+                            ((Marker) markerIterator.next()).setAlpha(defaultNonVisibleMarkerAlpha);
+                        }
+                    }
+                }
+            }
+        }
+
+        if (showMarkers) {
+            showMarkersJMenuItem.setText("Hide Markers");
+        } else {
+            showMarkersJMenuItem.setText("Show Markers");
+        }
+
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_showMarkersJMenuItemActionPerformed
 
     /**
      * Makes sure that only the selected data series are visible.
@@ -5937,7 +6172,6 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 //                    "Error Parsing File", JOptionPane.ERROR_MESSAGE);
 //        }
 //    }
-
     /**
      * Update the values in the combobox. Note that the values are sorted alphabetically.
      *
@@ -6233,10 +6467,9 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
      * @return the current label type, one of the following:
      *         PLOT_LABEL_TYPE_INSTRUMENT, PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE_ALL
      */
-    public int getLabelType(){
+    public int getLabelType() {
         return currentLabelType;
     }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox H2OIonsJCheckBox;
     private javax.swing.JCheckBox NH3IonsJCheckBox;
@@ -6338,6 +6571,8 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
     private javax.swing.JPopupMenu selectSpectraJPopupMenu;
     private javax.swing.JMenuItem showBoxPlotToolBarJMenuItem;
     private javax.swing.JMenuItem showBubblePlotToolBarJMenuItem;
+    private javax.swing.JMenuItem showLegendsJMenuItem;
+    private javax.swing.JMenuItem showMarkersJMenuItem;
     private javax.swing.JMenuItem showScatterPlotToolBarJMenuItem;
     private javax.swing.JMenuItem showSpectrumToolBarJMenuItem;
     private javax.swing.JButton spectraJButton;

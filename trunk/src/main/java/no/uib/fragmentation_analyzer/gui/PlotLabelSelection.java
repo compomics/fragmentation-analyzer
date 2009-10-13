@@ -47,7 +47,7 @@ public class PlotLabelSelection extends javax.swing.JDialog {
         fragmentIonTypeJRadioButton = new javax.swing.JRadioButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Select the Data Label Type");
+        setTitle("Select the Data Point Label");
         setResizable(false);
 
         okJButton.setText("OK");
@@ -68,10 +68,12 @@ public class PlotLabelSelection extends javax.swing.JDialog {
 
         buttonGroup.add(instrumentNameJRadioButton);
         instrumentNameJRadioButton.setText("Instrument Name");
+        instrumentNameJRadioButton.setToolTipText("<html>\nUse the instrument name as the data<br>\npoint label and and coloring scheme\n</html>");
         instrumentNameJRadioButton.setIconTextGap(15);
 
         buttonGroup.add(fragmentIonTypeJRadioButton);
         fragmentIonTypeJRadioButton.setText("Fragment Ion Type");
+        fragmentIonTypeJRadioButton.setToolTipText("<html>\nUse the fragment ion type as the data<br>\npoint label and coloring scheme.\n</html>");
         fragmentIonTypeJRadioButton.setIconTextGap(15);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -79,11 +81,11 @@ public class PlotLabelSelection extends javax.swing.JDialog {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(instrumentNameJRadioButton)
                     .addComponent(fragmentIonTypeJRadioButton))
-                .addContainerGap(95, Short.MAX_VALUE))
+                .addContainerGap(111, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
