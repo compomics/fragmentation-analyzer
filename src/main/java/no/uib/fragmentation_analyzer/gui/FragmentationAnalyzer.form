@@ -34,6 +34,14 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="showMarkersJMenuItemActionPerformed"/>
           </Events>
         </MenuItem>
+        <MenuItem class="javax.swing.JMenuItem" name="showAverageJMenuItem">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Show Average Mass Errors"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="showAverageJMenuItemActionPerformed"/>
+          </Events>
+        </MenuItem>
         <MenuItem class="javax.swing.JMenuItem" name="showSpectrumToolBarJMenuItem">
           <Properties>
             <Property name="text" type="java.lang.String" value="Show Spectrum Tool Bar"/>

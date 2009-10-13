@@ -86,11 +86,15 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.category.BoxAndWhiskerRenderer;
 import org.jfree.chart.renderer.xy.DefaultXYItemRenderer;
+import org.jfree.chart.renderer.xy.XYItemRenderer;
+import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.chart.title.LegendTitle;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.statistics.DefaultBoxAndWhiskerCategoryDataset;
 import org.jfree.data.xy.DefaultXYDataset;
 import org.jfree.data.xy.DefaultXYZDataset;
+import org.jfree.data.xy.XYSeries;
+import org.jfree.data.xy.XYSeriesCollection;
 import org.jfree.ui.Layer;
 import org.jfree.ui.RectangleEdge;
 import org.jfree.ui.RectangleInsets;
@@ -146,10 +150,10 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
     private int currentLabelType = PLOT_LABEL_TYPE_INSTRUMENT;
     private boolean showLegend = true;
     private boolean showMarkers = false;
+    private boolean showAverageMassError = false;
     private final Color defaultMarkerColor = new Color(0, 0, 255, 25);
     private final float defaultVisibleMarkerAlpha = 1.0f;
     private final float defaultNonVisibleMarkerAlpha = 0.0f;
-
 
     /**
      * Creates a new FragmentationAnalyzer frame and makes it visible. Then opens
@@ -354,6 +358,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         removeAllInternalFramesJMenuItem = new javax.swing.JMenuItem();
         showLegendsJMenuItem = new javax.swing.JMenuItem();
         showMarkersJMenuItem = new javax.swing.JMenuItem();
+        showAverageJMenuItem = new javax.swing.JMenuItem();
         showSpectrumToolBarJMenuItem = new javax.swing.JMenuItem();
         showBoxPlotToolBarJMenuItem = new javax.swing.JMenuItem();
         showScatterPlotToolBarJMenuItem = new javax.swing.JMenuItem();
@@ -517,6 +522,14 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
             }
         });
         internalFramesJPopupMenu.add(showMarkersJMenuItem);
+
+        showAverageJMenuItem.setText("Show Average Mass Errors");
+        showAverageJMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                showAverageJMenuItemActionPerformed(evt);
+            }
+        });
+        internalFramesJPopupMenu.add(showAverageJMenuItem);
 
         showSpectrumToolBarJMenuItem.setText("Show Spectrum Tool Bar");
         showSpectrumToolBarJMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -3212,14 +3225,17 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
             addLegend = false;
         }
 
+        // a hashmap to store the average fragment ion mass errors
+        HashMap<Double, Double> averageValues = new HashMap<Double, Double>();
+
         // create the plot
         if (isBubblePlot) {
-            DefaultXYZDataset dataset = addXYZDataSeries(data);
+            DefaultXYZDataset dataset = addXYZDataSeries(data, averageValues);
             chart = getBubbleChart(dataset, usePpm, addLegend);
             chartPanel = new ChartPanel(chart);
             plotType = "MassErrorBubblePlot";
         } else {
-            DefaultXYDataset dataSet = addXYDataSeries(data);
+            DefaultXYDataset dataSet = addXYDataSeries(data, averageValues);
             chart = getScatterPlotChart(dataSet, usePpm, addLegend);
             chartPanel = new ChartPanel(chart);
             plotType = "MassErrorScatterPlot";
@@ -3231,6 +3247,47 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                 chart.getLegend().setVisible(false);
             }
         }
+
+
+        // add average mass error line
+        if (currentLabelType == PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE_ALL) {
+            XYSeries averageError = new XYSeries("AverageError");
+
+            Iterator<Double> averageIterator = averageValues.keySet().iterator();
+
+            ArrayList<Double> mzValues = new ArrayList<Double>();
+
+            while (averageIterator.hasNext()) {
+                mzValues.add(averageIterator.next());
+            }
+
+            // ToDo: sorting is not needed??
+            java.util.Collections.sort(mzValues);
+
+            for (int i = 0; i < mzValues.size(); i++) {
+                Double currentMzValue = mzValues.get(i);
+                Double currentAverage = averageValues.get(currentMzValue);
+                averageError.add(currentMzValue, currentAverage);
+            }
+
+
+            XYSeriesCollection dataset = new XYSeriesCollection();
+            dataset.addSeries(averageError);
+
+            XYItemRenderer renderer = new XYLineAndShapeRenderer(true, false);
+            renderer.setSeriesPaint(0, Color.BLACK);
+            renderer.setBaseToolTipGenerator(new StandardXYToolTipGenerator());
+
+            if (chart.getPlot() instanceof XYPlot) {
+                ((XYPlot) chart.getPlot()).setDataset(1, dataset);
+                ((XYPlot) chart.getPlot()).setRenderer(1, renderer);
+            }
+
+            ((XYPlot) chart.getPlot()).getRenderer(1).setSeriesVisible(0, showAverageMassError);
+        }
+
+
+        int horizontalFontPadding = 13;
 
         // add fragment ion type markers
         if (currentLabelType == PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE_ALL) {
@@ -3259,39 +3316,39 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                 intervalMarker.setLabelPaint(Color.GRAY);
                 intervalMarker.setLabelTextAnchor(TextAnchor.TOP_LEFT);
 
-                if(fragmentIonType.lastIndexOf("H2O") != -1){
-                    intervalMarker.setLabelOffset(new RectangleInsets(15, 0, 15, 0));
+                if (fragmentIonType.lastIndexOf("H2O") != -1) {
+                    intervalMarker.setLabelOffset(new RectangleInsets(horizontalFontPadding, 0, horizontalFontPadding, 0));
                 }
 
-                if(fragmentIonType.lastIndexOf("NH3") != -1){
-                    intervalMarker.setLabelOffset(new RectangleInsets(30, 0, 30, 0));
+                if (fragmentIonType.lastIndexOf("NH3") != -1) {
+                    intervalMarker.setLabelOffset(new RectangleInsets(horizontalFontPadding * 2, 0, horizontalFontPadding * 2, 0));
                 }
 
-                if(fragmentIonType.lastIndexOf("Prec") != -1){
-                    intervalMarker.setLabelOffset(new RectangleInsets(45, 0, 45, 0));
+                if (fragmentIonType.lastIndexOf("Prec") != -1) {
+                    intervalMarker.setLabelOffset(new RectangleInsets(horizontalFontPadding * 3, 0, horizontalFontPadding * 3, 0));
 
-                    if(fragmentIonType.lastIndexOf("H2O") != -1){
-                        intervalMarker.setLabelOffset(new RectangleInsets(60, 0, 60, 0));
+                    if (fragmentIonType.lastIndexOf("H2O") != -1) {
+                        intervalMarker.setLabelOffset(new RectangleInsets(horizontalFontPadding * 4, 0, horizontalFontPadding * 4, 0));
                     }
 
-                    if(fragmentIonType.lastIndexOf("NH3") != -1){
-                        intervalMarker.setLabelOffset(new RectangleInsets(75, 0, 75, 0));
+                    if (fragmentIonType.lastIndexOf("NH3") != -1) {
+                        intervalMarker.setLabelOffset(new RectangleInsets(horizontalFontPadding * 5, 0, horizontalFontPadding * 5, 0));
                     }
                 }
 
-                if(fragmentIonType.startsWith("i")){
-                    intervalMarker.setLabelOffset(new RectangleInsets(60, 0, 60, 0));
+                if (fragmentIonType.startsWith("i")) {
+                    intervalMarker.setLabelOffset(new RectangleInsets(horizontalFontPadding * 4, 0, horizontalFontPadding * 4, 0));
                 }
 
-                if(fragmentIonType.lastIndexOf("++") != -1){
-                    intervalMarker.setLabelOffset(new RectangleInsets(75, 0, 75, 0));
-                   
-                    if(fragmentIonType.lastIndexOf("H2O") != -1){
-                        intervalMarker.setLabelOffset(new RectangleInsets(100, 0, 100, 0));
+                if (fragmentIonType.lastIndexOf("++") != -1) {
+                    intervalMarker.setLabelOffset(new RectangleInsets(horizontalFontPadding * 7, 0, horizontalFontPadding * 7, 0));
+
+                    if (fragmentIonType.lastIndexOf("H2O") != -1) {
+                        intervalMarker.setLabelOffset(new RectangleInsets(horizontalFontPadding * 8, 0, horizontalFontPadding * 8, 0));
                     }
 
-                    if(fragmentIonType.lastIndexOf("NH3") != -1){
-                        intervalMarker.setLabelOffset(new RectangleInsets(115, 0, 115, 0));
+                    if (fragmentIonType.lastIndexOf("NH3") != -1) {
+                        intervalMarker.setLabelOffset(new RectangleInsets(horizontalFontPadding * 9, 0, horizontalFontPadding * 9, 0));
                     }
                 }
 
@@ -3943,6 +4000,22 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
                         HashMap<String, ArrayList<XYZDataPoint>> data = new HashMap<String, ArrayList<XYZDataPoint>>();
 
+                        boolean allPlotsHaveSameSequence = true;
+
+                        // check if all plots have the same sequence
+                        if (combineSpectraJComboBox.getSelectedIndex() == 1) {
+
+                            String tempModifiedSequence = currentlySelectedRowsInSpectraTable.get(0).getModifiedSequence();
+
+                            for (int i = 1; i < currentlySelectedRowsInSpectraTable.size() && allPlotsHaveSameSequence; i++) {
+                                if (!currentlySelectedRowsInSpectraTable.get(i).getModifiedSequence().equalsIgnoreCase(
+                                        tempModifiedSequence)) {
+                                    allPlotsHaveSameSequence = false;
+                                }
+                            }
+                        }
+
+
                         for (int i = 0; i < currentlySelectedRowsInSpectraTable.size() && !cancelProgress; i++) {
 
                             try {
@@ -3989,8 +4062,8 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
                             String internalFrameTitle = "Mass Error Plot";
 
-                            if (currentlySelectedRowsInSpectraTable.size() == 1) {
-                                internalFrameTitle = currentlySelectedRowsInSpectraTable.get(0).getModifiedSequence();
+                            if (currentlySelectedRowsInSpectraTable.size() == 1 || allPlotsHaveSameSequence) {
+                                internalFrameTitle = currentlySelectedRowsInSpectraTable.get(0).getModifiedSequence() + " (" + currentlySelectedRowsInSpectraTable.size() + ")";
                             }
 
                             insertMassErrorPlot(isBubblePlot, data, internalFrameTitle,
@@ -4010,9 +4083,10 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
      * Adds the provided data series to an XYZ data set.
      *
      * @param data the data to add
+     * @param average a hash map to store the average fragment ion mass errors
      * @return the created data set
      */
-    private DefaultXYZDataset addXYZDataSeries(HashMap<String, ArrayList<XYZDataPoint>> data) {
+    private DefaultXYZDataset addXYZDataSeries(HashMap<String, ArrayList<XYZDataPoint>> data, HashMap<Double, Double> average) {
 
         DefaultXYZDataset dataset = new DefaultXYZDataset();
 
@@ -4026,11 +4100,17 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
             double[][] tempXYZData = new double[3][currentData.size()];
 
+            double averageYValue = 0.0;
+
             for (int i = 0; i < currentData.size(); i++) {
                 tempXYZData[0][i] = currentData.get(i).getX();
                 tempXYZData[1][i] = currentData.get(i).getY();
                 tempXYZData[2][i] = currentData.get(i).getZ();
+
+                averageYValue += tempXYZData[1][i];
             }
+
+            average.put(tempXYZData[0][0], (averageYValue / currentData.size()));
 
             dataset.addSeries(key, tempXYZData);
         }
@@ -4042,9 +4122,10 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
      * Adds the provided data series to an XY data set.
      *
      * @param data the data to add
+     * @param average a hash map to store the average fragment ion mass errors
      * @return the created data set
      */
-    private DefaultXYDataset addXYDataSeries(HashMap<String, ArrayList<XYZDataPoint>> data) {
+    private DefaultXYDataset addXYDataSeries(HashMap<String, ArrayList<XYZDataPoint>> data, HashMap<Double, Double> average) {
 
         DefaultXYDataset dataset = new DefaultXYDataset();
 
@@ -4058,12 +4139,18 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
             double[][] tempXYData = new double[2][currentData.size()];
 
+            double averageZValue = 0.0;
+
             for (int i = 0; i < currentData.size(); i++) {
                 tempXYData[0][i] = currentData.get(i).getX();
                 //tempXYData[1][i] = currentData.get(i).getY();
                 //tempXYZData[2][i] = currentData.get(i).getZ();
                 tempXYData[1][i] = currentData.get(i).getZ();
+
+                averageZValue += tempXYData[1][i];
             }
+
+            average.put(tempXYData[0][0], (averageZValue / currentData.size()));
 
             dataset.addSeries(key, tempXYData);
         }
@@ -5182,6 +5269,41 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
     }//GEN-LAST:event_showMarkersJMenuItemActionPerformed
 
     /**
+     * Show or hide the average mass error line.
+     * 
+     * @param evt
+     */
+    private void showAverageJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showAverageJMenuItemActionPerformed
+
+        Iterator<Integer> iterator = allChartFrames.keySet().iterator();
+
+        showAverageMassError = !showAverageMassError;
+
+        while (iterator.hasNext()) {
+
+            Integer key = iterator.next();
+
+            JFreeChart tempChart = allChartFrames.get(key);
+            String tempPlotType = allInternalFrames.get(key).getInternalFrameType();
+
+            if (tempPlotType.equalsIgnoreCase("MassErrorScatterPlot") ||
+                    tempPlotType.equalsIgnoreCase("MassErrorBubblePlot")) {
+
+                if(((XYPlot) tempChart.getPlot()).getRenderer(1) != null){
+                    ((XYPlot) tempChart.getPlot()).getRenderer(1).setSeriesVisible(0, showAverageMassError);
+                }
+            }
+        }
+
+        if (showAverageMassError) {
+            showAverageJMenuItem.setText("Hide Average Mass Errors");
+        } else {
+            showAverageJMenuItem.setText("Show Average Mass Errors");
+        }
+
+    }//GEN-LAST:event_showAverageJMenuItemActionPerformed
+
+    /**
      * Makes sure that only the selected data series are visible.
      *
      * @param selected
@@ -5203,11 +5325,11 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
                 if (tempPlotType.equalsIgnoreCase("BoxPlot") ||
                         tempPlotType.equalsIgnoreCase("BoxPlot_modification")) {
-                    ((CategoryPlot) tempChart.getPlot()).getRenderer().setSeriesVisible(seriesIndex, selected);
+                    ((CategoryPlot) tempChart.getPlot()).getRenderer(0).setSeriesVisible(seriesIndex, selected);
                 } else if (tempPlotType.equalsIgnoreCase("MassErrorScatterPlot")) {
-                    ((XYPlot) tempChart.getPlot()).getRenderer().setSeriesVisible(seriesIndex, selected);
+                    ((XYPlot) tempChart.getPlot()).getRenderer(0).setSeriesVisible(seriesIndex, selected);
                 } else if (tempPlotType.equalsIgnoreCase("MassErrorBubblePlot")) {
-                    ((XYPlot) tempChart.getPlot()).getRenderer().setSeriesVisible(seriesIndex, selected);
+                    ((XYPlot) tempChart.getPlot()).getRenderer(0).setSeriesVisible(seriesIndex, selected);
                 }
             }
         }
@@ -6569,6 +6691,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
     private javax.swing.JMenuItem selectHighlightedSpectraJMenuItem;
     private javax.swing.JPopupMenu selectIdentificationsJPopupMenu;
     private javax.swing.JPopupMenu selectSpectraJPopupMenu;
+    private javax.swing.JMenuItem showAverageJMenuItem;
     private javax.swing.JMenuItem showBoxPlotToolBarJMenuItem;
     private javax.swing.JMenuItem showBubblePlotToolBarJMenuItem;
     private javax.swing.JMenuItem showLegendsJMenuItem;
