@@ -18,6 +18,22 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="removeAllInternalFramesJMenuItemActionPerformed"/>
           </Events>
         </MenuItem>
+        <MenuItem class="javax.swing.JMenuItem" name="showLegendsJMenuItem">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Hide Legend"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="showLegendsJMenuItemActionPerformed"/>
+          </Events>
+        </MenuItem>
+        <MenuItem class="javax.swing.JMenuItem" name="showMarkersJMenuItem">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Show Markers"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="showMarkersJMenuItemActionPerformed"/>
+          </Events>
+        </MenuItem>
         <MenuItem class="javax.swing.JMenuItem" name="showSpectrumToolBarJMenuItem">
           <Properties>
             <Property name="text" type="java.lang.String" value="Show Spectrum Tool Bar"/>
@@ -399,7 +415,7 @@
                     </Component>
                     <Component class="javax.swing.JComboBox" name="instrument1JComboBox">
                       <Properties>
-                        <Property name="maximumRowCount" type="int" value="12"/>
+                        <Property name="maximumRowCount" type="int" value="20"/>
                         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                           <StringArray count="1">
                             <StringItem index="0" value="- Select -"/>
@@ -412,7 +428,7 @@
                     </Component>
                     <Component class="javax.swing.JComboBox" name="instrument2JComboBox">
                       <Properties>
-                        <Property name="maximumRowCount" type="int" value="12"/>
+                        <Property name="maximumRowCount" type="int" value="20"/>
                         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                           <StringArray count="1">
                             <StringItem index="0" value="- Select -"/>
@@ -426,7 +442,7 @@
                     </Component>
                     <Component class="javax.swing.JComboBox" name="instrument3JComboBox">
                       <Properties>
-                        <Property name="maximumRowCount" type="int" value="12"/>
+                        <Property name="maximumRowCount" type="int" value="20"/>
                         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                           <StringArray count="1">
                             <StringItem index="0" value="- Select -"/>
@@ -526,7 +542,7 @@
                     </Component>
                     <Component class="javax.swing.JComboBox" name="nTermJComboBox">
                       <Properties>
-                        <Property name="maximumRowCount" type="int" value="12"/>
+                        <Property name="maximumRowCount" type="int" value="20"/>
                         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                           <StringArray count="1">
                             <StringItem index="0" value="- Select -"/>
@@ -544,7 +560,7 @@
                     </Component>
                     <Component class="javax.swing.JComboBox" name="cTermJComboBox">
                       <Properties>
-                        <Property name="maximumRowCount" type="int" value="12"/>
+                        <Property name="maximumRowCount" type="int" value="20"/>
                         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                           <StringArray count="1">
                             <StringItem index="0" value="- Select -"/>
@@ -562,7 +578,7 @@
                     </Component>
                     <Component class="javax.swing.JComboBox" name="chargeJComboBox">
                       <Properties>
-                        <Property name="maximumRowCount" type="int" value="12"/>
+                        <Property name="maximumRowCount" type="int" value="20"/>
                         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                           <StringArray count="1">
                             <StringItem index="0" value="- Select -"/>
@@ -673,7 +689,7 @@
                     </Component>
                     <Component class="javax.swing.JComboBox" name="modification1JComboBox">
                       <Properties>
-                        <Property name="maximumRowCount" type="int" value="12"/>
+                        <Property name="maximumRowCount" type="int" value="20"/>
                         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                           <StringArray count="1">
                             <StringItem index="0" value="- Select -"/>
@@ -700,7 +716,7 @@
                     </Component>
                     <Component class="javax.swing.JComboBox" name="modification2JComboBox">
                       <Properties>
-                        <Property name="maximumRowCount" type="int" value="12"/>
+                        <Property name="maximumRowCount" type="int" value="20"/>
                         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                           <StringArray count="1">
                             <StringItem index="0" value="- Select -"/>
@@ -728,7 +744,7 @@
                     </Component>
                     <Component class="javax.swing.JComboBox" name="modification3JComboBox">
                       <Properties>
-                        <Property name="maximumRowCount" type="int" value="12"/>
+                        <Property name="maximumRowCount" type="int" value="20"/>
                         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                           <StringArray count="1">
                             <StringItem index="0" value="- Select -"/>

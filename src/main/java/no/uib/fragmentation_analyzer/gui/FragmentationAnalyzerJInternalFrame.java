@@ -1,6 +1,7 @@
 package no.uib.fragmentation_analyzer.gui;
 
 import javax.swing.JInternalFrame;
+import org.jfree.chart.ChartPanel;
 
 /**
  * An extension of a JInternalFrame that adds two parameters: frame type and frame id. 
@@ -11,6 +12,10 @@ import javax.swing.JInternalFrame;
  */
 public class FragmentationAnalyzerJInternalFrame extends JInternalFrame {
 
+    /**
+     * A reference to the chart panel.
+     */
+    private ChartPanel chartPanel;
     /**
      * Frame type e.g., spectrum panel, box plot, etc.
      */
@@ -27,13 +32,15 @@ public class FragmentationAnalyzerJInternalFrame extends JInternalFrame {
      * @param resizable
      * @param closable
      * @param maximizable
+     * @param chartPanel
      * @param internalFrameType Frame type e.g., spectrum panel, box plot, etc.
      * @param uniqueId Unique frame id
      */
     public FragmentationAnalyzerJInternalFrame(String title, boolean resizable, boolean closable,
-            boolean maximizable, String internalFrameType, int uniqueId) {
+            boolean maximizable, ChartPanel chartPanel, String internalFrameType, int uniqueId) {
         super(title, resizable, closable, maximizable);
 
+        this.chartPanel = chartPanel;
         this.internalFrameType = internalFrameType;
         this.uniqueId = uniqueId;
     }
@@ -64,5 +71,19 @@ public class FragmentationAnalyzerJInternalFrame extends JInternalFrame {
      */
     public void setUniqueId(int uniqueId) {
         this.uniqueId = uniqueId;
+    }
+
+    /**
+     * @return the chartPanel
+     */
+    public ChartPanel getChartPanel() {
+        return chartPanel;
+    }
+
+    /**
+     * @param chartPanel the chartPanel to set
+     */
+    public void setChartPanel(ChartPanel chartPanel) {
+        this.chartPanel = chartPanel;
     }
 }
