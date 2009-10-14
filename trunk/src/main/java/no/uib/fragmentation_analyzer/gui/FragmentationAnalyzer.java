@@ -80,6 +80,7 @@ import org.jfree.chart.labels.BoxAndWhiskerToolTipGenerator;
 import org.jfree.chart.labels.StandardXYToolTipGenerator;
 import org.jfree.chart.plot.CategoryMarker;
 import org.jfree.chart.plot.CategoryPlot;
+import org.jfree.chart.plot.DatasetRenderingOrder;
 import org.jfree.chart.plot.IntervalMarker;
 import org.jfree.chart.plot.Marker;
 import org.jfree.chart.plot.PlotOrientation;
@@ -355,14 +356,16 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
         searchButtonGroup = new javax.swing.ButtonGroup();
         internalFramesJPopupMenu = new javax.swing.JPopupMenu();
-        removeAllInternalFramesJMenuItem = new javax.swing.JMenuItem();
-        showLegendsJMenuItem = new javax.swing.JMenuItem();
-        showMarkersJMenuItem = new javax.swing.JMenuItem();
-        showAverageJMenuItem = new javax.swing.JMenuItem();
         showSpectrumToolBarJMenuItem = new javax.swing.JMenuItem();
         showBoxPlotToolBarJMenuItem = new javax.swing.JMenuItem();
         showScatterPlotToolBarJMenuItem = new javax.swing.JMenuItem();
         showBubblePlotToolBarJMenuItem = new javax.swing.JMenuItem();
+        jSeparator2 = new javax.swing.JSeparator();
+        showLegendsJMenuItem = new javax.swing.JMenuItem();
+        showMarkersJMenuItem = new javax.swing.JMenuItem();
+        showAverageJMenuItem = new javax.swing.JMenuItem();
+        jSeparator1 = new javax.swing.JSeparator();
+        removeAllInternalFramesJMenuItem = new javax.swing.JMenuItem();
         selectIdentificationsJPopupMenu = new javax.swing.JPopupMenu();
         selectAllIdentificationsJMenuItem = new javax.swing.JMenuItem();
         invertSelectionIdentificationsJMenuItem = new javax.swing.JMenuItem();
@@ -499,38 +502,6 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         helpJMenuItem = new javax.swing.JMenuItem();
         aboutJMenuItem = new javax.swing.JMenuItem();
 
-        removeAllInternalFramesJMenuItem.setText("Remove All");
-        removeAllInternalFramesJMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                removeAllInternalFramesJMenuItemActionPerformed(evt);
-            }
-        });
-        internalFramesJPopupMenu.add(removeAllInternalFramesJMenuItem);
-
-        showLegendsJMenuItem.setText("Hide Legend");
-        showLegendsJMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                showLegendsJMenuItemActionPerformed(evt);
-            }
-        });
-        internalFramesJPopupMenu.add(showLegendsJMenuItem);
-
-        showMarkersJMenuItem.setText("Show Markers");
-        showMarkersJMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                showMarkersJMenuItemActionPerformed(evt);
-            }
-        });
-        internalFramesJPopupMenu.add(showMarkersJMenuItem);
-
-        showAverageJMenuItem.setText("Show Average Mass Errors");
-        showAverageJMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                showAverageJMenuItemActionPerformed(evt);
-            }
-        });
-        internalFramesJPopupMenu.add(showAverageJMenuItem);
-
         showSpectrumToolBarJMenuItem.setText("Show Spectrum Tool Bar");
         showSpectrumToolBarJMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -562,6 +533,40 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
             }
         });
         internalFramesJPopupMenu.add(showBubblePlotToolBarJMenuItem);
+        internalFramesJPopupMenu.add(jSeparator2);
+
+        showLegendsJMenuItem.setText("Hide Legend");
+        showLegendsJMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                showLegendsJMenuItemActionPerformed(evt);
+            }
+        });
+        internalFramesJPopupMenu.add(showLegendsJMenuItem);
+
+        showMarkersJMenuItem.setText("Show Markers");
+        showMarkersJMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                showMarkersJMenuItemActionPerformed(evt);
+            }
+        });
+        internalFramesJPopupMenu.add(showMarkersJMenuItem);
+
+        showAverageJMenuItem.setText("Show Average Mass Errors");
+        showAverageJMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                showAverageJMenuItemActionPerformed(evt);
+            }
+        });
+        internalFramesJPopupMenu.add(showAverageJMenuItem);
+        internalFramesJPopupMenu.add(jSeparator1);
+
+        removeAllInternalFramesJMenuItem.setText("Remove All");
+        removeAllInternalFramesJMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removeAllInternalFramesJMenuItemActionPerformed(evt);
+            }
+        });
+        internalFramesJPopupMenu.add(removeAllInternalFramesJMenuItem);
 
         selectAllIdentificationsJMenuItem.setText("Select/Deselect All");
         selectAllIdentificationsJMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -3248,112 +3253,14 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
             }
         }
 
-
         // add average mass error line
         if (currentLabelType == PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE_ALL) {
-            XYSeries averageError = new XYSeries("AverageError");
-
-            Iterator<Double> averageIterator = averageValues.keySet().iterator();
-
-            ArrayList<Double> mzValues = new ArrayList<Double>();
-
-            while (averageIterator.hasNext()) {
-                mzValues.add(averageIterator.next());
-            }
-
-            // ToDo: sorting is not needed??
-            java.util.Collections.sort(mzValues);
-
-            for (int i = 0; i < mzValues.size(); i++) {
-                Double currentMzValue = mzValues.get(i);
-                Double currentAverage = averageValues.get(currentMzValue);
-                averageError.add(currentMzValue, currentAverage);
-            }
-
-
-            XYSeriesCollection dataset = new XYSeriesCollection();
-            dataset.addSeries(averageError);
-
-            XYItemRenderer renderer = new XYLineAndShapeRenderer(true, false);
-            renderer.setSeriesPaint(0, Color.BLACK);
-            renderer.setBaseToolTipGenerator(new StandardXYToolTipGenerator());
-
-            if (chart.getPlot() instanceof XYPlot) {
-                ((XYPlot) chart.getPlot()).setDataset(1, dataset);
-                ((XYPlot) chart.getPlot()).setRenderer(1, renderer);
-            }
-
-            ((XYPlot) chart.getPlot()).getRenderer(1).setSeriesVisible(0, showAverageMassError);
+            addAverageMassErrorLine(averageValues, chart);
         }
-
-
-        int horizontalFontPadding = 13;
 
         // add fragment ion type markers
         if (currentLabelType == PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE_ALL) {
-            Iterator<String> iterator = data.keySet().iterator();
-
-            while (iterator.hasNext()) {
-
-                String fragmentIonType = iterator.next();
-
-                ArrayList<XYZDataPoint> dataPoints = data.get(fragmentIonType);
-
-                XYZDataPoint currentDataPoint = dataPoints.get(0);
-
-                double currentXValue = currentDataPoint.getX();
-
-                IntervalMarker intervalMarker = new IntervalMarker(currentXValue - 5, currentXValue + 5, defaultMarkerColor);
-
-                if (showMarkers) {
-                    intervalMarker.setAlpha(defaultVisibleMarkerAlpha);
-                } else {
-                    intervalMarker.setAlpha(defaultNonVisibleMarkerAlpha);
-                }
-
-                intervalMarker.setLabel(fragmentIonType);
-                intervalMarker.setLabelFont(new Font("SansSerif", Font.PLAIN, 10));
-                intervalMarker.setLabelPaint(Color.GRAY);
-                intervalMarker.setLabelTextAnchor(TextAnchor.TOP_LEFT);
-
-                if (fragmentIonType.lastIndexOf("H2O") != -1) {
-                    intervalMarker.setLabelOffset(new RectangleInsets(horizontalFontPadding, 0, horizontalFontPadding, 0));
-                }
-
-                if (fragmentIonType.lastIndexOf("NH3") != -1) {
-                    intervalMarker.setLabelOffset(new RectangleInsets(horizontalFontPadding * 2, 0, horizontalFontPadding * 2, 0));
-                }
-
-                if (fragmentIonType.lastIndexOf("Prec") != -1) {
-                    intervalMarker.setLabelOffset(new RectangleInsets(horizontalFontPadding * 3, 0, horizontalFontPadding * 3, 0));
-
-                    if (fragmentIonType.lastIndexOf("H2O") != -1) {
-                        intervalMarker.setLabelOffset(new RectangleInsets(horizontalFontPadding * 4, 0, horizontalFontPadding * 4, 0));
-                    }
-
-                    if (fragmentIonType.lastIndexOf("NH3") != -1) {
-                        intervalMarker.setLabelOffset(new RectangleInsets(horizontalFontPadding * 5, 0, horizontalFontPadding * 5, 0));
-                    }
-                }
-
-                if (fragmentIonType.startsWith("i")) {
-                    intervalMarker.setLabelOffset(new RectangleInsets(horizontalFontPadding * 4, 0, horizontalFontPadding * 4, 0));
-                }
-
-                if (fragmentIonType.lastIndexOf("++") != -1) {
-                    intervalMarker.setLabelOffset(new RectangleInsets(horizontalFontPadding * 7, 0, horizontalFontPadding * 7, 0));
-
-                    if (fragmentIonType.lastIndexOf("H2O") != -1) {
-                        intervalMarker.setLabelOffset(new RectangleInsets(horizontalFontPadding * 8, 0, horizontalFontPadding * 8, 0));
-                    }
-
-                    if (fragmentIonType.lastIndexOf("NH3") != -1) {
-                        intervalMarker.setLabelOffset(new RectangleInsets(horizontalFontPadding * 9, 0, horizontalFontPadding * 9, 0));
-                    }
-                }
-
-                ((XYPlot) chart.getPlot()).addDomainMarker(intervalMarker, Layer.BACKGROUND);
-            }
+            addFragmentIonTypeMarkers(data, chart);
         }
 
         // create the interal frame and add the plot
@@ -3371,6 +3278,126 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
     }
 
     /**
+     * Adds the average mass error line to the plot.
+     *
+     * @param averageValues the map of average values (mz-value, average mass error)
+     * @param chart the chart to add the mass error line to
+     */
+    private void addAverageMassErrorLine(HashMap<Double, Double> averageValues, JFreeChart chart) {
+
+        XYSeries averageError = new XYSeries("Average Mass Error");
+
+        Iterator<Double> averageIterator = averageValues.keySet().iterator();
+
+        // add the mass errors to the data series
+        while (averageIterator.hasNext()) {
+            Double currentMzValue = averageIterator.next();
+            Double currentAverage = averageValues.get(currentMzValue);
+            averageError.add(currentMzValue, currentAverage);
+        }
+
+        // add the data series to the data set
+        XYSeriesCollection dataset = new XYSeriesCollection();
+        dataset.addSeries(averageError);
+
+        // create the mass error line renderer
+        XYItemRenderer renderer = new XYLineAndShapeRenderer(true, false);
+        renderer.setSeriesPaint(0, Color.BLACK);
+        renderer.setBaseToolTipGenerator(new StandardXYToolTipGenerator());
+
+        // add the data set to the plot
+        if (chart.getPlot() instanceof XYPlot) {
+            ((XYPlot) chart.getPlot()).setDataset(1, dataset);
+            ((XYPlot) chart.getPlot()).setRenderer(1, renderer);
+        }
+
+        // make the mass error line visble or not
+        ((XYPlot) chart.getPlot()).getRenderer(1).setSeriesVisible(0, showAverageMassError);
+
+        // makes sure that the average mass error line is rendered last, i.e., to the front
+        ((XYPlot) chart.getPlot()).setDatasetRenderingOrder(DatasetRenderingOrder.FORWARD);
+    }
+
+    /**
+     * Adds interval markers for all the fragment ion types.
+     *
+     * @param data the data to get the interval markers from
+     * @param chart the chart to add the markers to
+     */
+    private void addFragmentIonTypeMarkers(HashMap<String, ArrayList<XYZDataPoint>> data, JFreeChart chart) {
+
+        int horizontalFontPadding = 13;
+
+        Iterator<String> iterator = data.keySet().iterator();
+
+        // iterate the data and add one interval marker for each fragment ion type
+        while (iterator.hasNext()) {
+
+            String fragmentIonType = iterator.next();
+
+            // get the mz value of the current fragment ion type
+            ArrayList<XYZDataPoint> dataPoints = data.get(fragmentIonType);
+            XYZDataPoint currentDataPoint = dataPoints.get(0);
+            double currentXValue = currentDataPoint.getX();
+
+            // create the interval marker
+            IntervalMarker intervalMarker = new IntervalMarker(currentXValue - 5, currentXValue + 5, defaultMarkerColor);
+            intervalMarker.setLabel(fragmentIonType);
+            intervalMarker.setLabelFont(new Font("SansSerif", Font.PLAIN, 10));
+            intervalMarker.setLabelPaint(Color.GRAY);
+            intervalMarker.setLabelTextAnchor(TextAnchor.TOP_LEFT);
+
+            // make the marker visible or not
+            if (showMarkers) {
+                intervalMarker.setAlpha(defaultVisibleMarkerAlpha);
+            } else {
+                intervalMarker.setAlpha(defaultNonVisibleMarkerAlpha);
+            }
+
+            // set the horizontal location of the markers label
+            // this is need so that not all labels appear on top of each other
+            if (fragmentIonType.lastIndexOf("H2O") != -1) {
+                intervalMarker.setLabelOffset(new RectangleInsets(horizontalFontPadding, 0, horizontalFontPadding, 0));
+            }
+
+            if (fragmentIonType.lastIndexOf("NH3") != -1) {
+                intervalMarker.setLabelOffset(new RectangleInsets(horizontalFontPadding * 2, 0, horizontalFontPadding * 2, 0));
+            }
+
+            if (fragmentIonType.lastIndexOf("Prec") != -1) {
+                intervalMarker.setLabelOffset(new RectangleInsets(horizontalFontPadding * 3, 0, horizontalFontPadding * 3, 0));
+
+                if (fragmentIonType.lastIndexOf("H2O") != -1) {
+                    intervalMarker.setLabelOffset(new RectangleInsets(horizontalFontPadding * 4, 0, horizontalFontPadding * 4, 0));
+                }
+
+                if (fragmentIonType.lastIndexOf("NH3") != -1) {
+                    intervalMarker.setLabelOffset(new RectangleInsets(horizontalFontPadding * 5, 0, horizontalFontPadding * 5, 0));
+                }
+            }
+
+            if (fragmentIonType.startsWith("i")) {
+                intervalMarker.setLabelOffset(new RectangleInsets(horizontalFontPadding * 4, 0, horizontalFontPadding * 4, 0));
+            }
+
+            if (fragmentIonType.lastIndexOf("++") != -1) {
+                intervalMarker.setLabelOffset(new RectangleInsets(horizontalFontPadding * 7, 0, horizontalFontPadding * 7, 0));
+
+                if (fragmentIonType.lastIndexOf("H2O") != -1) {
+                    intervalMarker.setLabelOffset(new RectangleInsets(horizontalFontPadding * 8, 0, horizontalFontPadding * 8, 0));
+                }
+
+                if (fragmentIonType.lastIndexOf("NH3") != -1) {
+                    intervalMarker.setLabelOffset(new RectangleInsets(horizontalFontPadding * 9, 0, horizontalFontPadding * 9, 0));
+                }
+            }
+
+            // add the interval marker to the plot
+            ((XYPlot) chart.getPlot()).addDomainMarker(intervalMarker, Layer.BACKGROUND);
+        }
+    }
+
+    /**
      * Adds a marker in the plot highlighting the modified residue.
      *
      * @param modifiedSequence
@@ -3378,8 +3405,8 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
      */
     private void addModificationMarker(String modifiedSequence, CategoryPlot plot) {
 
+        // find the label to use for the modification marker
         String tempModifiedSequence = modifiedSequence;
-        int modificationIndex;
 
         // remove the n-terminal
         if (tempModifiedSequence.startsWith("#")) {
@@ -3388,16 +3415,17 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
             tempModifiedSequence = tempModifiedSequence.substring(tempModifiedSequence.indexOf("-") + 1);
         }
 
-        modificationIndex = tempModifiedSequence.indexOf('<') - 1;
+        int modificationIndex = tempModifiedSequence.indexOf('<') - 1;
 
         String modificationCategory = "" + tempModifiedSequence.charAt(modificationIndex) + (modificationIndex + 1);
 
-        CategoryMarker marker = new CategoryMarker(modificationCategory,
-                defaultMarkerColor, new BasicStroke(1.0f));
+        // create the marker and add it to the plot
+        CategoryMarker marker = new CategoryMarker(modificationCategory, defaultMarkerColor, new BasicStroke(1.0f));
         marker.setDrawAsLine(false);
         marker.setLabelOffset(new RectangleInsets(2, 5, 2, 5));
         plot.addDomainMarker(marker, Layer.BACKGROUND);
 
+        // make the marker visible or not visible
         if (showMarkers) {
             marker.setAlpha(defaultVisibleMarkerAlpha);
         } else {
@@ -3414,12 +3442,15 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
     private CategoryPlot getCategoryPlot(CategoryDataset dataSet) {
         CategoryAxis xAxis = new CategoryAxis("Sequence");
         xAxis.setLabelFont(new Font("SansSerif", Font.PLAIN, 10));
+
         NumberAxis yAxis = new NumberAxis("Intensity");
         yAxis.setLabelFont(new Font("SansSerif", Font.PLAIN, 10));
         yAxis.setAutoRangeIncludesZero(false);
+
         BoxAndWhiskerRenderer renderer = new BoxAndWhiskerRenderer();
         renderer.setFillBox(true);
         renderer.setBaseToolTipGenerator(new BoxAndWhiskerToolTipGenerator());
+
         return new CategoryPlot(dataSet, xAxis, yAxis, renderer);
     }
 
@@ -5289,7 +5320,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
             if (tempPlotType.equalsIgnoreCase("MassErrorScatterPlot") ||
                     tempPlotType.equalsIgnoreCase("MassErrorBubblePlot")) {
 
-                if(((XYPlot) tempChart.getPlot()).getRenderer(1) != null){
+                if (((XYPlot) tempChart.getPlot()).getRenderer(1) != null) {
                     ((XYPlot) tempChart.getPlot()).getRenderer(1).setSeriesVisible(0, showAverageMassError);
                 }
             }
@@ -5300,7 +5331,6 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         } else {
             showAverageJMenuItem.setText("Show Average Mass Errors");
         }
-
     }//GEN-LAST:event_showAverageJMenuItemActionPerformed
 
     /**
@@ -6647,6 +6677,8 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JSeparator jSeparator4;
     private javax.swing.JSeparator jSeparator5;

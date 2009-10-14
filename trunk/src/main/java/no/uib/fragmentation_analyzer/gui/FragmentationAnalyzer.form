@@ -10,38 +10,6 @@
         <Property name="useNullLayout" type="boolean" value="true"/>
       </Layout>
       <SubComponents>
-        <MenuItem class="javax.swing.JMenuItem" name="removeAllInternalFramesJMenuItem">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Remove All"/>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="removeAllInternalFramesJMenuItemActionPerformed"/>
-          </Events>
-        </MenuItem>
-        <MenuItem class="javax.swing.JMenuItem" name="showLegendsJMenuItem">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Hide Legend"/>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="showLegendsJMenuItemActionPerformed"/>
-          </Events>
-        </MenuItem>
-        <MenuItem class="javax.swing.JMenuItem" name="showMarkersJMenuItem">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Show Markers"/>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="showMarkersJMenuItemActionPerformed"/>
-          </Events>
-        </MenuItem>
-        <MenuItem class="javax.swing.JMenuItem" name="showAverageJMenuItem">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Show Average Mass Errors"/>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="showAverageJMenuItemActionPerformed"/>
-          </Events>
-        </MenuItem>
         <MenuItem class="javax.swing.JMenuItem" name="showSpectrumToolBarJMenuItem">
           <Properties>
             <Property name="text" type="java.lang.String" value="Show Spectrum Tool Bar"/>
@@ -72,6 +40,42 @@
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="showBubblePlotToolBarJMenuItemActionPerformed"/>
+          </Events>
+        </MenuItem>
+        <Component class="javax.swing.JSeparator" name="jSeparator2">
+        </Component>
+        <MenuItem class="javax.swing.JMenuItem" name="showLegendsJMenuItem">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Hide Legend"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="showLegendsJMenuItemActionPerformed"/>
+          </Events>
+        </MenuItem>
+        <MenuItem class="javax.swing.JMenuItem" name="showMarkersJMenuItem">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Show Markers"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="showMarkersJMenuItemActionPerformed"/>
+          </Events>
+        </MenuItem>
+        <MenuItem class="javax.swing.JMenuItem" name="showAverageJMenuItem">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Show Average Mass Errors"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="showAverageJMenuItemActionPerformed"/>
+          </Events>
+        </MenuItem>
+        <Component class="javax.swing.JSeparator" name="jSeparator1">
+        </Component>
+        <MenuItem class="javax.swing.JMenuItem" name="removeAllInternalFramesJMenuItem">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Remove All"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="removeAllInternalFramesJMenuItemActionPerformed"/>
           </Events>
         </MenuItem>
       </SubComponents>
