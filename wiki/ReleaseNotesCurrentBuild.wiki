@@ -11,5 +11,6 @@
  * FEATURE IMPROVEMENT: Increased the number of simultaneously visible elements in the drop down menus.
  * FEATURE IMPROVEMENT: Peptide sequence is now included in title of mass error plots when only one sequence is analyzed and "combine" is selected.
  * FEATURE IMPROVEMENT: The peptide sequence is now included in the title for "combine type plots" if all have rows contain the same modified peptide sequence.
+ * FEATURE IMPROVMENT: Added dividers to the internal frame popup menu.
  * BUG FIX: Instrument 2 and 3 are now reset if the instrument 1 is set to "- Select -". Same for instrument 3 when instrument 2 is set to "- Select -". Same fix also added for the modifications.
  * BUG FIX: Update visible series selection did not update the last added plot.
