@@ -20,9 +20,9 @@ public class PlotLabelSelection extends javax.swing.JDialog {
         initComponents();
 
         // set the current label type
-        if(fragmentationAnalyzer.getLabelType() == fragmentationAnalyzer.PLOT_LABEL_TYPE_INSTRUMENT){
+        if(fragmentationAnalyzer.getLabelType() == fragmentationAnalyzer.getProperties().PLOT_LABEL_TYPE_INSTRUMENT){
             instrumentNameJRadioButton.setSelected(true);
-        } else if(fragmentationAnalyzer.getLabelType() == fragmentationAnalyzer.PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE_ALL){
+        } else if(fragmentationAnalyzer.getLabelType() == fragmentationAnalyzer.getProperties().PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE_ALL){
             fragmentIonTypeJRadioButton.setSelected(true);
         }
 
@@ -149,9 +149,9 @@ public class PlotLabelSelection extends javax.swing.JDialog {
     private void okJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okJButtonActionPerformed
 
         if(instrumentNameJRadioButton.isSelected()){
-            fragmentationAnalyzer.setLabelType(fragmentationAnalyzer.PLOT_LABEL_TYPE_INSTRUMENT);
+            fragmentationAnalyzer.setLabelType(fragmentationAnalyzer.getProperties().PLOT_LABEL_TYPE_INSTRUMENT);
         } else{ // fragment ion type is selected
-            fragmentationAnalyzer.setLabelType(fragmentationAnalyzer.PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE_ALL);
+            fragmentationAnalyzer.setLabelType(fragmentationAnalyzer.getProperties().PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE_ALL);
         }
 
         this.setVisible(false);

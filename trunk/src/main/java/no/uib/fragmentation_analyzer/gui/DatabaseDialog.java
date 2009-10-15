@@ -311,7 +311,7 @@ public class DatabaseDialog extends javax.swing.JDialog {
 
             if(extractIdentifications){
 
-                boolean folderCreated = new File(fragmentationAnalyzer.getCurrentDataSetFolder()).mkdir();
+                boolean folderCreated = new File(fragmentationAnalyzer.getProperties().getCurrentDataSetFolder()).mkdir();
 
                 if (!folderCreated) {
                     JOptionPane.showMessageDialog(this,
@@ -336,7 +336,7 @@ public class DatabaseDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void cancelJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelJButtonActionPerformed
-        fragmentationAnalyzer.setCurrentDataSetFolder(null);
+        fragmentationAnalyzer.getProperties().setCurrentDataSetFolder(null);
         this.setVisible(false);
         this.dispose();
 }//GEN-LAST:event_cancelJButtonActionPerformed
