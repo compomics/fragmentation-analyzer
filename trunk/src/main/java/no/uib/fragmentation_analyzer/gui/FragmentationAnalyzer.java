@@ -145,8 +145,6 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         // make the interal frame tool bars invisible
         spectrumPanelToolBarJInternalFrame.setVisible(false);
         boxPlotPanelToolBarJInternalFrame.setVisible(false);
-        scatterPlotPanelToolBarJInternalFrame.setVisible(false);
-        bubblePlotPanelToolBarJInternalFrame.setVisible(false);
 
         plotsAndAnalysesJScrollPane.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {
 
@@ -166,18 +164,6 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                             40 + e.getValue(),
                             (int) boxPlotPanelToolBarJInternalFrame.getBounds().getWidth(),
                             (int) boxPlotPanelToolBarJInternalFrame.getBounds().getHeight());
-
-                    scatterPlotPanelToolBarJInternalFrame.setBounds(
-                            (int) scatterPlotPanelToolBarJInternalFrame.getBounds().getX(),
-                            40 + e.getValue(),
-                            (int) scatterPlotPanelToolBarJInternalFrame.getBounds().getWidth(),
-                            (int) scatterPlotPanelToolBarJInternalFrame.getBounds().getHeight());
-
-                    bubblePlotPanelToolBarJInternalFrame.setBounds(
-                            (int) bubblePlotPanelToolBarJInternalFrame.getBounds().getX(),
-                            40 + e.getValue(),
-                            (int) bubblePlotPanelToolBarJInternalFrame.getBounds().getWidth(),
-                            (int) bubblePlotPanelToolBarJInternalFrame.getBounds().getHeight());
                 }
             }
         });
@@ -462,16 +448,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         bIonsBoxPlotJCheckBox = new javax.swing.JCheckBox();
         yIonsBoxPlotJCheckBox = new javax.swing.JCheckBox();
         jSeparator7 = new javax.swing.JSeparator();
-        scatterPlotPanelToolBarJInternalFrame = new javax.swing.JInternalFrame();
-        jPanel7 = new javax.swing.JPanel();
-        scatterPlotSeries1JCheckBox = new javax.swing.JCheckBox();
-        scatterPlotSeries2JCheckBox = new javax.swing.JCheckBox();
-        scatterPlotSeries3JCheckBox = new javax.swing.JCheckBox();
-        bubblePlotPanelToolBarJInternalFrame = new javax.swing.JInternalFrame();
-        jPanel8 = new javax.swing.JPanel();
-        bubblePlotSeries1JCheckBox = new javax.swing.JCheckBox();
-        bubblePlotSeries2JCheckBox = new javax.swing.JCheckBox();
-        bubblePlotSeries3JCheckBox = new javax.swing.JCheckBox();
+        internalFrameTipJLabel = new javax.swing.JLabel();
         jMenuBar = new javax.swing.JMenuBar();
         fileJMenu = new javax.swing.JMenu();
         opemJMenuItem = new javax.swing.JMenuItem();
@@ -498,7 +475,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         });
         internalFramesJPopupMenu.add(showBoxPlotToolBarJMenuItem);
 
-        showScatterPlotToolBarJMenuItem.setText("Show Scatter Plot Tool Bar");
+        showScatterPlotToolBarJMenuItem.setText("Data Series Selection");
         showScatterPlotToolBarJMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 showScatterPlotToolBarJMenuItemActionPerformed(evt);
@@ -506,7 +483,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         });
         internalFramesJPopupMenu.add(showScatterPlotToolBarJMenuItem);
 
-        showBubblePlotToolBarJMenuItem.setText("Show Bubble Plot Tool Bar");
+        showBubblePlotToolBarJMenuItem.setText("Data Series Selection");
         showBubblePlotToolBarJMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 showBubblePlotToolBarJMenuItemActionPerformed(evt);
@@ -949,9 +926,8 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                 .add(38, 38, 38)
                 .add(searchTypeJXPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(generalSearchJRadioButton)
-                    .add(searchTypeJXPanelLayout.createSequentialGroup()
-                        .add(modificationSearchJRadioButton)
-                        .addContainerGap(164, Short.MAX_VALUE))))
+                    .add(modificationSearchJRadioButton))
+                .addContainerGap(164, Short.MAX_VALUE))
         );
         searchTypeJXPanelLayout.setVerticalGroup(
             searchTypeJXPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -1574,173 +1550,10 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         boxPlotPanelToolBarJInternalFrame.setBounds(660, 70, 100, 240);
         plotsAndAnalysesJDesktopPane.add(boxPlotPanelToolBarJInternalFrame, javax.swing.JLayeredPane.POPUP_LAYER);
 
-        scatterPlotPanelToolBarJInternalFrame.setClosable(true);
-        scatterPlotPanelToolBarJInternalFrame.setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
-        scatterPlotPanelToolBarJInternalFrame.setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/no/uib/fragmentation_analyzer/icons/scatter_plot.GIF"))); // NOI18N
-        scatterPlotPanelToolBarJInternalFrame.setPreferredSize(new java.awt.Dimension(100, 350));
-        scatterPlotPanelToolBarJInternalFrame.setVisible(true);
-
-        jPanel7.setOpaque(false);
-        jPanel7.setPreferredSize(new java.awt.Dimension(96, 463));
-
-        scatterPlotSeries1JCheckBox.setSelected(true);
-        scatterPlotSeries1JCheckBox.setText("Series 1");
-        scatterPlotSeries1JCheckBox.setToolTipText("Hide Scatter Plot Series");
-        scatterPlotSeries1JCheckBox.setIconTextGap(15);
-        scatterPlotSeries1JCheckBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                scatterPlotSeries1JCheckBoxActionPerformed(evt);
-            }
-        });
-
-        scatterPlotSeries2JCheckBox.setSelected(true);
-        scatterPlotSeries2JCheckBox.setText("Series 2");
-        scatterPlotSeries2JCheckBox.setToolTipText("Hide Scatter Plot Series");
-        scatterPlotSeries2JCheckBox.setIconTextGap(15);
-        scatterPlotSeries2JCheckBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                scatterPlotSeries2JCheckBoxActionPerformed(evt);
-            }
-        });
-
-        scatterPlotSeries3JCheckBox.setSelected(true);
-        scatterPlotSeries3JCheckBox.setText("Series 3");
-        scatterPlotSeries3JCheckBox.setToolTipText("Hide Scatter Plot Series");
-        scatterPlotSeries3JCheckBox.setIconTextGap(15);
-        scatterPlotSeries3JCheckBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                scatterPlotSeries3JCheckBoxActionPerformed(evt);
-            }
-        });
-
-        org.jdesktop.layout.GroupLayout jPanel7Layout = new org.jdesktop.layout.GroupLayout(jPanel7);
-        jPanel7.setLayout(jPanel7Layout);
-        jPanel7Layout.setHorizontalGroup(
-            jPanel7Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jPanel7Layout.createSequentialGroup()
-                .addContainerGap()
-                .add(jPanel7Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(scatterPlotSeries1JCheckBox)
-                    .add(scatterPlotSeries2JCheckBox)
-                    .add(scatterPlotSeries3JCheckBox))
-                .addContainerGap())
-        );
-
-        jPanel7Layout.linkSize(new java.awt.Component[] {scatterPlotSeries1JCheckBox, scatterPlotSeries2JCheckBox, scatterPlotSeries3JCheckBox}, org.jdesktop.layout.GroupLayout.HORIZONTAL);
-
-        jPanel7Layout.setVerticalGroup(
-            jPanel7Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jPanel7Layout.createSequentialGroup()
-                .add(10, 10, 10)
-                .add(scatterPlotSeries1JCheckBox)
-                .add(0, 0, 0)
-                .add(scatterPlotSeries2JCheckBox)
-                .add(0, 0, 0)
-                .add(scatterPlotSeries3JCheckBox))
-        );
-
-        jPanel7Layout.linkSize(new java.awt.Component[] {scatterPlotSeries1JCheckBox, scatterPlotSeries2JCheckBox, scatterPlotSeries3JCheckBox}, org.jdesktop.layout.GroupLayout.VERTICAL);
-
-        org.jdesktop.layout.GroupLayout scatterPlotPanelToolBarJInternalFrameLayout = new org.jdesktop.layout.GroupLayout(scatterPlotPanelToolBarJInternalFrame.getContentPane());
-        scatterPlotPanelToolBarJInternalFrame.getContentPane().setLayout(scatterPlotPanelToolBarJInternalFrameLayout);
-        scatterPlotPanelToolBarJInternalFrameLayout.setHorizontalGroup(
-            scatterPlotPanelToolBarJInternalFrameLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(scatterPlotPanelToolBarJInternalFrameLayout.createSequentialGroup()
-                .add(jPanel7, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 87, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        scatterPlotPanelToolBarJInternalFrameLayout.setVerticalGroup(
-            scatterPlotPanelToolBarJInternalFrameLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(scatterPlotPanelToolBarJInternalFrameLayout.createSequentialGroup()
-                .add(jPanel7, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 79, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        scatterPlotPanelToolBarJInternalFrame.setBounds(670, 70, 95, 100);
-        plotsAndAnalysesJDesktopPane.add(scatterPlotPanelToolBarJInternalFrame, javax.swing.JLayeredPane.POPUP_LAYER);
-
-        bubblePlotPanelToolBarJInternalFrame.setClosable(true);
-        bubblePlotPanelToolBarJInternalFrame.setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
-        bubblePlotPanelToolBarJInternalFrame.setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/no/uib/fragmentation_analyzer/icons/bubble_plot.GIF"))); // NOI18N
-        bubblePlotPanelToolBarJInternalFrame.setPreferredSize(new java.awt.Dimension(100, 350));
-        bubblePlotPanelToolBarJInternalFrame.setVisible(true);
-
-        jPanel8.setOpaque(false);
-        jPanel8.setPreferredSize(new java.awt.Dimension(96, 463));
-
-        bubblePlotSeries1JCheckBox.setSelected(true);
-        bubblePlotSeries1JCheckBox.setText("Series 1");
-        bubblePlotSeries1JCheckBox.setToolTipText("Hide Bubble Plot Series");
-        bubblePlotSeries1JCheckBox.setIconTextGap(15);
-        bubblePlotSeries1JCheckBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bubblePlotSeries1JCheckBoxActionPerformed(evt);
-            }
-        });
-
-        bubblePlotSeries2JCheckBox.setSelected(true);
-        bubblePlotSeries2JCheckBox.setText("Series 2");
-        bubblePlotSeries2JCheckBox.setToolTipText("Hide Bubble Plot Series");
-        bubblePlotSeries2JCheckBox.setIconTextGap(15);
-        bubblePlotSeries2JCheckBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bubblePlotSeries2JCheckBoxActionPerformed(evt);
-            }
-        });
-
-        bubblePlotSeries3JCheckBox.setSelected(true);
-        bubblePlotSeries3JCheckBox.setText("Series 3");
-        bubblePlotSeries3JCheckBox.setToolTipText("Hide Bubble Plot Series");
-        bubblePlotSeries3JCheckBox.setIconTextGap(15);
-        bubblePlotSeries3JCheckBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bubblePlotSeries3JCheckBoxActionPerformed(evt);
-            }
-        });
-
-        org.jdesktop.layout.GroupLayout jPanel8Layout = new org.jdesktop.layout.GroupLayout(jPanel8);
-        jPanel8.setLayout(jPanel8Layout);
-        jPanel8Layout.setHorizontalGroup(
-            jPanel8Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jPanel8Layout.createSequentialGroup()
-                .addContainerGap()
-                .add(jPanel8Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(bubblePlotSeries1JCheckBox)
-                    .add(bubblePlotSeries2JCheckBox)
-                    .add(bubblePlotSeries3JCheckBox))
-                .addContainerGap())
-        );
-
-        jPanel8Layout.linkSize(new java.awt.Component[] {bubblePlotSeries1JCheckBox, bubblePlotSeries2JCheckBox, bubblePlotSeries3JCheckBox}, org.jdesktop.layout.GroupLayout.HORIZONTAL);
-
-        jPanel8Layout.setVerticalGroup(
-            jPanel8Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jPanel8Layout.createSequentialGroup()
-                .add(10, 10, 10)
-                .add(bubblePlotSeries1JCheckBox)
-                .add(0, 0, 0)
-                .add(bubblePlotSeries2JCheckBox)
-                .add(0, 0, 0)
-                .add(bubblePlotSeries3JCheckBox))
-        );
-
-        jPanel8Layout.linkSize(new java.awt.Component[] {bubblePlotSeries1JCheckBox, bubblePlotSeries2JCheckBox, bubblePlotSeries3JCheckBox}, org.jdesktop.layout.GroupLayout.VERTICAL);
-
-        org.jdesktop.layout.GroupLayout bubblePlotPanelToolBarJInternalFrameLayout = new org.jdesktop.layout.GroupLayout(bubblePlotPanelToolBarJInternalFrame.getContentPane());
-        bubblePlotPanelToolBarJInternalFrame.getContentPane().setLayout(bubblePlotPanelToolBarJInternalFrameLayout);
-        bubblePlotPanelToolBarJInternalFrameLayout.setHorizontalGroup(
-            bubblePlotPanelToolBarJInternalFrameLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(bubblePlotPanelToolBarJInternalFrameLayout.createSequentialGroup()
-                .add(jPanel8, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 87, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        bubblePlotPanelToolBarJInternalFrameLayout.setVerticalGroup(
-            bubblePlotPanelToolBarJInternalFrameLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jPanel8, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 76, Short.MAX_VALUE)
-        );
-
-        bubblePlotPanelToolBarJInternalFrame.setBounds(670, 70, 95, 100);
-        plotsAndAnalysesJDesktopPane.add(bubblePlotPanelToolBarJInternalFrame, javax.swing.JLayeredPane.POPUP_LAYER);
+        internalFrameTipJLabel.setFont(new java.awt.Font("Tahoma", 2, 10)); // NOI18N
+        internalFrameTipJLabel.setText("Right click in the plot or on the plot title bar for plot options.");
+        internalFrameTipJLabel.setBounds(490, 0, 270, 20);
+        plotsAndAnalysesJDesktopPane.add(internalFrameTipJLabel, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         plotsAndAnalysesJScrollPane.setViewportView(plotsAndAnalysesJDesktopPane);
 
@@ -2643,6 +2456,26 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
         cancelProgress = false;
 
+//        String value = JOptionPane.showInputDialog(
+//                this, "Select Ion Scoring Type (0, 1 or 2):", "Ion Scoring Type", JOptionPane.INFORMATION_MESSAGE);
+//
+//        long tempScoringType = new Long(value).longValue();
+//
+//        if(tempScoringType == 0){
+//            properties.setNotSignificantNotScoringFragmentIon(true);
+//            properties.setSignificantNotScoringFragmentIon(false);
+//            properties.setSignificantScoringFragmentIon(false);
+//        } else if(tempScoringType == 1){
+//            properties.setNotSignificantNotScoringFragmentIon(false);
+//            properties.setSignificantNotScoringFragmentIon(true);
+//            properties.setSignificantScoringFragmentIon(false);
+//        } else if(tempScoringType == 2){
+//            properties.setNotSignificantNotScoringFragmentIon(false);
+//            properties.setSignificantNotScoringFragmentIon(false);
+//            properties.setSignificantScoringFragmentIon(true);
+//        }
+        
+
         // get the wanted plot label type from the user
         if (searchResultsJComboBox.getSelectedIndex() == Properties.SEARCH_RESULTS_MASS_ERROR_SCATTER_PLOT ||
                 searchResultsJComboBox.getSelectedIndex() == Properties.SEARCH_RESULTS_MASS_ERROR_BUBBLE_PLOT) {
@@ -2674,7 +2507,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                 }
             }
 
-            new Thread("SearchThread") {
+            new Thread("IdentificationsThread") {
 
                 @Override
                 public void run() {
@@ -3295,9 +3128,6 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
         properties.getAllChartFrames().put(internalFrameUniqueIdCounter, chart);
         internalFrameUniqueIdCounter++;
-
-        // update the visible series selection
-        updateScatterAndBubblePlotVisibleSeriesSelection();
     }
 
     /**
@@ -3490,18 +3320,6 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
     /**
      * Make sure the visible series are the same as the currently selected ones.
      */
-    private void updateScatterAndBubblePlotVisibleSeriesSelection() {
-        scatterPlotSeries1JCheckBoxActionPerformed(null);
-        scatterPlotSeries2JCheckBoxActionPerformed(null);
-        scatterPlotSeries3JCheckBoxActionPerformed(null);
-        bubblePlotSeries1JCheckBoxActionPerformed(null);
-        bubblePlotSeries2JCheckBoxActionPerformed(null);
-        bubblePlotSeries3JCheckBoxActionPerformed(null);
-    }
-
-    /**
-     * Make sure the visible series are the same as the currently selected ones.
-     */
     private void updateVisibleFragmentIonBoxPlotSelection() {
         bIonsBoxPlotJCheckBoxActionPerformed(null);
         yIonsBoxPlotJCheckBoxActionPerformed(null);
@@ -3522,6 +3340,27 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
     private double getPpmError(double theoreticalMzValue, double massError) {
         double ppmValue = (massError / theoreticalMzValue) * 1000000;
         return ppmValue;
+    }
+
+    /**
+     * Returns true if the given scoring type is currently selected, false otherwise.
+     *
+     * @param scoringType the scoring type (0, 1 or 2)
+     * @return true if the given scoring type is currently selected, false otherwise
+     */
+    private boolean isScoringTypeSelected(long scoringType){
+
+        boolean scoringTypeIsSelected = false;
+
+        if(scoringType == 0){
+            scoringTypeIsSelected = properties.isNotSignificantNotScoringFragmentIon();
+        } else if(scoringType == 1){
+            scoringTypeIsSelected = properties.isSignificantNotScoringFragmentIon();
+        } else if(scoringType == 2){
+            scoringTypeIsSelected = properties.isSignificantScoringFragmentIon();
+        }
+
+        return scoringTypeIsSelected;
     }
 
     /**
@@ -3547,46 +3386,50 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                     conn, (long) currentIdentification.getIdentificationId());
 
             for (int j = 0; j < fragmentIons.size(); j++) {
-                double mzValue = fragmentIons.get(j).getMz().doubleValue();
-                double intensity = fragmentIons.get(j).getIntensity();
-                double massError = fragmentIons.get(j).getMassdelta().doubleValue();
 
-                String fragmentIonType = fragmentIons.get(j).getIonname();
-                int fragmentIonNumber = (int) fragmentIons.get(j).getFragmentionnumber();
+                if(isScoringTypeSelected(fragmentIons.get(j).getL_ionscoringid())){
 
-                if (fragmentIonType.startsWith("a") || fragmentIonType.startsWith("b") || fragmentIonType.startsWith("c") ||
-                        fragmentIonType.startsWith("x") || fragmentIonType.startsWith("y") || fragmentIonType.startsWith("z")) {
-                    if (fragmentIonType.length() > 1) {
-                        fragmentIonType = fragmentIonType.substring(0, 1) + "[" + fragmentIonNumber + "]" + fragmentIonType.substring(1);
-                    } else {
-                        fragmentIonType = fragmentIonType.substring(0, 1) + fragmentIonNumber;
-                    }
-                }
+                    double mzValue = fragmentIons.get(j).getMz().doubleValue();
+                    double intensity = fragmentIons.get(j).getIntensity();
+                    double massError = fragmentIons.get(j).getMassdelta().doubleValue();
 
-                if (usePpmForMassError) {
-                    massError = getPpmError(mzValue, massError);
-                }
+                    String fragmentIonType = fragmentIons.get(j).getIonname();
+                    int fragmentIonNumber = (int) fragmentIons.get(j).getFragmentionnumber();
 
-                // normalize the intensity
-                if (normalize) {
-
-                    double totalIntensity = 1.0;
-
-                    if (currentIdentification.getSpectrumFileId() != null) {
-                        totalIntensity = calculateTotalIntensityForMsLimsSpectrum(currentIdentification.getSpectrumFileId());
-                    } else {
-                        if (currentIdentification.getTotalIntensity() != null) {
-                            totalIntensity = currentIdentification.getTotalIntensity();
+                    if (fragmentIonType.startsWith("a") || fragmentIonType.startsWith("b") || fragmentIonType.startsWith("c") ||
+                            fragmentIonType.startsWith("x") || fragmentIonType.startsWith("y") || fragmentIonType.startsWith("z")) {
+                        if (fragmentIonType.length() > 1) {
+                            fragmentIonType = fragmentIonType.substring(0, 1) + "[" + fragmentIonNumber + "]" + fragmentIonType.substring(1);
+                        } else {
+                            fragmentIonType = fragmentIonType.substring(0, 1) + fragmentIonNumber;
                         }
                     }
 
-                    intensity = intensity / totalIntensity;
-                }
+                    if (usePpmForMassError) {
+                        massError = getPpmError(mzValue, massError);
+                    }
 
-                if (currentLabelType == Properties.PLOT_LABEL_TYPE_INSTRUMENT) {
-                    addXYZDataPoint(data, currentIdentification.getInstrumentName(), switchYandZAxis, mzValue, massError, intensity, bubbleScaling);
-                } else if (currentLabelType == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE_ALL) {
-                    addXYZDataPoint(data, fragmentIonType, switchYandZAxis, mzValue, massError, intensity, bubbleScaling);
+                    // normalize the intensity
+                    if (normalize) {
+
+                        double totalIntensity = 1.0;
+
+                        if (currentIdentification.getSpectrumFileId() != null) {
+                            totalIntensity = calculateTotalIntensityForMsLimsSpectrum(currentIdentification.getSpectrumFileId());
+                        } else {
+                            if (currentIdentification.getTotalIntensity() != null) {
+                                totalIntensity = currentIdentification.getTotalIntensity();
+                            }
+                        }
+
+                        intensity = intensity / totalIntensity;
+                    }
+
+                    if (currentLabelType == Properties.PLOT_LABEL_TYPE_INSTRUMENT) {
+                        addXYZDataPoint(data, currentIdentification.getInstrumentName(), switchYandZAxis, mzValue, massError, intensity, bubbleScaling);
+                    } else if (currentLabelType == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE_ALL) {
+                        addXYZDataPoint(data, fragmentIonType, switchYandZAxis, mzValue, massError, intensity, bubbleScaling);
+                    }
                 }
             }
         } else {
@@ -3811,12 +3654,15 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
             Fragmention currentFragmentIon = (Fragmention) fragmentIterator.next();
 
-            if (normalize) {
-                intensities[new Long(currentFragmentIon.getFragmentionnumber()).intValue() - 1][index] +=
-                        new Long(currentFragmentIon.getIntensity()).doubleValue() / totalIntensity;
-            } else {
-                intensities[new Long(currentFragmentIon.getFragmentionnumber()).intValue() - 1][index] +=
-                        currentFragmentIon.getIntensity();
+            if(isScoringTypeSelected(currentFragmentIon.getL_ionscoringid())){
+
+                if (normalize) {
+                    intensities[new Long(currentFragmentIon.getFragmentionnumber()).intValue() - 1][index] +=
+                            new Long(currentFragmentIon.getIntensity()).doubleValue() / totalIntensity;
+                } else {
+                    intensities[new Long(currentFragmentIon.getFragmentionnumber()).intValue() - 1][index] +=
+                            currentFragmentIon.getIntensity();
+                }
             }
         }
     }
@@ -4429,8 +4275,6 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
         spectrumPanelToolBarJInternalFrame.setVisible(false);
         boxPlotPanelToolBarJInternalFrame.setVisible(false);
-        scatterPlotPanelToolBarJInternalFrame.setVisible(false);
-        bubblePlotPanelToolBarJInternalFrame.setVisible(false);
 
         plotsAndAnalysesJDesktopPane.setPreferredSize(plotsAndAnalysesJScrollPane.getMinimumSize());
         plotPaneCurrentPreferredSize = plotsAndAnalysesJDesktopPane.getPreferredSize();
@@ -4622,8 +4466,6 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
     private void showSpectrumToolBarJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showSpectrumToolBarJMenuItemActionPerformed
         spectrumPanelToolBarJInternalFrame.setVisible(true);
         boxPlotPanelToolBarJInternalFrame.setVisible(false);
-        scatterPlotPanelToolBarJInternalFrame.setVisible(false);
-        bubblePlotPanelToolBarJInternalFrame.setVisible(false);
 }//GEN-LAST:event_showSpectrumToolBarJMenuItemActionPerformed
 
     /**
@@ -4978,8 +4820,6 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
     private void showBoxPlotToolBarJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showBoxPlotToolBarJMenuItemActionPerformed
         boxPlotPanelToolBarJInternalFrame.setVisible(true);
         spectrumPanelToolBarJInternalFrame.setVisible(false);
-        scatterPlotPanelToolBarJInternalFrame.setVisible(false);
-        bubblePlotPanelToolBarJInternalFrame.setVisible(false);
 }//GEN-LAST:event_showBoxPlotToolBarJMenuItemActionPerformed
 
     /**
@@ -5027,67 +4867,35 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
     }//GEN-LAST:event_yIonsModifiedJCheckBoxActionPerformed
 
     /**
-     * Updated the list of currently selected data series.
-     *
-     * @param evt
-     */
-    private void scatterPlotSeries1JCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scatterPlotSeries1JCheckBoxActionPerformed
-        setSeriesVisible(scatterPlotSeries1JCheckBox.isSelected(), 0, "MassErrorScatterPlot");
-    }//GEN-LAST:event_scatterPlotSeries1JCheckBoxActionPerformed
-
-    /**
-     * See scatterPlotSeries1JCheckBoxActionPerformed
-     */
-    private void scatterPlotSeries2JCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scatterPlotSeries2JCheckBoxActionPerformed
-        setSeriesVisible(scatterPlotSeries2JCheckBox.isSelected(), 1, "MassErrorScatterPlot");
-    }//GEN-LAST:event_scatterPlotSeries2JCheckBoxActionPerformed
-
-    /**
-     * See scatterPlotSeries1JCheckBoxActionPerformed
-     */
-    private void scatterPlotSeries3JCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scatterPlotSeries3JCheckBoxActionPerformed
-        setSeriesVisible(scatterPlotSeries3JCheckBox.isSelected(), 2, "MassErrorScatterPlot");
-    }//GEN-LAST:event_scatterPlotSeries3JCheckBoxActionPerformed
-
-    /**
-     * See showSpectrumToolBarJMenuItemActionPerformed
+     * Opens a MassErrorDataSeriesSelection dialog where the data series
+     * to be displayed can be choosen.
      */
     private void showScatterPlotToolBarJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showScatterPlotToolBarJMenuItemActionPerformed
         boxPlotPanelToolBarJInternalFrame.setVisible(false);
         spectrumPanelToolBarJInternalFrame.setVisible(false);
-        scatterPlotPanelToolBarJInternalFrame.setVisible(true);
-        bubblePlotPanelToolBarJInternalFrame.setVisible(false);
+
+        Iterator<Integer> iterator = properties.getAllInternalFrames().keySet().iterator();
+
+        boolean selectedFrameFound = false;
+
+        // find the currently selected internal frame
+        while(iterator.hasNext() && !selectedFrameFound){
+            Integer key = iterator.next();
+
+            FragmentationAnalyzerJInternalFrame currentFrame = properties.getAllInternalFrames().get(key);
+
+            if(currentFrame.isSelected()){
+                selectedFrameFound = true;
+                new MassErrorDataSeriesSelection(this, true, currentFrame.getChartPanel());
+            }
+        }
     }//GEN-LAST:event_showScatterPlotToolBarJMenuItemActionPerformed
-
-    /**
-     * See scatterPlotSeries1JCheckBoxActionPerformed
-     */
-    private void bubblePlotSeries1JCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bubblePlotSeries1JCheckBoxActionPerformed
-        setSeriesVisible(bubblePlotSeries1JCheckBox.isSelected(), 0, "MassErrorBubblePlot");
-    }//GEN-LAST:event_bubblePlotSeries1JCheckBoxActionPerformed
-
-    /**
-     * See scatterPlotSeries1JCheckBoxActionPerformed
-     */
-    private void bubblePlotSeries2JCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bubblePlotSeries2JCheckBoxActionPerformed
-        setSeriesVisible(bubblePlotSeries2JCheckBox.isSelected(), 1, "MassErrorBubblePlot");
-    }//GEN-LAST:event_bubblePlotSeries2JCheckBoxActionPerformed
-
-    /**
-     * See scatterPlotSeries1JCheckBoxActionPerformed
-     */
-    private void bubblePlotSeries3JCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bubblePlotSeries3JCheckBoxActionPerformed
-        setSeriesVisible(bubblePlotSeries3JCheckBox.isSelected(), 2, "MassErrorBubblePlot");
-    }//GEN-LAST:event_bubblePlotSeries3JCheckBoxActionPerformed
 
     /**
      * See showSpectrumToolBarJMenuItemActionPerformed
      */
     private void showBubblePlotToolBarJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showBubblePlotToolBarJMenuItemActionPerformed
-        boxPlotPanelToolBarJInternalFrame.setVisible(false);
-        spectrumPanelToolBarJInternalFrame.setVisible(false);
-        scatterPlotPanelToolBarJInternalFrame.setVisible(false);
-        bubblePlotPanelToolBarJInternalFrame.setVisible(true);
+        showScatterPlotToolBarJMenuItemActionPerformed(null);
     }//GEN-LAST:event_showBubblePlotToolBarJMenuItemActionPerformed
 
     /**
@@ -5674,6 +5482,9 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         plotsAndAnalysesJDesktopPane.add(internalFrame, javax.swing.JLayeredPane.DEFAULT_LAYER);
         plotsAndAnalysesJScrollPane.repaint();
 
+        // make sure that the internal frame tip is always in the back
+        plotsAndAnalysesJDesktopPane.moveToBack(internalFrameTipJLabel);
+
         // invoke later to give time for frame to be updated
         SwingUtilities.invokeLater(new Runnable() {
 
@@ -5791,26 +5602,28 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
             Fragmention currentFragmentIon = fragmentIons.get(i);
 
-            int fragmentIonNumber = (int) currentFragmentIon.getFragmentionnumber();
-            String ionName = currentFragmentIon.getIonname();
+            if(isScoringTypeSelected(currentFragmentIon.getL_identificationid())){
 
-            Color currentColor = determineColorOfPeak(ionName);
+                int fragmentIonNumber = (int) currentFragmentIon.getFragmentionnumber();
+                String ionName = currentFragmentIon.getIonname();
 
-            if (ionName.startsWith("a") || ionName.startsWith("b") || ionName.startsWith("c") ||
-                    ionName.startsWith("x") || ionName.startsWith("y") || ionName.startsWith("z")) {
+                Color currentColor = determineColorOfPeak(ionName);
 
-                if (ionName.length() > 1) {
-                    ionName = ionName.substring(0, 1) + "[" + fragmentIonNumber + "]" + ionName.substring(1);
-                } else {
-                    ionName = ionName.substring(0, 1) + fragmentIonNumber;
+                if (ionName.startsWith("a") || ionName.startsWith("b") || ionName.startsWith("c") ||
+                        ionName.startsWith("x") || ionName.startsWith("y") || ionName.startsWith("z")) {
+                    if (ionName.length() > 1) {
+                        ionName = ionName.substring(0, 1) + "[" + fragmentIonNumber + "]" + ionName.substring(1);
+                    } else {
+                        ionName = ionName.substring(0, 1) + fragmentIonNumber;
+                    }
                 }
-            }
 
-            currentAnnotations.add(new DefaultSpectrumAnnotation(
-                    currentFragmentIon.getMz().doubleValue(),
-                    currentFragmentIon.getMasserrormargin().doubleValue(),
-                    currentColor,
-                    ionName));
+                currentAnnotations.add(new DefaultSpectrumAnnotation(
+                        currentFragmentIon.getMz().doubleValue(),
+                        currentFragmentIon.getMasserrormargin().doubleValue(),
+                        currentColor,
+                        ionName));
+            }
         }
 
         properties.getAllAnnotations().put(internalFrameUniqueIdCounter, currentAnnotations);
@@ -6738,10 +6551,6 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
     private javax.swing.JCheckBox bIonsModifiedJCheckBox;
     private javax.swing.JCheckBox bIonsUnmodifiedJCheckBox;
     private javax.swing.JInternalFrame boxPlotPanelToolBarJInternalFrame;
-    private javax.swing.JInternalFrame bubblePlotPanelToolBarJInternalFrame;
-    private javax.swing.JCheckBox bubblePlotSeries1JCheckBox;
-    private javax.swing.JCheckBox bubblePlotSeries2JCheckBox;
-    private javax.swing.JCheckBox bubblePlotSeries3JCheckBox;
     private javax.swing.JCheckBox cIonsJCheckBox;
     private javax.swing.JComboBox cTermJComboBox;
     private javax.swing.JComboBox chargeJComboBox;
@@ -6766,6 +6575,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
     private javax.swing.JComboBox instrument2JComboBox;
     private javax.swing.JComboBox instrument3JComboBox;
     private org.jdesktop.swingx.JXTaskPane instrumentJXTaskPane;
+    private javax.swing.JLabel internalFrameTipJLabel;
     private javax.swing.JPopupMenu internalFramesJPopupMenu;
     private javax.swing.JMenuItem invertSelectionIdentificationsJMenuItem;
     private javax.swing.JMenuItem invertSelectionSpectraJMenuItem;
@@ -6781,8 +6591,6 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
     private javax.swing.JMenuBar jMenuBar;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
-    private javax.swing.JPanel jPanel7;
-    private javax.swing.JPanel jPanel8;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
@@ -6808,10 +6616,6 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
     private javax.swing.JMenuItem removeAllInternalFramesJMenuItem;
     private javax.swing.JScrollPane resultsJScrollPane;
     private org.jdesktop.swingx.JXTaskPaneContainer resultsJXTaskPaneContainer;
-    private javax.swing.JInternalFrame scatterPlotPanelToolBarJInternalFrame;
-    private javax.swing.JCheckBox scatterPlotSeries1JCheckBox;
-    private javax.swing.JCheckBox scatterPlotSeries2JCheckBox;
-    private javax.swing.JCheckBox scatterPlotSeries3JCheckBox;
     private javax.swing.ButtonGroup searchButtonGroup;
     private javax.swing.JButton searchJButton;
     private org.jdesktop.swingx.JXPanel searchResultJXPanel;

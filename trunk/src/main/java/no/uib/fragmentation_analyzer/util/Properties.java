@@ -38,14 +38,17 @@ public class Properties {
     private HashMap<String, Integer> extractedInternalModifications, extractedNTermModifications,
             extractedCTermModifications, extractedCharges, extractedInstruments;
     private Pattern pattern;
-    private HashMap<String, ArrayList<ReducedIdentification>> identificationMap;
-    private HashMap<Integer, ReducedIdentification> allIdentifications;
-    private HashMap<Integer, SpectrumPanel> linkedSpectrumPanels;
-    private HashMap<Integer, JFreeChart> allChartFrames;
-    private HashMap<Integer, Vector<DefaultSpectrumAnnotation>> allAnnotations;
-    private HashMap<Integer, FragmentationAnalyzerJInternalFrame> allInternalFrames;
+    private HashMap<String, ArrayList<ReducedIdentification>> identificationMap = new HashMap<String, ArrayList<ReducedIdentification>>();
+    private HashMap<Integer, ReducedIdentification> allIdentifications = new HashMap<Integer, ReducedIdentification>();
+    private HashMap<Integer, SpectrumPanel> linkedSpectrumPanels = new HashMap<Integer, SpectrumPanel>();
+    private HashMap<Integer, JFreeChart> allChartFrames = new HashMap<Integer, JFreeChart>();
+    private HashMap<Integer, Vector<DefaultSpectrumAnnotation>> allAnnotations = new HashMap<Integer, Vector<DefaultSpectrumAnnotation>>();
+    private HashMap<Integer, FragmentationAnalyzerJInternalFrame> allInternalFrames = new HashMap<Integer, FragmentationAnalyzerJInternalFrame>();
     private ArrayList<IdentificationTableRow> currentlySelectedRowsInSearchTable = new ArrayList<IdentificationTableRow>();
     private ArrayList<SpectrumTableRow> currentlySelectedRowsInSpectraTable = new ArrayList<SpectrumTableRow>();
+    private boolean notSignificantNotScoringFragmentIon = false;
+    private boolean significantNotScoringFragmentIon = true;
+    private boolean significantScoringFragmentIon = true;
 
     /**
      * Creates a new empty Properties object.
@@ -349,5 +352,47 @@ public class Properties {
      */
     public void setCurrentlySelectedRowsInSpectraTable(ArrayList<SpectrumTableRow> currentlySelectedRowsInSpectraTable) {
         this.currentlySelectedRowsInSpectraTable = currentlySelectedRowsInSpectraTable;
+    }
+
+    /**
+     * @return the notSignificantNotScoringFragmentIon
+     */
+    public boolean isNotSignificantNotScoringFragmentIon() {
+        return notSignificantNotScoringFragmentIon;
+    }
+
+    /**
+     * @param notSignificantNotScoringFragmentIon the notSignificantNotScoringFragmentIon to set
+     */
+    public void setNotSignificantNotScoringFragmentIon(boolean notSignificantNotScoringFragmentIon) {
+        this.notSignificantNotScoringFragmentIon = notSignificantNotScoringFragmentIon;
+    }
+
+    /**
+     * @return the significantNotScoringFragmentIon
+     */
+    public boolean isSignificantNotScoringFragmentIon() {
+        return significantNotScoringFragmentIon;
+    }
+
+    /**
+     * @param significantNotScoringFragmentIon the significantNotScoringFragmentIon to set
+     */
+    public void setSignificantNotScoringFragmentIon(boolean significantNotScoringFragmentIon) {
+        this.significantNotScoringFragmentIon = significantNotScoringFragmentIon;
+    }
+
+    /**
+     * @return the significantScoringFragmentIon
+     */
+    public boolean isSignificantScoringFragmentIon() {
+        return significantScoringFragmentIon;
+    }
+
+    /**
+     * @param significantScoringFragmentIon the significantScoringFragmentIon to set
+     */
+    public void setSignificantScoringFragmentIon(boolean significantScoringFragmentIon) {
+        this.significantScoringFragmentIon = significantScoringFragmentIon;
     }
 }

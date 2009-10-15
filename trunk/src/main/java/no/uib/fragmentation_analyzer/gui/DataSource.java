@@ -197,7 +197,8 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
                 boolean identificationFileFound = false;
                 boolean fragmentIonsFileOrMsLimsPropFileFound = false;
 
-                for (int j = 0; j < dataFiles.length && !(identificationFileFound && fragmentIonsFileOrMsLimsPropFileFound); j++) {
+                for (int j = 0; j < dataFiles.length &&
+                        !(identificationFileFound && fragmentIonsFileOrMsLimsPropFileFound); j++) {
 
                     String currentFileName = dataFiles[j].getName();
 
@@ -396,7 +397,9 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
      * @param evt
      */
     private void ms_limsJRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ms_limsJRadioButtonActionPerformed
-        importJButton.setEnabled(ms_limsJRadioButton.isSelected() || mascotDatFilesJRadioButton.isSelected() || omssaJRadioButton.isSelected());
+        importJButton.setEnabled(ms_limsJRadioButton.isSelected() 
+                || mascotDatFilesJRadioButton.isSelected()
+                || omssaJRadioButton.isSelected());
     }//GEN-LAST:event_ms_limsJRadioButtonActionPerformed
 
     /**
@@ -472,7 +475,8 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
                     new DatabaseDialog(this, fragmentationAnalyzer, true, true);
                 } else {
 
-                    boolean folderCreated = new File(fragmentationAnalyzer.getProperties().getCurrentDataSetFolder()).mkdir();
+                    boolean folderCreated = new File(
+                            fragmentationAnalyzer.getProperties().getCurrentDataSetFolder()).mkdir();
 
                     if (!folderCreated) {
                         JOptionPane.showMessageDialog(this,
@@ -509,7 +513,8 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
 
                         if (returnVal == JFileChooser.APPROVE_OPTION) {
 
-                            fragmentationAnalyzer.getUserProperties().setLastUsedFolder(chooser.getSelectedFile().getPath());
+                            fragmentationAnalyzer.getUserProperties().setLastUsedFolder(
+                                    chooser.getSelectedFile().getPath());
 
                             File[] selectedFiles = chooser.getSelectedFiles();
 
@@ -577,12 +582,17 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
                                     public void run() {
 
                                         try {
+                                            FileWriter identificationWriter = new FileWriter(
+                                                    fragmentationAnalyzer.getProperties().getCurrentDataSetFolder()
+                                                    + "/identifications.temp");
+                                            BufferedWriter identificationsBufferedWriter =
+                                                    new BufferedWriter(identificationWriter);
 
-                                            FileWriter identificationWriter = new FileWriter(fragmentationAnalyzer.getProperties().getCurrentDataSetFolder() + "/identifications.temp");
-                                            BufferedWriter identificationsBufferedWriter = new BufferedWriter(identificationWriter);
-
-                                            FileWriter fragmentIonsWriter = new FileWriter(fragmentationAnalyzer.getProperties().getCurrentDataSetFolder() + "/fragmentIons.txt");
-                                            BufferedWriter fragmentIonsBufferedWriter = new BufferedWriter(fragmentIonsWriter);
+                                            FileWriter fragmentIonsWriter = new FileWriter(
+                                                    fragmentationAnalyzer.getProperties().getCurrentDataSetFolder()
+                                                    + "/fragmentIons.txt");
+                                            BufferedWriter fragmentIonsBufferedWriter =
+                                                    new BufferedWriter(fragmentIonsWriter);
 
                                             int identificationsCounter = 0;
                                             int fragmentIonCounter = 0;
@@ -596,13 +606,16 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
                                                 progressDialog.setTitle("Reading File. Please Wait...");
                                                 progressDialog.setValue(0);
                                                 progressDialog.setIntermidiate(true);
-                                                progressDialog.setString(currentFile.getName() + " (" + (i + 1) + "/" + selectedDataFiles.size() + ")");
+                                                progressDialog.setString(currentFile.getName() + " (" + (i + 1) + "/"
+                                                        + selectedDataFiles.size() + ")");
 
                                                 if (mascotDatFilesJRadioButton.isSelected()) {
-                                                    identificationsCounter = parseMascotDatFile(currentFile, identificationsCounter, fragmentIonCounter,
+                                                    identificationsCounter = parseMascotDatFile(
+                                                            currentFile, identificationsCounter, fragmentIonCounter,
                                                             identificationsBufferedWriter, fragmentIonsBufferedWriter);
                                                 } else if (omssaJRadioButton.isSelected()) {
-                                                    identificationsCounter = parseOmssaOmxFile(currentFile, identificationsCounter, fragmentIonCounter,
+                                                    identificationsCounter = parseOmssaOmxFile(
+                                                            currentFile, identificationsCounter, fragmentIonCounter,
                                                             identificationsBufferedWriter, fragmentIonsBufferedWriter);
                                                 }
                                             }
@@ -620,7 +633,8 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
                                             addIdentificationCounter(identificationsCounter);
 
                                             // delete the temp identifications file
-                                            new File(fragmentationAnalyzer.getProperties().getCurrentDataSetFolder() + "/identifications.temp").delete();
+                                            new File(fragmentationAnalyzer.getProperties().getCurrentDataSetFolder()
+                                                    + "/identifications.temp").delete();
 
                                         } catch (OutOfMemoryError error) {
                                             progressDialog.setVisible(false);
@@ -717,8 +731,10 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
                 getOmssaModificationFiles();
 
             } else {
-                error = Util.copyFile(new File(path + "mods.xml"), new File(fragmentationAnalyzer.getProperties().getCurrentDataSetFolder() + "/mods.xml"));
-                error = Util.copyFile(new File(path + "usermods.xml"), new File(fragmentationAnalyzer.getProperties().getCurrentDataSetFolder() + "/usermods.xml"));
+                error = Util.copyFile(new File(path + "mods.xml"), new File(
+                        fragmentationAnalyzer.getProperties().getCurrentDataSetFolder() + "/mods.xml"));
+                error = Util.copyFile(new File(path + "usermods.xml"), new File(
+                        fragmentationAnalyzer.getProperties().getCurrentDataSetFolder() + "/usermods.xml"));
             }
         } else {
             error = true;
@@ -739,10 +755,12 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
      */
     private void addIdentificationCounter(int identificationsCounter) throws IOException {
 
-        FileWriter idFileWriter = new FileWriter(fragmentationAnalyzer.getProperties().getCurrentDataSetFolder() + "/identifications.txt");
+        FileWriter idFileWriter = new FileWriter(
+                fragmentationAnalyzer.getProperties().getCurrentDataSetFolder() + "/identifications.txt");
         BufferedWriter idBufferedWriter = new BufferedWriter(idFileWriter);
 
-        FileReader r = new FileReader(fragmentationAnalyzer.getProperties().getCurrentDataSetFolder() + "/identifications.temp");
+        FileReader r = new FileReader(
+                fragmentationAnalyzer.getProperties().getCurrentDataSetFolder() + "/identifications.temp");
         BufferedReader br = new BufferedReader(r);
 
         idBufferedWriter.write(identificationsCounter + "\n");
@@ -1016,14 +1034,16 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
                         for (int j = 0; j < mzValues.size() && !cancelProgress; j++) {
 
                             // check if the fragment ion is within the mass error range
-                            if (Math.abs(mzValues.get(j) - fragmentIonMzValueUnscaled) <= (ionCoverageErrorMargin * omssaResponseScale)) {
+                            if (Math.abs(mzValues.get(j) - fragmentIonMzValueUnscaled) <=
+                                    (ionCoverageErrorMargin * omssaResponseScale)) {
 
                                 // select this peak if it's the most intense peak within range
                                 if ((intensityValues.get(j).doubleValue() / currentIntensityScale) > fragmentIonIntensityScaled) {
                                     fragmentIonIntensityScaled = intensityValues.get(j).doubleValue() / currentIntensityScale;
 
                                     // calculate the fragmet ion mass
-                                    fragmentIonMassError = (mzValues.get(j).doubleValue() - fragmentIonMzValueUnscaled) / omssaResponseScale; // @TODO: or the other way around?? The order decides the sign.
+                                    fragmentIonMassError = (mzValues.get(j).doubleValue() - fragmentIonMzValueUnscaled)
+                                            / omssaResponseScale; // @TODO: or the other way around?? The order decides the sign.
                                     observedPeakMzValue = mzValues.get(j).doubleValue() / omssaResponseScale;
                                 }
                             }
@@ -1034,8 +1054,8 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
 
                             JOptionPane.showMessageDialog(this,
                                     "Unable to map the fragment ion \'" +
-                                    currentFragmentIon.MSMZHit_ion.MSIonType + " " + currentFragmentIon.MSMZHit_number + "\'. Ion not included in annotation.",
-                                    "Unable To Map Fragment Ion",
+                                    currentFragmentIon.MSMZHit_ion.MSIonType + " " + currentFragmentIon.MSMZHit_number 
+                                    + "\'. Ion not included in annotation.", "Unable To Map Fragment Ion",
                                     JOptionPane.INFORMATION_MESSAGE);
                             error = true;
                         }
@@ -1561,7 +1581,8 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
                     //int incorrectModifiedSequenceCounter =
                     //        getAllIdentifications(getMaxIdentificationId(), getIdentificationCount());
 
-                    //System.out.println("incorrectModifiedSequenceCounter: " + incorrectModifiedSequenceCounter + " correct: " + allIdentificationIds.size());
+                    //System.out.println("incorrectModifiedSequenceCounter: " + incorrectModifiedSequenceCounter +
+                    //        " correct: " + allIdentificationIds.size());
 
                     //long temp2 = System.currentTimeMillis();
                     //System.out.println("Identifications Extracted: Milliseconds: " + (temp2 - temp) + "\n");
@@ -1731,7 +1752,8 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
         progressDialog.setTitle("Retrieving Identifications. Please Wait...");
         progressCounter = 0;
 
-        FileWriter f = new FileWriter(fragmentationAnalyzer.getProperties().getCurrentDataSetFolder() + "/identifications.temp");
+        FileWriter f = new FileWriter(
+                fragmentationAnalyzer.getProperties().getCurrentDataSetFolder() + "/identifications.temp");
         BufferedWriter b = new BufferedWriter(f);
 
         String modifiedSequence, undmodifiedSequence;
@@ -1853,10 +1875,12 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
         progressDialog.setIntermidiate(false);
         progressDialog.setTitle("Adding Instrument Details. Please Wait...");
 
-        FileWriter w = new FileWriter(fragmentationAnalyzer.getProperties().getCurrentDataSetFolder() + "/identifications.txt");
+        FileWriter w = new FileWriter(
+                fragmentationAnalyzer.getProperties().getCurrentDataSetFolder() + "/identifications.txt");
         BufferedWriter bw = new BufferedWriter(w);
 
-        FileReader r = new FileReader(fragmentationAnalyzer.getProperties().getCurrentDataSetFolder() + "/identifications.temp");
+        FileReader r = new FileReader(
+                fragmentationAnalyzer.getProperties().getCurrentDataSetFolder() + "/identifications.temp");
         BufferedReader b = new BufferedReader(r);
 
         String line = b.readLine();
@@ -1876,7 +1900,8 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
 
             tokens = line.split("\t");
             instrumentName = spectraInstrumentMapping.get(new Long(tokens[4]));
-            bw.write(tokens[0] + "\t" + tokens[1] + "\t" + tokens[2] + "\t" + tokens[3] + "\t" + instrumentName + "\tnull\t" + tokens[4] + "\n");
+            bw.write(tokens[0] + "\t" + tokens[1] + "\t" + tokens[2] + "\t" + tokens[3] + "\t"
+                    + instrumentName + "\tnull\t" + tokens[4] + "\n");
             line = b.readLine();
         }
 
@@ -1910,7 +1935,8 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
         StringBuffer inClause = new StringBuffer(spectrumfileids.size() * 10);
         String inClauseAsString = "";
 
-        FileWriter f = new FileWriter(fragmentationAnalyzer.getProperties().getCurrentDataSetFolder() + "/fragment_ions.txt");
+        FileWriter f = new FileWriter(
+                fragmentationAnalyzer.getProperties().getCurrentDataSetFolder() + "/fragment_ions.txt");
         BufferedWriter b = new BufferedWriter(f);
 
         ps = fragmentationAnalyzer.getConnection().prepareStatement(

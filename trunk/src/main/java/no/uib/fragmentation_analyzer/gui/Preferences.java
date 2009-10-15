@@ -26,6 +26,10 @@ public class Preferences extends javax.swing.JDialog {
         defaultBubbleScalingJTextField.setText("" + fragmentationAnalyzer.getUserProperties().getDefaultBubbleScaling());
         ppmBubbleScalingJTextField.setText("" + fragmentationAnalyzer.getUserProperties().getPpmBubbleScaling());
 
+        notSignificantNotUsedJCheckBox.setSelected(fragmentationAnalyzer.getProperties().isNotSignificantNotScoringFragmentIon());
+        significantNotUsedJCheckBox.setSelected(fragmentationAnalyzer.getProperties().isSignificantNotScoringFragmentIon());
+        significantAndUsedJCheckBox.setSelected(fragmentationAnalyzer.getProperties().isSignificantScoringFragmentIon());
+
         setLocationRelativeTo(fragmentationAnalyzer);
         setVisible(true);
     }
@@ -47,6 +51,10 @@ public class Preferences extends javax.swing.JDialog {
         okJButton = new javax.swing.JButton();
         cancelJButton = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JSeparator();
+        jPanel2 = new javax.swing.JPanel();
+        notSignificantNotUsedJCheckBox = new javax.swing.JCheckBox();
+        significantNotUsedJCheckBox = new javax.swing.JCheckBox();
+        significantAndUsedJCheckBox = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Preferences");
@@ -77,8 +85,8 @@ public class Preferences extends javax.swing.JDialog {
                     .add(jLabel2))
                 .add(14, 14, 14)
                 .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
-                    .add(defaultBubbleScalingJTextField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 198, Short.MAX_VALUE)
-                    .add(ppmBubbleScalingJTextField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 198, Short.MAX_VALUE))
+                    .add(defaultBubbleScalingJTextField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE)
+                    .add(ppmBubbleScalingJTextField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -108,6 +116,41 @@ public class Preferences extends javax.swing.JDialog {
             }
         });
 
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Fragment Ion Scoring Types - ms_lims", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 11), new java.awt.Color(0, 0, 0))); // NOI18N
+
+        notSignificantNotUsedJCheckBox.setText("Not Significant, Not Used For Scoring");
+        notSignificantNotUsedJCheckBox.setIconTextGap(15);
+
+        significantNotUsedJCheckBox.setText("Significant, Not Used For Scoring");
+        significantNotUsedJCheckBox.setIconTextGap(15);
+
+        significantAndUsedJCheckBox.setText("Significant, Used For Scoring");
+        significantAndUsedJCheckBox.setIconTextGap(15);
+
+        org.jdesktop.layout.GroupLayout jPanel2Layout = new org.jdesktop.layout.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(notSignificantNotUsedJCheckBox)
+                    .add(significantNotUsedJCheckBox)
+                    .add(significantAndUsedJCheckBox))
+                .addContainerGap(101, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .add(notSignificantNotUsedJCheckBox)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(significantNotUsedJCheckBox)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(significantAndUsedJCheckBox)
+                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
         org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -115,8 +158,9 @@ public class Preferences extends javax.swing.JDialog {
             .add(layout.createSequentialGroup()
                 .addContainerGap()
                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(jPanel2, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .add(jPanel1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .add(jSeparator1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE)
+                    .add(jSeparator1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 336, Short.MAX_VALUE)
                     .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
                         .add(okJButton)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
@@ -132,6 +176,8 @@ public class Preferences extends javax.swing.JDialog {
                 .addContainerGap()
                 .add(jPanel1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(jPanel2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(18, 18, 18)
                 .add(jSeparator1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
@@ -184,6 +230,21 @@ public class Preferences extends javax.swing.JDialog {
             }
         }
 
+        if(!error){
+            if(!notSignificantNotUsedJCheckBox.isSelected() &&
+                    !significantNotUsedJCheckBox.isSelected() &&
+                    !significantAndUsedJCheckBox.isSelected()){
+                JOptionPane.showMessageDialog(this,
+                        "Please select at least one fragment ion scoring type.",
+                        "Fragment Ion Scoring", JOptionPane.INFORMATION_MESSAGE);
+                error = true;
+            } else{
+                fragmentationAnalyzer.getProperties().setNotSignificantNotScoringFragmentIon(notSignificantNotUsedJCheckBox.isSelected());
+                fragmentationAnalyzer.getProperties().setSignificantNotScoringFragmentIon(significantNotUsedJCheckBox.isSelected());
+                fragmentationAnalyzer.getProperties().setSignificantScoringFragmentIon(significantAndUsedJCheckBox.isSelected());
+            }
+        }
+
         if (!error) {
             cancelJButtonActionPerformed(null);
         }
@@ -195,8 +256,12 @@ public class Preferences extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JCheckBox notSignificantNotUsedJCheckBox;
     private javax.swing.JButton okJButton;
     private javax.swing.JTextField ppmBubbleScalingJTextField;
+    private javax.swing.JCheckBox significantAndUsedJCheckBox;
+    private javax.swing.JCheckBox significantNotUsedJCheckBox;
     // End of variables declaration//GEN-END:variables
 }
