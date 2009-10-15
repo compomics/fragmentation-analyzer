@@ -1926,14 +1926,18 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
         boolean identificationMatch;
 
-        if (reducedModIdentification.getInstrumentName().equalsIgnoreCase(instrument1) ||
+        if(instrument1.equalsIgnoreCase("Select All")){
+            identificationMatch = true;
+        } else{
+            if (reducedModIdentification.getInstrumentName().equalsIgnoreCase(instrument1) ||
                 reducedModIdentification.getInstrumentName().equalsIgnoreCase(instrument2) ||
                 reducedModIdentification.getInstrumentName().equalsIgnoreCase(instrument3)) {
-            //System.out.println("instrument match");
-            identificationMatch = true;
-        } else {
-            identificationMatch = false;
-            //System.out.println("instrument does not match!");
+                //System.out.println("instrument match");
+                identificationMatch = true;
+            } else {
+                identificationMatch = false;
+                //System.out.println("instrument does not match!");
+            }
         }
 
         return identificationMatch;
@@ -1951,19 +1955,19 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
         boolean identificationMatch;
 
-        boolean noNTermSelected = false;
-        boolean noCTermSelected = false;
+        boolean nTermSelectAll = false;
+        boolean cTermSelectAll = false;
 
-        if (nTerminal.equalsIgnoreCase(" - Select - ")) { // no n terminal selected
-            noNTermSelected = true;
+        if (nTerminal.equalsIgnoreCase("Select All")) { // use all n terminals
+            nTermSelectAll = true;
         }
 
-        if (cTerminal.equalsIgnoreCase(" - Select - ")) { // no c terminal selected
-            noCTermSelected = true;
+        if (cTerminal.equalsIgnoreCase("Select All")) { // use all c terminals
+            cTermSelectAll = true;
         }
 
-        if ((reducedModIdentification.getNTerminal().equalsIgnoreCase(nTerminal) || noNTermSelected) &&
-                (reducedModIdentification.getCTerminal().equalsIgnoreCase(cTerminal) || noCTermSelected)) {
+        if ((reducedModIdentification.getNTerminal().equalsIgnoreCase(nTerminal) || nTermSelectAll) &&
+                (reducedModIdentification.getCTerminal().equalsIgnoreCase(cTerminal) || cTermSelectAll)) {
             identificationMatch = true;
             //System.out.println("terminals match");
         } else {
@@ -2048,7 +2052,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         // verify that all the required parameters have been selected
         if (!searchEnabled) {
             JOptionPane.showMessageDialog(null,
-                    "At least one instrument and the charge has to be selected.",
+                    "At least one instrument, the terminals and the charge has to be selected.",
                     "Search Parameters", JOptionPane.INFORMATION_MESSAGE);
             cancelProgress = true;
         }
@@ -2504,6 +2508,8 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
     private void enableSearchButton() {
 
         if (instrument1JComboBox.getSelectedIndex() != 0 &&
+                nTermJComboBox.getSelectedIndex() != 0 &&
+                cTermJComboBox.getSelectedIndex() != 0 &&
                 chargeJComboBox.getSelectedIndex() != 0) {
             searchEnabled = dataLoaded;
         } else {
@@ -2524,8 +2530,17 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
             instrument3JComboBox.setSelectedIndex(0);
             searchEnabled = false;
         } else {
-            instrument2JComboBox.setEnabled(true);
-            instrument2JComboBoxActionPerformed(null);
+
+            if(instrument1JComboBox.getSelectedItem().toString().equalsIgnoreCase("Select All")){
+                instrument2JComboBox.setEnabled(false);
+                instrument2JComboBox.setSelectedIndex(0);
+                instrument3JComboBox.setEnabled(false);
+                instrument3JComboBox.setSelectedIndex(0);
+            } else{
+                instrument2JComboBox.setEnabled(true);
+                instrument2JComboBoxActionPerformed(null);
+            }
+
             enableSearchButton();
         }
     }//GEN-LAST:event_instrument1JComboBoxActionPerformed
@@ -6169,18 +6184,18 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                         if (!cancelProgress) {
 
                             // update the comboboxes
-                            updateComboBox(instrument1JComboBox, properties.getExtractedInstruments());
-                            updateComboBox(instrument2JComboBox, properties.getExtractedInstruments());
-                            updateComboBox(instrument3JComboBox, properties.getExtractedInstruments());
+                            updateComboBox(instrument1JComboBox, properties.getExtractedInstruments(), true);
+                            updateComboBox(instrument2JComboBox, properties.getExtractedInstruments(), false);
+                            updateComboBox(instrument3JComboBox, properties.getExtractedInstruments(), false);
 
-                            updateComboBox(nTermJComboBox, properties.getExtractedNTermModifications());
-                            updateComboBox(cTermJComboBox, properties.getExtractedCTermModifications());
+                            updateComboBox(nTermJComboBox, properties.getExtractedNTermModifications(), true);
+                            updateComboBox(cTermJComboBox, properties.getExtractedCTermModifications(), true);
 
-                            updateComboBox(chargeJComboBox, properties.getExtractedCharges());
+                            updateComboBox(chargeJComboBox, properties.getExtractedCharges(), false);
 
-                            updateComboBox(modification1JComboBox, properties.getExtractedInternalModifications());
-                            updateComboBox(modification2JComboBox, properties.getExtractedInternalModifications());
-                            updateComboBox(modification3JComboBox, properties.getExtractedInternalModifications());
+                            updateComboBox(modification1JComboBox, properties.getExtractedInternalModifications(), false);
+                            updateComboBox(modification2JComboBox, properties.getExtractedInternalModifications(), false);
+                            updateComboBox(modification3JComboBox, properties.getExtractedInternalModifications(), false);
 
                             dataLoaded = true;
 
@@ -6414,7 +6429,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
      * @param comboBox the combobox to update
      * @param values the new values
      */
-    private void updateComboBox(JComboBox comboBox, HashMap<String, Integer> values) {
+    private void updateComboBox(JComboBox comboBox, HashMap<String, Integer> values, boolean addAllOption) {
 
         Vector<String> tempInstruments = new Vector<String>();
         tempInstruments.add(" - Select - ");
@@ -6427,6 +6442,10 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         }
 
         java.util.Collections.sort(tempInstruments);
+        
+        if(addAllOption){
+            tempInstruments.add("Select All");
+        }
 
         comboBox.setModel(new DefaultComboBoxModel(tempInstruments));
     }
