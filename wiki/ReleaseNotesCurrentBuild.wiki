@@ -6,7 +6,7 @@
  * NEW FEATURE: Instrument or fragment ion type can now be selected as the data point label when plotting the mass error.
  * NEW FEATURE: It is now possible to add markers highlighting the different fragment ion types to the mass error plots.
  * NEW FEATURE: Average fragment ion mass errors can now be plotted.
- * NEW FEATURE: Selecting the terminals is no longer mandatory. Leaving as "- Select -" now simply selects all peptides regardless of their terminals.
+ * NEW FEATURE: Added `Select All` options to the instrument and terminals drop down menus.
  * FEATURE IMPROVEMENT: The highlight markers can now be turned on and off.
  * FEATURE IMPROVEMENT: Made it possible to turn the legends on/off.
  * FEATURE IMPROVEMENT: Increased the number of simultaneously visible elements in the drop down menus.
