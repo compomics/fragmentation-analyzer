@@ -108,7 +108,7 @@ import org.jfree.ui.TextAnchor;
  */
 public class FragmentationAnalyzer extends javax.swing.JFrame implements ProgressDialogParent {
 
-    private static boolean useErrorLog = false;
+    private static boolean useErrorLog = true;
     private static Connection conn = null;
     private static String analyzerName = "FragmentationAnalyzer";
     private static String versionNumber = "1.0.2";
@@ -948,9 +948,10 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
             .add(searchTypeJXPanelLayout.createSequentialGroup()
                 .add(38, 38, 38)
                 .add(searchTypeJXPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(modificationSearchJRadioButton)
-                    .add(generalSearchJRadioButton))
-                .addContainerGap(164, Short.MAX_VALUE))
+                    .add(generalSearchJRadioButton)
+                    .add(searchTypeJXPanelLayout.createSequentialGroup()
+                        .add(modificationSearchJRadioButton)
+                        .addContainerGap(164, Short.MAX_VALUE))))
         );
         searchTypeJXPanelLayout.setVerticalGroup(
             searchTypeJXPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -1950,8 +1951,19 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
         boolean identificationMatch;
 
-        if (reducedModIdentification.getNTerminal().equalsIgnoreCase(nTerminal) &&
-                reducedModIdentification.getCTerminal().equalsIgnoreCase(cTerminal)) {
+        boolean noNTermSelected = false;
+        boolean noCTermSelected = false;
+
+        if (nTerminal.equalsIgnoreCase(" - Select - ")) { // no n terminal selected
+            noNTermSelected = true;
+        }
+
+        if (cTerminal.equalsIgnoreCase(" - Select - ")) { // no c terminal selected
+            noCTermSelected = true;
+        }
+
+        if ((reducedModIdentification.getNTerminal().equalsIgnoreCase(nTerminal) || noNTermSelected) &&
+                (reducedModIdentification.getCTerminal().equalsIgnoreCase(cTerminal) || noCTermSelected)) {
             identificationMatch = true;
             //System.out.println("terminals match");
         } else {
@@ -2036,7 +2048,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         // verify that all the required parameters have been selected
         if (!searchEnabled) {
             JOptionPane.showMessageDialog(null,
-                    "At least one instrument, the terminals and the charge has to be selected.",
+                    "At least one instrument and the charge has to be selected.",
                     "Search Parameters", JOptionPane.INFORMATION_MESSAGE);
             cancelProgress = true;
         }
@@ -2492,8 +2504,6 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
     private void enableSearchButton() {
 
         if (instrument1JComboBox.getSelectedIndex() != 0 &&
-                nTermJComboBox.getSelectedIndex() != 0 &&
-                cTermJComboBox.getSelectedIndex() != 0 &&
                 chargeJComboBox.getSelectedIndex() != 0) {
             searchEnabled = dataLoaded;
         } else {
