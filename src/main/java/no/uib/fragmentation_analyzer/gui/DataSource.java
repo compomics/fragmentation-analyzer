@@ -442,7 +442,7 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
 
         new DataSetNameDialog(this, true);
 
-        String currentDatasetName = fragmentationAnalyzer.getCurrentDataSetName();
+        String currentDatasetName = fragmentationAnalyzer.getProperties().getCurrentDataSetName();
 
         if (currentDatasetName != null) {
 
@@ -456,7 +456,7 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
                         "Data Set Name", JOptionPane.ERROR_MESSAGE);
                 new DataSetNameDialog(this, true);
 
-                currentDatasetName = fragmentationAnalyzer.getCurrentDataSetName();
+                currentDatasetName = fragmentationAnalyzer.getProperties().getCurrentDataSetName();
                 newName = path + "/" + currentDatasetName;
             }
 
@@ -464,15 +464,15 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
 
                 String currentDatasetFolder = newName;
 
-                fragmentationAnalyzer.setCurrentDataSetFolder(currentDatasetFolder);
-                fragmentationAnalyzer.setCurrentDataSetName(currentDatasetName);
+                fragmentationAnalyzer.getProperties().setCurrentDataSetFolder(currentDatasetFolder);
+                fragmentationAnalyzer.getProperties().setCurrentDataSetName(currentDatasetName);
 
                 // import data from ms_lims
                 if (ms_limsJRadioButton.isSelected()) {
                     new DatabaseDialog(this, fragmentationAnalyzer, true, true);
                 } else {
 
-                    boolean folderCreated = new File(fragmentationAnalyzer.getCurrentDataSetFolder()).mkdir();
+                    boolean folderCreated = new File(fragmentationAnalyzer.getProperties().getCurrentDataSetFolder()).mkdir();
 
                     if (!folderCreated) {
                         JOptionPane.showMessageDialog(this,
@@ -578,10 +578,10 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
 
                                         try {
 
-                                            FileWriter identificationWriter = new FileWriter(fragmentationAnalyzer.getCurrentDataSetFolder() + "/identifications.temp");
+                                            FileWriter identificationWriter = new FileWriter(fragmentationAnalyzer.getProperties().getCurrentDataSetFolder() + "/identifications.temp");
                                             BufferedWriter identificationsBufferedWriter = new BufferedWriter(identificationWriter);
 
-                                            FileWriter fragmentIonsWriter = new FileWriter(fragmentationAnalyzer.getCurrentDataSetFolder() + "/fragmentIons.txt");
+                                            FileWriter fragmentIonsWriter = new FileWriter(fragmentationAnalyzer.getProperties().getCurrentDataSetFolder() + "/fragmentIons.txt");
                                             BufferedWriter fragmentIonsBufferedWriter = new BufferedWriter(fragmentIonsWriter);
 
                                             int identificationsCounter = 0;
@@ -620,7 +620,7 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
                                             addIdentificationCounter(identificationsCounter);
 
                                             // delete the temp identifications file
-                                            new File(fragmentationAnalyzer.getCurrentDataSetFolder() + "/identifications.temp").delete();
+                                            new File(fragmentationAnalyzer.getProperties().getCurrentDataSetFolder() + "/identifications.temp").delete();
 
                                         } catch (OutOfMemoryError error) {
                                             progressDialog.setVisible(false);
@@ -647,7 +647,7 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
                                             insertAvailableDataSets();
                                         } else {
                                             // delete the created project folder and close any open database connections
-                                            Util.deleteDir(new File(fragmentationAnalyzer.getCurrentDataSetFolder()));
+                                            Util.deleteDir(new File(fragmentationAnalyzer.getProperties().getCurrentDataSetFolder()));
                                             fragmentationAnalyzer.closeDatabaseConnection();
                                         }
 
@@ -657,12 +657,12 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
                                 }.start();
                             } else {
                                 // delete the created project folder and close any open database connections
-                                Util.deleteDir(new File(fragmentationAnalyzer.getCurrentDataSetFolder()));
+                                Util.deleteDir(new File(fragmentationAnalyzer.getProperties().getCurrentDataSetFolder()));
                                 fragmentationAnalyzer.closeDatabaseConnection();
                             }
                         } else {
                             // delete the created project folder and close any open database connections
-                            Util.deleteDir(new File(fragmentationAnalyzer.getCurrentDataSetFolder()));
+                            Util.deleteDir(new File(fragmentationAnalyzer.getProperties().getCurrentDataSetFolder()));
                             fragmentationAnalyzer.closeDatabaseConnection();
                         }
                     }
@@ -717,8 +717,8 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
                 getOmssaModificationFiles();
 
             } else {
-                error = Util.copyFile(new File(path + "mods.xml"), new File(fragmentationAnalyzer.getCurrentDataSetFolder() + "/mods.xml"));
-                error = Util.copyFile(new File(path + "usermods.xml"), new File(fragmentationAnalyzer.getCurrentDataSetFolder() + "/usermods.xml"));
+                error = Util.copyFile(new File(path + "mods.xml"), new File(fragmentationAnalyzer.getProperties().getCurrentDataSetFolder() + "/mods.xml"));
+                error = Util.copyFile(new File(path + "usermods.xml"), new File(fragmentationAnalyzer.getProperties().getCurrentDataSetFolder() + "/usermods.xml"));
             }
         } else {
             error = true;
@@ -739,10 +739,10 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
      */
     private void addIdentificationCounter(int identificationsCounter) throws IOException {
 
-        FileWriter idFileWriter = new FileWriter(fragmentationAnalyzer.getCurrentDataSetFolder() + "/identifications.txt");
+        FileWriter idFileWriter = new FileWriter(fragmentationAnalyzer.getProperties().getCurrentDataSetFolder() + "/identifications.txt");
         BufferedWriter idBufferedWriter = new BufferedWriter(idFileWriter);
 
-        FileReader r = new FileReader(fragmentationAnalyzer.getCurrentDataSetFolder() + "/identifications.temp");
+        FileReader r = new FileReader(fragmentationAnalyzer.getProperties().getCurrentDataSetFolder() + "/identifications.temp");
         BufferedReader br = new BufferedReader(r);
 
         idBufferedWriter.write(identificationsCounter + "\n");
@@ -782,8 +782,8 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
 
         // parses the file
         OmssaOmxFile omssaOmxFile = new OmssaOmxFile(currentOmssaOmxFile.getPath(),
-                fragmentationAnalyzer.getCurrentDataSetFolder() + "/mods.xml",
-                fragmentationAnalyzer.getCurrentDataSetFolder() + "/usermods.xml");
+                fragmentationAnalyzer.getProperties().getCurrentDataSetFolder() + "/mods.xml",
+                fragmentationAnalyzer.getProperties().getCurrentDataSetFolder() + "/usermods.xml");
 
         if (!cancelProgress) {
 
@@ -858,14 +858,14 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
 
                     // extract and store as pkl file using identificationsCounter as name
                     File spectrumFolder = new File(
-                            fragmentationAnalyzer.getCurrentDataSetFolder() + "/spectra/");
+                            fragmentationAnalyzer.getProperties().getCurrentDataSetFolder() + "/spectra/");
 
                     if (!spectrumFolder.exists()) {
                         spectrumFolder.mkdir();
                     }
 
                     File spectrumFile = new File(
-                            fragmentationAnalyzer.getCurrentDataSetFolder() +
+                            fragmentationAnalyzer.getProperties().getCurrentDataSetFolder() +
                             "/spectra/" + identificationsCounter + ".pkl");
 
                     FileWriter spectrumFileWriter = new FileWriter(spectrumFile);
@@ -1255,14 +1255,14 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
                         Peak[] peakList = currentQuery.getPeakList();
 
                         File spectrumFolder = new File(
-                                fragmentationAnalyzer.getCurrentDataSetFolder() + "/spectra/");
+                                fragmentationAnalyzer.getProperties().getCurrentDataSetFolder() + "/spectra/");
 
                         if (!spectrumFolder.exists()) {
                             spectrumFolder.mkdir();
                         }
 
                         File spectrumFile = new File(
-                                fragmentationAnalyzer.getCurrentDataSetFolder() +
+                                fragmentationAnalyzer.getProperties().getCurrentDataSetFolder() +
                                 "/spectra/" + identificationsCounter + ".pkl");
 
                         FileWriter spectrumFileWriter = new FileWriter(spectrumFile);
@@ -1367,7 +1367,7 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
 
         String currentDatasetName = (String) ((DefaultTableModel) dataSetsJXTable.getModel()).getValueAt(selectedIndex, 1);
 
-        fragmentationAnalyzer.setCurrentDataSetName(currentDatasetName);
+        fragmentationAnalyzer.getProperties().setCurrentDataSetName(currentDatasetName);
 
         String path = "" + this.getClass().getProtectionDomain().getCodeSource().getLocation();
         path = path.substring(5, path.lastIndexOf("/"));
@@ -1376,7 +1376,7 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
 
         String currentDatasetFolder = path + "/" + currentDatasetName;
 
-        fragmentationAnalyzer.setCurrentDataSetFolder(currentDatasetFolder);
+        fragmentationAnalyzer.getProperties().setCurrentDataSetFolder(currentDatasetFolder);
 
         File dataSetFolder = new File(currentDatasetFolder);
 
@@ -1396,7 +1396,7 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
                 boolean noError = readMsLimsPropFile(currentDatasetFolder);
 
                 if (noError) {
-                    fragmentationAnalyzer.setCurrentDataSetFolder(currentDatasetFolder);
+                    fragmentationAnalyzer.getProperties().setCurrentDataSetFolder(currentDatasetFolder);
                     this.setVisible(false);
                     fragmentationAnalyzer.loadDataSet(true);
                     this.dispose();
@@ -1407,7 +1407,7 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
                 fragmentationAnalyzer.closeDatabaseConnection();
 
                 // extracted from OMSSA
-                fragmentationAnalyzer.setCurrentDataSetFolder(currentDatasetFolder);
+                fragmentationAnalyzer.getProperties().setCurrentDataSetFolder(currentDatasetFolder);
                 this.setVisible(false);
                 //massSpectrometryFragmentationAnalyzer.loadOmssaModificationFiles();
                 fragmentationAnalyzer.loadDataSet(false);
@@ -1417,7 +1417,7 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
                 fragmentationAnalyzer.closeDatabaseConnection();
 
                 // extracted from Mascot Dat Files or created from scratch
-                fragmentationAnalyzer.setCurrentDataSetFolder(currentDatasetFolder);
+                fragmentationAnalyzer.getProperties().setCurrentDataSetFolder(currentDatasetFolder);
                 this.setVisible(false);
                 this.dispose();
                 fragmentationAnalyzer.loadDataSet(false);
@@ -1475,7 +1475,7 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
                 new DatabaseDialog(this, fragmentationAnalyzer, true, false);
 
                 // check if connection was made
-                if (fragmentationAnalyzer.getCurrentDataSetFolder() == null) {
+                if (fragmentationAnalyzer.getProperties().getCurrentDataSetFolder() == null) {
                     noError = false;
                 }
             }
@@ -1621,7 +1621,7 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
      */
     private void createMsLimsPropertiesFile() throws IOException {
 
-        FileWriter f = new FileWriter(fragmentationAnalyzer.getCurrentDataSetFolder() + "/ms_lims.prop");
+        FileWriter f = new FileWriter(fragmentationAnalyzer.getProperties().getCurrentDataSetFolder() + "/ms_lims.prop");
         BufferedWriter b = new BufferedWriter(f);
 
         b.write("Username: " + fragmentationAnalyzer.getUserProperties().getUserName() + "\n");
@@ -1731,7 +1731,7 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
         progressDialog.setTitle("Retrieving Identifications. Please Wait...");
         progressCounter = 0;
 
-        FileWriter f = new FileWriter(fragmentationAnalyzer.getCurrentDataSetFolder() + "/identifications.temp");
+        FileWriter f = new FileWriter(fragmentationAnalyzer.getProperties().getCurrentDataSetFolder() + "/identifications.temp");
         BufferedWriter b = new BufferedWriter(f);
 
         String modifiedSequence, undmodifiedSequence;
@@ -1853,10 +1853,10 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
         progressDialog.setIntermidiate(false);
         progressDialog.setTitle("Adding Instrument Details. Please Wait...");
 
-        FileWriter w = new FileWriter(fragmentationAnalyzer.getCurrentDataSetFolder() + "/identifications.txt");
+        FileWriter w = new FileWriter(fragmentationAnalyzer.getProperties().getCurrentDataSetFolder() + "/identifications.txt");
         BufferedWriter bw = new BufferedWriter(w);
 
-        FileReader r = new FileReader(fragmentationAnalyzer.getCurrentDataSetFolder() + "/identifications.temp");
+        FileReader r = new FileReader(fragmentationAnalyzer.getProperties().getCurrentDataSetFolder() + "/identifications.temp");
         BufferedReader b = new BufferedReader(r);
 
         String line = b.readLine();
@@ -1885,7 +1885,7 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
         bw.close();
         w.close();
 
-        new File(fragmentationAnalyzer.getCurrentDataSetFolder() + "/identifications.temp").delete();
+        new File(fragmentationAnalyzer.getProperties().getCurrentDataSetFolder() + "/identifications.temp").delete();
     }
 
     /**
@@ -1910,7 +1910,7 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
         StringBuffer inClause = new StringBuffer(spectrumfileids.size() * 10);
         String inClauseAsString = "";
 
-        FileWriter f = new FileWriter(fragmentationAnalyzer.getCurrentDataSetFolder() + "/fragment_ions.txt");
+        FileWriter f = new FileWriter(fragmentationAnalyzer.getProperties().getCurrentDataSetFolder() + "/fragment_ions.txt");
         BufferedWriter b = new BufferedWriter(f);
 
         ps = fragmentationAnalyzer.getConnection().prepareStatement(

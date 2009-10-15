@@ -108,53 +108,30 @@ import org.jfree.ui.TextAnchor;
  */
 public class FragmentationAnalyzer extends javax.swing.JFrame implements ProgressDialogParent {
 
-    private static boolean useErrorLog = true;
+    private static boolean useErrorLog = false;
     private static Connection conn = null;
     private static String analyzerName = "FragmentationAnalyzer";
     private static String versionNumber = "1.0.2";
     private static UserProperties userProperties;
     private static Properties properties;
     private static ProgressDialog progressDialog;
-    private String currentDataSetFolder = null, currentDataSetName = null;
-    private static HashMap<String, Integer> extractedInternalModifications, extractedNTermModifications,
-            extractedCTermModifications, extractedCharges, extractedInstruments;
-    private static Pattern pattern;
     private Vector resultsColumnToolTips, spectraColumnToolTips;
-    private final int GENERAL_SEARCH = 1, MODIFICATION_SEARCH = 2;
-    private final int SEARCH_RESULTS_SHOW_INDIVIDUAL_SPECTRA = 1, SEARCH_RESULTS_INTENSITY_BOX_PLOT = 2,
-            SEARCH_RESULTS_MASS_ERROR_SCATTER_PLOT = 3,
-            SEARCH_RESULTS_MASS_ERROR_BUBBLE_PLOT = 4;
-    private final int SPECTRA_VIEW_SPECTRUM = 1, SPECTRA_MASS_ERROR_SCATTER_PLOT = 2,
-            SPECTRA_MASS_ERROR_BUBBLE_PLOT = 3;
     private static boolean dataLoaded = false;
-    private static HashMap<String, ArrayList<ReducedIdentification>> identificationMap;
-    private static HashMap<Integer, ReducedIdentification> allIdentifications;
-    private static HashMap<Integer, SpectrumPanel> linkedSpectrumPanels;
-    private static HashMap<Integer, JFreeChart> allChartFrames;
-    private HashMap<Integer, Vector<DefaultSpectrumAnnotation>> allAnnotations;
-    private static HashMap<Integer, FragmentationAnalyzerJInternalFrame> allInternalFrames;
     private static Dimension plotPaneCurrentPreferredSize;
     private static int plotPaneCurrentScrollValue = 0;
     private static boolean internalFrameBeingResized = false;
     private static boolean internalFrameIsMaximized = false;
     private static boolean updateScrollValue = true;
     private static boolean normalize = true;
-    private final long Y_ION = 7, B_ION = 1;
     private static boolean currentDataSetIsFromMsLims;
     private boolean selectAllIdentifications = true, selectAllSpectra = true;
-    private ArrayList<IdentificationTableRow> currentlySelectedRowsInSearchTable = new ArrayList<IdentificationTableRow>();
-    private ArrayList<SpectrumTableRow> currentlySelectedRowsInSpectraTable = new ArrayList<SpectrumTableRow>();
     private int internalFrameUniqueIdCounter = 0;
     private boolean cancelProgress = false;
     private boolean searchEnabled = false;
-    public static final int PLOT_LABEL_TYPE_INSTRUMENT = 0, PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE_ALL = 1;
-    private int currentLabelType = PLOT_LABEL_TYPE_INSTRUMENT;
+    private int currentLabelType = Properties.PLOT_LABEL_TYPE_INSTRUMENT;
     private boolean showLegend = true;
     private boolean showMarkers = false;
     private boolean showAverageMassError = false;
-    private final Color defaultMarkerColor = new Color(0, 0, 255, 25);
-    private final float defaultVisibleMarkerAlpha = 1.0f;
-    private final float defaultNonVisibleMarkerAlpha = 0.0f;
 
     /**
      * Creates a new FragmentationAnalyzer frame and makes it visible. Then opens
@@ -213,12 +190,14 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
         // the following lines are needed to make sure that the frame looks ok when
         // the scrollbars are showing (which changes the frame somewhat)
-        while (searchSettingsJScrollPane.getViewport().getViewRect().height < searchSettingsJXTaskPaneContainer.getMinimumSize().getHeight()) {
+        while (searchSettingsJScrollPane.getViewport().getViewRect().height <
+                searchSettingsJXTaskPaneContainer.getMinimumSize().getHeight()) {
             this.setPreferredSize(new Dimension(this.getWidth(), this.getHeight() + 1));
             pack();
         }
 
-        while (resultsJScrollPane.getViewport().getViewRect().height < resultsJXTaskPaneContainer.getMinimumSize().getHeight()) {
+        while (resultsJScrollPane.getViewport().getViewRect().height <
+                resultsJXTaskPaneContainer.getMinimumSize().getHeight()) {
             this.setPreferredSize(new Dimension(this.getWidth(), this.getHeight() + 1));
             pack();
         }
@@ -250,17 +229,18 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         plotsAnalysesJXTaskPane.setExpanded(false);
         spectraJXTaskPane.setExpanded(false);
 
-        linkedSpectrumPanels = new HashMap<Integer, SpectrumPanel>();
-        allAnnotations = new HashMap<Integer, Vector<DefaultSpectrumAnnotation>>();
-        allInternalFrames = new HashMap<Integer, FragmentationAnalyzerJInternalFrame>();
-        allChartFrames = new HashMap<Integer, JFreeChart>();
+        properties = new Properties();
+
+        properties.setLinkedSpectrumPanels(new HashMap<Integer, SpectrumPanel>());
+        properties.setAllAnnotations(new HashMap<Integer, Vector<DefaultSpectrumAnnotation>>());
+        properties.setAllInternalFrames(new HashMap<Integer, FragmentationAnalyzerJInternalFrame>());
+        properties.setAllChartFrames(new HashMap<Integer, JFreeChart>());
 
         userProperties = new UserProperties(versionNumber);
         userProperties.readUserPropertiesFromFile(null);
-        properties = new Properties();
-
+        
         String modificationPattern = "[<][^<]*[>]";
-        pattern = Pattern.compile(modificationPattern);
+        properties.setPattern(Pattern.compile(modificationPattern));
 
         // sets the icon of the frame
         setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().
@@ -2001,7 +1981,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
             identificationMatch = true;
             //System.out.println("mods match");
         } else {
-            ArrayList<String> tempMods = reducedIdentification.getInternalModifications(pattern);
+            ArrayList<String> tempMods = reducedIdentification.getInternalModifications(properties.getPattern());
 
             if (oneModificationOnly) {
                 identificationMatch = (tempMods.size() == 1);
@@ -2045,9 +2025,9 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         int tempSearchType = -1;
 
         if (generalSearchJRadioButton.isSelected()) {
-            tempSearchType = GENERAL_SEARCH;
+            tempSearchType = Properties.GENERAL_SEARCH;
         } else if (modificationSearchJRadioButton.isSelected()) {
-            tempSearchType = MODIFICATION_SEARCH;
+            tempSearchType = Properties.MODIFICATION_SEARCH;
         }
 
         // has to be done like this due to the variable being used inside the thread
@@ -2063,7 +2043,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
 
         // if modification search, verify that at least one modification has been selected
-        if (searchType == MODIFICATION_SEARCH && !cancelProgress) {
+        if (searchType == Properties.MODIFICATION_SEARCH && !cancelProgress) {
             if (!modificationSelected()) {
                 JOptionPane.showMessageDialog(null,
                         "For Modification Searches you have to select at least one modification.",
@@ -2116,7 +2096,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                 @Override
                 public void run() {
 
-                    File identificationFile = new File(currentDataSetFolder + "/identifications.txt");
+                    File identificationFile = new File(properties.getCurrentDataSetFolder() + "/identifications.txt");
 
                     if (identificationFile.exists()) {
 
@@ -2124,8 +2104,8 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                         ((DefaultTableModel) searchResultsJXTable.getModel()).setRowCount(0);
                         ((DefaultTableModel) spectraJXTable.getModel()).setRowCount(0);
 
-                        currentlySelectedRowsInSearchTable = new ArrayList<IdentificationTableRow>();
-                        currentlySelectedRowsInSpectraTable = new ArrayList<SpectrumTableRow>();
+                        properties.setCurrentlySelectedRowsInSearchTable(new ArrayList<IdentificationTableRow>());
+                        properties.setCurrentlySelectedRowsInSpectraTable(new ArrayList<SpectrumTableRow>());
 
                         selectAllIdentifications = true;
 
@@ -2155,8 +2135,8 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
                             int matchCounter = 0;
 
-                            identificationMap = new HashMap<String, ArrayList<ReducedIdentification>>();
-                            allIdentifications = new HashMap<Integer, ReducedIdentification>();
+                            properties.setIdentificationMap(new HashMap<String, ArrayList<ReducedIdentification>>());
+                            properties.setAllIdentifications(new HashMap<Integer, ReducedIdentification>());
 
                             // force garbage collection
                             System.gc();
@@ -2173,7 +2153,8 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
                                 // check the instrument
                                 if (identificationMatch) {
-                                    identificationMatch = checkInstrument(currentIdentification, instrument1, instrument2, instrument3);
+                                    identificationMatch = checkInstrument(
+                                            currentIdentification, instrument1, instrument2, instrument3);
                                 }
 
                                 // check the terminals
@@ -2182,39 +2163,41 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                 }
 
                                 // check the modifications
-                                if (identificationMatch && (searchType != MODIFICATION_SEARCH)) {
-                                    identificationMatch = checkModifications(currentIdentification, modification1, modification2, modification3, false);
+                                if (identificationMatch && (searchType != Properties.MODIFICATION_SEARCH)) {
+                                    identificationMatch = checkModifications(
+                                            currentIdentification, modification1, modification2, modification3, false);
                                 }
 
                                 if (identificationMatch) {
 
                                     matchCounter++;
 
-                                    if (searchType != MODIFICATION_SEARCH) {
+                                    if (searchType != Properties.MODIFICATION_SEARCH) {
 
-                                        if (identificationMap.containsKey(currentIdentification.getModifiedSequence())) {
-                                            ArrayList<ReducedIdentification> temp = identificationMap.get(currentIdentification.getModifiedSequence());
+                                        if (properties.getIdentificationMap().containsKey(currentIdentification.getModifiedSequence())) {
+                                            ArrayList<ReducedIdentification> temp = properties.getIdentificationMap().get(
+                                                    currentIdentification.getModifiedSequence());
                                             temp.add(currentIdentification);
-                                            identificationMap.put(currentIdentification.getModifiedSequence(), temp);
-                                            allIdentifications.put(currentIdentification.getIdentificationId(), currentIdentification);
+                                            properties.getIdentificationMap().put(currentIdentification.getModifiedSequence(), temp);
+                                            properties.getAllIdentifications().put(currentIdentification.getIdentificationId(), currentIdentification);
                                         } else {
                                             ArrayList<ReducedIdentification> temp = new ArrayList<ReducedIdentification>();
                                             temp.add(currentIdentification);
-                                            identificationMap.put(currentIdentification.getModifiedSequence(), temp);
-                                            allIdentifications.put(currentIdentification.getIdentificationId(), currentIdentification);
+                                            properties.getIdentificationMap().put(currentIdentification.getModifiedSequence(), temp);
+                                            properties.getAllIdentifications().put(currentIdentification.getIdentificationId(), currentIdentification);
                                         }
                                     } else {
 
-                                        if (identificationMap.containsKey(currentIdentification.getSequence())) {
-                                            ArrayList<ReducedIdentification> temp = identificationMap.get(currentIdentification.getSequence());
+                                        if (properties.getIdentificationMap().containsKey(currentIdentification.getSequence())) {
+                                            ArrayList<ReducedIdentification> temp = properties.getIdentificationMap().get(currentIdentification.getSequence());
                                             temp.add(currentIdentification);
-                                            identificationMap.put(currentIdentification.getSequence(), temp);
-                                            allIdentifications.put(currentIdentification.getIdentificationId(), currentIdentification);
+                                            properties.getIdentificationMap().put(currentIdentification.getSequence(), temp);
+                                            properties.getAllIdentifications().put(currentIdentification.getIdentificationId(), currentIdentification);
                                         } else {
                                             ArrayList<ReducedIdentification> temp = new ArrayList<ReducedIdentification>();
                                             temp.add(currentIdentification);
-                                            identificationMap.put(currentIdentification.getSequence(), temp);
-                                            allIdentifications.put(currentIdentification.getIdentificationId(), currentIdentification);
+                                            properties.getIdentificationMap().put(currentIdentification.getSequence(), temp);
+                                            properties.getAllIdentifications().put(currentIdentification.getIdentificationId(), currentIdentification);
                                         }
                                     }
                                 }
@@ -2238,23 +2221,24 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                     boolean rowsInserted = false;
 
                                     // hide or show the second count column
-                                    hideSecondCountColumn(searchType == GENERAL_SEARCH);
+                                    hideSecondCountColumn(searchType == Properties.GENERAL_SEARCH);
 
                                     searchResultsJXTable.setSortable(false);
 
-                                    if (searchType == GENERAL_SEARCH) {
+                                    if (searchType == Properties.GENERAL_SEARCH) {
 
                                         progressDialog.setTitle("Updating Results Table. Please Wait...");
                                         progressDialog.setIntermidiate(true);
 
                                         rowsInserted = insertGeneralSearchResults();
 
-                                    } else if (searchType == MODIFICATION_SEARCH) {
+                                    } else if (searchType == Properties.MODIFICATION_SEARCH) {
 
                                         progressDialog.setTitle("Finding Sequence Pairs. Please Wait...");
                                         progressDialog.setIntermidiate(false);
 
-                                        rowsInserted = insertModificationSearchResults(progressDialog, modification1, modification2, modification3,
+                                        rowsInserted = insertModificationSearchResults(
+                                                progressDialog, modification1, modification2, modification3,
                                                 minimumNumberOfModificationPairs);
                                     }
 
@@ -2279,13 +2263,13 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                         progressDialog.setVisible(false);
                                         progressDialog.dispose();
 
-                                        if (searchType == GENERAL_SEARCH) {
+                                        if (searchType == Properties.GENERAL_SEARCH) {
 
                                             JOptionPane.showMessageDialog(null,
                                                     "#Identifications: " + finalMatchCounter + "\n" +
-                                                    "#Unique Identifications: " + identificationMap.size() + "\n",
+                                                    "#Unique Identifications: " + properties.getIdentificationMap().size() + "\n",
                                                     "Search Results", JOptionPane.INFORMATION_MESSAGE);
-                                        } else if (searchType == MODIFICATION_SEARCH) {
+                                        } else if (searchType == Properties.MODIFICATION_SEARCH) {
 
                                             JOptionPane.showMessageDialog(null,
                                                     "#Sequence Pairs: " + searchResultsJXTable.getRowCount(),
@@ -2322,7 +2306,8 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                 "An error occured when trying to open the data set.\n" +
                                 "See /Properties/ErrorLog.txt for more details.",
                                 "Error Opening Data Set", JOptionPane.ERROR_MESSAGE);
-                        Util.writeToErrorLog("Error Opening Data Set: the identifications file " + currentDataSetFolder +
+                        Util.writeToErrorLog("Error Opening Data Set: the identifications file "
+                                + properties.getCurrentDataSetFolder() +
                                 "/identifications.txt" + " does not exist!");
                     }
 
@@ -2349,8 +2334,8 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
             int minimumNumberOfModificationPairs) {
 
         ArrayList<ReducedIdentification> reducedIdentifications;
-        Iterator<String> iterator = identificationMap.keySet().iterator();
-        progressDialog.setMax(identificationMap.keySet().size());
+        Iterator<String> iterator = properties.getIdentificationMap().keySet().iterator();
+        progressDialog.setMax(properties.getIdentificationMap().keySet().size());
 
         int rowCounter = 0, progressCounter = 1;
 
@@ -2360,7 +2345,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
             progressDialog.setValue(progressCounter++);
 
-            reducedIdentifications = identificationMap.get(iterator.next());
+            reducedIdentifications = properties.getIdentificationMap().get(iterator.next());
 
             int unmodifiedCounter = 0;
             modifiedSequences.clear();
@@ -2451,12 +2436,12 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
         int rowCounter = 0;
 
-        Iterator<String> iterator = identificationMap.keySet().iterator();
+        Iterator<String> iterator = properties.getIdentificationMap().keySet().iterator();
 
         while (iterator.hasNext()) {
             String key = iterator.next();
 
-            ArrayList<ReducedIdentification> tempList = identificationMap.get(key);
+            ArrayList<ReducedIdentification> tempList = properties.getIdentificationMap().get(key);
 
             ReducedIdentification temp = tempList.get(0);
 
@@ -2607,14 +2592,15 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
      * @param evt
      */
     private void searchResultsJComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchResultsJComboBoxActionPerformed
-        if (searchResultsJComboBox.getSelectedIndex() != 0 && currentlySelectedRowsInSearchTable.size() > 0) {
+        if (searchResultsJComboBox.getSelectedIndex() != 0 && 
+                properties.getCurrentlySelectedRowsInSearchTable().size() > 0) {
             searchResultsJButton.setEnabled(true);
         } else {
             searchResultsJButton.setEnabled(false);
         }
 
-        if (searchResultsJComboBox.getSelectedIndex() == SEARCH_RESULTS_MASS_ERROR_SCATTER_PLOT ||
-                searchResultsJComboBox.getSelectedIndex() == SEARCH_RESULTS_MASS_ERROR_BUBBLE_PLOT) {
+        if (searchResultsJComboBox.getSelectedIndex() == Properties.SEARCH_RESULTS_MASS_ERROR_SCATTER_PLOT ||
+                searchResultsJComboBox.getSelectedIndex() == Properties.SEARCH_RESULTS_MASS_ERROR_BUBBLE_PLOT) {
             daOrPpmSearchResultsJComboBox.setEnabled(true);
             combineSearchResultsJComboBox.setEnabled(true);
         } else {
@@ -2633,8 +2619,8 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         cancelProgress = false;
 
         // get the wanted plot label type from the user
-        if (searchResultsJComboBox.getSelectedIndex() == SEARCH_RESULTS_MASS_ERROR_SCATTER_PLOT ||
-                searchResultsJComboBox.getSelectedIndex() == SEARCH_RESULTS_MASS_ERROR_BUBBLE_PLOT) {
+        if (searchResultsJComboBox.getSelectedIndex() == Properties.SEARCH_RESULTS_MASS_ERROR_SCATTER_PLOT ||
+                searchResultsJComboBox.getSelectedIndex() == Properties.SEARCH_RESULTS_MASS_ERROR_BUBBLE_PLOT) {
             new PlotLabelSelection(this, true);
         }
 
@@ -2672,9 +2658,9 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                     boolean singleSearch = !searchResultsJXTable.getColumnExt("#2").isVisible();
 
                     progressDialog.setValue(0);
-                    progressDialog.setMax(currentlySelectedRowsInSearchTable.size());
+                    progressDialog.setMax(properties.getCurrentlySelectedRowsInSearchTable().size());
 
-                    if (searchResultsJComboBox.getSelectedIndex() == SEARCH_RESULTS_SHOW_INDIVIDUAL_SPECTRA) {
+                    if (searchResultsJComboBox.getSelectedIndex() == Properties.SEARCH_RESULTS_SHOW_INDIVIDUAL_SPECTRA) {
 
                         spectraJXTaskPane.setExpanded(true);
 
@@ -2682,17 +2668,19 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                         ((DefaultTableModel) spectraJXTable.getModel()).setRowCount(0);
                         spectraJScrollPane.getVerticalScrollBar().setValue(0);
                         spectraJXTable.resetSortOrder();
-                        currentlySelectedRowsInSpectraTable = new ArrayList<SpectrumTableRow>();
+                        properties.setCurrentlySelectedRowsInSpectraTable(new ArrayList<SpectrumTableRow>());
                         selectAllSpectra = true;
                         spectraJComboBoxActionPerformed(null);
 
-                        for (int i = 0; i < currentlySelectedRowsInSearchTable.size() && !cancelProgress; i++) {
+                        for (int i = 0; i < properties.getCurrentlySelectedRowsInSearchTable().size() && !cancelProgress; i++) {
 
-                            IdentificationTableRow currentlySelectedRow = currentlySelectedRowsInSearchTable.get(i);
+                            IdentificationTableRow currentlySelectedRow = 
+                                    properties.getCurrentlySelectedRowsInSearchTable().get(i);
                             String currentSequence = currentlySelectedRow.getSequence();
                             String currentModifiedSequence = currentlySelectedRow.getModifiedSequence();
 
-                            progressDialog.setString("" + (i + 1) + "/" + currentlySelectedRowsInSearchTable.size());
+                            progressDialog.setString("" + (i + 1) + "/" + 
+                                    properties.getCurrentlySelectedRowsInSearchTable().size());
 
                             int localCounter = 0;
 
@@ -2702,7 +2690,8 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                 progressDialog.setMax(currentlySelectedRow.getCountA() + currentlySelectedRow.getCountB());
                                 progressDialog.setValue(localCounter);
 
-                                ArrayList<ReducedIdentification> currentIdentifications = identificationMap.get(currentSequence);
+                                ArrayList<ReducedIdentification> currentIdentifications =
+                                        properties.getIdentificationMap().get(currentSequence);
 
                                 // add the unmodified sequences
                                 for (int j = 0; j < currentIdentifications.size() && !cancelProgress; j++) {
@@ -2746,7 +2735,8 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                     }
                                 }
                             } else {
-                                ArrayList<ReducedIdentification> currentIdentifications = identificationMap.get(currentModifiedSequence);
+                                ArrayList<ReducedIdentification> currentIdentifications =
+                                        properties.getIdentificationMap().get(currentModifiedSequence);
 
                                 progressDialog.setMax(currentlySelectedRow.getCountA());
                                 progressDialog.setValue(localCounter);
@@ -2775,11 +2765,11 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                             resultsJScrollPane.getVerticalScrollBar().setValue(0);
                         } else {
                             ((DefaultTableModel) spectraJXTable.getModel()).setRowCount(0);
-                            currentlySelectedRowsInSpectraTable = new ArrayList<SpectrumTableRow>();
+                            properties.setCurrentlySelectedRowsInSpectraTable(new ArrayList<SpectrumTableRow>());
                             selectAllSpectra = true;
                             spectraJComboBoxActionPerformed(null);
                         }
-                    } else if (searchResultsJComboBox.getSelectedIndex() == SEARCH_RESULTS_INTENSITY_BOX_PLOT) {
+                    } else if (searchResultsJComboBox.getSelectedIndex() == Properties.SEARCH_RESULTS_INTENSITY_BOX_PLOT) {
 
                         plotsAnalysesJXTaskPane.setExpanded(true);
                         searchResultsJXTaskPane.setExpanded(false);
@@ -2789,14 +2779,16 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
                         try {
 
-                            for (int i = 0; i < currentlySelectedRowsInSearchTable.size() && !cancelProgress; i++) {
+                            for (int i = 0; i < properties.getCurrentlySelectedRowsInSearchTable().size() && !cancelProgress; i++) {
 
                                 progressDialog.setIntermidiate(false);
                                 progressDialog.setTitle("Running Analysis. Please Wait...");
                                 progressDialog.setValue(i + 1);
-                                progressDialog.setString("(" + (i + 1) + "/" + currentlySelectedRowsInSearchTable.size() + ")");
+                                progressDialog.setString("(" + (i + 1) + "/" + 
+                                        properties.getCurrentlySelectedRowsInSearchTable().size() + ")");
 
-                                IdentificationTableRow currentlySelectedRow = currentlySelectedRowsInSearchTable.get(i);
+                                IdentificationTableRow currentlySelectedRow = 
+                                        properties.getCurrentlySelectedRowsInSearchTable().get(i);
                                 String currentSequence = currentlySelectedRow.getSequence();
                                 String currentModifiedSequence = currentlySelectedRow.getModifiedSequence();
 
@@ -2808,7 +2800,8 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                 // check for search type
                                 if (!singleSearch) {
 
-                                    ArrayList<ReducedIdentification> currentIdentifications = identificationMap.get(currentSequence);
+                                    ArrayList<ReducedIdentification> currentIdentifications =
+                                            properties.getIdentificationMap().get(currentSequence);
 
                                     unmodifiedCounter = 0;
                                     modifiedCounter = 0;
@@ -2853,10 +2846,10 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
                                             if (currentDataSetIsFromMsLims) {
                                                 // get all unmodified b fragments
-                                                getAllFragmentsFromMsLims(currentId, bUnmodIntensities, unmodifiedCounter, B_ION);
+                                                getAllFragmentsFromMsLims(currentId, bUnmodIntensities, unmodifiedCounter, Properties.B_ION);
 
                                                 // get all unmodified y fragments
-                                                getAllFragmentsFromMsLims(currentId, yUnmodIntensities, unmodifiedCounter, Y_ION);
+                                                getAllFragmentsFromMsLims(currentId, yUnmodIntensities, unmodifiedCounter, Properties.Y_ION);
                                             } else {
                                                 // get all unmodified b fragments
                                                 getAllFragmentsFromFragmentIonsFile(currentId, bUnmodIntensities, unmodifiedCounter, "b");
@@ -2886,10 +2879,10 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
                                             if (currentDataSetIsFromMsLims) {
                                                 // get all modified b fragments
-                                                getAllFragmentsFromMsLims(currentId, bModIntensities, modifiedCounter, B_ION);
+                                                getAllFragmentsFromMsLims(currentId, bModIntensities, modifiedCounter, Properties.B_ION);
 
                                                 // get all modified y fragments
-                                                getAllFragmentsFromMsLims(currentId, yModIntensities, modifiedCounter, Y_ION);
+                                                getAllFragmentsFromMsLims(currentId, yModIntensities, modifiedCounter, Properties.Y_ION);
                                             } else {
                                                 // get all modified b fragments
                                                 getAllFragmentsFromFragmentIonsFile(currentId, bModIntensities, modifiedCounter, "b");
@@ -2903,7 +2896,8 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                     }
 
                                     progressDialog.setIntermidiate(true);
-                                    progressDialog.setString("(" + (i + 1) + "/" + currentlySelectedRowsInSearchTable.size() + ")");
+                                    progressDialog.setString("(" + (i + 1) + "/" + 
+                                            properties.getCurrentlySelectedRowsInSearchTable().size() + ")");
                                     progressDialog.setTitle("Creating Box Plot. Please Wait...");
 
                                     // lists of all non null b and y values
@@ -2943,7 +2937,8 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                                 currentCategory);
                                     }
                                 } else {
-                                    ArrayList<ReducedIdentification> currentIdentifications = identificationMap.get(currentModifiedSequence);
+                                    ArrayList<ReducedIdentification> currentIdentifications = 
+                                            properties.getIdentificationMap().get(currentModifiedSequence);
 
                                     double[][] bIntensities = new double[currentSequence.length()][currentIdentifications.size()];
                                     double[][] yIntensities = new double[currentSequence.length()][currentIdentifications.size()];
@@ -2960,10 +2955,10 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
                                         if (currentDataSetIsFromMsLims) {
                                             // get all b fragments
-                                            getAllFragmentsFromMsLims(currentIdentifications.get(j), bIntensities, j, B_ION);
+                                            getAllFragmentsFromMsLims(currentIdentifications.get(j), bIntensities, j, Properties.B_ION);
 
                                             // get all y fragments
-                                            getAllFragmentsFromMsLims(currentIdentifications.get(j), yIntensities, j, Y_ION);
+                                            getAllFragmentsFromMsLims(currentIdentifications.get(j), yIntensities, j, Properties.Y_ION);
                                         } else {
                                             // get all b fragments
                                             getAllFragmentsFromFragmentIonsFile(currentIdentifications.get(j), bIntensities, j, "b");
@@ -2974,7 +2969,8 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                     }
 
                                     progressDialog.setIntermidiate(true);
-                                    progressDialog.setString("(" + (i + 1) + "/" + currentlySelectedRowsInSearchTable.size() + ")");
+                                    progressDialog.setString("(" + (i + 1) + "/" + 
+                                            properties.getCurrentlySelectedRowsInSearchTable().size() + ")");
                                     progressDialog.setTitle("Creating Box Plot. Please Wait...");
 
                                     // lists of all non null B and Y values
@@ -3040,7 +3036,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                     internalFrame.add(chartPanel);
 
                                     insertInternalFrame(internalFrame);
-                                    allChartFrames.put(internalFrameUniqueIdCounter, chart);
+                                    properties.getAllChartFrames().put(internalFrameUniqueIdCounter, chart);
                                     internalFrameUniqueIdCounter++;
 
                                     // update the visible box plot fragment ion selection
@@ -3062,12 +3058,12 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                             Util.writeToErrorLog("Error when building box plot: ");
                             e.printStackTrace();
                         }
-                    } else if (searchResultsJComboBox.getSelectedIndex() == SEARCH_RESULTS_MASS_ERROR_SCATTER_PLOT ||
-                            searchResultsJComboBox.getSelectedIndex() == SEARCH_RESULTS_MASS_ERROR_BUBBLE_PLOT) {
+                    } else if (searchResultsJComboBox.getSelectedIndex() == Properties.SEARCH_RESULTS_MASS_ERROR_SCATTER_PLOT ||
+                            searchResultsJComboBox.getSelectedIndex() == Properties.SEARCH_RESULTS_MASS_ERROR_BUBBLE_PLOT) {
 
                         boolean isBubblePlot = false;
 
-                        if (searchResultsJComboBox.getSelectedIndex() == SEARCH_RESULTS_MASS_ERROR_BUBBLE_PLOT) {
+                        if (searchResultsJComboBox.getSelectedIndex() == Properties.SEARCH_RESULTS_MASS_ERROR_BUBBLE_PLOT) {
                             isBubblePlot = true;
                         }
 
@@ -3084,14 +3080,16 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
                         HashMap<String, ArrayList<XYZDataPoint>> data = new HashMap<String, ArrayList<XYZDataPoint>>();
 
-                        for (int i = 0; i < currentlySelectedRowsInSearchTable.size() && !cancelProgress; i++) {
+                        for (int i = 0; i < properties.getCurrentlySelectedRowsInSearchTable().size() && !cancelProgress; i++) {
 
                             try {
 
-                                progressDialog.setString("" + (i + 1) + "/" + currentlySelectedRowsInSearchTable.size());
+                                progressDialog.setString("" + (i + 1) + "/" + 
+                                        properties.getCurrentlySelectedRowsInSearchTable().size());
                                 int localCounter = 0;
 
-                                IdentificationTableRow currentlySelectedRow = currentlySelectedRowsInSearchTable.get(i);
+                                IdentificationTableRow currentlySelectedRow = 
+                                        properties.getCurrentlySelectedRowsInSearchTable().get(i);
                                 String currentSequence = currentlySelectedRow.getSequence();
                                 String currentModifiedSequence = currentlySelectedRow.getModifiedSequence();
 
@@ -3101,7 +3099,8 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                     progressDialog.setMax(currentlySelectedRow.getCountA() + currentlySelectedRow.getCountB());
                                     progressDialog.setValue(localCounter);
 
-                                    ArrayList<ReducedIdentification> currentIdentifications = identificationMap.get(currentSequence);
+                                    ArrayList<ReducedIdentification> currentIdentifications =
+                                            properties.getIdentificationMap().get(currentSequence);
 
                                     // add the unmodified sequences
                                     for (int j = 0; j < currentIdentifications.size() && !cancelProgress; j++) {
@@ -3131,7 +3130,8 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                     progressDialog.setMax(currentlySelectedRow.getCountA());
                                     progressDialog.setValue(localCounter);
 
-                                    ArrayList<ReducedIdentification> currentIdentifications = identificationMap.get(currentModifiedSequence);
+                                    ArrayList<ReducedIdentification> currentIdentifications =
+                                            properties.getIdentificationMap().get(currentModifiedSequence);
 
                                     for (int j = 0; j < currentIdentifications.size() && !cancelProgress; j++) {
                                         ReducedIdentification currentId = currentIdentifications.get(j);
@@ -3183,15 +3183,15 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
                             String internalFrameTitle = "Mass Error Plot";
 
-                            if (currentlySelectedRowsInSearchTable.size() == 1) {
+                            if (properties.getCurrentlySelectedRowsInSearchTable().size() == 1) {
 
                                 if (singleSearch) {
-                                    internalFrameTitle = currentlySelectedRowsInSearchTable.get(0).getModifiedSequence() +
-                                            " (" + currentlySelectedRowsInSearchTable.get(0).getCountA() + ")";
+                                    internalFrameTitle = properties.getCurrentlySelectedRowsInSearchTable().get(0).getModifiedSequence() +
+                                            " (" + properties.getCurrentlySelectedRowsInSearchTable().get(0).getCountA() + ")";
                                 } else {
-                                    internalFrameTitle = currentlySelectedRowsInSearchTable.get(0).getModifiedSequence() +
-                                            " (" + currentlySelectedRowsInSearchTable.get(0).getCountA() + " u/" +
-                                            currentlySelectedRowsInSearchTable.get(0).getCountB() + " m)";
+                                    internalFrameTitle = properties.getCurrentlySelectedRowsInSearchTable().get(0).getModifiedSequence() +
+                                            " (" + properties.getCurrentlySelectedRowsInSearchTable().get(0).getCountA() + " u/" +
+                                            properties.getCurrentlySelectedRowsInSearchTable().get(0).getCountB() + " m)";
                                 }
                             }
 
@@ -3226,7 +3226,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         boolean addLegend = true;
 
         // fragment ion type plots do not have a legend because it's too big
-        if (currentLabelType == PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE_ALL) {
+        if (currentLabelType == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE_ALL) {
             addLegend = false;
         }
 
@@ -3254,12 +3254,10 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         }
 
         // add average mass error line
-        if (currentLabelType == PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE_ALL) {
-            addAverageMassErrorLine(averageValues, chart);
-        }
+        addAverageMassErrorLine(averageValues, chart);
 
         // add fragment ion type markers
-        if (currentLabelType == PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE_ALL) {
+        if (currentLabelType == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE_ALL) {
             addFragmentIonTypeMarkers(data, chart);
         }
 
@@ -3270,7 +3268,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
         insertInternalFrame(internalFrame);
 
-        allChartFrames.put(internalFrameUniqueIdCounter, chart);
+        properties.getAllChartFrames().put(internalFrameUniqueIdCounter, chart);
         internalFrameUniqueIdCounter++;
 
         // update the visible series selection
@@ -3341,17 +3339,26 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
             double currentXValue = currentDataPoint.getX();
 
             // create the interval marker
-            IntervalMarker intervalMarker = new IntervalMarker(currentXValue - 5, currentXValue + 5, defaultMarkerColor);
+            IntervalMarker intervalMarker = new IntervalMarker(currentXValue - 5, currentXValue + 5, properties.getDefaultMarkerColor());
             intervalMarker.setLabel(fragmentIonType);
             intervalMarker.setLabelFont(new Font("SansSerif", Font.PLAIN, 10));
             intervalMarker.setLabelPaint(Color.GRAY);
             intervalMarker.setLabelTextAnchor(TextAnchor.TOP_LEFT);
 
+            // set the fragment ion marker color
+            if (fragmentIonType.startsWith("b")) {
+                intervalMarker.setPaint(properties.getbFragmentIonColor());
+            } else if (fragmentIonType.startsWith("y")) {
+                intervalMarker.setPaint(properties.getyFragmentIonColor());
+            } else {
+                intervalMarker.setPaint(properties.getOtherFragmentIonColor());
+            }
+
             // make the marker visible or not
             if (showMarkers) {
-                intervalMarker.setAlpha(defaultVisibleMarkerAlpha);
+                intervalMarker.setAlpha(Properties.DEFAULT_VISIBLE_MARKER_ALPHA);
             } else {
-                intervalMarker.setAlpha(defaultNonVisibleMarkerAlpha);
+                intervalMarker.setAlpha(Properties.DEFAULT_NON_VISIBLE_MARKER_ALPHA);
             }
 
             // set the horizontal location of the markers label
@@ -3420,16 +3427,17 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         String modificationCategory = "" + tempModifiedSequence.charAt(modificationIndex) + (modificationIndex + 1);
 
         // create the marker and add it to the plot
-        CategoryMarker marker = new CategoryMarker(modificationCategory, defaultMarkerColor, new BasicStroke(1.0f));
+        CategoryMarker marker = new CategoryMarker(
+                modificationCategory, properties.getDefaultMarkerColor(), new BasicStroke(1.0f));
         marker.setDrawAsLine(false);
         marker.setLabelOffset(new RectangleInsets(2, 5, 2, 5));
         plot.addDomainMarker(marker, Layer.BACKGROUND);
 
         // make the marker visible or not visible
         if (showMarkers) {
-            marker.setAlpha(defaultVisibleMarkerAlpha);
+            marker.setAlpha(Properties.DEFAULT_VISIBLE_MARKER_ALPHA);
         } else {
-            marker.setAlpha(defaultNonVisibleMarkerAlpha);
+            marker.setAlpha(Properties.DEFAULT_NON_VISIBLE_MARKER_ALPHA);
         }
     }
 
@@ -3550,9 +3558,9 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                     intensity = intensity / totalIntensity;
                 }
 
-                if (currentLabelType == PLOT_LABEL_TYPE_INSTRUMENT) {
+                if (currentLabelType == Properties.PLOT_LABEL_TYPE_INSTRUMENT) {
                     addXYZDataPoint(data, currentIdentification.getInstrumentName(), switchYandZAxis, mzValue, massError, intensity, bubbleScaling);
-                } else if (currentLabelType == PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE_ALL) {
+                } else if (currentLabelType == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE_ALL) {
                     addXYZDataPoint(data, fragmentIonType, switchYandZAxis, mzValue, massError, intensity, bubbleScaling);
                 }
             }
@@ -3576,10 +3584,10 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                     intensity = intensity / currentIdentification.getTotalIntensity();
                 }
 
-                if (currentLabelType == PLOT_LABEL_TYPE_INSTRUMENT) {
+                if (currentLabelType == Properties.PLOT_LABEL_TYPE_INSTRUMENT) {
                     addXYZDataPoint(data, currentIdentification.getInstrumentName(), switchYandZAxis, mzValue,
                             massError, intensity, bubbleScaling);
-                } else if (currentLabelType == PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE_ALL) {
+                } else if (currentLabelType == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE_ALL) {
                     addXYZDataPoint(data, fragmentIonType, switchYandZAxis, mzValue, massError, intensity, bubbleScaling);
                 }
             }
@@ -3871,13 +3879,13 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
      * @param evt
      */
     private void spectraJComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_spectraJComboBoxActionPerformed
-        if (spectraJComboBox.getSelectedIndex() != 0 && currentlySelectedRowsInSpectraTable.size() > 0) {
+        if (spectraJComboBox.getSelectedIndex() != 0 && properties.getCurrentlySelectedRowsInSpectraTable().size() > 0) {
             spectraJButton.setEnabled(true);
         } else {
             spectraJButton.setEnabled(false);
         }
 
-        if (spectraJComboBox.getSelectedIndex() != SPECTRA_VIEW_SPECTRUM && spectraJComboBox.getSelectedIndex() != 0) {
+        if (spectraJComboBox.getSelectedIndex() != Properties.SPECTRA_VIEW_SPECTRUM && spectraJComboBox.getSelectedIndex() != 0) {
             daOrPpmSpectraJComboBox.setEnabled(true);
             combineSpectraJComboBox.setEnabled(true);
         } else {
@@ -3897,8 +3905,8 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         cancelProgress = false;
 
         // get the wanted label type from the user
-        if (spectraJComboBox.getSelectedIndex() == SPECTRA_MASS_ERROR_BUBBLE_PLOT ||
-                spectraJComboBox.getSelectedIndex() == SPECTRA_MASS_ERROR_SCATTER_PLOT) {
+        if (spectraJComboBox.getSelectedIndex() == Properties.SPECTRA_MASS_ERROR_BUBBLE_PLOT ||
+                spectraJComboBox.getSelectedIndex() == Properties.SPECTRA_MASS_ERROR_SCATTER_PLOT) {
             new PlotLabelSelection(this, true);
         }
 
@@ -3936,15 +3944,15 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                 @Override
                 public void run() {
 
-                    progressDialog.setMax(currentlySelectedRowsInSpectraTable.size());
+                    progressDialog.setMax(properties.getCurrentlySelectedRowsInSpectraTable().size());
 
                     resultsJScrollPane.getVerticalScrollBar().setValue(resultsJScrollPane.getVerticalScrollBar().getVisibleAmount());
 
-                    if (spectraJComboBox.getSelectedIndex() == SPECTRA_VIEW_SPECTRUM) {
+                    if (spectraJComboBox.getSelectedIndex() == Properties.SPECTRA_VIEW_SPECTRUM) {
 
-                        for (int i = 0; i < currentlySelectedRowsInSpectraTable.size() && !cancelProgress; i++) {
+                        for (int i = 0; i < properties.getCurrentlySelectedRowsInSpectraTable().size() && !cancelProgress; i++) {
 
-                            SpectrumTableRow currentRow = currentlySelectedRowsInSpectraTable.get(i);
+                            SpectrumTableRow currentRow = properties.getCurrentlySelectedRowsInSpectraTable().get(i);
                             Integer currentId = currentRow.getIdentificationId();
                             Integer currentSpectrumId = currentRow.getSpectrumId();
 
@@ -3988,7 +3996,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
                                 try {
 
-                                    File spectrumFile = new File(getCurrentDataSetFolder() + "/spectra/" + currentSpectrumId + ".pkl");
+                                    File spectrumFile = new File(properties.getCurrentDataSetFolder() + "/spectra/" + currentSpectrumId + ".pkl");
                                     PKLFile pklFile = parsePKLFile(spectrumFile);
 
                                     // get the fragment ions
@@ -4014,12 +4022,12 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                 }
                             }
                         }
-                    } else if (spectraJComboBox.getSelectedIndex() == SPECTRA_MASS_ERROR_BUBBLE_PLOT ||
-                            spectraJComboBox.getSelectedIndex() == SPECTRA_MASS_ERROR_SCATTER_PLOT) {
+                    } else if (spectraJComboBox.getSelectedIndex() == Properties.SPECTRA_MASS_ERROR_BUBBLE_PLOT ||
+                            spectraJComboBox.getSelectedIndex() == Properties.SPECTRA_MASS_ERROR_SCATTER_PLOT) {
 
                         boolean isBubblePlot = false;
 
-                        if (spectraJComboBox.getSelectedIndex() == SPECTRA_MASS_ERROR_BUBBLE_PLOT) {
+                        if (spectraJComboBox.getSelectedIndex() == Properties.SPECTRA_MASS_ERROR_BUBBLE_PLOT) {
                             isBubblePlot = true;
                         }
 
@@ -4036,10 +4044,10 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                         // check if all plots have the same sequence
                         if (combineSpectraJComboBox.getSelectedIndex() == 1) {
 
-                            String tempModifiedSequence = currentlySelectedRowsInSpectraTable.get(0).getModifiedSequence();
+                            String tempModifiedSequence = properties.getCurrentlySelectedRowsInSpectraTable().get(0).getModifiedSequence();
 
-                            for (int i = 1; i < currentlySelectedRowsInSpectraTable.size() && allPlotsHaveSameSequence; i++) {
-                                if (!currentlySelectedRowsInSpectraTable.get(i).getModifiedSequence().equalsIgnoreCase(
+                            for (int i = 1; i < properties.getCurrentlySelectedRowsInSpectraTable().size() && allPlotsHaveSameSequence; i++) {
+                                if (!properties.getCurrentlySelectedRowsInSpectraTable().get(i).getModifiedSequence().equalsIgnoreCase(
                                         tempModifiedSequence)) {
                                     allPlotsHaveSameSequence = false;
                                 }
@@ -4047,11 +4055,12 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                         }
 
 
-                        for (int i = 0; i < currentlySelectedRowsInSpectraTable.size() && !cancelProgress; i++) {
+                        for (int i = 0; i < properties.getCurrentlySelectedRowsInSpectraTable().size() && !cancelProgress; i++) {
 
                             try {
-                                Integer currentId = currentlySelectedRowsInSpectraTable.get(i).getIdentificationId();
-                                ReducedIdentification currentIdentification = allIdentifications.get(currentId);
+                                Integer currentId = properties.getCurrentlySelectedRowsInSpectraTable().get(i).getIdentificationId();
+                                ReducedIdentification currentIdentification =
+                                        properties.getAllIdentifications().get(currentId);
 
                                 progressDialog.setValue(i + 1);
 
@@ -4093,8 +4102,9 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
                             String internalFrameTitle = "Mass Error Plot";
 
-                            if (currentlySelectedRowsInSpectraTable.size() == 1 || allPlotsHaveSameSequence) {
-                                internalFrameTitle = currentlySelectedRowsInSpectraTable.get(0).getModifiedSequence() + " (" + currentlySelectedRowsInSpectraTable.size() + ")";
+                            if (properties.getCurrentlySelectedRowsInSpectraTable().size() == 1 || allPlotsHaveSameSequence) {
+                                internalFrameTitle = properties.getCurrentlySelectedRowsInSpectraTable().get(0).getModifiedSequence()
+                                        + " (" + properties.getCurrentlySelectedRowsInSpectraTable().size() + ")";
                             }
 
                             insertMassErrorPlot(isBubblePlot, data, internalFrameTitle,
@@ -4107,7 +4117,6 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                 }
             }.start();
         }
-
     }//GEN-LAST:event_spectraJButtonActionPerformed
 
     /**
@@ -4122,6 +4131,8 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         DefaultXYZDataset dataset = new DefaultXYZDataset();
 
         Iterator<String> iterator = data.keySet().iterator();
+
+        HashMap<Double, ArrayList<Double>> xAndYValues = new HashMap<Double, ArrayList<Double>>();
 
         while (iterator.hasNext()) {
 
@@ -4138,10 +4149,41 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                 tempXYZData[1][i] = currentData.get(i).getY();
                 tempXYZData[2][i] = currentData.get(i).getZ();
 
-                averageYValue += tempXYZData[1][i];
+                if (currentLabelType == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE_ALL) {
+                    averageYValue += tempXYZData[1][i];
+                } else if (currentLabelType == Properties.PLOT_LABEL_TYPE_INSTRUMENT) {
+                    if (xAndYValues.containsKey(tempXYZData[0][i])) {
+                        ArrayList<Double> tempYValues = xAndYValues.get(tempXYZData[0][i]);
+                        tempYValues.add(tempXYZData[1][i]);
+                        xAndYValues.put(tempXYZData[0][i], tempYValues);
+                    } else {
+                        ArrayList<Double> tempYValues = new ArrayList<Double>();
+                        tempYValues.add(tempXYZData[1][i]);
+                        xAndYValues.put(tempXYZData[0][i], tempYValues);
+                    }
+                }
             }
 
-            average.put(tempXYZData[0][0], (averageYValue / currentData.size()));
+            if (currentLabelType == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE_ALL) {
+                average.put(tempXYZData[0][0], (averageYValue / currentData.size()));
+            } else if (currentLabelType == Properties.PLOT_LABEL_TYPE_INSTRUMENT) {
+
+                Iterator<Double> xValuesIterator = xAndYValues.keySet().iterator();
+
+                while (xValuesIterator.hasNext()) {
+                    Double currentXValue = xValuesIterator.next();
+
+                    ArrayList<Double> currentYValues = xAndYValues.get(currentXValue);
+
+                    double currentAverageYValue = 0.0;
+
+                    for (int i = 0; i < currentYValues.size(); i++) {
+                        currentAverageYValue += currentYValues.get(i);
+                    }
+
+                    average.put(currentXValue, (currentAverageYValue / currentYValues.size()));
+                }
+            }
 
             dataset.addSeries(key, tempXYZData);
         }
@@ -4160,6 +4202,8 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
         DefaultXYDataset dataset = new DefaultXYDataset();
 
+        HashMap<Double, ArrayList<Double>> xAndZValues = new HashMap<Double, ArrayList<Double>>();
+
         Iterator<String> iterator = data.keySet().iterator();
 
         while (iterator.hasNext()) {
@@ -4174,14 +4218,43 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
             for (int i = 0; i < currentData.size(); i++) {
                 tempXYData[0][i] = currentData.get(i).getX();
-                //tempXYData[1][i] = currentData.get(i).getY();
-                //tempXYZData[2][i] = currentData.get(i).getZ();
                 tempXYData[1][i] = currentData.get(i).getZ();
 
-                averageZValue += tempXYData[1][i];
+                if (currentLabelType == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE_ALL) {
+                    averageZValue += tempXYData[1][i];
+                } else if (currentLabelType == Properties.PLOT_LABEL_TYPE_INSTRUMENT) {
+                    if (xAndZValues.containsKey(tempXYData[0][i])) {
+                        ArrayList<Double> tempZValues = xAndZValues.get(tempXYData[0][i]);
+                        tempZValues.add(tempXYData[1][i]);
+                        xAndZValues.put(tempXYData[0][i], tempZValues);
+                    } else {
+                        ArrayList<Double> tempZValues = new ArrayList<Double>();
+                        tempZValues.add(tempXYData[1][i]);
+                        xAndZValues.put(tempXYData[0][i], tempZValues);
+                    }
+                }
             }
 
-            average.put(tempXYData[0][0], (averageZValue / currentData.size()));
+            if (currentLabelType == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE_ALL) {
+                average.put(tempXYData[0][0], (averageZValue / currentData.size()));
+            } else if (currentLabelType == Properties.PLOT_LABEL_TYPE_INSTRUMENT) {
+
+                Iterator<Double> xValuesIterator = xAndZValues.keySet().iterator();
+
+                while (xValuesIterator.hasNext()) {
+                    Double currentXValue = xValuesIterator.next();
+
+                    ArrayList<Double> currentZValues = xAndZValues.get(currentXValue);
+
+                    double currentAverageZValue = 0.0;
+
+                    for (int i = 0; i < currentZValues.size(); i++) {
+                        currentAverageZValue += currentZValues.get(i);
+                    }
+
+                    average.put(currentXValue, (currentAverageZValue / currentZValues.size()));
+                }
+            }
 
             dataset.addSeries(key, tempXYData);
         }
@@ -4253,7 +4326,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
         ArrayList<FragmentIon> currentFragmentIons = new ArrayList<FragmentIon>();
 
-        FileReader r = new FileReader(getCurrentDataSetFolder() + "/fragmentIons.txt");
+        FileReader r = new FileReader(properties.getCurrentDataSetFolder() + "/fragmentIons.txt");
         BufferedReader b = new BufferedReader(r);
 
         String currentLine = b.readLine();
@@ -4310,7 +4383,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
 
-        Iterator<Integer> iterator = allInternalFrames.keySet().iterator();
+        Iterator<Integer> iterator = properties.getAllInternalFrames().keySet().iterator();
 
         // store the keys in a list first to escape a ConcurrentModificationException
         ArrayList<Integer> keys = new ArrayList<Integer>();
@@ -4320,14 +4393,14 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         }
 
         for (int i = 0; i < keys.size(); i++) {
-            allInternalFrames.get(keys.get(i)).setVisible(false);
-            allInternalFrames.get(keys.get(i)).dispose();
+            properties.getAllInternalFrames().get(keys.get(i)).setVisible(false);
+            properties.getAllInternalFrames().get(keys.get(i)).dispose();
         }
 
-        allInternalFrames = new HashMap<Integer, FragmentationAnalyzerJInternalFrame>();
-        linkedSpectrumPanels = new HashMap<Integer, SpectrumPanel>();
-        allAnnotations = new HashMap<Integer, Vector<DefaultSpectrumAnnotation>>();
-        allChartFrames = new HashMap<Integer, JFreeChart>();
+        properties.setAllInternalFrames(new HashMap<Integer, FragmentationAnalyzerJInternalFrame>());
+        properties.setLinkedSpectrumPanels(new HashMap<Integer, SpectrumPanel>());
+        properties.setAllAnnotations(new HashMap<Integer, Vector<DefaultSpectrumAnnotation>>());
+        properties.setAllChartFrames(new HashMap<Integer, JFreeChart>());
 
         spectrumPanelToolBarJInternalFrame.setVisible(false);
         boxPlotPanelToolBarJInternalFrame.setVisible(false);
@@ -4445,13 +4518,13 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
      */
     private void aIonsJCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aIonsJCheckBoxActionPerformed
 
-        Iterator<Integer> iterator = linkedSpectrumPanels.keySet().iterator();
+        Iterator<Integer> iterator = properties.getLinkedSpectrumPanels().keySet().iterator();
 
         while (iterator.hasNext()) {
 
             Integer key = iterator.next();
-            SpectrumPanel currentSpectrumPanel = linkedSpectrumPanels.get(key);
-            Vector<DefaultSpectrumAnnotation> currentAnnotations = allAnnotations.get(key);
+            SpectrumPanel currentSpectrumPanel = properties.getLinkedSpectrumPanels().get(key);
+            Vector<DefaultSpectrumAnnotation> currentAnnotations = properties.getAllAnnotations().get(key);
 
             // update the ion coverage annotations
             currentSpectrumPanel.setAnnotations(filterAnnotations(currentAnnotations));
@@ -4561,7 +4634,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         int sortedTableColumn = -1;
         SortOrder sortOrder = null;
 
-        currentlySelectedRowsInSearchTable = new ArrayList<IdentificationTableRow>();
+        properties.setCurrentlySelectedRowsInSearchTable(new ArrayList<IdentificationTableRow>());
 
         if (searchResultsJXTable.getSortedColumn() != null) {
             sortedTableColumn = searchResultsJXTable.getSortedColumn().getModelIndex();
@@ -4580,7 +4653,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                     countB = (Integer) searchResultsJXTable.getValueAt(i, 4);
                 }
 
-                currentlySelectedRowsInSearchTable.add(
+                properties.getCurrentlySelectedRowsInSearchTable().add(
                         new IdentificationTableRow(
                         (String) searchResultsJXTable.getValueAt(i, 1),
                         (String) searchResultsJXTable.getValueAt(i, 2),
@@ -4595,7 +4668,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
             }
         }
 
-        if (currentlySelectedRowsInSearchTable.size() > 0) {
+        if (properties.getCurrentlySelectedRowsInSearchTable().size() > 0) {
             searchResultsJComboBoxActionPerformed(null);
         } else {
             searchResultsJButton.setEnabled(false);
@@ -4625,7 +4698,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         int sortedTableColumn = -1;
         SortOrder sortOrder = null;
 
-        currentlySelectedRowsInSearchTable = new ArrayList<IdentificationTableRow>();
+        properties.setCurrentlySelectedRowsInSearchTable(new ArrayList<IdentificationTableRow>());
 
         if (searchResultsJXTable.getSortedColumn() != null) {
             sortedTableColumn = searchResultsJXTable.getSortedColumn().getModelIndex();
@@ -4648,7 +4721,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                     countB = (Integer) searchResultsJXTable.getValueAt(i, 4);
                 }
 
-                currentlySelectedRowsInSearchTable.add(
+                properties.getCurrentlySelectedRowsInSearchTable().add(
                         new IdentificationTableRow(
                         (String) searchResultsJXTable.getValueAt(i, 1),
                         (String) searchResultsJXTable.getValueAt(i, 2),
@@ -4657,7 +4730,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
             }
         }
 
-        if (currentlySelectedRowsInSearchTable.size() > 0) {
+        if (properties.getCurrentlySelectedRowsInSearchTable().size() > 0) {
             searchResultsJComboBoxActionPerformed(null);
         } else {
             searchResultsJButton.setEnabled(false);
@@ -4683,7 +4756,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         int sortedTableColumn = -1;
         SortOrder sortOrder = null;
 
-        currentlySelectedRowsInSpectraTable = new ArrayList<SpectrumTableRow>();
+        properties.setCurrentlySelectedRowsInSpectraTable(new ArrayList<SpectrumTableRow>());
 
         if (spectraJXTable.getSortedColumn() != null) {
             sortedTableColumn = spectraJXTable.getSortedColumn().getModelIndex();
@@ -4695,7 +4768,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         if (selectAllSpectra) {
             for (int i = 0; i < spectraJXTable.getRowCount(); i++) {
                 spectraJXTable.setValueAt(new Boolean(true), i, spectraJXTable.getColumnCount() - 1);
-                currentlySelectedRowsInSpectraTable.add(
+                properties.getCurrentlySelectedRowsInSpectraTable().add(
                         new SpectrumTableRow(
                         (Integer) spectraJXTable.getValueAt(i, 1),
                         (Integer) spectraJXTable.getValueAt(i, 2),
@@ -4711,7 +4784,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
             }
         }
 
-        if (currentlySelectedRowsInSpectraTable.size() > 0) {
+        if (properties.getCurrentlySelectedRowsInSpectraTable().size() > 0) {
             spectraJComboBoxActionPerformed(null);
         } else {
             spectraJButton.setEnabled(false);
@@ -4741,7 +4814,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         int sortedTableColumn = -1;
         SortOrder sortOrder = null;
 
-        currentlySelectedRowsInSpectraTable = new ArrayList<SpectrumTableRow>();
+        properties.setCurrentlySelectedRowsInSpectraTable(new ArrayList<SpectrumTableRow>());
 
         if (spectraJXTable.getSortedColumn() != null) {
             sortedTableColumn = spectraJXTable.getSortedColumn().getModelIndex();
@@ -4752,10 +4825,11 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
         for (int i = 0; i < spectraJXTable.getRowCount(); i++) {
             spectraJXTable.setValueAt(
-                    new Boolean(!((Boolean) spectraJXTable.getValueAt(i, spectraJXTable.getColumnCount() - 1)).booleanValue()), i, spectraJXTable.getColumnCount() - 1);
+                    new Boolean(!((Boolean) spectraJXTable.getValueAt(i,
+                    spectraJXTable.getColumnCount() - 1)).booleanValue()), i, spectraJXTable.getColumnCount() - 1);
 
             if (((Boolean) spectraJXTable.getValueAt(i, spectraJXTable.getColumnCount() - 1)).booleanValue()) {
-                currentlySelectedRowsInSpectraTable.add(
+                properties.getCurrentlySelectedRowsInSpectraTable().add(
                         new SpectrumTableRow(
                         (Integer) spectraJXTable.getValueAt(i, 1),
                         (Integer) spectraJXTable.getValueAt(i, 2),
@@ -4765,7 +4839,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
             }
         }
 
-        if (currentlySelectedRowsInSpectraTable.size() > 0) {
+        if (properties.getCurrentlySelectedRowsInSpectraTable().size() > 0) {
             spectraJComboBoxActionPerformed(null);
         } else {
             spectraJButton.setEnabled(false);
@@ -4809,15 +4883,15 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                             countB);
 
                     if (((Boolean) searchResultsJXTable.getValueAt(row, column)).booleanValue()) {
-                        if (!currentlySelectedRowsInSearchTable.contains(temp)) {
-                            currentlySelectedRowsInSearchTable.add(temp);
+                        if (!properties.getCurrentlySelectedRowsInSearchTable().contains(temp)) {
+                            properties.getCurrentlySelectedRowsInSearchTable().add(temp);
                         }
                     } else {
-                        currentlySelectedRowsInSearchTable.remove(temp);
+                        properties.getCurrentlySelectedRowsInSearchTable().remove(temp);
                     }
                 }
 
-                if (currentlySelectedRowsInSearchTable.size() > 0) {
+                if (properties.getCurrentlySelectedRowsInSearchTable().size() > 0) {
                     searchResultsJComboBoxActionPerformed(null);
                 } else {
                     searchResultsJButton.setEnabled(false);
@@ -4854,15 +4928,15 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
                     if (((Boolean) spectraJXTable.getValueAt(row, column)).booleanValue()) {
 
-                        if (!currentlySelectedRowsInSpectraTable.contains(temp)) {
-                            currentlySelectedRowsInSpectraTable.add(temp);
+                        if (!properties.getCurrentlySelectedRowsInSpectraTable().contains(temp)) {
+                            properties.getCurrentlySelectedRowsInSpectraTable().add(temp);
                         }
                     } else {
-                        currentlySelectedRowsInSpectraTable.remove(temp);
+                        properties.getCurrentlySelectedRowsInSpectraTable().remove(temp);
                     }
                 }
 
-                if (currentlySelectedRowsInSpectraTable.size() > 0) {
+                if (properties.getCurrentlySelectedRowsInSpectraTable().size() > 0) {
                     spectraJComboBoxActionPerformed(null);
                 } else {
                     spectraJButton.setEnabled(false);
@@ -5089,15 +5163,15 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
             // add the row to the list of selected rows
             if (((Boolean) searchResultsJXTable.getValueAt(currentRow, column)).booleanValue()) {
-                if (!currentlySelectedRowsInSearchTable.contains(temp)) {
-                    currentlySelectedRowsInSearchTable.add(temp);
+                if (!properties.getCurrentlySelectedRowsInSearchTable().contains(temp)) {
+                    properties.getCurrentlySelectedRowsInSearchTable().add(temp);
                 }
             } else {
-                currentlySelectedRowsInSearchTable.remove(temp);
+                properties.getCurrentlySelectedRowsInSearchTable().remove(temp);
             }
         }
 
-        if (currentlySelectedRowsInSearchTable.size() > 0) {
+        if (properties.getCurrentlySelectedRowsInSearchTable().size() > 0) {
             searchResultsJComboBoxActionPerformed(null);
         } else {
             searchResultsJButton.setEnabled(false);
@@ -5161,15 +5235,15 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
             // add the row to the list of selected rows
             if (((Boolean) spectraJXTable.getValueAt(currentRow, column)).booleanValue()) {
-                if (!currentlySelectedRowsInSpectraTable.contains(temp)) {
-                    currentlySelectedRowsInSpectraTable.add(temp);
+                if (!properties.getCurrentlySelectedRowsInSpectraTable().contains(temp)) {
+                    properties.getCurrentlySelectedRowsInSpectraTable().add(temp);
                 }
             } else {
-                currentlySelectedRowsInSpectraTable.remove(temp);
+                properties.getCurrentlySelectedRowsInSpectraTable().remove(temp);
             }
         }
 
-        if (currentlySelectedRowsInSpectraTable.size() > 0) {
+        if (properties.getCurrentlySelectedRowsInSpectraTable().size() > 0) {
             spectraJComboBoxActionPerformed(null);
         } else {
             spectraJButton.setEnabled(false);
@@ -5209,7 +5283,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
     private void showLegendsJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showLegendsJMenuItemActionPerformed
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
 
-        Iterator<Integer> iterator = allInternalFrames.keySet().iterator();
+        Iterator<Integer> iterator = properties.getAllInternalFrames().keySet().iterator();
 
         // store the keys in a list first to escape a ConcurrentModificationException
         ArrayList<Integer> keys = new ArrayList<Integer>();
@@ -5222,7 +5296,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
         for (int i = 0; i < keys.size(); i++) {
 
-            ChartPanel tepmChartPanel = allInternalFrames.get(keys.get(i)).getChartPanel();
+            ChartPanel tepmChartPanel = properties.getAllInternalFrames().get(keys.get(i)).getChartPanel();
 
             if (tepmChartPanel != null) {
                 LegendTitle tempLegend = tepmChartPanel.getChart().getLegend();
@@ -5250,7 +5324,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
     private void showMarkersJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showMarkersJMenuItemActionPerformed
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
 
-        Iterator<Integer> internalFramesIterator = allInternalFrames.keySet().iterator();
+        Iterator<Integer> internalFramesIterator = properties.getAllInternalFrames().keySet().iterator();
 
         // store the keys in a list first to escape a ConcurrentModificationException
         ArrayList<Integer> keys = new ArrayList<Integer>();
@@ -5263,7 +5337,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
         for (int i = 0; i < keys.size(); i++) {
 
-            ChartPanel tepmChartPanel = allInternalFrames.get(keys.get(i)).getChartPanel();
+            ChartPanel tepmChartPanel = properties.getAllInternalFrames().get(keys.get(i)).getChartPanel();
 
             if (tepmChartPanel != null) {
 
@@ -5281,9 +5355,9 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                     while (markerIterator.hasNext()) {
 
                         if (showMarkers) {
-                            ((Marker) markerIterator.next()).setAlpha(defaultVisibleMarkerAlpha);
+                            ((Marker) markerIterator.next()).setAlpha(Properties.DEFAULT_VISIBLE_MARKER_ALPHA);
                         } else {
-                            ((Marker) markerIterator.next()).setAlpha(defaultNonVisibleMarkerAlpha);
+                            ((Marker) markerIterator.next()).setAlpha(Properties.DEFAULT_NON_VISIBLE_MARKER_ALPHA);
                         }
                     }
                 }
@@ -5306,7 +5380,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
      */
     private void showAverageJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showAverageJMenuItemActionPerformed
 
-        Iterator<Integer> iterator = allChartFrames.keySet().iterator();
+        Iterator<Integer> iterator = properties.getAllChartFrames().keySet().iterator();
 
         showAverageMassError = !showAverageMassError;
 
@@ -5314,8 +5388,8 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
             Integer key = iterator.next();
 
-            JFreeChart tempChart = allChartFrames.get(key);
-            String tempPlotType = allInternalFrames.get(key).getInternalFrameType();
+            JFreeChart tempChart = properties.getAllChartFrames().get(key);
+            String tempPlotType = properties.getAllInternalFrames().get(key).getInternalFrameType();
 
             if (tempPlotType.equalsIgnoreCase("MassErrorScatterPlot") ||
                     tempPlotType.equalsIgnoreCase("MassErrorBubblePlot")) {
@@ -5342,14 +5416,14 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
      */
     private void setSeriesVisible(boolean selected, int seriesIndex, String currentPlotType) {
 
-        Iterator<Integer> iterator = allChartFrames.keySet().iterator();
+        Iterator<Integer> iterator = properties.getAllChartFrames().keySet().iterator();
 
         while (iterator.hasNext()) {
 
             Integer key = iterator.next();
 
-            JFreeChart tempChart = allChartFrames.get(key);
-            String tempPlotType = allInternalFrames.get(key).getInternalFrameType();
+            JFreeChart tempChart = properties.getAllChartFrames().get(key);
+            String tempPlotType = properties.getAllInternalFrames().get(key).getInternalFrameType();
 
             if (tempPlotType.equalsIgnoreCase(currentPlotType)) {
 
@@ -5372,15 +5446,15 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
 
-        Iterator<Integer> iterator = allInternalFrames.keySet().iterator();
+        Iterator<Integer> iterator = properties.getAllInternalFrames().keySet().iterator();
 
         int index = 0;
 
         while (iterator.hasNext()) {
-            setLocationOfInternalFrame(allInternalFrames.get(iterator.next()), index++);
+            setLocationOfInternalFrame(properties.getAllInternalFrames().get(iterator.next()), index++);
         }
 
-        if (allInternalFrames.size() <= 4) {
+        if (properties.getAllInternalFrames().size() <= 4) {
             plotsAndAnalysesJDesktopPane.setPreferredSize(plotsAndAnalysesJScrollPane.getMinimumSize());
             plotPaneCurrentPreferredSize = plotsAndAnalysesJDesktopPane.getPreferredSize();
             plotPaneCurrentScrollValue = 0;
@@ -5486,14 +5560,14 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                 FragmentationAnalyzerJInternalFrame temp = (FragmentationAnalyzerJInternalFrame) e.getInternalFrame();
 
                 if (temp.getInternalFrameType().equalsIgnoreCase("SpectrumPanel")) {
-                    linkedSpectrumPanels.remove(temp.getUniqueId());
-                    allAnnotations.remove(temp.getUniqueId());
+                    properties.getLinkedSpectrumPanels().remove(temp.getUniqueId());
+                    properties.getAllAnnotations().remove(temp.getUniqueId());
                 }
 
                 internalFrameIsMaximized = false;
 
-                allChartFrames.remove(temp.getUniqueId());
-                allInternalFrames.remove(temp.getUniqueId());
+                properties.getAllChartFrames().remove(temp.getUniqueId());
+                properties.getAllInternalFrames().remove(temp.getUniqueId());
                 orderInternalFrames();
             }
         });
@@ -5565,8 +5639,8 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
             }
         });
 
-        setLocationOfInternalFrame(internalFrame, allInternalFrames.size());
-        allInternalFrames.put(internalFrameUniqueIdCounter, internalFrame);
+        setLocationOfInternalFrame(internalFrame, properties.getAllInternalFrames().size());
+        properties.getAllInternalFrames().put(internalFrameUniqueIdCounter, internalFrame);
 
         internalFrame.setVisible(true);
         internalFrame.validate();
@@ -5673,10 +5747,10 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                 double minMass = rescalingEvent.getMinMass();
                 double maxMass = rescalingEvent.getMaxMass();
 
-                Iterator<Integer> iterator = linkedSpectrumPanels.keySet().iterator();
+                Iterator<Integer> iterator = properties.getLinkedSpectrumPanels().keySet().iterator();
 
                 while (iterator.hasNext()) {
-                    SpectrumPanel currentSpectrumPanel = linkedSpectrumPanels.get(iterator.next());
+                    SpectrumPanel currentSpectrumPanel = properties.getLinkedSpectrumPanels().get(iterator.next());
                     if (currentSpectrumPanel != source) {
                         currentSpectrumPanel.rescale(minMass, maxMass, false);
                         currentSpectrumPanel.repaint();
@@ -5714,11 +5788,11 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                     ionName));
         }
 
-        allAnnotations.put(internalFrameUniqueIdCounter, currentAnnotations);
+        properties.getAllAnnotations().put(internalFrameUniqueIdCounter, currentAnnotations);
 
         spectrumPanel.setAnnotations(currentAnnotations);
 
-        linkedSpectrumPanels.put(new Integer(internalFrameUniqueIdCounter), spectrumPanel);
+        properties.getLinkedSpectrumPanels().put(new Integer(internalFrameUniqueIdCounter), spectrumPanel);
 
         return spectrumPanel;
     }
@@ -5746,10 +5820,10 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                 double minMass = rescalingEvent.getMinMass();
                 double maxMass = rescalingEvent.getMaxMass();
 
-                Iterator<Integer> iterator = linkedSpectrumPanels.keySet().iterator();
+                Iterator<Integer> iterator = properties.getLinkedSpectrumPanels().keySet().iterator();
 
                 while (iterator.hasNext()) {
-                    SpectrumPanel currentSpectrumPanel = linkedSpectrumPanels.get(iterator.next());
+                    SpectrumPanel currentSpectrumPanel = properties.getLinkedSpectrumPanels().get(iterator.next());
                     if (currentSpectrumPanel != source) {
                         currentSpectrumPanel.rescale(minMass, maxMass, false);
                         currentSpectrumPanel.repaint();
@@ -5776,9 +5850,9 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                     ionName));
         }
 
-        allAnnotations.put(internalFrameUniqueIdCounter, currentAnnotations);
+        properties.getAllAnnotations().put(internalFrameUniqueIdCounter, currentAnnotations);
         spectrumPanel.setAnnotations(currentAnnotations);
-        linkedSpectrumPanels.put(new Integer(internalFrameUniqueIdCounter), spectrumPanel);
+        properties.getLinkedSpectrumPanels().put(new Integer(internalFrameUniqueIdCounter), spectrumPanel);
 
         return spectrumPanel;
     }
@@ -5885,7 +5959,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                     // ignore error
                 }
 
-                // check if a newer version of PRIDE Converter is available
+                // check if a newer version of FragmentationAnalyzer is available
                 checkForNewVersion();
 
                 if (useErrorLog) {
@@ -6008,7 +6082,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         ((DefaultTableModel) searchResultsJXTable.getModel()).setRowCount(0);
         ((DefaultTableModel) spectraJXTable.getModel()).setRowCount(0);
 
-        currentlySelectedRowsInSearchTable = new ArrayList<IdentificationTableRow>();
+        properties.setCurrentlySelectedRowsInSearchTable(new ArrayList<IdentificationTableRow>());
 
         currentDataSetIsFromMsLims = ms_lims_dataSet;
 
@@ -6041,7 +6115,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
                 dataLoaded = false;
 
-                File identificationsFile = new File(currentDataSetFolder + "/identifications.txt");
+                File identificationsFile = new File(properties.getCurrentDataSetFolder() + "/identifications.txt");
 
                 if (identificationsFile.exists()) {
 
@@ -6054,11 +6128,11 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                         progressDialog.setValue(0);
                         progressDialog.setMax(identificationCount);
 
-                        extractedInternalModifications = new HashMap<String, Integer>();
-                        extractedNTermModifications = new HashMap<String, Integer>();
-                        extractedCTermModifications = new HashMap<String, Integer>();
-                        extractedCharges = new HashMap<String, Integer>();
-                        extractedInstruments = new HashMap<String, Integer>();
+                        properties.setExtractedInternalModifications(new HashMap<String, Integer>());
+                        properties.setExtractedNTermModifications(new HashMap<String, Integer>());
+                        properties.setExtractedCTermModifications(new HashMap<String, Integer>());
+                        properties.setExtractedCharges(new HashMap<String, Integer>());
+                        properties.setExtractedInstruments(new HashMap<String, Integer>());
 
                         instrument2JComboBox.setEnabled(false);
                         instrument3JComboBox.setEnabled(false);
@@ -6085,18 +6159,18 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                         if (!cancelProgress) {
 
                             // update the comboboxes
-                            updateComboBox(instrument1JComboBox, extractedInstruments);
-                            updateComboBox(instrument2JComboBox, extractedInstruments);
-                            updateComboBox(instrument3JComboBox, extractedInstruments);
+                            updateComboBox(instrument1JComboBox, properties.getExtractedInstruments());
+                            updateComboBox(instrument2JComboBox, properties.getExtractedInstruments());
+                            updateComboBox(instrument3JComboBox, properties.getExtractedInstruments());
 
-                            updateComboBox(nTermJComboBox, extractedNTermModifications);
-                            updateComboBox(cTermJComboBox, extractedCTermModifications);
+                            updateComboBox(nTermJComboBox, properties.getExtractedNTermModifications());
+                            updateComboBox(cTermJComboBox, properties.getExtractedCTermModifications());
 
-                            updateComboBox(chargeJComboBox, extractedCharges);
+                            updateComboBox(chargeJComboBox, properties.getExtractedCharges());
 
-                            updateComboBox(modification1JComboBox, extractedInternalModifications);
-                            updateComboBox(modification2JComboBox, extractedInternalModifications);
-                            updateComboBox(modification3JComboBox, extractedInternalModifications);
+                            updateComboBox(modification1JComboBox, properties.getExtractedInternalModifications());
+                            updateComboBox(modification2JComboBox, properties.getExtractedInternalModifications());
+                            updateComboBox(modification3JComboBox, properties.getExtractedInternalModifications());
 
                             dataLoaded = true;
 
@@ -6108,7 +6182,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
                             repaint();
 
-                            setTitle(analyzerName + " " + versionNumber + " - " + new File(currentDataSetFolder).getName());
+                            setTitle(analyzerName + " " + versionNumber + " - " + new File(properties.getCurrentDataSetFolder()).getName());
                         } else {
                             // cancel loading of the data set
                             closeDatabaseConnection();
@@ -6135,8 +6209,8 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                             "An error occured when trying to open the data set.\n" +
                             "See /Properties/ErrorLog.txt for more details.",
                             "Error Opening Data Set", JOptionPane.ERROR_MESSAGE);
-                    Util.writeToErrorLog("Error Opening Data Set: the identifications file " + currentDataSetFolder +
-                            "/identifications.txt" + " does not exist!");
+                    Util.writeToErrorLog("Error Opening Data Set: the identifications file "
+                            + properties.getCurrentDataSetFolder() + "/identifications.txt" + " does not exist!");
                     closeDatabaseConnection();
                 }
 
@@ -6353,10 +6427,10 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
      * @param charge current charge
      */
     public void storeCharge(String charge) {
-        if (!extractedCharges.containsKey(charge)) {
-            extractedCharges.put(charge, 1);
+        if (!properties.getExtractedCharges().containsKey(charge)) {
+            properties.getExtractedCharges().put(charge, 1);
         } else {
-            extractedCharges.put(charge, extractedCharges.get(charge).intValue() + 1);
+            properties.getExtractedCharges().put(charge, properties.getExtractedCharges().get(charge).intValue() + 1);
         }
     }
 
@@ -6366,10 +6440,11 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
      * @param instrument current instrument
      */
     public void storeInstrument(String instrument) {
-        if (!extractedInstruments.containsKey(instrument)) {
-            extractedInstruments.put(instrument, 1);
+        if (!properties.getExtractedInstruments().containsKey(instrument)) {
+            properties.getExtractedInstruments().put(instrument, 1);
         } else {
-            extractedInstruments.put(instrument, extractedInstruments.get(instrument).intValue() + 1);
+            properties.getExtractedInstruments().put(instrument,
+                    properties.getExtractedInstruments().get(instrument).intValue() + 1);
         }
     }
 
@@ -6405,10 +6480,11 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                 currentModification = currentModification.substring(0, currentModification.length() - 2) + "-";
             }
 
-            if (!extractedNTermModifications.containsKey(currentModification)) {
-                extractedNTermModifications.put(currentModification, 1);
+            if (!properties.getExtractedNTermModifications().containsKey(currentModification)) {
+                properties.getExtractedNTermModifications().put(currentModification, 1);
             } else {
-                extractedNTermModifications.put(currentModification, extractedNTermModifications.get(currentModification) + 1);
+                properties.getExtractedNTermModifications().put(currentModification,
+                        properties.getExtractedNTermModifications().get(currentModification) + 1);
             }
         }
 
@@ -6428,17 +6504,18 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                 currentModification = currentModification.substring(0, currentModification.length() - 1);
             }
 
-            if (!extractedCTermModifications.containsKey(currentModification)) {
-                extractedCTermModifications.put(currentModification, 1);
+            if (!properties.getExtractedCTermModifications().containsKey(currentModification)) {
+                properties.getExtractedCTermModifications().put(currentModification, 1);
             } else {
-                extractedCTermModifications.put(currentModification, extractedCTermModifications.get(currentModification) + 1);
+                properties.getExtractedCTermModifications().put(currentModification,
+                        properties.getExtractedCTermModifications().get(currentModification) + 1);
             }
         }
 
 
         // internal modification
 
-        Matcher matcher = pattern.matcher(unmodifiedSequence);
+        Matcher matcher = properties.getPattern().matcher(unmodifiedSequence);
 
         while (matcher.find()) {
 
@@ -6448,7 +6525,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                     unmodifiedSequence.substring(0, matcher.start()) +
                     unmodifiedSequence.substring(matcher.end());
 
-            matcher = pattern.matcher(unmodifiedSequence);
+            matcher = properties.getPattern().matcher(unmodifiedSequence);
 
             //remove '<' and '>'
 //                currentModification =
@@ -6461,11 +6538,11 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                     currentModification = currentModification.substring(0, currentModification.length() - 2) + ">";
                 }
 
-                if (!extractedInternalModifications.containsKey(currentModification)) {
-                    extractedInternalModifications.put(currentModification, 1);
+                if (!properties.getExtractedInternalModifications().containsKey(currentModification)) {
+                    properties.getExtractedInternalModifications().put(currentModification, 1);
                 } else {
-                    extractedInternalModifications.put(currentModification,
-                            extractedInternalModifications.get(currentModification) + 1);
+                    properties.getExtractedInternalModifications().put(currentModification,
+                            properties.getExtractedInternalModifications().get(currentModification) + 1);
                 }
             }
         }
@@ -6745,102 +6822,4 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
     private javax.swing.JCheckBox yIonsUnmodifiedJCheckBox;
     private javax.swing.JCheckBox zIonsJCheckBox;
     // End of variables declaration//GEN-END:variables
-
-    /**
-     * @return the currentDataSetFolder
-     */
-    public String getCurrentDataSetFolder() {
-        return currentDataSetFolder;
-    }
-
-    /**
-     * @param currentDataSetFolder the currentDataSetFolder to set
-     */
-    public void setCurrentDataSetFolder(String currentDataSetFolder) {
-        this.currentDataSetFolder = currentDataSetFolder;
-    }
-
-    /**
-     * @return the currentDataSetName
-     */
-    public String getCurrentDataSetName() {
-        return currentDataSetName;
-    }
-
-    /**
-     * @param currentDataSetName the currentDataSetName to set
-     */
-    public void setCurrentDataSetName(String currentDataSetName) {
-        this.currentDataSetName = currentDataSetName;
-    }
-
-    /**
-     * @return the extractedInternalModifications
-     */
-    public static HashMap<String, Integer> getExtractedInternalModifications() {
-        return extractedInternalModifications;
-    }
-
-    /**
-     * @param aExtractedInternalModifications the extractedInternalModifications to set
-     */
-    public static void setExtractedInternalModifications(HashMap<String, Integer> aExtractedInternalModifications) {
-        extractedInternalModifications = aExtractedInternalModifications;
-    }
-
-    /**
-     * @return the extractedNTermModifications
-     */
-    public static HashMap<String, Integer> getExtractedNTermModifications() {
-        return extractedNTermModifications;
-    }
-
-    /**
-     * @param aExtractedNTermModifications the extractedNTermModifications to set
-     */
-    public static void setExtractedNTermModifications(HashMap<String, Integer> aExtractedNTermModifications) {
-        extractedNTermModifications = aExtractedNTermModifications;
-    }
-
-    /**
-     * @return the extractedCTermModifications
-     */
-    public static HashMap<String, Integer> getExtractedCTermModifications() {
-        return extractedCTermModifications;
-    }
-
-    /**
-     * @param aExtractedCTermModifications the extractedCTermModifications to set
-     */
-    public static void setExtractedCTermModifications(HashMap<String, Integer> aExtractedCTermModifications) {
-        extractedCTermModifications = aExtractedCTermModifications;
-    }
-
-    /**
-     * @return the extractedCharges
-     */
-    public static HashMap<String, Integer> getExtractedCharges() {
-        return extractedCharges;
-    }
-
-    /**
-     * @param aExtractedCharges the extractedCharges to set
-     */
-    public static void setExtractedCharges(HashMap<String, Integer> aExtractedCharges) {
-        extractedCharges = aExtractedCharges;
-    }
-
-    /**
-     * @return the extractedInstruments
-     */
-    public static HashMap<String, Integer> getExtractedInstruments() {
-        return extractedInstruments;
-    }
-
-    /**
-     * @param aExtractedInstruments the extractedInstruments to set
-     */
-    public static void setExtractedInstruments(HashMap<String, Integer> aExtractedInstruments) {
-        extractedInstruments = aExtractedInstruments;
-    }
 }

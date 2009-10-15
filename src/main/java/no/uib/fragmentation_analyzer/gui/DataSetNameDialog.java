@@ -114,7 +114,7 @@ public class DataSetNameDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void cancelJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelJButtonActionPerformed
-        dataSourceDialog.getFragmentationAnalyzer().setCurrentDataSetName(null);
+        dataSourceDialog.getFragmentationAnalyzer().getProperties().setCurrentDataSetName(null);
         setVisible(true);
         dispose();
     }//GEN-LAST:event_cancelJButtonActionPerformed
@@ -125,7 +125,7 @@ public class DataSetNameDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void okJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okJButtonActionPerformed
-        dataSourceDialog.getFragmentationAnalyzer().setCurrentDataSetName(nameJTextField.getText());
+        dataSourceDialog.getFragmentationAnalyzer().getProperties().setCurrentDataSetName(nameJTextField.getText());
         setVisible(true);
         dispose();
     }//GEN-LAST:event_okJButtonActionPerformed
