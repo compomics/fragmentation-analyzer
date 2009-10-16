@@ -6503,19 +6503,6 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
      * @return the ms_lims database connection
      */
     public Connection getConnection() {
-
-        if (conn != null) {
-            try {
-                // try to validate the connection
-                if (!conn.isValid(60)) {
-                    conn = null;
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-                conn = null;
-            }
-        }
-
         return conn;
     }
 
