@@ -245,10 +245,12 @@ public class MassErrorDataSeriesSelection extends javax.swing.JDialog {
                     seriesKeyToSeriesNumber.get(currentSeriesKey), isCurrentlySelected);
 
             // update the marker
-            if(isCurrentlySelected){
-                markers.get(currentSeriesKey).setAlpha(Properties.DEFAULT_VISIBLE_MARKER_ALPHA);
-            } else{
-                markers.get(currentSeriesKey).setAlpha(Properties.DEFAULT_NON_VISIBLE_MARKER_ALPHA);
+            if (markers.get(currentSeriesKey) != null) {
+                if (isCurrentlySelected) {
+                    markers.get(currentSeriesKey).setAlpha(Properties.DEFAULT_VISIBLE_MARKER_ALPHA);
+                } else {
+                    markers.get(currentSeriesKey).setAlpha(Properties.DEFAULT_NON_VISIBLE_MARKER_ALPHA);
+                }
             }
         }
 
