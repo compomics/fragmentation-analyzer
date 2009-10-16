@@ -32,7 +32,8 @@ public class Properties {
     private Color otherFragmentIonColor = new Color(255, 0, 0, 25); // light red
     public static final float DEFAULT_VISIBLE_MARKER_ALPHA = 1.0f;
     public static final float DEFAULT_NON_VISIBLE_MARKER_ALPHA = 0.0f;
-    public static final int PLOT_LABEL_TYPE_INSTRUMENT = 0, PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE_ALL = 1;
+    public static final int PLOT_LABEL_TYPE_INSTRUMENT = 0, PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE = 1,
+            PLOT_LABEL_TYPE_FRAGMENT_ION_SCORING_TYPE = 2;
     public static final long Y_ION = 7, B_ION = 1;
     private String currentDataSetFolder = null, currentDataSetName = null;
     private HashMap<String, Integer> extractedInternalModifications, extractedNTermModifications,

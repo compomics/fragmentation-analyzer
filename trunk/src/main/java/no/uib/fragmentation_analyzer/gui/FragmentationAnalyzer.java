@@ -2454,32 +2454,12 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
      */
     private void searchResultsJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchResultsJButtonActionPerformed
 
-        cancelProgress = false;
-
-//        String value = JOptionPane.showInputDialog(
-//                this, "Select Ion Scoring Type (0, 1 or 2):", "Ion Scoring Type", JOptionPane.INFORMATION_MESSAGE);
-//
-//        long tempScoringType = new Long(value).longValue();
-//
-//        if(tempScoringType == 0){
-//            properties.setNotSignificantNotScoringFragmentIon(true);
-//            properties.setSignificantNotScoringFragmentIon(false);
-//            properties.setSignificantScoringFragmentIon(false);
-//        } else if(tempScoringType == 1){
-//            properties.setNotSignificantNotScoringFragmentIon(false);
-//            properties.setSignificantNotScoringFragmentIon(true);
-//            properties.setSignificantScoringFragmentIon(false);
-//        } else if(tempScoringType == 2){
-//            properties.setNotSignificantNotScoringFragmentIon(false);
-//            properties.setSignificantNotScoringFragmentIon(false);
-//            properties.setSignificantScoringFragmentIon(true);
-//        }
-        
+        cancelProgress = false;        
 
         // get the wanted plot label type from the user
         if (searchResultsJComboBox.getSelectedIndex() == Properties.SEARCH_RESULTS_MASS_ERROR_SCATTER_PLOT ||
                 searchResultsJComboBox.getSelectedIndex() == Properties.SEARCH_RESULTS_MASS_ERROR_BUBBLE_PLOT) {
-            new PlotLabelSelection(this, true);
+            new PlotLabelSelection(this, true, currentDataSetIsFromMsLims);
         }
 
         if (!cancelProgress) {
@@ -3084,7 +3064,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         boolean addLegend = true;
 
         // fragment ion type plots do not have a legend because it's too big
-        if (currentLabelType == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE_ALL) {
+        if (currentLabelType == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE) {
             addLegend = false;
         }
 
@@ -3115,7 +3095,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         addAverageMassErrorLine(averageValues, chart);
 
         // add fragment ion type markers
-        if (currentLabelType == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE_ALL) {
+        if (currentLabelType == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE) {
             addFragmentIonTypeMarkers(data, chart);
         }
 
@@ -3370,7 +3350,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
      * @param currentIdentification the current identification
      * @param normalize if true the z values are normalized
      * @param bubbleScaling the scaling value for the bubble size
-     * @param switchYandZAxis if true the Y and Z values provied in the data set is switched
+     * @param switchYandZAxis if true the Y and Z values provied in the data set are switched
      * @param usePpmForMassError if true ppm is calculated and used for the mass error value,
      *                           otherwise the given mass error is used
      * @throws IOException
@@ -3427,8 +3407,21 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
                     if (currentLabelType == Properties.PLOT_LABEL_TYPE_INSTRUMENT) {
                         addXYZDataPoint(data, currentIdentification.getInstrumentName(), switchYandZAxis, mzValue, massError, intensity, bubbleScaling);
-                    } else if (currentLabelType == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE_ALL) {
+                    } else if (currentLabelType == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE) {
                         addXYZDataPoint(data, fragmentIonType, switchYandZAxis, mzValue, massError, intensity, bubbleScaling);
+                    } else if (currentLabelType == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_SCORING_TYPE) {
+
+                        String dataSeriesLabel = "" + fragmentIons.get(j).getL_ionscoringid();
+
+                        if(fragmentIons.get(j).getL_ionscoringid() == 0){
+                            dataSeriesLabel = "Not Significant, Not Used For Scoring";
+                        } else if(fragmentIons.get(j).getL_ionscoringid() == 1){
+                            dataSeriesLabel = "Significant, Not Used For Scoring";
+                        } else if(fragmentIons.get(j).getL_ionscoringid() == 2){
+                            dataSeriesLabel = "Significant, Used For Scoring";
+                        }
+
+                        addXYZDataPoint(data, dataSeriesLabel, switchYandZAxis, mzValue, massError, intensity, bubbleScaling);
                     }
                 }
             }
@@ -3455,7 +3448,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                 if (currentLabelType == Properties.PLOT_LABEL_TYPE_INSTRUMENT) {
                     addXYZDataPoint(data, currentIdentification.getInstrumentName(), switchYandZAxis, mzValue,
                             massError, intensity, bubbleScaling);
-                } else if (currentLabelType == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE_ALL) {
+                } else if (currentLabelType == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE) {
                     addXYZDataPoint(data, fragmentIonType, switchYandZAxis, mzValue, massError, intensity, bubbleScaling);
                 }
             }
@@ -3778,7 +3771,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         // get the wanted label type from the user
         if (spectraJComboBox.getSelectedIndex() == Properties.SPECTRA_MASS_ERROR_BUBBLE_PLOT ||
                 spectraJComboBox.getSelectedIndex() == Properties.SPECTRA_MASS_ERROR_SCATTER_PLOT) {
-            new PlotLabelSelection(this, true);
+            new PlotLabelSelection(this, true, currentDataSetIsFromMsLims);
         }
 
         if (!cancelProgress) {
@@ -4020,9 +4013,10 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                 tempXYZData[1][i] = currentData.get(i).getY();
                 tempXYZData[2][i] = currentData.get(i).getZ();
 
-                if (currentLabelType == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE_ALL) {
+                if (currentLabelType == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE) {
                     averageYValue += tempXYZData[1][i];
-                } else if (currentLabelType == Properties.PLOT_LABEL_TYPE_INSTRUMENT) {
+                } else if (currentLabelType == Properties.PLOT_LABEL_TYPE_INSTRUMENT ||
+                        currentLabelType == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_SCORING_TYPE) {
                     if (xAndYValues.containsKey(tempXYZData[0][i])) {
                         ArrayList<Double> tempYValues = xAndYValues.get(tempXYZData[0][i]);
                         tempYValues.add(tempXYZData[1][i]);
@@ -4035,9 +4029,10 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                 }
             }
 
-            if (currentLabelType == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE_ALL) {
+            if (currentLabelType == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE) {
                 average.put(tempXYZData[0][0], (averageYValue / currentData.size()));
-            } else if (currentLabelType == Properties.PLOT_LABEL_TYPE_INSTRUMENT) {
+            } else if (currentLabelType == Properties.PLOT_LABEL_TYPE_INSTRUMENT ||
+                    currentLabelType == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_SCORING_TYPE) {
 
                 Iterator<Double> xValuesIterator = xAndYValues.keySet().iterator();
 
@@ -4091,9 +4086,10 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                 tempXYData[0][i] = currentData.get(i).getX();
                 tempXYData[1][i] = currentData.get(i).getZ();
 
-                if (currentLabelType == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE_ALL) {
+                if (currentLabelType == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE) {
                     averageZValue += tempXYData[1][i];
-                } else if (currentLabelType == Properties.PLOT_LABEL_TYPE_INSTRUMENT) {
+                } else if (currentLabelType == Properties.PLOT_LABEL_TYPE_INSTRUMENT ||
+                        currentLabelType == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_SCORING_TYPE) {
                     if (xAndZValues.containsKey(tempXYData[0][i])) {
                         ArrayList<Double> tempZValues = xAndZValues.get(tempXYData[0][i]);
                         tempZValues.add(tempXYData[1][i]);
@@ -4106,9 +4102,10 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                 }
             }
 
-            if (currentLabelType == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE_ALL) {
+            if (currentLabelType == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE) {
                 average.put(tempXYData[0][0], (averageZValue / currentData.size()));
-            } else if (currentLabelType == Properties.PLOT_LABEL_TYPE_INSTRUMENT) {
+            } else if (currentLabelType == Properties.PLOT_LABEL_TYPE_INSTRUMENT ||
+                    currentLabelType == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_SCORING_TYPE) {
 
                 Iterator<Double> xValuesIterator = xAndZValues.keySet().iterator();
 
@@ -6525,7 +6522,8 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
     /**
      * Sets the label type to use in the scatter and bubble plots.
      *
-     * @param labelType of the following: PLOT_LABEL_TYPE_INSTRUMENT, PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE_ALL
+     * @param labelType of the following: PLOT_LABEL_TYPE_INSTRUMENT, PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE or
+     *        PLOT_LABEL_TYPE_FRAGMENT_ION_SCORING_TYPE
      */
     public void setLabelType(int labelType) {
         currentLabelType = labelType;
@@ -6533,10 +6531,10 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
     /**
      * Returns the currently used/last used label type. One of the following:
-     * PLOT_LABEL_TYPE_INSTRUMENT, PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE_ALL
+     * PLOT_LABEL_TYPE_INSTRUMENT, PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE or PLOT_LABEL_TYPE_FRAGMENT_ION_SCORING_TYPE
      *
      * @return the current label type, one of the following:
-     *         PLOT_LABEL_TYPE_INSTRUMENT, PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE_ALL
+     *         PLOT_LABEL_TYPE_INSTRUMENT, PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE or PLOT_LABEL_TYPE_FRAGMENT_ION_SCORING_TYPE
      */
     public int getLabelType() {
         return currentLabelType;
