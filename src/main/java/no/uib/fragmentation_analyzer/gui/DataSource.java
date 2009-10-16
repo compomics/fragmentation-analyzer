@@ -1578,8 +1578,8 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
                         spectrumfileids = new ArrayList<Long>(getIdentificationCount());
                     }
 
-                    //int incorrectModifiedSequenceCounter =
-                    //        getAllIdentifications(getMaxIdentificationId(), getIdentificationCount());
+                    int incorrectModifiedSequenceCounter =
+                            getAllIdentifications(getMaxIdentificationId(), getIdentificationCount());
 
                     //System.out.println("incorrectModifiedSequenceCounter: " + incorrectModifiedSequenceCounter +
                     //        " correct: " + allIdentificationIds.size());
