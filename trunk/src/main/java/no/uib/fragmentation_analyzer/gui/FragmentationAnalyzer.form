@@ -934,6 +934,9 @@
                     <Component class="javax.swing.JButton" name="searchResultsJButton">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="Analyze / Plot"/>
+                        <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                          <Connection code="searchResultAnalysisButtonDisabledToolTip" type="code"/>
+                        </Property>
                         <Property name="enabled" type="boolean" value="false"/>
                       </Properties>
                       <Events>
@@ -1080,6 +1083,9 @@
                     <Component class="javax.swing.JButton" name="spectraJButton">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="Analyze / Plot"/>
+                        <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                          <Connection code="spectraAnalysisButtonDisabledToolTip" type="code"/>
+                        </Property>
                         <Property name="enabled" type="boolean" value="false"/>
                       </Properties>
                       <Events>

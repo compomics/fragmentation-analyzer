@@ -132,6 +132,8 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
     private boolean showLegend = true;
     private boolean showMarkers = false;
     private boolean showAverageMassError = false;
+    private String searchResultAnalysisButtonDisabledToolTip = "Select at least one row in the Search Results table";
+    private String spectraAnalysisButtonDisabledToolTip = "Select at least one row in the Individual Spectra table";
 
     /**
      * Creates a new FragmentationAnalyzer frame and makes it visible. Then opens
@@ -956,6 +958,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         searchResultJXPanel.setPreferredSize(new java.awt.Dimension(769, 129));
 
         searchResultsJButton.setText("Analyze / Plot");
+        searchResultsJButton.setToolTipText(searchResultAnalysisButtonDisabledToolTip);
         searchResultsJButton.setEnabled(false);
         searchResultsJButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1062,6 +1065,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         spectraJXPanel.setBackground(javax.swing.UIManager.getDefaults().getColor("tab_focus_fill_dark"));
 
         spectraJButton.setText("Analyze / Plot");
+        spectraJButton.setToolTipText(spectraAnalysisButtonDisabledToolTip);
         spectraJButton.setEnabled(false);
         spectraJButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1550,7 +1554,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         boxPlotPanelToolBarJInternalFrame.setBounds(660, 70, 100, 240);
         plotsAndAnalysesJDesktopPane.add(boxPlotPanelToolBarJInternalFrame, javax.swing.JLayeredPane.POPUP_LAYER);
 
-        internalFrameTipJLabel.setFont(new java.awt.Font("Tahoma", 2, 10)); // NOI18N
+        internalFrameTipJLabel.setFont(new java.awt.Font("Tahoma", 2, 10));
         internalFrameTipJLabel.setText("Right click in the plot or on the plot title bar for plot options.");
         internalFrameTipJLabel.setBounds(490, 0, 270, 20);
         plotsAndAnalysesJDesktopPane.add(internalFrameTipJLabel, javax.swing.JLayeredPane.DEFAULT_LAYER);
@@ -1935,6 +1939,11 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
                         properties.setCurrentlySelectedRowsInSearchTable(new ArrayList<IdentificationTableRow>());
                         properties.setCurrentlySelectedRowsInSpectraTable(new ArrayList<SpectrumTableRow>());
+
+                        searchResultsJButton.setEnabled(false);
+                        searchResultsJButton.setToolTipText(searchResultAnalysisButtonDisabledToolTip);
+                        spectraJButton.setEnabled(false);
+                        spectraJButton.setToolTipText(spectraAnalysisButtonDisabledToolTip);
 
                         selectAllIdentifications = true;
 
@@ -2433,8 +2442,10 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         if (searchResultsJComboBox.getSelectedIndex() != 0 && 
                 properties.getCurrentlySelectedRowsInSearchTable().size() > 0) {
             searchResultsJButton.setEnabled(true);
+            searchResultsJButton.setToolTipText(null);
         } else {
             searchResultsJButton.setEnabled(false);
+            searchResultsJButton.setToolTipText(searchResultAnalysisButtonDisabledToolTip);
         }
 
         if (searchResultsJComboBox.getSelectedIndex() == Properties.SEARCH_RESULTS_MASS_ERROR_SCATTER_PLOT ||
@@ -3333,11 +3344,11 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         boolean scoringTypeIsSelected = false;
 
         if(scoringType == 0){
-            scoringTypeIsSelected = properties.isNotSignificantNotScoringFragmentIon();
+            scoringTypeIsSelected = userProperties.isNotSignificantNotScoringFragmentIon();
         } else if(scoringType == 1){
-            scoringTypeIsSelected = properties.isSignificantNotScoringFragmentIon();
+            scoringTypeIsSelected = userProperties.isSignificantNotScoringFragmentIon();
         } else if(scoringType == 2){
-            scoringTypeIsSelected = properties.isSignificantScoringFragmentIon();
+            scoringTypeIsSelected = userProperties.isSignificantScoringFragmentIon();
         }
 
         return scoringTypeIsSelected;
@@ -3745,8 +3756,10 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
     private void spectraJComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_spectraJComboBoxActionPerformed
         if (spectraJComboBox.getSelectedIndex() != 0 && properties.getCurrentlySelectedRowsInSpectraTable().size() > 0) {
             spectraJButton.setEnabled(true);
+            spectraJButton.setToolTipText(null);
         } else {
             spectraJButton.setEnabled(false);
+            spectraJButton.setToolTipText(spectraAnalysisButtonDisabledToolTip);
         }
 
         if (spectraJComboBox.getSelectedIndex() != Properties.SPECTRA_VIEW_SPECTRUM && spectraJComboBox.getSelectedIndex() != 0) {
@@ -4536,6 +4549,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
             searchResultsJComboBoxActionPerformed(null);
         } else {
             searchResultsJButton.setEnabled(false);
+            searchResultsJButton.setToolTipText(searchResultAnalysisButtonDisabledToolTip);
         }
 
         selectAllIdentifications = !selectAllIdentifications;
@@ -4598,6 +4612,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
             searchResultsJComboBoxActionPerformed(null);
         } else {
             searchResultsJButton.setEnabled(false);
+            searchResultsJButton.setToolTipText(searchResultAnalysisButtonDisabledToolTip);
         }
 
         if (columnWasSorted) {
@@ -4652,6 +4667,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
             spectraJComboBoxActionPerformed(null);
         } else {
             spectraJButton.setEnabled(false);
+            spectraJButton.setToolTipText(spectraAnalysisButtonDisabledToolTip);
         }
 
         selectAllSpectra = !selectAllSpectra;
@@ -4707,6 +4723,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
             spectraJComboBoxActionPerformed(null);
         } else {
             spectraJButton.setEnabled(false);
+            spectraJButton.setToolTipText(spectraAnalysisButtonDisabledToolTip);
         }
 
         if (columnWasSorted) {
@@ -4759,6 +4776,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                     searchResultsJComboBoxActionPerformed(null);
                 } else {
                     searchResultsJButton.setEnabled(false);
+                    searchResultsJButton.setToolTipText(searchResultAnalysisButtonDisabledToolTip);
                 }
             } else if (evt.getButton() == java.awt.event.MouseEvent.BUTTON3) {
                 selectIdentificationsJPopupMenu.show(evt.getComponent(), evt.getX(), evt.getY());
@@ -4804,6 +4822,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                     spectraJComboBoxActionPerformed(null);
                 } else {
                     spectraJButton.setEnabled(false);
+                    spectraJButton.setToolTipText(spectraAnalysisButtonDisabledToolTip);
                 }
             } else if (evt.getButton() == java.awt.event.MouseEvent.BUTTON3) {
                 selectSpectraJPopupMenu.show(evt.getComponent(), evt.getX(), evt.getY());
@@ -5005,6 +5024,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
             searchResultsJComboBoxActionPerformed(null);
         } else {
             searchResultsJButton.setEnabled(false);
+            searchResultsJButton.setToolTipText(searchResultAnalysisButtonDisabledToolTip);
         }
 
         if (columnWasSorted) {
@@ -5077,6 +5097,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
             spectraJComboBoxActionPerformed(null);
         } else {
             spectraJButton.setEnabled(false);
+            spectraJButton.setToolTipText(spectraAnalysisButtonDisabledToolTip);
         }
 
         if (columnWasSorted) {
@@ -5910,7 +5931,9 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         searchResultsJXTaskPane.setExpanded(false);
         spectraJXTaskPane.setExpanded(false);
         spectraJButton.setEnabled(false);
+        spectraJButton.setToolTipText(spectraAnalysisButtonDisabledToolTip);
         searchResultsJButton.setEnabled(false);
+        searchResultsJButton.setToolTipText(searchResultAnalysisButtonDisabledToolTip);
         searchEnabled = false;
 
         // empty the tables
@@ -6012,7 +6035,8 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                             progressDialog.setVisible(false);
                             progressDialog.dispose();
                             JOptionPane.showMessageDialog(null,
-                                    "Data set loaded successfully.",
+                                    "Select the search parameters to the left and\n" +
+                                    "click on Search to start analyzing the data.\n",
                                     "Data Set Loaded", JOptionPane.INFORMATION_MESSAGE);
 
                             repaint();

@@ -41,6 +41,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JRadioButton;
+import javax.swing.SwingUtilities;
 import javax.swing.event.TableModelEvent;
 import javax.swing.table.DefaultTableModel;
 import no.uib.fragmentation_analyzer.filefilters.DatFileFilter;
@@ -125,7 +126,7 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
                     int row = dataSetsJXTable.rowAtPoint(evt.getPoint());
 
                     if (column == 2 && row != -1) {
-                        loadDataJButton.setEnabled(true);
+                        openDataSetJButton.setEnabled(true);
                     }
                 }
             }
@@ -148,7 +149,7 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
         datasSetsJScrollPane.setViewportView(dataSetsJXTable);
 
         setLocationRelativeTo(fragmentationAnalyzer);
-        insertAvailableDataSets();
+        insertAvailableDataSets(null);
         setVisible(true);
     }
 
@@ -165,9 +166,9 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
     /**
      * Insert the available data sets into the data set table.
      */
-    private void insertAvailableDataSets() {
+    private void insertAvailableDataSets(String currentDataSet) {
 
-        loadDataJButton.setEnabled(false);
+        openDataSetJButton.setEnabled(false);
 
         while (dataSetsJXTable.getRowCount() > 0) {
             ((DefaultTableModel) dataSetsJXTable.getModel()).removeRow(0);
@@ -184,15 +185,30 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
             dataFolder.mkdir();
         }
 
-        File[] dataSets = dataFolder.listFiles();
+        // get all the files
+        File[] tempDataSets = dataFolder.listFiles();
+
+        // add the files to an array list and sort them
+        ArrayList<File> dataSets = new ArrayList<File>();
+
+        for(int i=0; i<tempDataSets.length; i++){
+            dataSets.add(tempDataSets[i]);
+        }
+
+        java.util.Collections.sort(dataSets);
 
         int counter = 0;
 
         buttonGroup = new ButtonGroup();
 
-        for (int i = 0; i < dataSets.length; i++) {
-            if (dataSets[i].isDirectory()) {
-                File[] dataFiles = dataSets[i].listFiles();
+        int selectedRow = 0;
+
+        boolean selectDataSet = false;
+
+        // iterate the files and add them to the table
+        for (int i = 0; i < dataSets.size(); i++) {
+            if (dataSets.get(i).isDirectory()) {
+                File[] dataFiles = dataSets.get(i).listFiles();
 
                 boolean identificationFileFound = false;
                 boolean fragmentIonsFileOrMsLimsPropFileFound = false;
@@ -213,12 +229,20 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
 
                 if (identificationFileFound && fragmentIonsFileOrMsLimsPropFileFound) {
 
+                    if (currentDataSet != null) {
+                        if (currentDataSet.equalsIgnoreCase(dataSets.get(i).getName())) {
+                            selectDataSet = true;
+                            selectedRow = i;
+                        }
+                    }
+
                     JRadioButton tempRadioButton = new JRadioButton();
+                    tempRadioButton.setSelected(selectDataSet);
                     tempRadioButton.setOpaque(true);
 
                     dataSetsModel.addRow(new Object[]{
                                 ++counter,
-                                dataSets[i].getName(),
+                                dataSets.get(i).getName(),
                                 tempRadioButton
                             });
 
@@ -228,6 +252,33 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
         }
 
         dataSetsJXTable.setModel(dataSetsModel);
+        
+        if (selectDataSet) {
+            openDataSetJButton.setEnabled(true);
+        }
+
+        // make sure the selected data set (if any) is visible in the table
+        final int tempSelectedRow = selectedRow;
+        final boolean tempSelectDataSet = selectDataSet;
+
+        SwingUtilities.invokeLater(new Runnable() {
+
+            public void run() {
+                dataSetsJXTable.scrollCellToVisible(tempSelectedRow, 0);
+
+                if(tempSelectDataSet){
+                    dataSetsJXTable.setRowSelectionInterval(tempSelectedRow, tempSelectedRow);
+                    
+                    int value = JOptionPane.showConfirmDialog(
+                            null, "Data imported successfully.\nOpen data set?", "Open Data Set?",
+                            JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
+
+                    if(value == JOptionPane.YES_OPTION){
+                        openDataSetJButtonActionPerformed(null);
+                    }
+                }
+            }
+        });
     }
 
     public void cancelProgress() {
@@ -254,7 +305,7 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
         jXTaskPane2 = new org.jdesktop.swingx.JXTaskPane();
         jXPanel2 = new org.jdesktop.swingx.JXPanel();
         datasSetsJScrollPane = new javax.swing.JScrollPane();
-        loadDataJButton = new javax.swing.JButton();
+        openDataSetJButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Select Data Set");
@@ -345,11 +396,11 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
 
         jXPanel2.setBackground(javax.swing.UIManager.getDefaults().getColor("tab_focus_fill_dark"));
 
-        loadDataJButton.setText("Load Data");
-        loadDataJButton.setEnabled(false);
-        loadDataJButton.addActionListener(new java.awt.event.ActionListener() {
+        openDataSetJButton.setText("Open Data Set");
+        openDataSetJButton.setEnabled(false);
+        openDataSetJButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                loadDataJButtonActionPerformed(evt);
+                openDataSetJButtonActionPerformed(evt);
             }
         });
 
@@ -361,16 +412,16 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
                 .addContainerGap()
                 .add(jXPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
                     .add(org.jdesktop.layout.GroupLayout.LEADING, datasSetsJScrollPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 379, Short.MAX_VALUE)
-                    .add(org.jdesktop.layout.GroupLayout.LEADING, loadDataJButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 379, Short.MAX_VALUE))
+                    .add(org.jdesktop.layout.GroupLayout.LEADING, openDataSetJButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 379, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jXPanel2Layout.setVerticalGroup(
             jXPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(org.jdesktop.layout.GroupLayout.TRAILING, jXPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .add(datasSetsJScrollPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
-                .add(loadDataJButton))
+                .add(datasSetsJScrollPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 134, Short.MAX_VALUE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(openDataSetJButton))
         );
 
         jXTaskPane2.getContentPane().add(jXPanel2);
@@ -385,7 +436,7 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jXTaskPaneContainer1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .add(jXTaskPaneContainer1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 432, Short.MAX_VALUE)
         );
 
         pack();
@@ -397,9 +448,7 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
      * @param evt
      */
     private void ms_limsJRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ms_limsJRadioButtonActionPerformed
-        importJButton.setEnabled(ms_limsJRadioButton.isSelected() 
-                || mascotDatFilesJRadioButton.isSelected()
-                || omssaJRadioButton.isSelected());
+        importJButton.setEnabled(ms_limsJRadioButton.isSelected() || mascotDatFilesJRadioButton.isSelected() || omssaJRadioButton.isSelected());
     }//GEN-LAST:event_ms_limsJRadioButtonActionPerformed
 
     /**
@@ -490,7 +539,7 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
                         selectedDataFiles = new ArrayList<File>();
 
                         JOptionPane.showMessageDialog(this,
-                                "Select the file(s) to be analyzed.",
+                                "Select the file(s) to import.",
                                 "File Selection", JOptionPane.INFORMATION_MESSAGE);
 
                         this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
@@ -583,14 +632,12 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
 
                                         try {
                                             FileWriter identificationWriter = new FileWriter(
-                                                    fragmentationAnalyzer.getProperties().getCurrentDataSetFolder()
-                                                    + "/identifications.temp");
+                                                    fragmentationAnalyzer.getProperties().getCurrentDataSetFolder() + "/identifications.temp");
                                             BufferedWriter identificationsBufferedWriter =
                                                     new BufferedWriter(identificationWriter);
 
                                             FileWriter fragmentIonsWriter = new FileWriter(
-                                                    fragmentationAnalyzer.getProperties().getCurrentDataSetFolder()
-                                                    + "/fragmentIons.txt");
+                                                    fragmentationAnalyzer.getProperties().getCurrentDataSetFolder() + "/fragmentIons.txt");
                                             BufferedWriter fragmentIonsBufferedWriter =
                                                     new BufferedWriter(fragmentIonsWriter);
 
@@ -606,8 +653,7 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
                                                 progressDialog.setTitle("Reading File. Please Wait...");
                                                 progressDialog.setValue(0);
                                                 progressDialog.setIntermidiate(true);
-                                                progressDialog.setString(currentFile.getName() + " (" + (i + 1) + "/"
-                                                        + selectedDataFiles.size() + ")");
+                                                progressDialog.setString(currentFile.getName() + " (" + (i + 1) + "/" + selectedDataFiles.size() + ")");
 
                                                 if (mascotDatFilesJRadioButton.isSelected()) {
                                                     identificationsCounter = parseMascotDatFile(
@@ -633,8 +679,7 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
                                             addIdentificationCounter(identificationsCounter);
 
                                             // delete the temp identifications file
-                                            new File(fragmentationAnalyzer.getProperties().getCurrentDataSetFolder()
-                                                    + "/identifications.temp").delete();
+                                            new File(fragmentationAnalyzer.getProperties().getCurrentDataSetFolder() + "/identifications.temp").delete();
 
                                         } catch (OutOfMemoryError error) {
                                             progressDialog.setVisible(false);
@@ -658,7 +703,7 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
                                         }
 
                                         if (!cancelProgress) {
-                                            insertAvailableDataSets();
+                                            insertAvailableDataSets(fragmentationAnalyzer.getProperties().getCurrentDataSetName());
                                         } else {
                                             // delete the created project folder and close any open database connections
                                             Util.deleteDir(new File(fragmentationAnalyzer.getProperties().getCurrentDataSetFolder()));
@@ -1042,8 +1087,7 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
                                     fragmentIonIntensityScaled = intensityValues.get(j).doubleValue() / currentIntensityScale;
 
                                     // calculate the fragmet ion mass
-                                    fragmentIonMassError = (mzValues.get(j).doubleValue() - fragmentIonMzValueUnscaled)
-                                            / omssaResponseScale; // @TODO: or the other way around?? The order decides the sign.
+                                    fragmentIonMassError = (mzValues.get(j).doubleValue() - fragmentIonMzValueUnscaled) / omssaResponseScale; // @TODO: or the other way around?? The order decides the sign.
                                     observedPeakMzValue = mzValues.get(j).doubleValue() / omssaResponseScale;
                                 }
                             }
@@ -1054,8 +1098,7 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
 
                             JOptionPane.showMessageDialog(this,
                                     "Unable to map the fragment ion \'" +
-                                    currentFragmentIon.MSMZHit_ion.MSIonType + " " + currentFragmentIon.MSMZHit_number 
-                                    + "\'. Ion not included in annotation.", "Unable To Map Fragment Ion",
+                                    currentFragmentIon.MSMZHit_ion.MSIonType + " " + currentFragmentIon.MSMZHit_number + "\'. Ion not included in annotation.", "Unable To Map Fragment Ion",
                                     JOptionPane.INFORMATION_MESSAGE);
                             error = true;
                         }
@@ -1373,7 +1416,7 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
      *
      * @param evt
      */
-    private void loadDataJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadDataJButtonActionPerformed
+    private void openDataSetJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openDataSetJButtonActionPerformed
 
         cancelProgress = false;
 
@@ -1443,7 +1486,7 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
                 fragmentationAnalyzer.loadDataSet(false);
             }
         }
-    }//GEN-LAST:event_loadDataJButtonActionPerformed
+    }//GEN-LAST:event_openDataSetJButtonActionPerformed
 
     /**
      * Reads the contents of the ms_lims properties file, then tells the user to log on
@@ -1613,7 +1656,7 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
                     //printTerminalsModsInstrumentsAndCharges();
 
                     if (!cancelProgress) {
-                        insertAvailableDataSets();
+                        insertAvailableDataSets(fragmentationAnalyzer.getProperties().getCurrentDataSetName());
                     }
 
                 } catch (Exception e) {
@@ -1900,8 +1943,7 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
 
             tokens = line.split("\t");
             instrumentName = spectraInstrumentMapping.get(new Long(tokens[4]));
-            bw.write(tokens[0] + "\t" + tokens[1] + "\t" + tokens[2] + "\t" + tokens[3] + "\t"
-                    + instrumentName + "\tnull\t" + tokens[4] + "\n");
+            bw.write(tokens[0] + "\t" + tokens[1] + "\t" + tokens[2] + "\t" + tokens[3] + "\t" + instrumentName + "\tnull\t" + tokens[4] + "\n");
             line = b.readLine();
         }
 
@@ -1981,9 +2023,9 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
     private org.jdesktop.swingx.JXTaskPane jXTaskPane1;
     private org.jdesktop.swingx.JXTaskPane jXTaskPane2;
     private org.jdesktop.swingx.JXTaskPaneContainer jXTaskPaneContainer1;
-    private javax.swing.JButton loadDataJButton;
     private javax.swing.JRadioButton mascotDatFilesJRadioButton;
     private javax.swing.JRadioButton ms_limsJRadioButton;
     private javax.swing.JRadioButton omssaJRadioButton;
+    private javax.swing.JButton openDataSetJButton;
     // End of variables declaration//GEN-END:variables
 }

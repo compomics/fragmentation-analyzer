@@ -36,7 +36,7 @@
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="jXTaskPaneContainer1" alignment="0" max="32767" attributes="0"/>
+          <Component id="jXTaskPaneContainer1" alignment="0" pref="432" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
   </Layout>
@@ -170,7 +170,7 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="1" attributes="0">
                               <Component id="datasSetsJScrollPane" alignment="0" pref="379" max="32767" attributes="0"/>
-                              <Component id="loadDataJButton" alignment="0" pref="379" max="32767" attributes="0"/>
+                              <Component id="openDataSetJButton" alignment="0" pref="379" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
@@ -180,9 +180,9 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="1" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="datasSetsJScrollPane" pref="121" max="32767" attributes="0"/>
-                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                          <Component id="loadDataJButton" min="-2" max="-2" attributes="0"/>
+                          <Component id="datasSetsJScrollPane" pref="134" max="32767" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="openDataSetJButton" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -192,13 +192,13 @@
 
                   <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
                 </Container>
-                <Component class="javax.swing.JButton" name="loadDataJButton">
+                <Component class="javax.swing.JButton" name="openDataSetJButton">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Load Data"/>
+                    <Property name="text" type="java.lang.String" value="Open Data Set"/>
                     <Property name="enabled" type="boolean" value="false"/>
                   </Properties>
                   <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="loadDataJButtonActionPerformed"/>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="openDataSetJButtonActionPerformed"/>
                   </Events>
                 </Component>
               </SubComponents>

@@ -47,9 +47,6 @@ public class Properties {
     private HashMap<Integer, FragmentationAnalyzerJInternalFrame> allInternalFrames = new HashMap<Integer, FragmentationAnalyzerJInternalFrame>();
     private ArrayList<IdentificationTableRow> currentlySelectedRowsInSearchTable = new ArrayList<IdentificationTableRow>();
     private ArrayList<SpectrumTableRow> currentlySelectedRowsInSpectraTable = new ArrayList<SpectrumTableRow>();
-    private boolean notSignificantNotScoringFragmentIon = false;
-    private boolean significantNotScoringFragmentIon = true;
-    private boolean significantScoringFragmentIon = true;
 
     /**
      * Creates a new empty Properties object.
@@ -353,47 +350,5 @@ public class Properties {
      */
     public void setCurrentlySelectedRowsInSpectraTable(ArrayList<SpectrumTableRow> currentlySelectedRowsInSpectraTable) {
         this.currentlySelectedRowsInSpectraTable = currentlySelectedRowsInSpectraTable;
-    }
-
-    /**
-     * @return the notSignificantNotScoringFragmentIon
-     */
-    public boolean isNotSignificantNotScoringFragmentIon() {
-        return notSignificantNotScoringFragmentIon;
-    }
-
-    /**
-     * @param notSignificantNotScoringFragmentIon the notSignificantNotScoringFragmentIon to set
-     */
-    public void setNotSignificantNotScoringFragmentIon(boolean notSignificantNotScoringFragmentIon) {
-        this.notSignificantNotScoringFragmentIon = notSignificantNotScoringFragmentIon;
-    }
-
-    /**
-     * @return the significantNotScoringFragmentIon
-     */
-    public boolean isSignificantNotScoringFragmentIon() {
-        return significantNotScoringFragmentIon;
-    }
-
-    /**
-     * @param significantNotScoringFragmentIon the significantNotScoringFragmentIon to set
-     */
-    public void setSignificantNotScoringFragmentIon(boolean significantNotScoringFragmentIon) {
-        this.significantNotScoringFragmentIon = significantNotScoringFragmentIon;
-    }
-
-    /**
-     * @return the significantScoringFragmentIon
-     */
-    public boolean isSignificantScoringFragmentIon() {
-        return significantScoringFragmentIon;
-    }
-
-    /**
-     * @param significantScoringFragmentIon the significantScoringFragmentIon to set
-     */
-    public void setSignificantScoringFragmentIon(boolean significantScoringFragmentIon) {
-        this.significantScoringFragmentIon = significantScoringFragmentIon;
     }
 }

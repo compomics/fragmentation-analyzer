@@ -26,9 +26,9 @@ public class Preferences extends javax.swing.JDialog {
         defaultBubbleScalingJTextField.setText("" + fragmentationAnalyzer.getUserProperties().getDefaultBubbleScaling());
         ppmBubbleScalingJTextField.setText("" + fragmentationAnalyzer.getUserProperties().getPpmBubbleScaling());
 
-        notSignificantNotUsedJCheckBox.setSelected(fragmentationAnalyzer.getProperties().isNotSignificantNotScoringFragmentIon());
-        significantNotUsedJCheckBox.setSelected(fragmentationAnalyzer.getProperties().isSignificantNotScoringFragmentIon());
-        significantAndUsedJCheckBox.setSelected(fragmentationAnalyzer.getProperties().isSignificantScoringFragmentIon());
+        notSignificantNotUsedJCheckBox.setSelected(fragmentationAnalyzer.getUserProperties().isNotSignificantNotScoringFragmentIon());
+        significantNotUsedJCheckBox.setSelected(fragmentationAnalyzer.getUserProperties().isSignificantNotScoringFragmentIon());
+        significantAndUsedJCheckBox.setSelected(fragmentationAnalyzer.getUserProperties().isSignificantScoringFragmentIon());
 
         setLocationRelativeTo(fragmentationAnalyzer);
         setVisible(true);
@@ -239,9 +239,9 @@ public class Preferences extends javax.swing.JDialog {
                         "Fragment Ion Scoring", JOptionPane.INFORMATION_MESSAGE);
                 error = true;
             } else{
-                fragmentationAnalyzer.getProperties().setNotSignificantNotScoringFragmentIon(notSignificantNotUsedJCheckBox.isSelected());
-                fragmentationAnalyzer.getProperties().setSignificantNotScoringFragmentIon(significantNotUsedJCheckBox.isSelected());
-                fragmentationAnalyzer.getProperties().setSignificantScoringFragmentIon(significantAndUsedJCheckBox.isSelected());
+                fragmentationAnalyzer.getUserProperties().setNotSignificantNotScoringFragmentIon(notSignificantNotUsedJCheckBox.isSelected());
+                fragmentationAnalyzer.getUserProperties().setSignificantNotScoringFragmentIon(significantNotUsedJCheckBox.isSelected());
+                fragmentationAnalyzer.getUserProperties().setSignificantScoringFragmentIon(significantAndUsedJCheckBox.isSelected());
             }
         }
 
