@@ -3,6 +3,25 @@
 
 ----
 
+*Changes in FragmentationAnalyzer v1.1 - (Oct. 17. 2009):*
+ * NEW FEATURE: Tooltips have been added to both mass error plot types. 
+ * NEW FEATURE: Instrument or fragment ion type can now be selected as the data point label when plotting the mass error.
+ * NEW FEATURE: It is now possible to add markers highlighting the different fragment ion types to the mass error plots.
+ * NEW FEATURE: Average fragment ion mass errors can now be plotted.
+ * NEW FEATURE: Added `Select All` options to the instrument and terminals drop down menus.
+ * NEW FEATURE: Added the ms_lims Mascot scoring type to the preferences dialog.
+ * NEW FEATURE: Added a general series selection dialog for mass error type plots.
+ * FEATURE IMPROVEMENT: The highlight markers can now be turned on and off.
+ * FEATURE IMPROVEMENT: Made it possible to turn the legends on/off.
+ * FEATURE IMPROVEMENT: Increased the number of simultaneously visible elements in the drop down menus.
+ * FEATURE IMPROVEMENT: Peptide sequence is now included in title of mass error plots when only one sequence is analyzed and "combine" is selected.
+ * FEATURE IMPROVEMENT: The peptide sequence is now included in the title for "combine type plots" if all have rows contain the same modified peptide sequence.
+ * FEATURE IMPROVMENT: Added dividers to the internal frame popup menu.
+ * BUG FIX: Instrument 2 and 3 are now reset if instrument 1 is set to "- Select -". Same for instrument 3 when instrument 2 is set to "- Select -". Same fix also added for the modifications.
+ * BUG FIX: Update visible series selection did not update the last added plot.
+
+----
+
 *Changes in FragmentationAnalyzer v1.0.2 - (Oct. 08. 2009):*
  * NEW FEATURE: Added support for selecting/deselecting highlighted rows in the tables.
  * FEATURE IMPROVEMENT: The selection popup menus are now available for all columns and not just the selection column.
@@ -10,6 +29,8 @@
  * BUG FIX: Turned off sorting in the spectra table when inserting new rows, which makes inserting new rows much faster.
  * BUG FIX: If the ms_lims connection goes down, reloading the dataset now resets the connection.
  * BUG FIX: Fixed an incorrect default subject in the mailto links.
+
+Download Count: 3
 
 ----
 
