@@ -24,7 +24,7 @@ public class FragmentationAnalyzerWrapper {
      * The name of the omssa parser jar file. Must be equal to the name 
      * given in the pom file.
      */
-    private String jarFileName = "FragmentationAnalyzer-1.0.2.jar";
+    private String jarFileName = "FragmentationAnalyzer-1.1.jar";
 
     /**
      * Starts the launcher by calling the launch method. Use this as the 
