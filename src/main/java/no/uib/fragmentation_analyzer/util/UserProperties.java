@@ -32,6 +32,9 @@ public class UserProperties implements ProgressDialogParent {
     private int defaultBubbleScaling = 1;
     private boolean cancelProgress = false;
     private ProgressDialog progressDialog;
+    private boolean notSignificantNotScoringFragmentIon = false;
+    private boolean significantNotScoringFragmentIon = true;
+    private boolean significantScoringFragmentIon = true;
 
     /**
      * Creates a new UserProperties object
@@ -111,6 +114,25 @@ public class UserProperties implements ProgressDialogParent {
             ppmBubbleScaling = new Integer(s.substring(s.indexOf(": ") + 2));
             s = b.readLine();
             defaultBubbleScaling = new Integer(s.substring(s.indexOf(": ") + 2));
+
+            // get the fragment ion scoring types, requires v1.1 or newer
+            s = b.readLine();
+
+            if(s != null){
+                notSignificantNotScoringFragmentIon = new Boolean(s.substring(s.indexOf(": ") + 2));
+            }
+
+            s = b.readLine();
+
+            if(s != null){
+                significantNotScoringFragmentIon = new Boolean(s.substring(s.indexOf(": ") + 2));
+            }
+
+            s = b.readLine();
+
+            if(s != null){
+                significantScoringFragmentIon = new Boolean(s.substring(s.indexOf(": ") + 2));
+            }
 
             b.close();
             f.close();
@@ -410,6 +432,9 @@ public class UserProperties implements ProgressDialogParent {
             f.write("MascotConfidenceLevel: " + mascotConfidenceLevel + "\n");
             f.write("ppmBubbleScaling: " + ppmBubbleScaling + "\n");
             f.write("DefaultBubbleScaling: " + defaultBubbleScaling + "\n");
+            f.write("NotSignificantNotScoringFragmentIon: " + notSignificantNotScoringFragmentIon + "\n");
+            f.write("SignificantNotScoringFragmentIon: " + significantNotScoringFragmentIon + "\n");
+            f.write("SignificantScoringFragmentIon: " + significantScoringFragmentIon + "\n");
 
             f.close();
 
@@ -549,5 +574,47 @@ public class UserProperties implements ProgressDialogParent {
 
     public void cancelProgress() {
         cancelProgress = true;
+    }
+
+        /**
+     * @return the notSignificantNotScoringFragmentIon
+     */
+    public boolean isNotSignificantNotScoringFragmentIon() {
+        return notSignificantNotScoringFragmentIon;
+    }
+
+    /**
+     * @param notSignificantNotScoringFragmentIon the notSignificantNotScoringFragmentIon to set
+     */
+    public void setNotSignificantNotScoringFragmentIon(boolean notSignificantNotScoringFragmentIon) {
+        this.notSignificantNotScoringFragmentIon = notSignificantNotScoringFragmentIon;
+    }
+
+    /**
+     * @return the significantNotScoringFragmentIon
+     */
+    public boolean isSignificantNotScoringFragmentIon() {
+        return significantNotScoringFragmentIon;
+    }
+
+    /**
+     * @param significantNotScoringFragmentIon the significantNotScoringFragmentIon to set
+     */
+    public void setSignificantNotScoringFragmentIon(boolean significantNotScoringFragmentIon) {
+        this.significantNotScoringFragmentIon = significantNotScoringFragmentIon;
+    }
+
+    /**
+     * @return the significantScoringFragmentIon
+     */
+    public boolean isSignificantScoringFragmentIon() {
+        return significantScoringFragmentIon;
+    }
+
+    /**
+     * @param significantScoringFragmentIon the significantScoringFragmentIon to set
+     */
+    public void setSignificantScoringFragmentIon(boolean significantScoringFragmentIon) {
+        this.significantScoringFragmentIon = significantScoringFragmentIon;
     }
 }
