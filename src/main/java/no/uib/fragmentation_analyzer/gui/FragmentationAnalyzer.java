@@ -111,7 +111,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
     private static boolean useErrorLog = true;
     private static Connection conn = null;
     private static String analyzerName = "FragmentationAnalyzer";
-    private static String versionNumber = "1.0.2";
+    private static String versionNumber = "1.1";
     private static UserProperties userProperties;
     private static Properties properties;
     private static ProgressDialog progressDialog;
