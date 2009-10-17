@@ -2,4 +2,6 @@
 
 ----
 
-(currently no changes)
+ * NEW FEATURE: The fragment ion scoring type selection is now stored in the user properties file and saved between each run of the tool. 
+ * FEATURE IMPROVEMENT: The import/load process has been simplified and improved.
+ * BUG FIX: The analysis buttons did not get disabled when doing a new search.
