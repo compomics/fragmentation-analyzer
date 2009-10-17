@@ -22,8 +22,8 @@ public class UserProperties implements ProgressDialogParent {
 
     // defaults user settings, used if the UserProperties file can not be read
     private String userName = ""; //database user name
-    private String serverHost = "127.0.0.1:3307"; //database serverhost
-    private String schema = "projects"; //database schema
+    private String serverHost = ""; //database serverhost
+    private String schema = ""; //database schema
     private String versionNumber;
     private int minimumSequencePairCounter = 30;
     private String lastUsedFolder = "";

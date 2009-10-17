@@ -4,13 +4,13 @@
     <groupId>no.uib</groupId>
     <artifactId>FragmentationAnalyzer</artifactId>
     <packaging>jar</packaging>
-    <version>1.0.2</version>
+    <version>1.1</version>
     <name>FragmentationAnalyzer</name>
     <description>FragmentationAnalyzer is a tool for analyzing and visualizing MS/MS fragmentation data.</description>
     <url>http://fragmentation-analyzer.googlecode.com</url>
 
 
-  <!-- Licence -->
+    <!-- License -->
     <licenses>
         <license>
             <name>The Apache Software License, Version 2.0</name>
@@ -24,14 +24,14 @@
         <developer>
             <name>Harald Barsnes</name>
             <id>harald</id>
-            <email>Harald.Barsnes@ii.uib.no</email>
+            <email>harald.barsnes@ii.uib.no</email>
             <organization>Department of Informatics, University of Bergen, Norway</organization>
         </developer>
         <developer>
             <name>Lennart Martens</name>
             <id>lennart</id>
-            <email>Lennart.Martens@ebi.ac.uk</email>
-            <organization>Proteomics Services Team, PANDA Group, EMBL-European Bioinformatics Institute</organization>
+            <email>lennart.martens@UGent.be</email>
+            <organization>Computational Omics and Systems Biology Group, VIB Department of Medical Protein Research, UGent, Belgium</organization>
         </developer>
     </developers>
 
