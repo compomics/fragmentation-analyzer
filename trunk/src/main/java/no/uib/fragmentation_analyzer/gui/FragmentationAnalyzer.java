@@ -128,7 +128,6 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
     private int internalFrameUniqueIdCounter = 0;
     private boolean cancelProgress = false;
     private boolean searchEnabled = false;
-    private int currentLabelType = Properties.PLOT_LABEL_TYPE_INSTRUMENT;
     private boolean showLegend = true;
     private boolean showMarkers = false;
     private boolean showAverageMassError = false;
@@ -1657,7 +1656,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
     }// </editor-fold>//GEN-END:initComponents
 
     /**
-     * See exitJMenuItemActionPerformed
+     * @see #exitJMenuItemActionPerformed(java.awt.event.ActionEvent)
      */
     public void close() {
         exitJMenuItemActionPerformed(null);
@@ -1675,7 +1674,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
     }//GEN-LAST:event_exitJMenuItemActionPerformed
 
     /**
-     * See exitJMenuItemActionPerformed
+     * @see #exitJMenuItemActionPerformed(java.awt.event.ActionEvent)
      */
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         exitJMenuItemActionPerformed(null);
@@ -2413,21 +2412,21 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
     }//GEN-LAST:event_modification2JComboBoxActionPerformed
 
     /**
-     * See enableSearchButton
+     * @see #enableSearchButton()
      */
     private void nTermJComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nTermJComboBoxActionPerformed
         enableSearchButton();
 }//GEN-LAST:event_nTermJComboBoxActionPerformed
 
     /**
-     * See enableSearchButton
+     * @see #enableSearchButton()
      */
     private void cTermJComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cTermJComboBoxActionPerformed
         enableSearchButton();
 }//GEN-LAST:event_cTermJComboBoxActionPerformed
 
     /**
-     * See enableSearchButton
+     * @see #enableSearchButton()
      */
     private void chargeJComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chargeJComboBoxActionPerformed
         enableSearchButton();
@@ -3075,7 +3074,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         boolean addLegend = true;
 
         // fragment ion type plots do not have a legend because it's too big
-        if (currentLabelType == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE) {
+        if (properties.getCurrentLabelType() == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE) {
             addLegend = false;
         }
 
@@ -3106,7 +3105,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         addAverageMassErrorLine(averageValues, chart);
 
         // add fragment ion type markers
-        if (currentLabelType == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE) {
+        if (properties.getCurrentLabelType() == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE) {
             addFragmentIonTypeMarkers(data, chart);
         }
 
@@ -3416,11 +3415,12 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                         intensity = intensity / totalIntensity;
                     }
 
-                    if (currentLabelType == Properties.PLOT_LABEL_TYPE_INSTRUMENT) {
-                        addXYZDataPoint(data, currentIdentification.getInstrumentName(), switchYandZAxis, mzValue, massError, intensity, bubbleScaling);
-                    } else if (currentLabelType == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE) {
+                    if (properties.getCurrentLabelType() == Properties.PLOT_LABEL_TYPE_INSTRUMENT) {
+                        addXYZDataPoint(data, currentIdentification.getInstrumentName(),
+                                switchYandZAxis, mzValue, massError, intensity, bubbleScaling);
+                    } else if (properties.getCurrentLabelType() == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE) {
                         addXYZDataPoint(data, fragmentIonType, switchYandZAxis, mzValue, massError, intensity, bubbleScaling);
-                    } else if (currentLabelType == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_SCORING_TYPE) {
+                    } else if (properties.getCurrentLabelType() == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_SCORING_TYPE) {
 
                         String dataSeriesLabel = "" + fragmentIons.get(j).getL_ionscoringid();
 
@@ -3433,6 +3433,9 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                         }
 
                         addXYZDataPoint(data, dataSeriesLabel, switchYandZAxis, mzValue, massError, intensity, bubbleScaling);
+                    } else if (properties.getCurrentLabelType() == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_THRESHOLD) {
+                        addXYZDataPoint(data, fragmentIons.get(j).getMasserrormargin().toString(),
+                                switchYandZAxis, mzValue, massError, intensity, bubbleScaling);
                     }
                 }
             }
@@ -3456,10 +3459,10 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                     intensity = intensity / currentIdentification.getTotalIntensity();
                 }
 
-                if (currentLabelType == Properties.PLOT_LABEL_TYPE_INSTRUMENT) {
+                if (properties.getCurrentLabelType() == Properties.PLOT_LABEL_TYPE_INSTRUMENT) {
                     addXYZDataPoint(data, currentIdentification.getInstrumentName(), switchYandZAxis, mzValue,
                             massError, intensity, bubbleScaling);
-                } else if (currentLabelType == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE) {
+                } else if (properties.getCurrentLabelType() == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE) {
                     addXYZDataPoint(data, fragmentIonType, switchYandZAxis, mzValue, massError, intensity, bubbleScaling);
                 }
             }
@@ -4026,10 +4029,11 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                 tempXYZData[1][i] = currentData.get(i).getY();
                 tempXYZData[2][i] = currentData.get(i).getZ();
 
-                if (currentLabelType == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE) {
+                if (properties.getCurrentLabelType() == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE) {
                     averageYValue += tempXYZData[1][i];
-                } else if (currentLabelType == Properties.PLOT_LABEL_TYPE_INSTRUMENT ||
-                        currentLabelType == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_SCORING_TYPE) {
+                } else if (properties.getCurrentLabelType() == Properties.PLOT_LABEL_TYPE_INSTRUMENT ||
+                        properties.getCurrentLabelType() == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_SCORING_TYPE ||
+                        properties.getCurrentLabelType() == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_THRESHOLD) {
                     if (xAndYValues.containsKey(tempXYZData[0][i])) {
                         ArrayList<Double> tempYValues = xAndYValues.get(tempXYZData[0][i]);
                         tempYValues.add(tempXYZData[1][i]);
@@ -4042,10 +4046,11 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                 }
             }
 
-            if (currentLabelType == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE) {
+            if (properties.getCurrentLabelType() == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE) {
                 average.put(tempXYZData[0][0], (averageYValue / currentData.size()));
-            } else if (currentLabelType == Properties.PLOT_LABEL_TYPE_INSTRUMENT ||
-                    currentLabelType == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_SCORING_TYPE) {
+            } else if (properties.getCurrentLabelType() == Properties.PLOT_LABEL_TYPE_INSTRUMENT ||
+                    properties.getCurrentLabelType() == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_SCORING_TYPE ||
+                    properties.getCurrentLabelType() == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_THRESHOLD) {
 
                 Iterator<Double> xValuesIterator = xAndYValues.keySet().iterator();
 
@@ -4099,10 +4104,11 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                 tempXYData[0][i] = currentData.get(i).getX();
                 tempXYData[1][i] = currentData.get(i).getZ();
 
-                if (currentLabelType == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE) {
+                if (properties.getCurrentLabelType() == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE) {
                     averageZValue += tempXYData[1][i];
-                } else if (currentLabelType == Properties.PLOT_LABEL_TYPE_INSTRUMENT ||
-                        currentLabelType == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_SCORING_TYPE) {
+                } else if (properties.getCurrentLabelType() == Properties.PLOT_LABEL_TYPE_INSTRUMENT ||
+                        properties.getCurrentLabelType() == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_SCORING_TYPE ||
+                        properties.getCurrentLabelType() == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_THRESHOLD) {
                     if (xAndZValues.containsKey(tempXYData[0][i])) {
                         ArrayList<Double> tempZValues = xAndZValues.get(tempXYData[0][i]);
                         tempZValues.add(tempXYData[1][i]);
@@ -4115,10 +4121,11 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                 }
             }
 
-            if (currentLabelType == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE) {
+            if (properties.getCurrentLabelType() == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE) {
                 average.put(tempXYData[0][0], (averageZValue / currentData.size()));
-            } else if (currentLabelType == Properties.PLOT_LABEL_TYPE_INSTRUMENT ||
-                    currentLabelType == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_SCORING_TYPE) {
+            } else if (properties.getCurrentLabelType() == Properties.PLOT_LABEL_TYPE_INSTRUMENT ||
+                    properties.getCurrentLabelType() == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_SCORING_TYPE ||
+                    properties.getCurrentLabelType() == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_THRESHOLD) {
 
                 Iterator<Double> xValuesIterator = xAndZValues.keySet().iterator();
 
@@ -4413,56 +4420,56 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 }//GEN-LAST:event_aIonsJCheckBoxActionPerformed
 
     /**
-     * See aIonsJCheckBoxActionPerformed
+     * @see #aIonsJCheckBoxActionPerformed(java.awt.event.ActionEvent)
      */
     private void bIonsJCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bIonsJCheckBoxActionPerformed
         aIonsJCheckBoxActionPerformed(null);
 }//GEN-LAST:event_bIonsJCheckBoxActionPerformed
 
     /**
-     * See aIonsJCheckBoxActionPerformed
+     * @see #aIonsJCheckBoxActionPerformed(java.awt.event.ActionEvent)
      */
     private void cIonsJCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cIonsJCheckBoxActionPerformed
         aIonsJCheckBoxActionPerformed(null);
 }//GEN-LAST:event_cIonsJCheckBoxActionPerformed
 
     /**
-     * See aIonsJCheckBoxActionPerformed
+     * @see #aIonsJCheckBoxActionPerformed(java.awt.event.ActionEvent)
      */
     private void yIonsJCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_yIonsJCheckBoxActionPerformed
         aIonsJCheckBoxActionPerformed(null);
 }//GEN-LAST:event_yIonsJCheckBoxActionPerformed
 
     /**
-     * See aIonsJCheckBoxActionPerformed
+     * @see #aIonsJCheckBoxActionPerformed(java.awt.event.ActionEvent)
      */
     private void xIonsJCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_xIonsJCheckBoxActionPerformed
         aIonsJCheckBoxActionPerformed(null);
 }//GEN-LAST:event_xIonsJCheckBoxActionPerformed
 
     /**
-     * See aIonsJCheckBoxActionPerformed
+     * @see #aIonsJCheckBoxActionPerformed(java.awt.event.ActionEvent)
      */
     private void zIonsJCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_zIonsJCheckBoxActionPerformed
         aIonsJCheckBoxActionPerformed(null);
 }//GEN-LAST:event_zIonsJCheckBoxActionPerformed
 
     /**
-     * See aIonsJCheckBoxActionPerformed
+     * @see #aIonsJCheckBoxActionPerformed(java.awt.event.ActionEvent)
      */
     private void chargeOneJCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chargeOneJCheckBoxActionPerformed
         aIonsJCheckBoxActionPerformed(null);
 }//GEN-LAST:event_chargeOneJCheckBoxActionPerformed
 
     /**
-     * See aIonsJCheckBoxActionPerformed
+     * @see #aIonsJCheckBoxActionPerformed(java.awt.event.ActionEvent)
      */
     private void chargeTwoJCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chargeTwoJCheckBoxActionPerformed
         aIonsJCheckBoxActionPerformed(null);
 }//GEN-LAST:event_chargeTwoJCheckBoxActionPerformed
 
     /**
-     * See aIonsJCheckBoxActionPerformed
+     * @see #aIonsJCheckBoxActionPerformed(java.awt.event.ActionEvent)
      */
     private void chargeOverTwoJCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chargeOverTwoJCheckBoxActionPerformed
         aIonsJCheckBoxActionPerformed(null);
@@ -4479,21 +4486,21 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 }//GEN-LAST:event_showSpectrumToolBarJMenuItemActionPerformed
 
     /**
-     * See aIonsJCheckBoxActionPerformed
+     * @see #aIonsJCheckBoxActionPerformed(java.awt.event.ActionEvent)
      */
     private void otherIonsJCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_otherIonsJCheckBoxActionPerformed
         aIonsJCheckBoxActionPerformed(null);
 }//GEN-LAST:event_otherIonsJCheckBoxActionPerformed
 
     /**
-     * See aIonsJCheckBoxActionPerformed
+     * @see #aIonsJCheckBoxActionPerformed(java.awt.event.ActionEvent)
      */
     private void H2OIonsJCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_H2OIonsJCheckBoxActionPerformed
         aIonsJCheckBoxActionPerformed(null);
 }//GEN-LAST:event_H2OIonsJCheckBoxActionPerformed
 
     /**
-     * See aIonsJCheckBoxActionPerformed
+     * @see #aIonsJCheckBoxActionPerformed(java.awt.event.ActionEvent)
      */
     private void NH3IonsJCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NH3IonsJCheckBoxActionPerformed
         aIonsJCheckBoxActionPerformed(null);
@@ -4831,7 +4838,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
     }//GEN-LAST:event_spectraJXTableMouseReleased
 
     /**
-     * See showSpectrumToolBarJMenuItemActionPerformed
+     * @see #showSpectrumToolBarJMenuItemActionPerformed(java.awt.event.ActionEvent)
      */
     private void showBoxPlotToolBarJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showBoxPlotToolBarJMenuItemActionPerformed
         boxPlotPanelToolBarJInternalFrame.setVisible(true);
@@ -4848,35 +4855,35 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
     }//GEN-LAST:event_bIonsBoxPlotJCheckBoxActionPerformed
 
     /**
-     * See bIonsBoxPlotJCheckBoxActionPerformed
+     * @see #bIonsBoxPlotJCheckBoxActionPerformed(java.awt.event.ActionEvent)
      */
     private void bIonsUnmodifiedJCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bIonsUnmodifiedJCheckBoxActionPerformed
         setSeriesVisible(bIonsUnmodifiedJCheckBox.isSelected(), 0, "BoxPlot_modification");
     }//GEN-LAST:event_bIonsUnmodifiedJCheckBoxActionPerformed
 
     /**
-     * See bIonsBoxPlotJCheckBoxActionPerformed
+     * @see #bIonsBoxPlotJCheckBoxActionPerformed(java.awt.event.ActionEvent)
      */
     private void yIonsBoxPlotJCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_yIonsBoxPlotJCheckBoxActionPerformed
         setSeriesVisible(yIonsBoxPlotJCheckBox.isSelected(), 1, "BoxPlot");
     }//GEN-LAST:event_yIonsBoxPlotJCheckBoxActionPerformed
 
     /**
-     * See bIonsBoxPlotJCheckBoxActionPerformed
+     * @see #bIonsBoxPlotJCheckBoxActionPerformed(java.awt.event.ActionEvent)
      */
     private void bIonsModifiedJCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bIonsModifiedJCheckBoxActionPerformed
         setSeriesVisible(bIonsModifiedJCheckBox.isSelected(), 1, "BoxPlot_modification");
     }//GEN-LAST:event_bIonsModifiedJCheckBoxActionPerformed
 
     /**
-     * See bIonsBoxPlotJCheckBoxActionPerformed
+     * @see #bIonsBoxPlotJCheckBoxActionPerformed(java.awt.event.ActionEvent)
      */
     private void yIonsUnmodifiedJCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_yIonsUnmodifiedJCheckBoxActionPerformed
         setSeriesVisible(yIonsUnmodifiedJCheckBox.isSelected(), 2, "BoxPlot_modification");
     }//GEN-LAST:event_yIonsUnmodifiedJCheckBoxActionPerformed
 
     /**
-     * See bIonsBoxPlotJCheckBoxActionPerformed
+     * @see #bIonsBoxPlotJCheckBoxActionPerformed(java.awt.event.ActionEvent)
      */
     private void yIonsModifiedJCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_yIonsModifiedJCheckBoxActionPerformed
         setSeriesVisible(yIonsModifiedJCheckBox.isSelected(), 3, "BoxPlot_modification");
@@ -4908,7 +4915,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
     }//GEN-LAST:event_showScatterPlotToolBarJMenuItemActionPerformed
 
     /**
-     * See showSpectrumToolBarJMenuItemActionPerformed
+     * @see #showSpectrumToolBarJMenuItemActionPerformed(java.awt.event.ActionEvent) 
      */
     private void showBubblePlotToolBarJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showBubblePlotToolBarJMenuItemActionPerformed
         showScatterPlotToolBarJMenuItemActionPerformed(null);
@@ -6530,26 +6537,6 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         return conn;
     }
 
-    /**
-     * Sets the label type to use in the scatter and bubble plots.
-     *
-     * @param labelType of the following: PLOT_LABEL_TYPE_INSTRUMENT, PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE or
-     *        PLOT_LABEL_TYPE_FRAGMENT_ION_SCORING_TYPE
-     */
-    public void setLabelType(int labelType) {
-        currentLabelType = labelType;
-    }
-
-    /**
-     * Returns the currently used/last used label type. One of the following:
-     * PLOT_LABEL_TYPE_INSTRUMENT, PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE or PLOT_LABEL_TYPE_FRAGMENT_ION_SCORING_TYPE
-     *
-     * @return the current label type, one of the following:
-     *         PLOT_LABEL_TYPE_INSTRUMENT, PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE or PLOT_LABEL_TYPE_FRAGMENT_ION_SCORING_TYPE
-     */
-    public int getLabelType() {
-        return currentLabelType;
-    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox H2OIonsJCheckBox;
     private javax.swing.JCheckBox NH3IonsJCheckBox;

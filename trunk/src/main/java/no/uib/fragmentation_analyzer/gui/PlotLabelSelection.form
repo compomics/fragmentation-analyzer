@@ -61,6 +61,7 @@
     <Component class="javax.swing.JButton" name="okJButton">
       <Properties>
         <Property name="text" type="java.lang.String" value="OK"/>
+        <Property name="enabled" type="boolean" value="false"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="okJButtonActionPerformed"/>
@@ -91,11 +92,12 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="fragmentIonThresholdJRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
                       <Component id="fragmentIonScoringTypeJRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
                       <Component id="fragmentIonTypeJRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
                       <Component id="instrumentNameJRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace pref="73" max="32767" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -108,6 +110,8 @@
                   <Component id="fragmentIonTypeJRadioButton" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="fragmentIonScoringTypeJRadioButton" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="fragmentIonThresholdJRadioButton" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
@@ -123,6 +127,9 @@
             <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;Use the instrument name as the data&lt;br&gt;&#xa;point label and and coloring scheme&#xa;&lt;/html&gt;"/>
             <Property name="iconTextGap" type="int" value="15"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="instrumentNameJRadioButtonActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JRadioButton" name="fragmentIonTypeJRadioButton">
           <Properties>
@@ -133,16 +140,35 @@
             <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;Use the fragment ion type as the data&lt;br&gt;&#xa;point label and coloring scheme.&#xa;&lt;/html&gt;"/>
             <Property name="iconTextGap" type="int" value="15"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="fragmentIonTypeJRadioButtonActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JRadioButton" name="fragmentIonScoringTypeJRadioButton">
           <Properties>
             <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
               <ComponentRef name="buttonGroup"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Fragment Ion Scoring Type"/>
+            <Property name="text" type="java.lang.String" value="Fragment Ion Scoring Type (requires ms_lims)"/>
             <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;Use the fragment ion scoring type as the data&lt;br&gt;&#xa;point label and coloring scheme.&#xa;&lt;/html&gt;"/>
             <Property name="iconTextGap" type="int" value="15"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="fragmentIonScoringTypeJRadioButtonActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JRadioButton" name="fragmentIonThresholdJRadioButton">
+          <Properties>
+            <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+              <ComponentRef name="buttonGroup"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Fragment Ion Threshold (requires ms_lims)"/>
+            <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;Use the fragment ion threshold as the data&lt;br&gt;&#xa;point label and coloring scheme.&#xa;&lt;/html&gt;"/>
+            <Property name="iconTextGap" type="int" value="15"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="fragmentIonThresholdJRadioButtonActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>

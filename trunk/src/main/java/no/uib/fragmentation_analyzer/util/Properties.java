@@ -33,7 +33,7 @@ public class Properties {
     public static final float DEFAULT_VISIBLE_MARKER_ALPHA = 1.0f;
     public static final float DEFAULT_NON_VISIBLE_MARKER_ALPHA = 0.0f;
     public static final int PLOT_LABEL_TYPE_INSTRUMENT = 0, PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE = 1,
-            PLOT_LABEL_TYPE_FRAGMENT_ION_SCORING_TYPE = 2;
+            PLOT_LABEL_TYPE_FRAGMENT_ION_SCORING_TYPE = 2, PLOT_LABEL_TYPE_FRAGMENT_ION_THRESHOLD = 3;
     public static final long Y_ION = 7, B_ION = 1;
     private String currentDataSetFolder = null, currentDataSetName = null;
     private HashMap<String, Integer> extractedInternalModifications, extractedNTermModifications,
@@ -47,6 +47,7 @@ public class Properties {
     private HashMap<Integer, FragmentationAnalyzerJInternalFrame> allInternalFrames = new HashMap<Integer, FragmentationAnalyzerJInternalFrame>();
     private ArrayList<IdentificationTableRow> currentlySelectedRowsInSearchTable = new ArrayList<IdentificationTableRow>();
     private ArrayList<SpectrumTableRow> currentlySelectedRowsInSpectraTable = new ArrayList<SpectrumTableRow>();
+    private int currentLabelType = 0; // no type selected
 
     /**
      * Creates a new empty Properties object.
@@ -350,5 +351,28 @@ public class Properties {
      */
     public void setCurrentlySelectedRowsInSpectraTable(ArrayList<SpectrumTableRow> currentlySelectedRowsInSpectraTable) {
         this.currentlySelectedRowsInSpectraTable = currentlySelectedRowsInSpectraTable;
+    }
+
+    /**
+     * Sets the label type to use in the scatter and bubble plots.
+     *
+     * @param labelType of the following: PLOT_LABEL_TYPE_INSTRUMENT, PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE,
+     *        PLOT_LABEL_TYPE_FRAGMENT_ION_SCORING_TYPE or PLOT_LABEL_TYPE_FRAGMENT_ION_THRESHOLD
+     */
+    public void setCurrentLabelType(int labelType) {
+        currentLabelType = labelType;
+    }
+
+    /**
+     * Returns the currently used/last used label type. One of the following:
+     * PLOT_LABEL_TYPE_INSTRUMENT, PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE, PLOT_LABEL_TYPE_FRAGMENT_ION_SCORING_TYPE
+     * or PLOT_LABEL_TYPE_FRAGMENT_ION_THRESHOLD
+     *
+     * @return the current label type, one of the following:
+     *         PLOT_LABEL_TYPE_INSTRUMENT, PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE, PLOT_LABEL_TYPE_FRAGMENT_ION_SCORING_TYPE
+     *         or PLOT_LABEL_TYPE_FRAGMENT_ION_THRESHOLD
+     */
+    public int getCurrentLabelType() {
+        return currentLabelType;
     }
 }

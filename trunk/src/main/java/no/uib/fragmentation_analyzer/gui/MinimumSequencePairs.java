@@ -140,7 +140,7 @@ public class MinimumSequencePairs extends javax.swing.JDialog {
 }//GEN-LAST:event_cancelJButtonActionPerformed
 
     /**
-     * See cancelJButtonActionPerformed
+     * @see #cancelJButtonActionPerformed(java.awt.event.ActionEvent) 
      */
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         cancelJButtonActionPerformed(null);

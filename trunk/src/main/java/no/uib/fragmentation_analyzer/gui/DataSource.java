@@ -191,7 +191,7 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
         // add the files to an array list and sort them
         ArrayList<File> dataSets = new ArrayList<File>();
 
-        for(int i=0; i<tempDataSets.length; i++){
+        for (int i = 0; i < tempDataSets.length; i++) {
             dataSets.add(tempDataSets[i]);
         }
 
@@ -252,7 +252,7 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
         }
 
         dataSetsJXTable.setModel(dataSetsModel);
-        
+
         if (selectDataSet) {
             openDataSetJButton.setEnabled(true);
         }
@@ -266,14 +266,14 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
             public void run() {
                 dataSetsJXTable.scrollCellToVisible(tempSelectedRow, 0);
 
-                if(tempSelectDataSet){
+                if (tempSelectDataSet) {
                     dataSetsJXTable.setRowSelectionInterval(tempSelectedRow, tempSelectedRow);
-                    
+
                     int value = JOptionPane.showConfirmDialog(
                             null, "Data imported successfully.\nOpen data set?", "Open Data Set?",
                             JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
 
-                    if(value == JOptionPane.YES_OPTION){
+                    if (value == JOptionPane.YES_OPTION) {
                         openDataSetJButtonActionPerformed(null);
                     }
                 }
@@ -436,7 +436,7 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jXTaskPaneContainer1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 432, Short.MAX_VALUE)
+            .add(jXTaskPaneContainer1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -452,14 +452,14 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
     }//GEN-LAST:event_ms_limsJRadioButtonActionPerformed
 
     /**
-     * See ms_limsJRadioButtonActionPerformed
+     * @see #ms_limsJRadioButtonActionPerformed(java.awt.event.ActionEvent)
      */
     private void mascotDatFilesJRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mascotDatFilesJRadioButtonActionPerformed
         ms_limsJRadioButtonActionPerformed(null);
     }//GEN-LAST:event_mascotDatFilesJRadioButtonActionPerformed
 
     /**
-     * See ms_limsJRadioButtonActionPerformed
+     * @see #ms_limsJRadioButtonActionPerformed(java.awt.event.ActionEvent)
      */
     private void omssaJRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_omssaJRadioButtonActionPerformed
         ms_limsJRadioButtonActionPerformed(null);
@@ -1632,6 +1632,7 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
 
                     // get the spectrum-instrument mappings
                     spectraInstrumentMapping = new HashMap<Long, String>(spectrumfileids.size());
+
                     if (!cancelProgress) {
                         getSpectrumInstrumentMappings();
                     }
@@ -1657,6 +1658,10 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
 
                     if (!cancelProgress) {
                         insertAvailableDataSets(fragmentationAnalyzer.getProperties().getCurrentDataSetName());
+                    } else {
+                        // delete the created project folder and close any open database connections
+                        Util.deleteDir(new File(fragmentationAnalyzer.getProperties().getCurrentDataSetFolder()));
+                        fragmentationAnalyzer.closeDatabaseConnection();
                     }
 
                 } catch (Exception e) {
@@ -1666,6 +1671,9 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
                             "Error Extracting Data", JOptionPane.ERROR_MESSAGE);
                     Util.writeToErrorLog("Error extracting data from database: ");
                     e.printStackTrace();
+
+                    // delete the created project folder and close any open database connections
+                    Util.deleteDir(new File(fragmentationAnalyzer.getProperties().getCurrentDataSetFolder()));
                     fragmentationAnalyzer.closeDatabaseConnection();
                 }
 
@@ -1791,7 +1799,7 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
 
         progressDialog.setIntermidiate(false);
         progressDialog.setValue(0);
-        progressDialog.setMax(totalNumberOfIdentifications * 2);
+        progressDialog.setMax(totalNumberOfIdentifications);
         progressDialog.setTitle("Retrieving Identifications. Please Wait...");
         progressCounter = 0;
 
@@ -1812,10 +1820,6 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
         int querrySize = 20000;
 
         for (int i = 1; i <= highestIdentificationId; i++) {
-
-            for (int j = 0; j < querrySize; j++) {
-                progressDialog.setValue(progressCounter++);
-            }
 
             ps.setInt(1, i);
             ps.setInt(2, (i + querrySize));
