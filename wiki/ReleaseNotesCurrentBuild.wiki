@@ -2,4 +2,6 @@
 
 ----
 
-(currently no changes)
+ * NEW FEATURE: The option of using the mass error threshold as the data label has been added (for ms_lims only). 
+ * BUG FIX: Empty ms_lims data sets (and folder) are now deleted if the data extraction is canceled. 
+ * BUG FIX: The progress bar shown when retrieving identifications from ms_lims no longer halts too long at 100%.
