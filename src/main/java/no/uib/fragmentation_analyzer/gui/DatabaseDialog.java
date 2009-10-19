@@ -331,7 +331,7 @@ public class DatabaseDialog extends javax.swing.JDialog {
 }//GEN-LAST:event_okJButtonActionPerformed
 
     /**
-     * See cancelJButtonActionPerformed
+     * @see #cancelJButtonActionPerformed(java.awt.event.ActionEvent) 
      *
      * @param evt
      */
