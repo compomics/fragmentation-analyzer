@@ -3404,11 +3404,11 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
                         double totalIntensity = 1.0;
 
-                        if (currentIdentification.getSpectrumFileId() != null) {
-                            totalIntensity = calculateTotalIntensityForMsLimsSpectrum(currentIdentification.getSpectrumFileId());
-                        } else {
-                            if (currentIdentification.getTotalIntensity() != null) {
-                                totalIntensity = currentIdentification.getTotalIntensity();
+                        if (currentIdentification.getTotalIntensity() != null) {
+                            totalIntensity = currentIdentification.getTotalIntensity();
+                        } else{
+                            if (currentIdentification.getSpectrumFileId() != null) {
+                                totalIntensity = calculateTotalIntensityForMsLimsSpectrum(currentIdentification.getSpectrumFileId());
                             }
                         }
 
@@ -3645,15 +3645,15 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
         Iterator fragmentIterator = fragments.iterator();
 
-        double totalIntensity;
+        double totalIntensity = 1.0;
 
-        if (currentId.getSpectrumFileId() != null && normalize) {
-            totalIntensity = calculateTotalIntensityForMsLimsSpectrum(currentId.getSpectrumFileId());
-        } else {
+        if(normalize){
             if (currentId.getTotalIntensity() != null) {
                 totalIntensity = currentId.getTotalIntensity();
-            } else {
-                totalIntensity = 1.0;
+            } else{
+                if (currentId.getSpectrumFileId() != null) {
+                    totalIntensity = calculateTotalIntensityForMsLimsSpectrum(currentId.getSpectrumFileId());
+                }
             }
         }
 

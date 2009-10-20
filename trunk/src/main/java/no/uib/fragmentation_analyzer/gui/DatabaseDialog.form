@@ -127,6 +127,7 @@
                   </Properties>
                   <Events>
                     <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="passordJPasswordFieldKeyPressed"/>
+                    <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="passordJPasswordFieldKeyReleased"/>
                   </Events>
                 </Component>
                 <Component class="javax.swing.JTextField" name="userNameJTextField">
@@ -136,6 +137,7 @@
                   </Properties>
                   <Events>
                     <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="userNameJTextFieldKeyPressed"/>
+                    <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="userNameJTextFieldKeyReleased"/>
                   </Events>
                 </Component>
               </SubComponents>
@@ -229,6 +231,7 @@
                   </Properties>
                   <Events>
                     <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="schemaJTextFieldKeyPressed"/>
+                    <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="schemaJTextFieldKeyReleased"/>
                   </Events>
                 </Component>
                 <Component class="javax.swing.JTextField" name="serverHostJTextField">
@@ -238,6 +241,7 @@
                   </Properties>
                   <Events>
                     <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="serverHostJTextFieldKeyPressed"/>
+                    <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="serverHostJTextFieldKeyReleased"/>
                   </Events>
                 </Component>
               </SubComponents>
