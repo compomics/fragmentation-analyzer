@@ -3,6 +3,8 @@ package no.uib.fragmentation_analyzer.util;
 import be.proteomics.util.gui.spectrum.DefaultSpectrumAnnotation;
 import be.proteomics.util.gui.spectrum.SpectrumPanel;
 import java.awt.Color;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Vector;
@@ -53,6 +55,25 @@ public class Properties {
      * Creates a new empty Properties object.
      */
     public Properties() {
+    }
+
+    /**
+     * Retrieves the version number set in the pom file.
+     *
+     * @return the version number of the fragmentation analyzer
+     */
+    public String getVersion() {
+
+        java.util.Properties p = new java.util.Properties();
+
+        try {
+            InputStream is = this.getClass().getClassLoader().getResourceAsStream("fragmentation-analyzer.properties");
+            p.load( is );
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return p.getProperty("fragmentation-analyzer.version");
     }
 
     /**

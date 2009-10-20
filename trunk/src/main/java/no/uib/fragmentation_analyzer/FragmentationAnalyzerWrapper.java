@@ -7,6 +7,7 @@ import java.io.*;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import no.uib.fragmentation_analyzer.util.Properties;
 
 /**
  * A wrapper class used to start the jar file with parameters. The parameters 
@@ -24,13 +25,18 @@ public class FragmentationAnalyzerWrapper {
      * The name of the omssa parser jar file. Must be equal to the name 
      * given in the pom file.
      */
-    private String jarFileName = "FragmentationAnalyzer-1.1.jar";
+    private String jarFileName = "FragmentationAnalyzer-";
 
     /**
      * Starts the launcher by calling the launch method. Use this as the 
      * main class in the jar file.
      */
     public FragmentationAnalyzerWrapper() {
+
+        // get the version number set in the pom file
+        Properties properties = new Properties();
+        jarFileName = jarFileName + properties.getVersion() + ".jar";
+        
         try {
             PlasticLookAndFeel.setPlasticTheme(new SkyKrupp());
             UIManager.setLookAndFeel(new PlasticXPLookAndFeel());

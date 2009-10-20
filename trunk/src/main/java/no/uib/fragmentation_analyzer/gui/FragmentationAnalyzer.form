@@ -191,6 +191,8 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="opemJMenuItemActionPerformed"/>
               </Events>
             </MenuItem>
+            <MenuItem class="javax.swing.JSeparator" name="jSeparator8">
+            </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="exitJMenuItem">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Exit"/>
