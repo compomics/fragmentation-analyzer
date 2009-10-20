@@ -102,6 +102,9 @@ public class DatabaseDialog extends javax.swing.JDialog {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 passordJPasswordFieldKeyPressed(evt);
             }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                passordJPasswordFieldKeyReleased(evt);
+            }
         });
 
         userNameJTextField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
@@ -109,6 +112,9 @@ public class DatabaseDialog extends javax.swing.JDialog {
         userNameJTextField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 userNameJTextFieldKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                userNameJTextFieldKeyReleased(evt);
             }
         });
 
@@ -174,6 +180,9 @@ public class DatabaseDialog extends javax.swing.JDialog {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 schemaJTextFieldKeyPressed(evt);
             }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                schemaJTextFieldKeyReleased(evt);
+            }
         });
 
         serverHostJTextField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
@@ -181,6 +190,9 @@ public class DatabaseDialog extends javax.swing.JDialog {
         serverHostJTextField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 serverHostJTextFieldKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                serverHostJTextFieldKeyReleased(evt);
             }
         });
 
@@ -404,6 +416,34 @@ public class DatabaseDialog extends javax.swing.JDialog {
             }
         }
 }//GEN-LAST:event_schemaJTextFieldKeyPressed
+
+    /**
+     * @see #userNameJTextFieldKeyPressed(java.awt.event.KeyEvent) 
+     */
+    private void userNameJTextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_userNameJTextFieldKeyReleased
+        userNameJTextFieldKeyPressed(evt);
+    }//GEN-LAST:event_userNameJTextFieldKeyReleased
+
+    /**
+     * @see #passordJPasswordFieldKeyPressed(java.awt.event.KeyEvent) 
+     */
+    private void passordJPasswordFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_passordJPasswordFieldKeyReleased
+        passordJPasswordFieldKeyPressed(evt);
+    }//GEN-LAST:event_passordJPasswordFieldKeyReleased
+
+    /**
+     * @see #serverHostJTextFieldKeyPressed(java.awt.event.KeyEvent)
+     */
+    private void serverHostJTextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_serverHostJTextFieldKeyReleased
+        serverHostJTextFieldKeyPressed(evt);
+    }//GEN-LAST:event_serverHostJTextFieldKeyReleased
+
+    /**
+     * @see #schemaJTextFieldKeyPressed(java.awt.event.KeyEvent)
+     */
+    private void schemaJTextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_schemaJTextFieldKeyReleased
+        schemaJTextFieldKeyPressed(evt);
+    }//GEN-LAST:event_schemaJTextFieldKeyReleased
 
     /**
      * Checks if all mandatory information is filled in and enables or disables

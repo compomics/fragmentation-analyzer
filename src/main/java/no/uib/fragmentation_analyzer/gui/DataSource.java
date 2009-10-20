@@ -70,6 +70,7 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
     private static ArrayList<Long> allIdentificationIds;
     private static ArrayList<Long> spectrumfileids;
     private static HashMap<Long, String> spectraInstrumentMapping;
+    private static HashMap<Long, Double> spectraTotalIntensityMapping;
     private final int NUMBER_OF_BYTES_PER_MEGABYTE = 1048576;
     private final double MAX_MASCOT_DAT_FILESIZE_BEFORE_INDEXING = 40; //in megabytes
     private ArrayList<File> selectedDataFiles;
@@ -232,7 +233,7 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
                     if (currentDataSet != null) {
                         if (currentDataSet.equalsIgnoreCase(dataSets.get(i).getName())) {
                             selectDataSet = true;
-                            selectedRow = i;
+                            selectedRow = dataSetsModel.getRowCount();
                         }
                     }
 
@@ -1630,19 +1631,20 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
                     //long temp2 = System.currentTimeMillis();
                     //System.out.println("Identifications Extracted: Milliseconds: " + (temp2 - temp) + "\n");
 
-                    // get the spectrum-instrument mappings
+                    // get the spectrum-instrument mappings and the total intensity (if available)
                     spectraInstrumentMapping = new HashMap<Long, String>(spectrumfileids.size());
+                    spectraTotalIntensityMapping = new HashMap<Long, Double>();
 
                     if (!cancelProgress) {
-                        getSpectrumInstrumentMappings();
+                        getSpectrumInstrumentMappingsAndTotalIntensity();
                     }
 
                     //long temp3 = System.currentTimeMillis();
                     //System.out.println("Spectrum-Instrument Mapping Extracted: Milliseconds: " + (temp3 - temp2) + "\n");
 
-                    // add the instrument
+                    // add the instrument and the total intensity (if available)
                     if (!cancelProgress) {
-                        addInstrumentsToIdentificationsFile();
+                        addInstrumentsAndTotalIntensityToIdentificationsFile();
                     }
 
                     //long temp4 = System.currentTimeMillis();
@@ -1859,11 +1861,11 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
     }
 
     /**
-     * Get the spectrum vs instrument mappings.
+     * Get the spectrum vs instrument mappings. And the total intensity if available in database.
      *
      * @throws SQLException
      */
-    private void getSpectrumInstrumentMappings() throws SQLException {
+    private void getSpectrumInstrumentMappingsAndTotalIntensity() throws SQLException {
 
         progressDialog.setMax(spectrumfileids.size() * 2);
         progressDialog.setValue(0);
@@ -1876,6 +1878,16 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
         // can't use a prepared statment as the in clause is too long, and seems to
         // get cut by the insertString method
         Statement s = fragmentationAnalyzer.getConnection().createStatement();
+
+        // verify if the database contains the total_spectrum_intensity column
+        s.execute("show columns in spectrumfile where Field = 'total_spectrum_intensity'");
+        rs = s.getResultSet();
+
+        boolean totalIntensityColumnExists = false;
+
+        if(rs.next()){
+            totalIntensityColumnExists = true;
+        }
 
         int querrySize = 10000;
 
@@ -1893,8 +1905,14 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
             }
 
             //progressDialog.setTitle("SI: Executing query. Please Wait...");
-            s.execute("select spectrumfileid, l_instrumentid from spectrumfile where " +
+            if(totalIntensityColumnExists){
+                s.execute("select spectrumfileid, l_instrumentid, total_spectrum_intensity from spectrumfile where " +
                     "spectrumfileid in (" + inClause + ")");
+            } else{
+                s.execute("select spectrumfileid, l_instrumentid from spectrumfile where " +
+                    "spectrumfileid in (" + inClause + ")");
+            }
+            
 
             rs = s.getResultSet();
 
@@ -1904,18 +1922,25 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
 
             while (rs.next()) {
                 progressDialog.setValue(progressCounter++);
-                spectraInstrumentMapping.put(rs.getLong(1), allInstruments.get(rs.getLong(2)));
+
+                long spectrumfileid = rs.getLong(1);
+
+                spectraInstrumentMapping.put(spectrumfileid, allInstruments.get(rs.getLong(2)));
+
+                if(totalIntensityColumnExists){
+                    spectraTotalIntensityMapping.put(spectrumfileid, rs.getDouble(3));
+                }
             }
         }
     }
 
     /**
-     * Add the instrument details to the identification file.
+     * Add the instrument details and the total intensity (if available) to the identification file.
      *
      * @throws IOException
      * @throws SQLException
      */
-    private void addInstrumentsToIdentificationsFile() throws IOException, SQLException {
+    private void addInstrumentsAndTotalIntensityToIdentificationsFile() throws IOException, SQLException {
 
         progressDialog.setMax(allIdentificationIds.size());
         progressDialog.setValue(0);
@@ -1946,8 +1971,24 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
             progressDialog.setValue(progressCounter);
 
             tokens = line.split("\t");
-            instrumentName = spectraInstrumentMapping.get(new Long(tokens[4]));
-            bw.write(tokens[0] + "\t" + tokens[1] + "\t" + tokens[2] + "\t" + tokens[3] + "\t" + instrumentName + "\tnull\t" + tokens[4] + "\n");
+
+            // get the instrument name
+            Long currentSpectrumId = new Long(tokens[4]);
+            instrumentName = spectraInstrumentMapping.get(currentSpectrumId);
+
+            // get the total intensity
+            Double totalIntensity = spectraTotalIntensityMapping.get(currentSpectrumId);
+
+            // write the extended identification to the file
+            bw.write(tokens[0] + "\t" + tokens[1] + "\t" + tokens[2] + "\t" + tokens[3] + "\t" 
+                    + instrumentName + "\t" + null + "\t" + tokens[4]);
+
+            if(totalIntensity != null){
+                bw.write("\t" + totalIntensity);
+            }
+
+            bw.write("\n");
+
             line = b.readLine();
         }
 
