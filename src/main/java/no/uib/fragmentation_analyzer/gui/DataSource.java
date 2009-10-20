@@ -1713,7 +1713,7 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
     /**
      * Returns the largest identification id in the database.
      *
-     * @return
+     * @return the largest identification id in the database
      * @throws SQLException
      */
     private int getMaxIdentificationId() throws SQLException {
@@ -1733,7 +1733,7 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
     /**
      * Returns the total number of identifications.
      *
-     * @return
+     * @return the total number of identifications
      * @throws SQLException
      */
     private int getIdentificationCount() throws SQLException {
@@ -1752,7 +1752,7 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
     /**
      * Returns the total number of spectrum files.
      *
-     * @return
+     * @return the total number of spectrum files
      * @throws SQLException
      */
     private int getSpectrumFileCount() throws SQLException {
@@ -1790,7 +1790,7 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
      *
      * @param highestIdentificationId
      * @param totalNumberOfIdentifications
-     * @return
+     * @return the number of sequences where the modified sequence in the database is incorrect
      * @throws SQLException
      * @throws IOException
      */
