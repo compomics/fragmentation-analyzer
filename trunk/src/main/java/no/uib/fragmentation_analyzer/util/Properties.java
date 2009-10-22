@@ -50,11 +50,13 @@ public class Properties {
     private ArrayList<IdentificationTableRow> currentlySelectedRowsInSearchTable = new ArrayList<IdentificationTableRow>();
     private ArrayList<SpectrumTableRow> currentlySelectedRowsInSpectraTable = new ArrayList<SpectrumTableRow>();
     private int currentLabelType = 0; // no type selected
-
+    private String modificationPattern = "[<][^<]*[>]";
+        
     /**
      * Creates a new empty Properties object.
      */
     public Properties() {
+        setPattern(Pattern.compile(modificationPattern));
     }
 
     /**

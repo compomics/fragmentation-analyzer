@@ -1827,7 +1827,8 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
 
                     modifiedSequence = rs.getString(3);
                     undmodifiedSequence =
-                            fragmentationAnalyzer.extractUnmodifiedSequenceAndModifications(modifiedSequence, false, false);
+                            Util.extractUnmodifiedSequenceAndModifications(modifiedSequence, false, false,
+                            fragmentationAnalyzer.getProperties());
 
                     if (rs.getString(5).equalsIgnoreCase(undmodifiedSequence)) {
 

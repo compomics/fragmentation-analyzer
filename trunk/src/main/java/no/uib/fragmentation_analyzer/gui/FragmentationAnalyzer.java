@@ -14,7 +14,6 @@ import com.jgoodies.looks.plastic.PlasticLookAndFeel;
 import com.jgoodies.looks.plastic.PlasticXPLookAndFeel;
 import com.jgoodies.looks.plastic.theme.SkyKrupp;
 import com.mysql.jdbc.Driver;
-import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -45,8 +44,6 @@ import java.util.Iterator;
 import java.util.Locale;
 import java.util.TreeSet;
 import java.util.Vector;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
@@ -63,6 +60,7 @@ import no.uib.fragmentation_analyzer.util.BareBonesBrowserLaunch;
 import no.uib.fragmentation_analyzer.util.FragmentIon;
 import no.uib.fragmentation_analyzer.util.IdentificationTableRow;
 import no.uib.fragmentation_analyzer.util.PKLFile;
+import no.uib.fragmentation_analyzer.util.PlotUtil;
 import no.uib.fragmentation_analyzer.util.Properties;
 import no.uib.fragmentation_analyzer.util.ReducedIdentification;
 import no.uib.fragmentation_analyzer.util.SpectrumTableRow;
@@ -72,35 +70,17 @@ import no.uib.fragmentation_analyzer.util.XYZDataPoint;
 import org.jdesktop.swingx.JXTable;
 import org.jdesktop.swingx.JXTableHeader;
 import org.jdesktop.swingx.decorator.SortOrder;
-import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.axis.CategoryAxis;
-import org.jfree.chart.axis.NumberAxis;
-import org.jfree.chart.labels.BoxAndWhiskerToolTipGenerator;
-import org.jfree.chart.labels.StandardXYToolTipGenerator;
-import org.jfree.chart.plot.CategoryMarker;
 import org.jfree.chart.plot.CategoryPlot;
-import org.jfree.chart.plot.DatasetRenderingOrder;
-import org.jfree.chart.plot.IntervalMarker;
 import org.jfree.chart.plot.Marker;
-import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
-import org.jfree.chart.renderer.category.BoxAndWhiskerRenderer;
-import org.jfree.chart.renderer.xy.DefaultXYItemRenderer;
-import org.jfree.chart.renderer.xy.XYItemRenderer;
-import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.chart.title.LegendTitle;
-import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.statistics.DefaultBoxAndWhiskerCategoryDataset;
 import org.jfree.data.xy.DefaultXYDataset;
 import org.jfree.data.xy.DefaultXYZDataset;
-import org.jfree.data.xy.XYSeries;
-import org.jfree.data.xy.XYSeriesCollection;
 import org.jfree.ui.Layer;
 import org.jfree.ui.RectangleEdge;
-import org.jfree.ui.RectangleInsets;
-import org.jfree.ui.TextAnchor;
 
 /**
  * FragmentationAnalyzer is the main screen in the FragmentationAnalyzer tool.
@@ -119,18 +99,14 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
     private static boolean dataLoaded = false;
     private static Dimension plotPaneCurrentPreferredSize;
     private static int plotPaneCurrentScrollValue = 0;
-    private static boolean internalFrameBeingResized = false;
-    private static boolean internalFrameIsMaximized = false;
+    private static boolean internalFrameBeingResized = false, internalFrameIsMaximized = false;
     private static boolean updateScrollValue = true;
     private static boolean normalize = true;
     private static boolean currentDataSetIsFromMsLims;
     private boolean selectAllIdentifications = true, selectAllSpectra = true;
     private int internalFrameUniqueIdCounter = 0;
-    private boolean cancelProgress = false;
-    private boolean searchEnabled = false;
-    private boolean showLegend = true;
-    private boolean showMarkers = false;
-    private boolean showAverageMassError = false;
+    private boolean cancelProgress = false, searchEnabled = false;
+    private boolean showLegend = true, showMarkers = false, showAverageMassError = false;
     private String searchResultAnalysisButtonDisabledToolTip = "Select at least one row in the Search Results table";
     private String spectraAnalysisButtonDisabledToolTip = "Select at least one row in the Individual Spectra table";
     private boolean initialSizeHasBeenSet = false;
@@ -190,23 +166,14 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
             pack();
         }
 
-        // a try at making the two task panes equal in vertical size on Linux, does not yet work
-//        int newHeight = plotsAndAnalysesJScrollPane.getHeight() + (resultsJScrollPane.getHeight()
-//                - plotsAndAnalysesJScrollPane.getHeight() - 74*2);  // ToDo: remove hardcoding!!
-//
-//        plotsAndAnalysesJScrollPane.setPreferredSize(new Dimension(plotsAndAnalysesJScrollPane.getWidth(), newHeight));
-//        //plotsAndAnalysesJScrollPane.setMinimumSize(new Dimension(plotsAndAnalysesJScrollPane.getWidth(), newHeight));
-//        //plotsAndAnalysesJScrollPane.setViewportView(plotsAndAnalysesJDesktopPane);
-//
-//
-//        newHeight = searchResultJXPanel.getHeight() + spectraJXPanel.getHeight()
-//                + (resultsJScrollPane.getHeight() - (searchResultJXPanel.getHeight() + spectraJXPanel.getHeight())
-//                - 37);  // ToDo: remove hardcoding!!
-//
-//        newHeight = newHeight/2 - 67; // ToDo: remove hardcoding!!
-//
-//        searchResultJXPanel.setPreferredSize(new Dimension(searchResultJXPanel.getWidth(), newHeight));
-//        spectraJXPanel.setPreferredSize(new Dimension(spectraJXPanel.getWidth(), newHeight));
+
+        // make sure the main frame is not too wide for the screen
+        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+
+        if(dim.getWidth() < this.getWidth()){
+            this.setPreferredSize(new Dimension(dim.width - 50, this.getPreferredSize().height));
+            pack();
+        }
 
 
         setColumnProperties();
@@ -215,16 +182,8 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         plotsAnalysesJXTaskPane.setExpanded(false);
         spectraJXTaskPane.setExpanded(false);
 
-        properties.setLinkedSpectrumPanels(new HashMap<Integer, SpectrumPanel>());
-        properties.setAllAnnotations(new HashMap<Integer, Vector<DefaultSpectrumAnnotation>>());
-        properties.setAllInternalFrames(new HashMap<Integer, FragmentationAnalyzerJInternalFrame>());
-        properties.setAllChartFrames(new HashMap<Integer, JFreeChart>());
-
         userProperties = new UserProperties(properties.getVersion());
         userProperties.readUserPropertiesFromFile(null);
-
-        String modificationPattern = "[<][^<]*[>]";
-        properties.setPattern(Pattern.compile(modificationPattern));
 
         // sets the icon of the frame
         setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().
@@ -1029,14 +988,14 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         searchResultJXPanelLayout.setHorizontalGroup(
             searchResultJXPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(org.jdesktop.layout.GroupLayout.TRAILING, searchResultJXPanelLayout.createSequentialGroup()
-                .add(searchResultsJComboBox, 0, 310, Short.MAX_VALUE)
+                .add(searchResultsJComboBox, 0, 298, Short.MAX_VALUE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(daOrPpmSearchResultsJComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(combineSearchResultsJComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .add(46, 46, 46)
-                .add(searchResultsJButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 311, Short.MAX_VALUE))
-            .add(org.jdesktop.layout.GroupLayout.TRAILING, searchResultsJScrollPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 811, Short.MAX_VALUE)
+                .add(searchResultsJButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 299, Short.MAX_VALUE))
+            .add(org.jdesktop.layout.GroupLayout.TRAILING, searchResultsJScrollPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 787, Short.MAX_VALUE)
         );
 
         searchResultJXPanelLayout.linkSize(new java.awt.Component[] {combineSearchResultsJComboBox, daOrPpmSearchResultsJComboBox}, org.jdesktop.layout.GroupLayout.HORIZONTAL);
@@ -1126,14 +1085,14 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         spectraJXPanelLayout.setHorizontalGroup(
             spectraJXPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(spectraJXPanelLayout.createSequentialGroup()
-                .add(spectraJComboBox, 0, 309, Short.MAX_VALUE)
+                .add(spectraJComboBox, 0, 297, Short.MAX_VALUE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(daOrPpmSpectraJComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 65, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(combineSpectraJComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .add(50, 50, 50)
-                .add(spectraJButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 309, Short.MAX_VALUE))
-            .add(spectraJScrollPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 811, Short.MAX_VALUE)
+                .add(spectraJButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 297, Short.MAX_VALUE))
+            .add(spectraJScrollPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 787, Short.MAX_VALUE)
         );
         spectraJXPanelLayout.setVerticalGroup(
             spectraJXPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -1543,7 +1502,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         boxPlotPanelToolBarJInternalFrame.setBounds(660, 70, 100, 240);
         plotsAndAnalysesJDesktopPane.add(boxPlotPanelToolBarJInternalFrame, javax.swing.JLayeredPane.POPUP_LAYER);
 
-        internalFrameTipJLabel.setFont(new java.awt.Font("Tahoma", 2, 10)); // NOI18N
+        internalFrameTipJLabel.setFont(new java.awt.Font("Tahoma", 2, 10));
         internalFrameTipJLabel.setText("Right click in the plot or on the plot title bar for plot options.");
         internalFrameTipJLabel.setBounds(30, 0, 270, 20);
         plotsAndAnalysesJDesktopPane.add(internalFrameTipJLabel, javax.swing.JLayeredPane.DEFAULT_LAYER);
@@ -1623,7 +1582,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
             .add(layout.createSequentialGroup()
                 .add(searchSettingsJScrollPane, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 384, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .add(0, 0, 0)
-                .add(resultsJScrollPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 870, Short.MAX_VALUE))
+                .add(resultsJScrollPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 846, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -1667,151 +1626,6 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
     private void opemJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_opemJMenuItemActionPerformed
         new DataSource(this, true);
     }//GEN-LAST:event_opemJMenuItemActionPerformed
-
-    /**
-     * Removes the occurence count from an item in the combobox, e.g., <Mox> (12234) becomes <Mox>.
-     *
-     * @param item the item to remove the count from
-     * @return the item without the occurence count
-     */
-    private String removeOccurenceCount(String item) {
-
-        if (item.endsWith(")")) {
-            item = item.substring(0, item.lastIndexOf("(") - 1);
-        }
-
-        return item;
-    }
-
-    /**
-     * Returns true if the given identification has the selected charge.
-     *
-     * @param reducedModIdentification
-     * @param charge
-     * @return true of the given identification has the selected charge, false otherwise
-     */
-    private boolean checkCharge(ReducedIdentification reducedModIdentification, Integer charge) {
-
-        boolean identificationMatch;
-
-        if (reducedModIdentification.getCharge().intValue() == charge.intValue()) {
-            identificationMatch = true;
-            //System.out.println("charge match");
-        } else {
-            identificationMatch = false;
-            //System.out.println("charge does not match!");
-        }
-
-        return identificationMatch;
-    }
-
-    /**
-     * Returns true if the given identification has been identified using one if the provided
-     * instruments.
-     *
-     * @param reducedModIdentification
-     * @param instrument1
-     * @param instrument2
-     * @param instrument3
-     * @return true of the given identification has been identified using one if the provided
-     *         instruments, false otherwise
-     */
-    private boolean checkInstrument(ReducedIdentification reducedModIdentification, String instrument1,
-            String instrument2, String instrument3) {
-
-        boolean identificationMatch;
-
-        if (instrument1.equalsIgnoreCase("Select All")) {
-            identificationMatch = true;
-        } else {
-            if (reducedModIdentification.getInstrumentName().equalsIgnoreCase(instrument1) ||
-                    reducedModIdentification.getInstrumentName().equalsIgnoreCase(instrument2) ||
-                    reducedModIdentification.getInstrumentName().equalsIgnoreCase(instrument3)) {
-                //System.out.println("instrument match");
-                identificationMatch = true;
-            } else {
-                identificationMatch = false;
-                //System.out.println("instrument does not match!");
-            }
-        }
-
-        return identificationMatch;
-    }
-
-    /**
-     * Returns true if the given identification has the selected terminals.
-     *
-     * @param reducedModIdentification
-     * @param nTerminal
-     * @param cTerminal
-     * @return true of the given identification has the selected terminals, false otherwise
-     */
-    private boolean checkTerminals(ReducedIdentification reducedModIdentification, String nTerminal, String cTerminal) {
-
-        boolean identificationMatch;
-
-        boolean nTermSelectAll = false;
-        boolean cTermSelectAll = false;
-
-        if (nTerminal.equalsIgnoreCase("Select All")) { // use all n terminals
-            nTermSelectAll = true;
-        }
-
-        if (cTerminal.equalsIgnoreCase("Select All")) { // use all c terminals
-            cTermSelectAll = true;
-        }
-
-        if ((reducedModIdentification.getNTerminal().equalsIgnoreCase(nTerminal) || nTermSelectAll) &&
-                (reducedModIdentification.getCTerminal().equalsIgnoreCase(cTerminal) || cTermSelectAll)) {
-            identificationMatch = true;
-            //System.out.println("terminals match");
-        } else {
-            identificationMatch = false;
-            //System.out.println("terminals does not match!");
-        }
-
-        return identificationMatch;
-    }
-
-    /**
-     * Returns true if the given identification contains the selected modifications.
-     *
-     * @param reducedModIdentification
-     * @param modification1
-     * @param modification2
-     * @param modification3
-     * @param oneModificationOnly
-     * @return true if the given identification contains the selected modifications, false otherwise
-     */
-    private boolean checkModifications(ReducedIdentification reducedIdentification,
-            String modification1, String modification2, String modification3, boolean oneModificationOnly) {
-
-        boolean identificationMatch = true;
-
-        if (modification1.equalsIgnoreCase(" - Select - ")) { // no modifications selected
-            identificationMatch = true;
-            //System.out.println("mods match");
-        } else {
-            ArrayList<String> tempMods = reducedIdentification.getInternalModifications(properties.getPattern());
-
-            if (oneModificationOnly) {
-                identificationMatch = (tempMods.size() == 1);
-            }
-
-            if (identificationMatch &&
-                    tempMods.contains(modification1) ||
-                    tempMods.contains(modification2) ||
-                    tempMods.contains(modification3)) {
-                identificationMatch = true;
-                //System.out.println("mods match");
-            } else {
-                identificationMatch = false;
-                //System.out.println("mods does not match!");
-            }
-        }
-
-        return identificationMatch;
-    }
 
     /**
      * Returns true if at least one modification is selected.
@@ -1926,18 +1740,18 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
                         selectAllIdentifications = true;
 
-                        Integer charge = new Integer(removeOccurenceCount(((String) chargeJComboBox.getSelectedItem())));
+                        Integer charge = new Integer(Util.removeOccurenceCount(((String) chargeJComboBox.getSelectedItem())));
 
-                        String modification1 = removeOccurenceCount(((String) modification1JComboBox.getSelectedItem()));
-                        String modification2 = removeOccurenceCount(((String) modification2JComboBox.getSelectedItem()));
-                        String modification3 = removeOccurenceCount(((String) modification3JComboBox.getSelectedItem()));
+                        String modification1 = Util.removeOccurenceCount(((String) modification1JComboBox.getSelectedItem()));
+                        String modification2 = Util.removeOccurenceCount(((String) modification2JComboBox.getSelectedItem()));
+                        String modification3 = Util.removeOccurenceCount(((String) modification3JComboBox.getSelectedItem()));
 
-                        String nTerminal = removeOccurenceCount(((String) nTermJComboBox.getSelectedItem()));
-                        String cTerminal = removeOccurenceCount(((String) cTermJComboBox.getSelectedItem()));
+                        String nTerminal = Util.removeOccurenceCount(((String) nTermJComboBox.getSelectedItem()));
+                        String cTerminal = Util.removeOccurenceCount(((String) cTermJComboBox.getSelectedItem()));
 
-                        String instrument1 = removeOccurenceCount(((String) instrument1JComboBox.getSelectedItem()));
-                        String instrument2 = removeOccurenceCount(((String) instrument2JComboBox.getSelectedItem()));
-                        String instrument3 = removeOccurenceCount(((String) instrument3JComboBox.getSelectedItem()));
+                        String instrument1 = Util.removeOccurenceCount(((String) instrument1JComboBox.getSelectedItem()));
+                        String instrument2 = Util.removeOccurenceCount(((String) instrument2JComboBox.getSelectedItem()));
+                        String instrument3 = Util.removeOccurenceCount(((String) instrument3JComboBox.getSelectedItem()));
 
                         try {
                             BufferedReader b = new BufferedReader(new FileReader(identificationFile));
@@ -1965,24 +1779,25 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
                                 // check the charge
                                 if (identificationMatch) {
-                                    identificationMatch = checkCharge(currentIdentification, charge);
+                                    identificationMatch = Util.checkCharge(currentIdentification, charge);
                                 }
 
                                 // check the instrument
                                 if (identificationMatch) {
-                                    identificationMatch = checkInstrument(
+                                    identificationMatch = Util.checkInstrument(
                                             currentIdentification, instrument1, instrument2, instrument3);
                                 }
 
                                 // check the terminals
                                 if (identificationMatch) {
-                                    identificationMatch = checkTerminals(currentIdentification, nTerminal, cTerminal);
+                                    identificationMatch = Util.checkTerminals(currentIdentification, nTerminal, cTerminal);
                                 }
 
                                 // check the modifications
                                 if (identificationMatch && (searchType != Properties.MODIFICATION_SEARCH)) {
-                                    identificationMatch = checkModifications(
-                                            currentIdentification, modification1, modification2, modification3, false);
+                                    identificationMatch = Util.checkModifications(
+                                            currentIdentification, modification1, modification2, modification3, false,
+                                            properties.getPattern());
                                 }
 
                                 if (identificationMatch) {
@@ -2176,7 +1991,9 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
                     if (currentIdentification.isModified()) {
 
-                        if (checkModifications(currentIdentification, modification1, modification2, modification3, true)) {
+                        if (Util.checkModifications(
+                                currentIdentification, modification1, modification2, modification3, true,
+                                properties.getPattern())) {
 
                             // have to be able to handle multiple versions of modified peptides
                             if (modifiedSequences.containsKey(currentIdentification.getModifiedSequence())) {
@@ -2745,23 +2562,23 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                         // NB: the y fragments are flipped in the returned lists to make it
                                         //     easier to compare b and y ions in the same plot, i.e. y 1 becomes y n,
                                         //     y 2 becomes y (n-1), etc.
-                                        double averageBUnmodValue = getNonNullBFragments(nonNullBUnmodValues, bUnmodIntensities, k);
-                                        double averageBModValue = getNonNullBFragments(nonNullBModValues, bModIntensities, k);
-                                        double averageYUnmodValue = getNonNullYFragments(nonNullYUnmodValues, yUnmodIntensities, k);
-                                        double averageYModValue = getNonNullYFragments(nonNullYModValues, yModIntensities, k);
+                                        double averageBUnmodValue = PlotUtil.getNonNullBFragments(nonNullBUnmodValues, bUnmodIntensities, k);
+                                        double averageBModValue = PlotUtil.getNonNullBFragments(nonNullBModValues, bModIntensities, k);
+                                        double averageYUnmodValue = PlotUtil.getNonNullYFragments(nonNullYUnmodValues, yUnmodIntensities, k);
+                                        double averageYModValue = PlotUtil.getNonNullYFragments(nonNullYModValues, yModIntensities, k);
 
                                         String currentCategory = "" + currentSequence.charAt(k) + (k + 1);
 
                                         // add the b ions to the box plot data set
-                                        double[] bUnmodValues = addValuesToBoxPlot(dataSet, nonNullBUnmodValues, "b ions - unmod.",
+                                        double[] bUnmodValues = PlotUtil.addValuesToBoxPlot(dataSet, nonNullBUnmodValues, "b ions - unmod.",
                                                 currentCategory);
-                                        double[] bModValues = addValuesToBoxPlot(dataSet, nonNullBModValues, "b ions - mod.",
+                                        double[] bModValues = PlotUtil.addValuesToBoxPlot(dataSet, nonNullBModValues, "b ions - mod.",
                                                 currentCategory);
 
                                         // add the y ions to the box plot data set
-                                        double[] yUnmodValues = addValuesToBoxPlot(dataSet, nonNullYUnmodValues, "y ions - unmod.",
+                                        double[] yUnmodValues = PlotUtil.addValuesToBoxPlot(dataSet, nonNullYUnmodValues, "y ions - unmod.",
                                                 currentCategory);
-                                        double[] yModValues = addValuesToBoxPlot(dataSet, nonNullYModValues, "y ions - mod.",
+                                        double[] yModValues = PlotUtil.addValuesToBoxPlot(dataSet, nonNullYModValues, "y ions - mod.",
                                                 currentCategory);
                                     }
                                 } else {
@@ -2814,24 +2631,25 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                         // NB: the y fragments are flipped in the returned lists to make it
                                         //     easier to compare b and y ions in the same plot, i.e. y 1 becomes y n,
                                         //     y 2 becomes y (n-1), etc.
-                                        double averageBValue = getNonNullBFragments(nonNullBValues, bIntensities, k);
-                                        double averageYValue = getNonNullYFragments(nonNullYValues, yIntensities, k);
+                                        double averageBValue = PlotUtil.getNonNullBFragments(nonNullBValues, bIntensities, k);
+                                        double averageYValue = PlotUtil.getNonNullYFragments(nonNullYValues, yIntensities, k);
 
                                         // add the b ions to the box plot data set
-                                        double[] bValues = addValuesToBoxPlot(dataSet, nonNullBValues, "b ions",
+                                        double[] bValues = PlotUtil.addValuesToBoxPlot(dataSet, nonNullBValues, "b ions",
                                                 "" + currentSequence.charAt(k) + (k + 1));
 
                                         // add the y ions to the box plot data set
-                                        double[] yValues = addValuesToBoxPlot(dataSet, nonNullYValues, "y ions",
+                                        double[] yValues = PlotUtil.addValuesToBoxPlot(dataSet, nonNullYValues, "y ions",
                                                 "" + currentSequence.charAt(k) + (k + 1));
                                     }
                                 }
 
-                                CategoryPlot plot = getCategoryPlot(dataSet);
+                                CategoryPlot plot = PlotUtil.getCategoryPlot(dataSet);
 
                                 // add a category marker for the modified residue
                                 if (!singleSearch) {
-                                    addModificationMarker(currentModifiedSequence, plot);
+                                    PlotUtil.addModificationMarker(currentModifiedSequence, plot,
+                                            showMarkers, properties);
                                 }
 
                                 if (!cancelProgress) {
@@ -2974,7 +2792,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
                                     String internalFrameTitle = "Mass Error Plot";
 
-                                    int fragmentIonCount = getTotalFragmentIonCount(data);
+                                    int fragmentIonCount = Util.getTotalFragmentIonCount(data);
 
                                     if (singleSearch) {
                                         internalFrameTitle = currentModifiedSequence +
@@ -3015,7 +2833,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
                             String internalFrameTitle = "Mass Error Plot";
 
-                            int fragmentIonCount = getTotalFragmentIonCount(data);
+                            int fragmentIonCount = Util.getTotalFragmentIonCount(data);
 
                             if (properties.getCurrentlySelectedRowsInSearchTable().size() == 1) {
 
@@ -3071,13 +2889,13 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
         // create the plot
         if (isBubblePlot) {
-            DefaultXYZDataset dataset = addXYZDataSeries(data, averageValues);
-            chart = getBubbleChart(dataset, usePpm, addLegend);
+            DefaultXYZDataset dataset = PlotUtil.addXYZDataSeries(data, averageValues, properties);
+            chart = PlotUtil.getBubbleChart(dataset, usePpm, addLegend);
             chartPanel = new ChartPanel(chart);
             plotType = "MassErrorBubblePlot";
         } else {
-            DefaultXYDataset dataSet = addXYDataSeries(data, averageValues);
-            chart = getScatterPlotChart(dataSet, usePpm, addLegend);
+            DefaultXYDataset dataSet = PlotUtil.addXYDataSeries(data, averageValues, properties);
+            chart = PlotUtil.getScatterPlotChart(dataSet, usePpm, addLegend);
             chartPanel = new ChartPanel(chart);
             plotType = "MassErrorScatterPlot";
         }
@@ -3090,11 +2908,11 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         }
 
         // add average mass error line
-        addAverageMassErrorLine(averageValues, chart);
+        PlotUtil.addAverageMassErrorLine(averageValues, chart, showAverageMassError);
 
         // add fragment ion type markers
         if (properties.getCurrentLabelType() == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE) {
-            addFragmentIonTypeMarkers(data, chart);
+            PlotUtil.addFragmentIonTypeMarkers(data, chart, showMarkers, properties);
         }
 
         // create the interal frame and add the plot
@@ -3109,193 +2927,6 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
     }
 
     /**
-     * Adds the average mass error line to the plot.
-     *
-     * @param averageValues the map of average values (mz-value, average mass error)
-     * @param chart the chart to add the mass error line to
-     */
-    private void addAverageMassErrorLine(HashMap<Double, Double> averageValues, JFreeChart chart) {
-
-        XYSeries averageError = new XYSeries("Average Mass Error");
-
-        Iterator<Double> averageIterator = averageValues.keySet().iterator();
-
-        // add the mass errors to the data series
-        while (averageIterator.hasNext()) {
-            Double currentMzValue = averageIterator.next();
-            Double currentAverage = averageValues.get(currentMzValue);
-            averageError.add(currentMzValue, currentAverage);
-        }
-
-        // add the data series to the data set
-        XYSeriesCollection dataset = new XYSeriesCollection();
-        dataset.addSeries(averageError);
-
-        // create the mass error line renderer
-        XYItemRenderer renderer = new XYLineAndShapeRenderer(true, false);
-        renderer.setSeriesPaint(0, Color.BLACK);
-        renderer.setBaseToolTipGenerator(new StandardXYToolTipGenerator());
-
-        // add the data set to the plot
-        if (chart.getPlot() instanceof XYPlot) {
-            ((XYPlot) chart.getPlot()).setDataset(1, dataset);
-            ((XYPlot) chart.getPlot()).setRenderer(1, renderer);
-        }
-
-        // make the mass error line visble or not
-        ((XYPlot) chart.getPlot()).getRenderer(1).setSeriesVisible(0, showAverageMassError);
-
-        // makes sure that the average mass error line is rendered last, i.e., to the front
-        ((XYPlot) chart.getPlot()).setDatasetRenderingOrder(DatasetRenderingOrder.FORWARD);
-    }
-
-    /**
-     * Adds interval markers for all the fragment ion types.
-     *
-     * @param data the data to get the interval markers from
-     * @param chart the chart to add the markers to
-     */
-    private void addFragmentIonTypeMarkers(HashMap<String, ArrayList<XYZDataPoint>> data, JFreeChart chart) {
-
-        int horizontalFontPadding = 13;
-
-        Iterator<String> iterator = data.keySet().iterator();
-
-        // iterate the data and add one interval marker for each fragment ion type
-        while (iterator.hasNext()) {
-
-            String fragmentIonType = iterator.next();
-
-            // get the mz value of the current fragment ion type
-            ArrayList<XYZDataPoint> dataPoints = data.get(fragmentIonType);
-            XYZDataPoint currentDataPoint = dataPoints.get(0);
-            double currentXValue = currentDataPoint.getX();
-
-            // create the interval marker
-            IntervalMarker intervalMarker = new IntervalMarker(currentXValue - 5, currentXValue + 5, properties.getDefaultMarkerColor());
-            intervalMarker.setLabel(fragmentIonType);
-            intervalMarker.setLabelFont(new Font("SansSerif", Font.PLAIN, 10));
-            intervalMarker.setLabelPaint(Color.GRAY);
-            intervalMarker.setLabelTextAnchor(TextAnchor.TOP_LEFT);
-
-            // set the fragment ion marker color
-            if (fragmentIonType.startsWith("b")) {
-                intervalMarker.setPaint(properties.getbFragmentIonColor());
-            } else if (fragmentIonType.startsWith("y")) {
-                intervalMarker.setPaint(properties.getyFragmentIonColor());
-            } else {
-                intervalMarker.setPaint(properties.getOtherFragmentIonColor());
-            }
-
-            // make the marker visible or not
-            if (showMarkers) {
-                intervalMarker.setAlpha(Properties.DEFAULT_VISIBLE_MARKER_ALPHA);
-            } else {
-                intervalMarker.setAlpha(Properties.DEFAULT_NON_VISIBLE_MARKER_ALPHA);
-            }
-
-            // set the horizontal location of the markers label
-            // this is need so that not all labels appear on top of each other
-            if (fragmentIonType.lastIndexOf("H2O") != -1) {
-                intervalMarker.setLabelOffset(new RectangleInsets(horizontalFontPadding, 0, horizontalFontPadding, 0));
-            }
-
-            if (fragmentIonType.lastIndexOf("NH3") != -1) {
-                intervalMarker.setLabelOffset(new RectangleInsets(horizontalFontPadding * 2, 0, horizontalFontPadding * 2, 0));
-            }
-
-            if (fragmentIonType.lastIndexOf("Prec") != -1) {
-                intervalMarker.setLabelOffset(new RectangleInsets(horizontalFontPadding * 3, 0, horizontalFontPadding * 3, 0));
-
-                if (fragmentIonType.lastIndexOf("H2O") != -1) {
-                    intervalMarker.setLabelOffset(new RectangleInsets(horizontalFontPadding * 4, 0, horizontalFontPadding * 4, 0));
-                }
-
-                if (fragmentIonType.lastIndexOf("NH3") != -1) {
-                    intervalMarker.setLabelOffset(new RectangleInsets(horizontalFontPadding * 5, 0, horizontalFontPadding * 5, 0));
-                }
-            }
-
-            if (fragmentIonType.startsWith("i")) {
-                intervalMarker.setLabelOffset(new RectangleInsets(horizontalFontPadding * 4, 0, horizontalFontPadding * 4, 0));
-            }
-
-            if (fragmentIonType.lastIndexOf("++") != -1) {
-                intervalMarker.setLabelOffset(new RectangleInsets(horizontalFontPadding * 7, 0, horizontalFontPadding * 7, 0));
-
-                if (fragmentIonType.lastIndexOf("H2O") != -1) {
-                    intervalMarker.setLabelOffset(new RectangleInsets(horizontalFontPadding * 8, 0, horizontalFontPadding * 8, 0));
-                }
-
-                if (fragmentIonType.lastIndexOf("NH3") != -1) {
-                    intervalMarker.setLabelOffset(new RectangleInsets(horizontalFontPadding * 9, 0, horizontalFontPadding * 9, 0));
-                }
-            }
-
-            // add the interval marker to the plot
-            ((XYPlot) chart.getPlot()).addDomainMarker(intervalMarker, Layer.BACKGROUND);
-        }
-    }
-
-    /**
-     * Adds a marker in the plot highlighting the modified residue.
-     *
-     * @param modifiedSequence
-     * @param plot
-     */
-    private void addModificationMarker(String modifiedSequence, CategoryPlot plot) {
-
-        // find the label to use for the modification marker
-        String tempModifiedSequence = modifiedSequence;
-
-        // remove the n-terminal
-        if (tempModifiedSequence.startsWith("#")) {
-            tempModifiedSequence = tempModifiedSequence.substring(tempModifiedSequence.indexOf("#", 1) + 2);
-        } else {
-            tempModifiedSequence = tempModifiedSequence.substring(tempModifiedSequence.indexOf("-") + 1);
-        }
-
-        int modificationIndex = tempModifiedSequence.indexOf('<') - 1;
-
-        String modificationCategory = "" + tempModifiedSequence.charAt(modificationIndex) + (modificationIndex + 1);
-
-        // create the marker and add it to the plot
-        CategoryMarker marker = new CategoryMarker(
-                modificationCategory, properties.getDefaultMarkerColor(), new BasicStroke(1.0f));
-        marker.setDrawAsLine(false);
-        marker.setLabelOffset(new RectangleInsets(2, 5, 2, 5));
-        plot.addDomainMarker(marker, Layer.BACKGROUND);
-
-        // make the marker visible or not visible
-        if (showMarkers) {
-            marker.setAlpha(Properties.DEFAULT_VISIBLE_MARKER_ALPHA);
-        } else {
-            marker.setAlpha(Properties.DEFAULT_NON_VISIBLE_MARKER_ALPHA);
-        }
-    }
-
-    /**
-     * Returns a category plot based on the provided data.
-     *
-     * @param dataSet
-     * @return
-     */
-    private CategoryPlot getCategoryPlot(CategoryDataset dataSet) {
-        CategoryAxis xAxis = new CategoryAxis("Sequence");
-        xAxis.setLabelFont(new Font("SansSerif", Font.PLAIN, 10));
-
-        NumberAxis yAxis = new NumberAxis("Intensity");
-        yAxis.setLabelFont(new Font("SansSerif", Font.PLAIN, 10));
-        yAxis.setAutoRangeIncludesZero(false);
-
-        BoxAndWhiskerRenderer renderer = new BoxAndWhiskerRenderer();
-        renderer.setFillBox(true);
-        renderer.setBaseToolTipGenerator(new BoxAndWhiskerToolTipGenerator());
-
-        return new CategoryPlot(dataSet, xAxis, yAxis, renderer);
-    }
-
-    /**
      * Make sure the visible series are the same as the currently selected ones.
      */
     private void updateVisibleFragmentIonBoxPlotSelection() {
@@ -3305,19 +2936,6 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         bIonsModifiedJCheckBoxActionPerformed(null);
         yIonsUnmodifiedJCheckBoxActionPerformed(null);
         yIonsModifiedJCheckBoxActionPerformed(null);
-    }
-
-    /**
-     * Returns the ppm value of the given mass error relative to its
-     * theoretical m/z value.
-     *
-     * @param theoreticalMzValue the theoretical mass
-     * @param massError the mass error
-     * @return the mass error as a ppm value relative to the theoretical mass
-     */
-    private double getPpmError(double theoreticalMzValue, double massError) {
-        double ppmValue = (massError / theoreticalMzValue) * 1000000;
-        return ppmValue;
     }
 
     /**
@@ -3384,7 +3002,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                     }
 
                     if (usePpmForMassError) {
-                        massError = getPpmError(mzValue, massError);
+                        massError = Util.getPpmError(mzValue, massError);
                     }
 
                     // normalize the intensity
@@ -3439,7 +3057,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                 String fragmentIonType = fragmentIons.get(k).getFragmentIonType();
 
                 if (usePpmForMassError) {
-                    massError = getPpmError(mzValue, massError);
+                    massError = Util.getPpmError(mzValue, massError);
                 }
 
                 // normalize the intensity
@@ -3489,131 +3107,6 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
             data.put(dataPointLabel, temp);
         }
-    }
-
-    /**
-     * Returns a scatter plot if tbe provided data set.
-     *
-     * @param dataSet
-     * @param usePpm if true ppm is used when plotting, otherwise Dalton is used
-     * @param addLegend if true the legend is visible
-     * @return the created chart
-     */
-    private JFreeChart getScatterPlotChart(DefaultXYDataset dataSet, boolean usePpm, boolean addLegend) {
-
-        NumberAxis xAxis = new NumberAxis();
-        xAxis.setLabelFont(new Font("SansSerif", Font.PLAIN, 10));
-        xAxis.setAutoRangeIncludesZero(true);
-        xAxis.setTickLabelFont(new Font("SansSerif", Font.PLAIN, 10));
-        xAxis.setLabel("m/z-value");
-
-        String yAxisLabel = "Mass Error (Da)";
-
-        if (usePpm) {
-            yAxisLabel = "Mass Error (ppm)";
-        }
-
-        NumberAxis yAxis = new NumberAxis();
-        yAxis.setLabelFont(new Font("SansSerif", Font.PLAIN, 10));
-        yAxis.setAutoRangeIncludesZero(true);
-        yAxis.setTickLabelFont(new Font("SansSerif", Font.PLAIN, 10));
-        yAxis.setLabel(yAxisLabel);
-
-        DefaultXYItemRenderer renderer = new DefaultXYItemRenderer();
-        renderer.setBaseLinesVisible(false);
-        renderer.setBaseToolTipGenerator(new StandardXYToolTipGenerator());
-
-        XYPlot plot = new XYPlot(dataSet, xAxis, yAxis, renderer);
-        plot.setForegroundAlpha(0.5f);
-        plot.setBackgroundPaint(Color.WHITE);
-        plot.setDomainGridlinePaint(Color.BLACK);
-        plot.setRangeGridlinePaint(Color.BLACK);
-
-        JFreeChart chart = new JFreeChart(plot);
-
-        chart.setBackgroundPaint(new Color(225, 225, 225));
-        chart.getLegend().setItemFont(new Font("SansSerif", Font.PLAIN, 10));
-
-        if (!addLegend) {
-            chart.removeLegend();
-        }
-
-        return chart;
-    }
-
-    /**
-     * Add a set of values to a box plot.
-     *
-     * @param dataSet the data set to add the values to
-     * @param values the values to add
-     * @param categoryLabel the label used for the category
-     * @param dataSeriesLabel the label used for the data series
-     * @return
-     */
-    private double[] addValuesToBoxPlot(DefaultBoxAndWhiskerCategoryDataset dataSet, ArrayList<Double> values,
-            String categoryLabel, String dataSeriesLabel) {
-
-        ArrayList<Double> listValues = new ArrayList();
-
-        double[] sample1 = new double[values.size()];
-
-        for (int t = 0; t < values.size(); t++) {
-            sample1[t] = values.get(t).doubleValue();
-            listValues.add(new Double(values.get(t).doubleValue()));
-        }
-
-        dataSet.add(listValues, categoryLabel, dataSeriesLabel);
-
-        return sample1;
-    }
-
-    /**
-     * Retrieve the non-null b fragments.
-     *
-     * @param nonNullBValues the list to store the fragments in
-     * @param bIntensities the list of intensities for the b fragments
-     * @param index the index in the b fragment list to search
-     * @return averge intensity of the non-null b fragments
-     */
-    private double getNonNullBFragments(ArrayList<Double> nonNullBValues, double[][] bIntensities, int index) {
-
-        float averageBValue = 0.0f;
-        int averageBValues_numberOfNonNullValues = 0;
-
-        for (int n = 0; n < bIntensities[index].length; n++) {
-
-            if (bIntensities[index][n] > 0) {
-                averageBValue += bIntensities[index][n];
-                averageBValues_numberOfNonNullValues++;
-                nonNullBValues.add(bIntensities[index][n]);
-            }
-        }
-
-        return averageBValue /= averageBValues_numberOfNonNullValues;
-    }
-
-    /**
-     * Retrieve the non-null y fragments.
-     *
-     * @param nonNullYValues the list to store the fragments in
-     * @param yIntensities the list of intensities for the y fragments
-     * @param index the index in the y fragment list to search
-     * @return averge intensity of the non-null y fragments
-     */
-    private double getNonNullYFragments(ArrayList<Double> nonNullYValues, double[][] yIntensities, int index) {
-
-        float averageYValue = 0.0f;
-        int averageYValues_numberOfNonNullValues = 0;
-
-        for (int n = 0; n < yIntensities[index].length; n++) {
-            if (yIntensities[yIntensities.length - index - 1][n] > 0) {
-                averageYValue += yIntensities[yIntensities.length - index - 1][n];
-                averageYValues_numberOfNonNullValues++;
-                nonNullYValues.add(yIntensities[yIntensities.length - index - 1][n]);
-            }
-        }
-
-        return averageYValue /= averageYValues_numberOfNonNullValues;
     }
 
     /**
@@ -3865,7 +3358,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                 try {
 
                                     File spectrumFile = new File(properties.getCurrentDataSetFolder() + "/spectra/" + currentSpectrumId + ".pkl");
-                                    PKLFile pklFile = parsePKLFile(spectrumFile);
+                                    PKLFile pklFile = Util.parsePKLFile(spectrumFile);
 
                                     // get the fragment ions
                                     ArrayList<FragmentIon> fragmentIons = getFragmentIons(currentSpectrumId, null);
@@ -3939,7 +3432,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                 // if not combine create plot
                                 if (combineSpectraJComboBox.getSelectedIndex() == 0) {
 
-                                    int fragmentIonCount = getTotalFragmentIonCount(data);
+                                    int fragmentIonCount = Util.getTotalFragmentIonCount(data);
 
                                     String internalFrameTitle = currentIdentification.getModifiedSequence() +
                                             " (SID: " + currentIdentification.getSpectrumFileId()
@@ -3973,7 +3466,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
                             String internalFrameTitle = "Mass Error Plot";
 
-                            int fragmentIonCount = getTotalFragmentIonCount(data);
+                            int fragmentIonCount = Util.getTotalFragmentIonCount(data);
 
                             if (properties.getCurrentlySelectedRowsInSpectraTable().size() == 1 || allPlotsHaveSameSequence) {
                                 internalFrameTitle = properties.getCurrentlySelectedRowsInSpectraTable().get(0).getModifiedSequence() + " (" + properties.getCurrentlySelectedRowsInSpectraTable().size() + " spectra, dp: " + fragmentIonCount + ")";
@@ -3990,228 +3483,6 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
             }.start();
         }
     }//GEN-LAST:event_spectraJButtonActionPerformed
-
-    /**
-     * Returns the total number of data points in the given data set.
-     * 
-     * @param data
-     * @return the total number of data points in the given data set
-     */
-    private int getTotalFragmentIonCount(HashMap<String, ArrayList<XYZDataPoint>> data) {
-
-        int count = 0;
-
-        Iterator<String> iterator = data.keySet().iterator();
-
-        while (iterator.hasNext()) {
-            count += data.get(iterator.next()).size();
-        }
-
-        return count;
-    }
-
-    /**
-     * Adds the provided data series to an XYZ data set.
-     *
-     * @param data the data to add
-     * @param average a hash map to store the average fragment ion mass errors
-     * @return the created data set
-     */
-    private DefaultXYZDataset addXYZDataSeries(HashMap<String, ArrayList<XYZDataPoint>> data, HashMap<Double, Double> average) {
-
-        DefaultXYZDataset dataset = new DefaultXYZDataset();
-
-        Iterator<String> iterator = data.keySet().iterator();
-
-        HashMap<Double, ArrayList<Double>> xAndYValues = new HashMap<Double, ArrayList<Double>>();
-
-        while (iterator.hasNext()) {
-
-            String key = iterator.next();
-
-            ArrayList<XYZDataPoint> currentData = data.get(key);
-
-            double[][] tempXYZData = new double[3][currentData.size()];
-
-            double averageYValue = 0.0;
-
-            for (int i = 0; i < currentData.size(); i++) {
-                tempXYZData[0][i] = currentData.get(i).getX();
-                tempXYZData[1][i] = currentData.get(i).getY();
-                tempXYZData[2][i] = currentData.get(i).getZ();
-
-                if (properties.getCurrentLabelType() == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE) {
-                    averageYValue += tempXYZData[1][i];
-                } else if (properties.getCurrentLabelType() == Properties.PLOT_LABEL_TYPE_INSTRUMENT ||
-                        properties.getCurrentLabelType() == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_SCORING_TYPE ||
-                        properties.getCurrentLabelType() == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_THRESHOLD) {
-                    if (xAndYValues.containsKey(tempXYZData[0][i])) {
-                        ArrayList<Double> tempYValues = xAndYValues.get(tempXYZData[0][i]);
-                        tempYValues.add(tempXYZData[1][i]);
-                        xAndYValues.put(tempXYZData[0][i], tempYValues);
-                    } else {
-                        ArrayList<Double> tempYValues = new ArrayList<Double>();
-                        tempYValues.add(tempXYZData[1][i]);
-                        xAndYValues.put(tempXYZData[0][i], tempYValues);
-                    }
-                }
-            }
-
-            if (properties.getCurrentLabelType() == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE) {
-                average.put(tempXYZData[0][0], (averageYValue / currentData.size()));
-            } else if (properties.getCurrentLabelType() == Properties.PLOT_LABEL_TYPE_INSTRUMENT ||
-                    properties.getCurrentLabelType() == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_SCORING_TYPE ||
-                    properties.getCurrentLabelType() == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_THRESHOLD) {
-
-                Iterator<Double> xValuesIterator = xAndYValues.keySet().iterator();
-
-                while (xValuesIterator.hasNext()) {
-                    Double currentXValue = xValuesIterator.next();
-
-                    ArrayList<Double> currentYValues = xAndYValues.get(currentXValue);
-
-                    double currentAverageYValue = 0.0;
-
-                    for (int i = 0; i < currentYValues.size(); i++) {
-                        currentAverageYValue += currentYValues.get(i);
-                    }
-
-                    average.put(currentXValue, (currentAverageYValue / currentYValues.size()));
-                }
-            }
-
-            dataset.addSeries(key, tempXYZData);
-        }
-
-        return dataset;
-    }
-
-    /**
-     * Adds the provided data series to an XY data set.
-     *
-     * @param data the data to add
-     * @param average a hash map to store the average fragment ion mass errors
-     * @return the created data set
-     */
-    private DefaultXYDataset addXYDataSeries(HashMap<String, ArrayList<XYZDataPoint>> data, HashMap<Double, Double> average) {
-
-        DefaultXYDataset dataset = new DefaultXYDataset();
-
-        HashMap<Double, ArrayList<Double>> xAndZValues = new HashMap<Double, ArrayList<Double>>();
-
-        Iterator<String> iterator = data.keySet().iterator();
-
-        while (iterator.hasNext()) {
-
-            String key = iterator.next();
-
-            ArrayList<XYZDataPoint> currentData = data.get(key);
-
-            double[][] tempXYData = new double[2][currentData.size()];
-
-            double averageZValue = 0.0;
-
-            for (int i = 0; i < currentData.size(); i++) {
-                tempXYData[0][i] = currentData.get(i).getX();
-                tempXYData[1][i] = currentData.get(i).getZ();
-
-                if (properties.getCurrentLabelType() == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE) {
-                    averageZValue += tempXYData[1][i];
-                } else if (properties.getCurrentLabelType() == Properties.PLOT_LABEL_TYPE_INSTRUMENT ||
-                        properties.getCurrentLabelType() == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_SCORING_TYPE ||
-                        properties.getCurrentLabelType() == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_THRESHOLD) {
-                    if (xAndZValues.containsKey(tempXYData[0][i])) {
-                        ArrayList<Double> tempZValues = xAndZValues.get(tempXYData[0][i]);
-                        tempZValues.add(tempXYData[1][i]);
-                        xAndZValues.put(tempXYData[0][i], tempZValues);
-                    } else {
-                        ArrayList<Double> tempZValues = new ArrayList<Double>();
-                        tempZValues.add(tempXYData[1][i]);
-                        xAndZValues.put(tempXYData[0][i], tempZValues);
-                    }
-                }
-            }
-
-            if (properties.getCurrentLabelType() == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE) {
-                average.put(tempXYData[0][0], (averageZValue / currentData.size()));
-            } else if (properties.getCurrentLabelType() == Properties.PLOT_LABEL_TYPE_INSTRUMENT ||
-                    properties.getCurrentLabelType() == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_SCORING_TYPE ||
-                    properties.getCurrentLabelType() == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_THRESHOLD) {
-
-                Iterator<Double> xValuesIterator = xAndZValues.keySet().iterator();
-
-                while (xValuesIterator.hasNext()) {
-                    Double currentXValue = xValuesIterator.next();
-
-                    ArrayList<Double> currentZValues = xAndZValues.get(currentXValue);
-
-                    double currentAverageZValue = 0.0;
-
-                    for (int i = 0; i < currentZValues.size(); i++) {
-                        currentAverageZValue += currentZValues.get(i);
-                    }
-
-                    average.put(currentXValue, (currentAverageZValue / currentZValues.size()));
-                }
-            }
-
-            dataset.addSeries(key, tempXYData);
-        }
-
-        return dataset;
-    }
-
-    /**
-     * Returns a bubble chart of the provided data set.
-     *
-     * @param dataset the data set to plot
-     * @param usePpm if true ppm is used when plotting, otherwise Dalton is used
-     * @param addLegend if true the legend is visible
-     * @return the created chart
-     */
-    private JFreeChart getBubbleChart(DefaultXYZDataset dataset, boolean usePpm, boolean addLegend) {
-
-        String yAxisLabel = "Mass Error (Da)";
-
-        if (usePpm) {
-            yAxisLabel = "Mass Error (ppm)";
-        }
-
-        JFreeChart chart = ChartFactory.createBubbleChart(
-                null, // title
-                "m/z-value", // xAxisLabel
-                yAxisLabel, // yAxisLabel
-                dataset, // XYZDataset
-                PlotOrientation.VERTICAL, // orientation
-                true, // legend
-                true, // tooltips
-                false); // urls
-
-        XYPlot plot = chart.getXYPlot();
-        plot.setForegroundAlpha(0.5f);
-        plot.setBackgroundPaint(Color.WHITE);
-        plot.setDomainGridlinePaint(Color.BLACK);
-        plot.setRangeGridlinePaint(Color.BLACK);
-
-        //plot.setRenderer(new XYBubbleRenderer(XYBubbleRenderer.SCALE_ON_BOTH_AXES));
-
-        NumberAxis xAxis = (NumberAxis) plot.getDomainAxis();
-        xAxis.setLabelFont(new Font("SansSerif", Font.PLAIN, 10));
-        xAxis.setTickLabelFont(new Font("SansSerif", Font.PLAIN, 10));
-
-        NumberAxis yAxis = (NumberAxis) plot.getRangeAxis();
-        yAxis.setLabelFont(new Font("SansSerif", Font.PLAIN, 10));
-        yAxis.setTickLabelFont(new Font("SansSerif", Font.PLAIN, 10));
-
-        chart.setBackgroundPaint(new Color(225, 225, 225));
-        chart.getLegend().setItemFont(new Font("SansSerif", Font.PLAIN, 10));
-
-        if (!addLegend) {
-            chart.removeLegend();
-        }
-
-        return chart;
-    }
 
     /**
      * Extract the fragment ion for the given spectrum id from the fragmentIons text file.
@@ -4258,18 +3529,6 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         }
 
         return currentFragmentIons;
-    }
-
-    /**
-     * Parse the selected PKL file.
-     *
-     * @param aPklFile the file to parse
-     * @return the parsed PKL file as an PKLFile object
-     * @throws IOException
-     */
-    private PKLFile parsePKLFile(File aPklFile) throws IOException {
-        PKLFile pklFile = new PKLFile(aPklFile);
-        return pklFile;
     }
 
     /**
@@ -5698,7 +4957,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                 int fragmentIonNumber = (int) currentFragmentIon.getFragmentionnumber();
                 String ionName = currentFragmentIon.getIonname();
 
-                Color currentColor = determineColorOfPeak(ionName);
+                Color currentColor = Util.determineColorOfPeak(ionName);
 
                 if (ionName.startsWith("a") || ionName.startsWith("b") || ionName.startsWith("c") ||
                         ionName.startsWith("x") || ionName.startsWith("y") || ionName.startsWith("z")) {
@@ -5770,7 +5029,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
             String ionName = currentFragmentIon.getFragmentIonType();
 
-            Color currentColor = determineColorOfPeak(ionName);
+            Color currentColor = Util.determineColorOfPeak(ionName);
 
             currentAnnotations.add(new DefaultSpectrumAnnotation(
                     currentFragmentIon.getFragmenIonMz().doubleValue(),
@@ -5784,84 +5043,6 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         properties.getLinkedSpectrumPanels().put(new Integer(internalFrameUniqueIdCounter), spectrumPanel);
 
         return spectrumPanel;
-    }
-
-    /**
-     * Returns the peak color to be used for the given peak label. The
-     * colors used are based on the color coding used in MascotDatfile.
-     *
-     * @param peakLabel
-     * @return the peak color
-     */
-    private Color determineColorOfPeak(String peakLabel) {
-
-        Color currentColor = Color.GRAY;
-
-        if (peakLabel.startsWith("a")) {
-
-            //turquoise
-            currentColor = new Color(153, 0, 0);
-
-            if (peakLabel.lastIndexOf("H2O") != -1 || peakLabel.lastIndexOf("H20") != -1) {
-                //light purple-blue
-                currentColor = new Color(171, 161, 255);
-            } else if (peakLabel.lastIndexOf("NH3") != -1) {
-                //ugly purple pink
-                currentColor = new Color(248, 151, 202);
-            }
-
-        } else if (peakLabel.startsWith("b")) {
-
-            //dark blue
-            currentColor = new Color(0, 0, 255);
-
-            if (peakLabel.lastIndexOf("H2O") != -1 || peakLabel.lastIndexOf("H20") != -1) {
-                //nice blue
-                currentColor = new Color(0, 125, 200);
-            } else if (peakLabel.lastIndexOf("NH3") != -1) {
-                //another purple
-                currentColor = new Color(153, 0, 255);
-            }
-
-        } else if (peakLabel.startsWith("c")) {
-
-            //purple blue
-            currentColor = new Color(188, 0, 255); // ToDo: no colors for H2O and NH3??
-
-        } else if (peakLabel.startsWith("x")) {
-
-            //green
-            currentColor = new Color(78, 200, 0); // ToDo: no colors for H2O and NH3??
-
-        } else if (peakLabel.startsWith("y")) {
-
-            //black
-            currentColor = new Color(0, 0, 0);
-
-            if (peakLabel.lastIndexOf("H2O") != -1 || peakLabel.lastIndexOf("H20") != -1) {
-                //navy blue
-                currentColor = new Color(0, 70, 135);
-            } else if (peakLabel.lastIndexOf("NH3") != -1) {
-                //another purple
-                currentColor = new Color(155, 0, 155);
-            }
-
-        } else if (peakLabel.startsWith("z")) {
-
-            //dark green
-            currentColor = new Color(64, 179, 0); // ToDo: no colors for H2O and NH3??
-
-        } else if (peakLabel.startsWith("Prec")) { // precursor
-
-            //red
-            currentColor = Color.gray; // Color.red is used in MascotDatFile
-
-        } else if (peakLabel.startsWith("i")) { // immonimum ion
-            //grey
-            currentColor = Color.gray;
-        }
-
-        return currentColor;
     }
 
     /**
@@ -6079,9 +5260,10 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                             ReducedIdentification currentIdentification = new ReducedIdentification(currentLine, true);
 
                             // store a list of all found charges, instruments, terminals and modifications
-                            storeCharge(currentIdentification.getCharge().toString());
-                            storeInstrument(currentIdentification.getInstrumentName());
-                            extractUnmodifiedSequenceAndModifications(currentIdentification.getModifiedSequence(), true, false);
+                            Util.storeCharge(currentIdentification.getCharge().toString(), properties);
+                            Util.storeInstrument(currentIdentification.getInstrumentName(), properties);
+                            Util.extractUnmodifiedSequenceAndModifications(
+                                    currentIdentification.getModifiedSequence(), true, false, properties);
 
                             //identifications.put(currentIdentification.getIdentificationId(), currentIdentification);
                             progressDialog.setValue(progressCounter++);
@@ -6358,135 +5540,6 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         }
 
         comboBox.setModel(new DefaultComboBoxModel(tempInstruments));
-    }
-
-    /**
-     * Update the list of currently used charges.
-     *
-     * @param charge current charge
-     */
-    public void storeCharge(String charge) {
-        if (!properties.getExtractedCharges().containsKey(charge)) {
-            properties.getExtractedCharges().put(charge, 1);
-        } else {
-            properties.getExtractedCharges().put(charge, properties.getExtractedCharges().get(charge).intValue() + 1);
-        }
-    }
-
-    /**
-     * Update the list of currently used instruments.
-     *
-     * @param instrument current instrument
-     */
-    public void storeInstrument(String instrument) {
-        if (!properties.getExtractedInstruments().containsKey(instrument)) {
-            properties.getExtractedInstruments().put(instrument, 1);
-        } else {
-            properties.getExtractedInstruments().put(instrument,
-                    properties.getExtractedInstruments().get(instrument).intValue() + 1);
-        }
-    }
-
-    /**
-     * Extract the unmodified sequence from the modified sequence. E.g. 'ARMR' from 'NH2-ARTM<Mox>R-COOH'.
-     *
-     * @param modifiedSequence the modified sequence
-     * @param extractSequenceProperties if true the terminals and modifications are stored
-     * @param combineFixedAndVariableMods if true the fixed and variable modifications are combined into one modification
-     * @return the extracted unmodified sequence
-     */
-    public String extractUnmodifiedSequenceAndModifications(
-            String modifiedSequence, boolean extractSequenceProperties, boolean combineFixedAndVariableMods) {
-
-        // colapses fixed and variable modificattions into one modification
-        // For example, <Mox> and <Mox*> becomes <Mox>
-
-        String unmodifiedSequence = modifiedSequence;
-        String currentModification;
-
-        // n-term modification
-        if (unmodifiedSequence.startsWith("#")) {
-            currentModification = unmodifiedSequence.substring(0, unmodifiedSequence.indexOf("#", 1) + 2);
-            unmodifiedSequence = unmodifiedSequence.substring(unmodifiedSequence.indexOf("#", 1) + 2);
-        } else {
-            currentModification = unmodifiedSequence.substring(0, unmodifiedSequence.indexOf("-") + 1);
-            unmodifiedSequence = unmodifiedSequence.substring(unmodifiedSequence.indexOf("-") + 1);
-        }
-
-        if (extractSequenceProperties) {
-
-            if (currentModification.endsWith("*-") && combineFixedAndVariableMods) {
-                currentModification = currentModification.substring(0, currentModification.length() - 2) + "-";
-            }
-
-            if (!properties.getExtractedNTermModifications().containsKey(currentModification)) {
-                properties.getExtractedNTermModifications().put(currentModification, 1);
-            } else {
-                properties.getExtractedNTermModifications().put(currentModification,
-                        properties.getExtractedNTermModifications().get(currentModification) + 1);
-            }
-        }
-
-        // c-term modification
-        if (unmodifiedSequence.endsWith("#")) {
-            String temp = unmodifiedSequence.substring(0, unmodifiedSequence.length() - 1);
-            currentModification = unmodifiedSequence.substring(temp.lastIndexOf("#") - 1);
-            unmodifiedSequence = unmodifiedSequence.substring(0, temp.lastIndexOf("#") - 1);
-        } else {
-            currentModification = unmodifiedSequence.substring(unmodifiedSequence.lastIndexOf("-"));
-            unmodifiedSequence = unmodifiedSequence.substring(0, unmodifiedSequence.lastIndexOf("-"));
-        }
-
-        if (extractSequenceProperties) {
-
-            if (currentModification.endsWith("*") && combineFixedAndVariableMods) {
-                currentModification = currentModification.substring(0, currentModification.length() - 1);
-            }
-
-            if (!properties.getExtractedCTermModifications().containsKey(currentModification)) {
-                properties.getExtractedCTermModifications().put(currentModification, 1);
-            } else {
-                properties.getExtractedCTermModifications().put(currentModification,
-                        properties.getExtractedCTermModifications().get(currentModification) + 1);
-            }
-        }
-
-
-        // internal modification
-
-        Matcher matcher = properties.getPattern().matcher(unmodifiedSequence);
-
-        while (matcher.find()) {
-
-            currentModification = matcher.group();
-
-            unmodifiedSequence =
-                    unmodifiedSequence.substring(0, matcher.start()) +
-                    unmodifiedSequence.substring(matcher.end());
-
-            matcher = properties.getPattern().matcher(unmodifiedSequence);
-
-            //remove '<' and '>'
-//                currentModification =
-//                        currentModification.substring(1,
-//                        currentModification.length() - 1);
-
-            if (extractSequenceProperties) {
-
-                if (currentModification.endsWith("*>") && combineFixedAndVariableMods) {
-                    currentModification = currentModification.substring(0, currentModification.length() - 2) + ">";
-                }
-
-                if (!properties.getExtractedInternalModifications().containsKey(currentModification)) {
-                    properties.getExtractedInternalModifications().put(currentModification, 1);
-                } else {
-                    properties.getExtractedInternalModifications().put(currentModification,
-                            properties.getExtractedInternalModifications().get(currentModification) + 1);
-                }
-            }
-        }
-
-        return unmodifiedSequence;
     }
 
     /**
