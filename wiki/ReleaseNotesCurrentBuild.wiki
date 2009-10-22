@@ -2,5 +2,6 @@
 
 ----
 
+ * NEW FEATURE: Resizing of the main frame is now supported.
  * NEW FEATURE: The total number of fragment ions is now shown in the title bar of some of the mass error plots.
  * FEATURE IMPROVEMENT: If the ms_lims connection goes down, it is now possible to reconnect without having to reload the dataset. 
