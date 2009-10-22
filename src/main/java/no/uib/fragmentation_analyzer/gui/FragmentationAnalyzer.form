@@ -280,7 +280,7 @@
           <Group type="102" alignment="0" attributes="0">
               <Component id="searchSettingsJScrollPane" min="-2" pref="384" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
-              <Component id="resultsJScrollPane" pref="870" max="32767" attributes="0"/>
+              <Component id="resultsJScrollPane" pref="846" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -892,15 +892,15 @@
                     <DimensionLayout dim="0">
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="1" attributes="0">
-                              <Component id="searchResultsJComboBox" pref="310" max="32767" attributes="0"/>
+                              <Component id="searchResultsJComboBox" pref="298" max="32767" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="daOrPpmSearchResultsJComboBox" linkSize="4" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="combineSearchResultsJComboBox" linkSize="4" min="-2" max="-2" attributes="0"/>
                               <EmptySpace min="-2" pref="46" max="-2" attributes="0"/>
-                              <Component id="searchResultsJButton" pref="311" max="32767" attributes="0"/>
+                              <Component id="searchResultsJButton" pref="299" max="32767" attributes="0"/>
                           </Group>
-                          <Component id="searchResultsJScrollPane" alignment="1" pref="811" max="32767" attributes="2"/>
+                          <Component id="searchResultsJScrollPane" alignment="1" pref="787" max="32767" attributes="2"/>
                       </Group>
                     </DimensionLayout>
                     <DimensionLayout dim="1">
@@ -1032,15 +1032,15 @@
                     <DimensionLayout dim="0">
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
-                              <Component id="spectraJComboBox" pref="309" max="32767" attributes="0"/>
+                              <Component id="spectraJComboBox" pref="297" max="32767" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="daOrPpmSpectraJComboBox" min="-2" pref="65" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="combineSpectraJComboBox" min="-2" max="-2" attributes="0"/>
                               <EmptySpace min="-2" pref="50" max="-2" attributes="0"/>
-                              <Component id="spectraJButton" pref="309" max="32767" attributes="0"/>
+                              <Component id="spectraJButton" pref="297" max="32767" attributes="0"/>
                           </Group>
-                          <Component id="spectraJScrollPane" alignment="0" pref="811" max="32767" attributes="2"/>
+                          <Component id="spectraJScrollPane" alignment="0" pref="787" max="32767" attributes="2"/>
                       </Group>
                     </DimensionLayout>
                     <DimensionLayout dim="1">

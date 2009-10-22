@@ -1,5 +1,6 @@
 package no.uib.fragmentation_analyzer.util;
 
+import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -7,6 +8,11 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
 
 /**
@@ -111,5 +117,403 @@ public final class Util {
         }
 
         return error;
+    }
+
+    /**
+     * Removes the occurence count from an item in the combobox, e.g., <Mox> (12234) becomes <Mox>.
+     *
+     * @param item the item to remove the count from
+     * @return the item without the occurence count
+     */
+    public static String removeOccurenceCount(String item) {
+
+        if (item.endsWith(")")) {
+            item = item.substring(0, item.lastIndexOf("(") - 1);
+        }
+
+        return item;
+    }
+
+    /**
+     * Returns true if the given identification has the selected charge.
+     *
+     * @param reducedModIdentification
+     * @param charge
+     * @return true of the given identification has the selected charge, false otherwise
+     */
+    public static boolean checkCharge(ReducedIdentification reducedModIdentification, Integer charge) {
+
+        boolean identificationMatch;
+
+        if (reducedModIdentification.getCharge().intValue() == charge.intValue()) {
+            identificationMatch = true;
+            //System.out.println("charge match");
+        } else {
+            identificationMatch = false;
+            //System.out.println("charge does not match!");
+        }
+
+        return identificationMatch;
+    }
+
+    /**
+     * Returns true if the given identification has been identified using one if the provided
+     * instruments.
+     *
+     * @param reducedModIdentification
+     * @param instrument1
+     * @param instrument2
+     * @param instrument3
+     * @return true of the given identification has been identified using one if the provided
+     *         instruments, false otherwise
+     */
+    public static boolean checkInstrument(ReducedIdentification reducedModIdentification, String instrument1,
+            String instrument2, String instrument3) {
+
+        boolean identificationMatch;
+
+        if (instrument1.equalsIgnoreCase("Select All")) {
+            identificationMatch = true;
+        } else {
+            if (reducedModIdentification.getInstrumentName().equalsIgnoreCase(instrument1) ||
+                    reducedModIdentification.getInstrumentName().equalsIgnoreCase(instrument2) ||
+                    reducedModIdentification.getInstrumentName().equalsIgnoreCase(instrument3)) {
+                //System.out.println("instrument match");
+                identificationMatch = true;
+            } else {
+                identificationMatch = false;
+                //System.out.println("instrument does not match!");
+            }
+        }
+
+        return identificationMatch;
+    }
+
+    /**
+     * Returns true if the given identification has the selected terminals.
+     *
+     * @param reducedModIdentification
+     * @param nTerminal
+     * @param cTerminal
+     * @return true of the given identification has the selected terminals, false otherwise
+     */
+    public static boolean checkTerminals(ReducedIdentification reducedModIdentification, String nTerminal, String cTerminal) {
+
+        boolean identificationMatch;
+
+        boolean nTermSelectAll = false;
+        boolean cTermSelectAll = false;
+
+        if (nTerminal.equalsIgnoreCase("Select All")) { // use all n terminals
+            nTermSelectAll = true;
+        }
+
+        if (cTerminal.equalsIgnoreCase("Select All")) { // use all c terminals
+            cTermSelectAll = true;
+        }
+
+        if ((reducedModIdentification.getNTerminal().equalsIgnoreCase(nTerminal) || nTermSelectAll) &&
+                (reducedModIdentification.getCTerminal().equalsIgnoreCase(cTerminal) || cTermSelectAll)) {
+            identificationMatch = true;
+            //System.out.println("terminals match");
+        } else {
+            identificationMatch = false;
+            //System.out.println("terminals does not match!");
+        }
+
+        return identificationMatch;
+    }
+
+    /**
+     * Returns true if the given identification contains the selected modifications.
+     *
+     * @param reducedModIdentification
+     * @param modification1
+     * @param modification2
+     * @param modification3
+     * @param oneModificationOnly
+     * @return true if the given identification contains the selected modifications, false otherwise
+     */
+    public static boolean checkModifications(ReducedIdentification reducedIdentification,
+            String modification1, String modification2, String modification3, boolean oneModificationOnly,
+            Pattern pattern) {
+
+        boolean identificationMatch = true;
+
+        if (modification1.equalsIgnoreCase(" - Select - ")) { // no modifications selected
+            identificationMatch = true;
+            //System.out.println("mods match");
+        } else {
+            ArrayList<String> tempMods = reducedIdentification.getInternalModifications(pattern);
+
+            if (oneModificationOnly) {
+                identificationMatch = (tempMods.size() == 1);
+            }
+
+            if (identificationMatch &&
+                    tempMods.contains(modification1) ||
+                    tempMods.contains(modification2) ||
+                    tempMods.contains(modification3)) {
+                identificationMatch = true;
+                //System.out.println("mods match");
+            } else {
+                identificationMatch = false;
+                //System.out.println("mods does not match!");
+            }
+        }
+
+        return identificationMatch;
+    }
+
+    /**
+     * Returns the ppm value of the given mass error relative to its
+     * theoretical m/z value.
+     *
+     * @param theoreticalMzValue the theoretical mass
+     * @param massError the mass error
+     * @return the mass error as a ppm value relative to the theoretical mass
+     */
+    public static double getPpmError(double theoreticalMzValue, double massError) {
+        double ppmValue = (massError / theoreticalMzValue) * 1000000;
+        return ppmValue;
+    }
+
+    /**
+     * Returns the total number of data points in the given data set.
+     *
+     * @param data
+     * @return the total number of data points in the given data set
+     */
+    public static int getTotalFragmentIonCount(HashMap<String, ArrayList<XYZDataPoint>> data) {
+
+        int count = 0;
+
+        Iterator<String> iterator = data.keySet().iterator();
+
+        while (iterator.hasNext()) {
+            count += data.get(iterator.next()).size();
+        }
+
+        return count;
+    }
+
+    /**
+     * Parse the selected PKL file.
+     *
+     * @param aPklFile the file to parse
+     * @return the parsed PKL file as an PKLFile object
+     * @throws IOException
+     */
+    public static PKLFile parsePKLFile(File aPklFile) throws IOException {
+        PKLFile pklFile = new PKLFile(aPklFile);
+        return pklFile;
+    }
+
+    /**
+     * Returns the peak color to be used for the given peak label. The
+     * colors used are based on the color coding used in MascotDatfile.
+     *
+     * @param peakLabel
+     * @return the peak color
+     */
+    public static Color determineColorOfPeak(String peakLabel) {
+
+        Color currentColor = Color.GRAY;
+
+        if (peakLabel.startsWith("a")) {
+
+            //turquoise
+            currentColor = new Color(153, 0, 0);
+
+            if (peakLabel.lastIndexOf("H2O") != -1 || peakLabel.lastIndexOf("H20") != -1) {
+                //light purple-blue
+                currentColor = new Color(171, 161, 255);
+            } else if (peakLabel.lastIndexOf("NH3") != -1) {
+                //ugly purple pink
+                currentColor = new Color(248, 151, 202);
+            }
+
+        } else if (peakLabel.startsWith("b")) {
+
+            //dark blue
+            currentColor = new Color(0, 0, 255);
+
+            if (peakLabel.lastIndexOf("H2O") != -1 || peakLabel.lastIndexOf("H20") != -1) {
+                //nice blue
+                currentColor = new Color(0, 125, 200);
+            } else if (peakLabel.lastIndexOf("NH3") != -1) {
+                //another purple
+                currentColor = new Color(153, 0, 255);
+            }
+
+        } else if (peakLabel.startsWith("c")) {
+
+            //purple blue
+            currentColor = new Color(188, 0, 255); // ToDo: no colors for H2O and NH3??
+
+        } else if (peakLabel.startsWith("x")) {
+
+            //green
+            currentColor = new Color(78, 200, 0); // ToDo: no colors for H2O and NH3??
+
+        } else if (peakLabel.startsWith("y")) {
+
+            //black
+            currentColor = new Color(0, 0, 0);
+
+            if (peakLabel.lastIndexOf("H2O") != -1 || peakLabel.lastIndexOf("H20") != -1) {
+                //navy blue
+                currentColor = new Color(0, 70, 135);
+            } else if (peakLabel.lastIndexOf("NH3") != -1) {
+                //another purple
+                currentColor = new Color(155, 0, 155);
+            }
+
+        } else if (peakLabel.startsWith("z")) {
+
+            //dark green
+            currentColor = new Color(64, 179, 0); // ToDo: no colors for H2O and NH3??
+
+        } else if (peakLabel.startsWith("Prec")) { // precursor
+
+            //red
+            currentColor = Color.gray; // Color.red is used in MascotDatFile
+
+        } else if (peakLabel.startsWith("i")) { // immonimum ion
+            //grey
+            currentColor = Color.gray;
+        }
+
+        return currentColor;
+    }
+
+    /**
+     * Extract the unmodified sequence from the modified sequence. E.g. 'ARMR' from 'NH2-ARTM<Mox>R-COOH'.
+     *
+     * @param modifiedSequence the modified sequence
+     * @param extractSequenceProperties if true the terminals and modifications are stored
+     * @param combineFixedAndVariableMods if true the fixed and variable modifications are combined into one modification
+     * @return the extracted unmodified sequence
+     */
+    public static String extractUnmodifiedSequenceAndModifications(
+            String modifiedSequence, boolean extractSequenceProperties, boolean combineFixedAndVariableMods,
+            Properties properties) {
+
+        // colapses fixed and variable modificattions into one modification
+        // For example, <Mox> and <Mox*> becomes <Mox>
+
+        String unmodifiedSequence = modifiedSequence;
+        String currentModification;
+
+        // n-term modification
+        if (unmodifiedSequence.startsWith("#")) {
+            currentModification = unmodifiedSequence.substring(0, unmodifiedSequence.indexOf("#", 1) + 2);
+            unmodifiedSequence = unmodifiedSequence.substring(unmodifiedSequence.indexOf("#", 1) + 2);
+        } else {
+            currentModification = unmodifiedSequence.substring(0, unmodifiedSequence.indexOf("-") + 1);
+            unmodifiedSequence = unmodifiedSequence.substring(unmodifiedSequence.indexOf("-") + 1);
+        }
+
+        if (extractSequenceProperties) {
+
+            if (currentModification.endsWith("*-") && combineFixedAndVariableMods) {
+                currentModification = currentModification.substring(0, currentModification.length() - 2) + "-";
+            }
+
+            if (!properties.getExtractedNTermModifications().containsKey(currentModification)) {
+                properties.getExtractedNTermModifications().put(currentModification, 1);
+            } else {
+                properties.getExtractedNTermModifications().put(currentModification,
+                        properties.getExtractedNTermModifications().get(currentModification) + 1);
+            }
+        }
+
+        // c-term modification
+        if (unmodifiedSequence.endsWith("#")) {
+            String temp = unmodifiedSequence.substring(0, unmodifiedSequence.length() - 1);
+            currentModification = unmodifiedSequence.substring(temp.lastIndexOf("#") - 1);
+            unmodifiedSequence = unmodifiedSequence.substring(0, temp.lastIndexOf("#") - 1);
+        } else {
+            currentModification = unmodifiedSequence.substring(unmodifiedSequence.lastIndexOf("-"));
+            unmodifiedSequence = unmodifiedSequence.substring(0, unmodifiedSequence.lastIndexOf("-"));
+        }
+
+        if (extractSequenceProperties) {
+
+            if (currentModification.endsWith("*") && combineFixedAndVariableMods) {
+                currentModification = currentModification.substring(0, currentModification.length() - 1);
+            }
+
+            if (!properties.getExtractedCTermModifications().containsKey(currentModification)) {
+                properties.getExtractedCTermModifications().put(currentModification, 1);
+            } else {
+                properties.getExtractedCTermModifications().put(currentModification,
+                        properties.getExtractedCTermModifications().get(currentModification) + 1);
+            }
+        }
+
+
+        // internal modification
+
+        Matcher matcher = properties.getPattern().matcher(unmodifiedSequence);
+
+        while (matcher.find()) {
+
+            currentModification = matcher.group();
+
+            unmodifiedSequence =
+                    unmodifiedSequence.substring(0, matcher.start()) +
+                    unmodifiedSequence.substring(matcher.end());
+
+            matcher = properties.getPattern().matcher(unmodifiedSequence);
+
+            //remove '<' and '>'
+//                currentModification =
+//                        currentModification.substring(1,
+//                        currentModification.length() - 1);
+
+            if (extractSequenceProperties) {
+
+                if (currentModification.endsWith("*>") && combineFixedAndVariableMods) {
+                    currentModification = currentModification.substring(0, currentModification.length() - 2) + ">";
+                }
+
+                if (!properties.getExtractedInternalModifications().containsKey(currentModification)) {
+                    properties.getExtractedInternalModifications().put(currentModification, 1);
+                } else {
+                    properties.getExtractedInternalModifications().put(currentModification,
+                            properties.getExtractedInternalModifications().get(currentModification) + 1);
+                }
+            }
+        }
+
+        return unmodifiedSequence;
+    }
+
+    /**
+     * Update the list of currently used charges.
+     *
+     * @param charge current charge
+     */
+    public static void storeCharge(String charge, Properties properties) {
+        if (!properties.getExtractedCharges().containsKey(charge)) {
+            properties.getExtractedCharges().put(charge, 1);
+        } else {
+            properties.getExtractedCharges().put(charge, properties.getExtractedCharges().get(charge).intValue() + 1);
+        }
+    }
+
+    /**
+     * Update the list of currently used instruments.
+     *
+     * @param instrument current instrument
+     */
+    public static void storeInstrument(String instrument, Properties properties) {
+        if (!properties.getExtractedInstruments().containsKey(instrument)) {
+            properties.getExtractedInstruments().put(instrument, 1);
+        } else {
+            properties.getExtractedInstruments().put(instrument,
+                    properties.getExtractedInstruments().get(instrument).intValue() + 1);
+        }
     }
 }
