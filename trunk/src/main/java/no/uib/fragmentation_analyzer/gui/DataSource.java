@@ -1527,15 +1527,6 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
                 fragmentationAnalyzer.getUserProperties().setSchema(schema);
                 fragmentationAnalyzer.getUserProperties().saveUserPropertiesToFile();
 
-                JOptionPane.showMessageDialog(this,
-                        "This data set was extracted from an ms_lims database:\n\n" +
-                        "Username: " + userName + "\n" +
-                        "Serverhost: " + serverHost + "\n" +
-                        "Schema: " + schema + "\n" +
-                        "Date: " + date + "\n\n" +
-                        "Log on to this database (in next step) before continuing.",
-                        "ms_lims Dataset", JOptionPane.INFORMATION_MESSAGE);
-
                 new DatabaseDialog(this, fragmentationAnalyzer, true, false);
 
                 // check if connection was made
