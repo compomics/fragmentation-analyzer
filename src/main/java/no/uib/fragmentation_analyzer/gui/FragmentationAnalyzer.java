@@ -37,6 +37,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -2994,13 +2995,17 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
                                     String internalFrameTitle = "Mass Error Plot";
 
+                                    int fragmentIonCount = getTotalFragmentIonCount(data);
+
                                     if (singleSearch) {
                                         internalFrameTitle = currentModifiedSequence +
-                                                " (" + currentlySelectedRow.getCountA() + ")";
+                                                " (" + currentlySelectedRow.getCountA() 
+                                                + ", dp: " + fragmentIonCount + ")";
                                     } else {
                                         internalFrameTitle = currentModifiedSequence +
                                                 " (" + currentlySelectedRow.getCountA() + " u/" +
-                                                currentlySelectedRow.getCountB() + " m)";
+                                                currentlySelectedRow.getCountB() + " m"
+                                                + ", dp: " + fragmentIonCount + ")";
                                     }
 
                                     insertMassErrorPlot(isBubblePlot, data, internalFrameTitle,
@@ -3031,15 +3036,19 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
                             String internalFrameTitle = "Mass Error Plot";
 
+                            int fragmentIonCount = getTotalFragmentIonCount(data);
+
                             if (properties.getCurrentlySelectedRowsInSearchTable().size() == 1) {
 
                                 if (singleSearch) {
                                     internalFrameTitle = properties.getCurrentlySelectedRowsInSearchTable().get(0).getModifiedSequence() +
-                                            " (" + properties.getCurrentlySelectedRowsInSearchTable().get(0).getCountA() + ")";
+                                            " (" + properties.getCurrentlySelectedRowsInSearchTable().get(0).getCountA()
+                                            + ", dp: " + fragmentIonCount + ")";
                                 } else {
                                     internalFrameTitle = properties.getCurrentlySelectedRowsInSearchTable().get(0).getModifiedSequence() +
                                             " (" + properties.getCurrentlySelectedRowsInSearchTable().get(0).getCountA() + " u/" +
-                                            properties.getCurrentlySelectedRowsInSearchTable().get(0).getCountB() + " m)";
+                                            properties.getCurrentlySelectedRowsInSearchTable().get(0).getCountB() + " m"
+                                            + ", dp: " + fragmentIonCount + ")";
                                 }
                             }
 
@@ -3373,7 +3382,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         if (currentDataSetIsFromMsLims) {
 
             Vector<Fragmention> fragmentIons = (Vector<Fragmention>) Fragmention.getAllFragmentions(
-                    conn, (long) currentIdentification.getIdentificationId());
+                    getConnection(), (long) currentIdentification.getIdentificationId());
 
             for (int j = 0; j < fragmentIons.size(); j++) {
 
@@ -3641,7 +3650,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
             throws SQLException {
 
         Collection fragments =
-                Fragmention.getAllFragmentions(conn, currentId.getIdentificationId(), ionType);
+                Fragmention.getAllFragmentions(getConnection(), currentId.getIdentificationId(), ionType);
 
         Iterator fragmentIterator = fragments.iterator();
 
@@ -3711,12 +3720,12 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
      * @param spectrumFileId
      * @return the total intensity of the selected spectrum
      */
-    public static Double calculateTotalIntensityForMsLimsSpectrum(Integer spectrumFileId) {
+    public Double calculateTotalIntensityForMsLimsSpectrum(Integer spectrumFileId) {
 
         Double totalIntensity = 0.0;
 
         try {
-            Spectrumfile spectrumFile = Spectrumfile.findFromID(spectrumFileId, conn);
+            Spectrumfile spectrumFile = Spectrumfile.findFromID(spectrumFileId, getConnection());
             String filename = spectrumFile.getFilename();
             String file = new String(spectrumFile.getUnzippedFile());
             MascotGenericFile lSpectrumFile = new MascotGenericFile(filename, file);
@@ -3844,8 +3853,8 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
                                 try {
                                     // TODO could be replaced by a select that only extracts the file
-                                    Spectrumfile spectrumFile = Spectrumfile.findFromID((long) currentSpectrumId, conn);
-                                    Vector<Fragmention> fragmentIons = (Vector<Fragmention>) Fragmention.getAllFragmentions(conn, (long) currentId);
+                                    Spectrumfile spectrumFile = Spectrumfile.findFromID((long) currentSpectrumId, getConnection());
+                                    Vector<Fragmention> fragmentIons = (Vector<Fragmention>) Fragmention.getAllFragmentions(getConnection(), (long) currentId);
 
                                     FragmentationAnalyzerJInternalFrame internalFrame = new FragmentationAnalyzerJInternalFrame(
                                             internalFrameTitle, true, true, true, null, "SpectrumPanel", internalFrameUniqueIdCounter);
@@ -3951,8 +3960,11 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                 // if not combine create plot
                                 if (combineSpectraJComboBox.getSelectedIndex() == 0) {
 
+                                    int fragmentIonCount = getTotalFragmentIonCount(data);
+
                                     String internalFrameTitle = currentIdentification.getModifiedSequence() +
-                                            " (SID: " + currentIdentification.getSpectrumFileId() + ")";
+                                            " (SID: " + currentIdentification.getSpectrumFileId() 
+                                            + ", dp:" + fragmentIonCount + ")";
 
                                     insertMassErrorPlot(isBubblePlot, data, internalFrameTitle,
                                             daOrPpmSpectraJComboBox.getSelectedIndex() == 1);
@@ -3982,9 +3994,12 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
                             String internalFrameTitle = "Mass Error Plot";
 
+                            int fragmentIonCount = getTotalFragmentIonCount(data);
+
                             if (properties.getCurrentlySelectedRowsInSpectraTable().size() == 1 || allPlotsHaveSameSequence) {
                                 internalFrameTitle = properties.getCurrentlySelectedRowsInSpectraTable().get(0).getModifiedSequence()
-                                        + " (" + properties.getCurrentlySelectedRowsInSpectraTable().size() + ")";
+                                        + " (" + properties.getCurrentlySelectedRowsInSpectraTable().size() 
+                                        + " spectra, dp: " + fragmentIonCount + ")";
                             }
 
                             insertMassErrorPlot(isBubblePlot, data, internalFrameTitle,
@@ -3998,6 +4013,25 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
             }.start();
         }
     }//GEN-LAST:event_spectraJButtonActionPerformed
+
+    /**
+     * Returns the total number of data points in the given data set.
+     * 
+     * @param data
+     * @return the total number of data points in the given data set
+     */
+    private int getTotalFragmentIonCount(HashMap<String, ArrayList<XYZDataPoint>> data){
+
+        int count = 0;
+
+        Iterator<String> iterator = data.keySet().iterator();
+
+        while (iterator.hasNext()) {
+            count += data.get(iterator.next()).size();
+        }
+
+        return count;
+    }
 
     /**
      * Adds the provided data series to an XYZ data set.
@@ -6424,15 +6458,6 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
     }
 
     /**
-     * Returns true if a database connection is available.
-     *
-     * @return true if a database connection is available
-     */
-    public boolean isConnectedToDatabase() {
-        return (conn != null);
-    }
-
-    /**
      * Tries to connect to the ms_lims database. Returns true if connection was successfull.
      * Note: only works for ms_lims 7 and newer.
      *
@@ -6528,6 +6553,34 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
      * @return the ms_lims database connection
      */
     public Connection getConnection() {
+
+        if(conn != null){
+
+            int value = JOptionPane.OK_OPTION;
+
+            while(value != JOptionPane.CANCEL_OPTION){
+
+                // verify that the connection is still alive. if not, open a new connection
+                try{
+                    Statement s = conn.createStatement();
+                    s.execute("show columns in spectrumfile");
+                    
+                    // get out of the while loop
+                    value = JOptionPane.CANCEL_OPTION;
+                } catch(SQLException e){
+
+                    conn = null;
+
+                    value = JOptionPane.showConfirmDialog(this, "Database connection is no longer available. Please reconnect.",
+                            "Database Connection Failure", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+
+                    if(value == JOptionPane.OK_OPTION){
+                        new DatabaseDialog(this, true);
+                    }
+                }
+            }
+        }
+
         return conn;
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables

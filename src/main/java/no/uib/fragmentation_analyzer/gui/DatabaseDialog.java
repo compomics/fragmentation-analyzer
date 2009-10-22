@@ -53,6 +53,39 @@ public class DatabaseDialog extends javax.swing.JDialog {
         setVisible(true);
     }
 
+    /**
+     * Opens a new DatabaseDialog frame, and inserts stored information.
+     *
+     * @param fragmentationAnalyzer
+     * @param modal
+     * @param extractIdentifications if true the tool starts extracting the identifications after connecting
+     */
+    public DatabaseDialog(FragmentationAnalyzer fragmentationAnalyzer, boolean modal) {
+        super(fragmentationAnalyzer, modal);
+
+        this.fragmentationAnalyzer = fragmentationAnalyzer;
+        this.extractIdentifications = false;
+        dataSourceDialog = null;
+
+        initComponents();
+
+        // insert stored information
+        userNameJTextField.setText(fragmentationAnalyzer.getUserProperties().getUserName());
+        passordJPasswordField.setText(fragmentationAnalyzer.getProperties().getPassWord());
+        serverHostJTextField.setText(fragmentationAnalyzer.getUserProperties().getServerHost());
+        schemaJTextField.setText(fragmentationAnalyzer.getUserProperties().getSchema());
+
+        // see if the next button should be enabled
+        mandatoryFieldsCheck();
+
+        if(userNameJTextField.getText().length() > 0){
+            passordJPasswordField.requestFocus();
+        }
+
+        setLocationRelativeTo(fragmentationAnalyzer);
+        setVisible(true);
+    }
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
