@@ -133,6 +133,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
     private boolean showAverageMassError = false;
     private String searchResultAnalysisButtonDisabledToolTip = "Select at least one row in the Search Results table";
     private String spectraAnalysisButtonDisabledToolTip = "Select at least one row in the Individual Spectra table";
+    private boolean initialSizeHasBeenSet = false;
 
     /**
      * Creates a new FragmentationAnalyzer frame and makes it visible. Then opens
@@ -189,8 +190,6 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
             pack();
         }
 
-
-
         // a try at making the two task panes equal in vertical size on Linux, does not yet work
 //        int newHeight = plotsAndAnalysesJScrollPane.getHeight() + (resultsJScrollPane.getHeight()
 //                - plotsAndAnalysesJScrollPane.getHeight() - 74*2);  // ToDo: remove hardcoding!!
@@ -233,6 +232,8 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
         setLocationRelativeTo(null);
         setVisible(true);
+
+        initialSizeHasBeenSet = true;
 
         plotPaneCurrentPreferredSize = plotsAndAnalysesJScrollPane.getMinimumSize();
 
@@ -599,10 +600,19 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("FragmentationAnalyzer");
-        setResizable(false);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 formWindowClosing(evt);
+            }
+        });
+        addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentResized(java.awt.event.ComponentEvent evt) {
+                formComponentResized(evt);
+            }
+        });
+        addWindowStateListener(new java.awt.event.WindowStateListener() {
+            public void windowStateChanged(java.awt.event.WindowEvent evt) {
+                formWindowStateChanged(evt);
             }
         });
 
@@ -951,9 +961,10 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
         searchResultsJXTaskPane.setTitle("Search Results");
         searchResultsJXTaskPane.setAnimated(false);
+        searchResultsJXTaskPane.getContentPane().setLayout(new javax.swing.BoxLayout(searchResultsJXTaskPane.getContentPane(), javax.swing.BoxLayout.LINE_AXIS));
 
         searchResultJXPanel.setBackground(javax.swing.UIManager.getDefaults().getColor("tab_focus_fill_dark"));
-        searchResultJXPanel.setPreferredSize(new java.awt.Dimension(769, 129));
+        searchResultJXPanel.setPreferredSize(new java.awt.Dimension(0, 233));
 
         searchResultsJButton.setText("Analyze / Plot");
         searchResultsJButton.setToolTipText(searchResultAnalysisButtonDisabledToolTip);
@@ -966,6 +977,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
         searchResultsJComboBox.setMaximumRowCount(12);
         searchResultsJComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { " - Select Analysis Type - ", "List Individual Identifications", "Intensity Box Plot", "Mass Error Scatter Plot", "Mass Error Bubble Plot" }));
+        searchResultsJComboBox.setPreferredSize(new java.awt.Dimension(99, 20));
         searchResultsJComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 searchResultsJComboBoxActionPerformed(evt);
@@ -1017,14 +1029,14 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         searchResultJXPanelLayout.setHorizontalGroup(
             searchResultJXPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(org.jdesktop.layout.GroupLayout.TRAILING, searchResultJXPanelLayout.createSequentialGroup()
-                .add(searchResultsJComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 309, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(searchResultsJComboBox, 0, 310, Short.MAX_VALUE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(daOrPpmSearchResultsJComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(combineSearchResultsJComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 29, Short.MAX_VALUE)
-                .add(searchResultsJButton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 309, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-            .add(searchResultsJScrollPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 791, Short.MAX_VALUE)
+                .add(46, 46, 46)
+                .add(searchResultsJButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 311, Short.MAX_VALUE))
+            .add(org.jdesktop.layout.GroupLayout.TRAILING, searchResultsJScrollPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 811, Short.MAX_VALUE)
         );
 
         searchResultJXPanelLayout.linkSize(new java.awt.Component[] {combineSearchResultsJComboBox, daOrPpmSearchResultsJComboBox}, org.jdesktop.layout.GroupLayout.HORIZONTAL);
@@ -1032,35 +1044,25 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         searchResultJXPanelLayout.setVerticalGroup(
             searchResultJXPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(org.jdesktop.layout.GroupLayout.TRAILING, searchResultJXPanelLayout.createSequentialGroup()
-                .add(searchResultsJScrollPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)
+                .add(searchResultsJScrollPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(searchResultJXPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(searchResultsJComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(searchResultsJButton)
-                    .add(daOrPpmSearchResultsJComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(combineSearchResultsJComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
+                    .add(combineSearchResultsJComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(daOrPpmSearchResultsJComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
         );
 
-        org.jdesktop.layout.GroupLayout searchResultsJXTaskPaneLayout = new org.jdesktop.layout.GroupLayout(searchResultsJXTaskPane.getContentPane());
-        searchResultsJXTaskPane.getContentPane().setLayout(searchResultsJXTaskPaneLayout);
-        searchResultsJXTaskPaneLayout.setHorizontalGroup(
-            searchResultsJXTaskPaneLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(searchResultsJXTaskPaneLayout.createSequentialGroup()
-                .addContainerGap()
-                .add(searchResultJXPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 791, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        searchResultsJXTaskPaneLayout.setVerticalGroup(
-            searchResultsJXTaskPaneLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(searchResultJXPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 234, Short.MAX_VALUE)
-        );
+        searchResultsJXTaskPane.getContentPane().add(searchResultJXPanel);
 
         resultsJXTaskPaneContainer.add(searchResultsJXTaskPane);
 
         spectraJXTaskPane.setTitle("Individual Spectra");
         spectraJXTaskPane.setAnimated(false);
+        spectraJXTaskPane.getContentPane().setLayout(new javax.swing.BoxLayout(spectraJXTaskPane.getContentPane(), javax.swing.BoxLayout.LINE_AXIS));
 
         spectraJXPanel.setBackground(javax.swing.UIManager.getDefaults().getColor("tab_focus_fill_dark"));
+        spectraJXPanel.setPreferredSize(new java.awt.Dimension(0, 233));
 
         spectraJButton.setText("Analyze / Plot");
         spectraJButton.setToolTipText(spectraAnalysisButtonDisabledToolTip);
@@ -1124,19 +1126,19 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         spectraJXPanelLayout.setHorizontalGroup(
             spectraJXPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(spectraJXPanelLayout.createSequentialGroup()
-                .add(spectraJComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 309, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(spectraJComboBox, 0, 309, Short.MAX_VALUE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(daOrPpmSpectraJComboBox, 0, 65, Short.MAX_VALUE)
+                .add(daOrPpmSpectraJComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 65, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(combineSpectraJComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .add(30, 30, 30)
-                .add(spectraJButton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 309, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-            .add(spectraJScrollPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 791, Short.MAX_VALUE)
+                .add(50, 50, 50)
+                .add(spectraJButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 309, Short.MAX_VALUE))
+            .add(spectraJScrollPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 811, Short.MAX_VALUE)
         );
         spectraJXPanelLayout.setVerticalGroup(
             spectraJXPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(org.jdesktop.layout.GroupLayout.TRAILING, spectraJXPanelLayout.createSequentialGroup()
-                .add(spectraJScrollPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)
+                .add(spectraJScrollPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(spectraJXPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(spectraJComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
@@ -1145,19 +1147,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                     .add(combineSpectraJComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
         );
 
-        org.jdesktop.layout.GroupLayout spectraJXTaskPaneLayout = new org.jdesktop.layout.GroupLayout(spectraJXTaskPane.getContentPane());
-        spectraJXTaskPane.getContentPane().setLayout(spectraJXTaskPaneLayout);
-        spectraJXTaskPaneLayout.setHorizontalGroup(
-            spectraJXTaskPaneLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(spectraJXTaskPaneLayout.createSequentialGroup()
-                .addContainerGap()
-                .add(spectraJXPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        spectraJXTaskPaneLayout.setVerticalGroup(
-            spectraJXTaskPaneLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(spectraJXPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
+        spectraJXTaskPane.getContentPane().add(spectraJXPanel);
 
         resultsJXTaskPaneContainer.add(spectraJXTaskPane);
 
@@ -1168,10 +1158,11 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                 plotsAnalysesJXTaskPaneMouseClicked(evt);
             }
         });
+        plotsAnalysesJXTaskPane.getContentPane().setLayout(new javax.swing.BoxLayout(plotsAnalysesJXTaskPane.getContentPane(), javax.swing.BoxLayout.LINE_AXIS));
 
         plotsAndAnalysesJScrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        plotsAndAnalysesJScrollPane.setMinimumSize(new java.awt.Dimension(750, 450));
         plotsAndAnalysesJScrollPane.setOpaque(false);
+        plotsAndAnalysesJScrollPane.setPreferredSize(new java.awt.Dimension(0, 487));
 
         plotsAndAnalysesJDesktopPane.setBackground(javax.swing.UIManager.getDefaults().getColor("tab_focus_fill_dark"));
         plotsAndAnalysesJDesktopPane.setDragMode(javax.swing.JDesktopPane.OUTLINE_DRAG_MODE);
@@ -1552,26 +1543,14 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         boxPlotPanelToolBarJInternalFrame.setBounds(660, 70, 100, 240);
         plotsAndAnalysesJDesktopPane.add(boxPlotPanelToolBarJInternalFrame, javax.swing.JLayeredPane.POPUP_LAYER);
 
-        internalFrameTipJLabel.setFont(new java.awt.Font("Tahoma", 2, 10));
+        internalFrameTipJLabel.setFont(new java.awt.Font("Tahoma", 2, 10)); // NOI18N
         internalFrameTipJLabel.setText("Right click in the plot or on the plot title bar for plot options.");
-        internalFrameTipJLabel.setBounds(490, 0, 270, 20);
+        internalFrameTipJLabel.setBounds(30, 0, 270, 20);
         plotsAndAnalysesJDesktopPane.add(internalFrameTipJLabel, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         plotsAndAnalysesJScrollPane.setViewportView(plotsAndAnalysesJDesktopPane);
 
-        org.jdesktop.layout.GroupLayout plotsAnalysesJXTaskPaneLayout = new org.jdesktop.layout.GroupLayout(plotsAnalysesJXTaskPane.getContentPane());
-        plotsAnalysesJXTaskPane.getContentPane().setLayout(plotsAnalysesJXTaskPaneLayout);
-        plotsAnalysesJXTaskPaneLayout.setHorizontalGroup(
-            plotsAnalysesJXTaskPaneLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(org.jdesktop.layout.GroupLayout.TRAILING, plotsAnalysesJXTaskPaneLayout.createSequentialGroup()
-                .addContainerGap()
-                .add(plotsAndAnalysesJScrollPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 791, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        plotsAnalysesJXTaskPaneLayout.setVerticalGroup(
-            plotsAnalysesJXTaskPaneLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(plotsAndAnalysesJScrollPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 487, Short.MAX_VALUE)
-        );
+        plotsAnalysesJXTaskPane.getContentPane().add(plotsAndAnalysesJScrollPane);
 
         resultsJXTaskPaneContainer.add(plotsAnalysesJXTaskPane);
 
@@ -2999,7 +2978,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
                                     if (singleSearch) {
                                         internalFrameTitle = currentModifiedSequence +
-                                                " (" + currentlySelectedRow.getCountA() 
+                                                " (" + currentlySelectedRow.getCountA()
                                                 + ", dp: " + fragmentIonCount + ")";
                                     } else {
                                         internalFrameTitle = currentModifiedSequence +
@@ -3415,7 +3394,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
                         if (currentIdentification.getTotalIntensity() != null) {
                             totalIntensity = currentIdentification.getTotalIntensity();
-                        } else{
+                        } else {
                             if (currentIdentification.getSpectrumFileId() != null) {
                                 totalIntensity = calculateTotalIntensityForMsLimsSpectrum(currentIdentification.getSpectrumFileId());
                             }
@@ -3656,10 +3635,10 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
         double totalIntensity = 1.0;
 
-        if(normalize){
+        if (normalize) {
             if (currentId.getTotalIntensity() != null) {
                 totalIntensity = currentId.getTotalIntensity();
-            } else{
+            } else {
                 if (currentId.getSpectrumFileId() != null) {
                     totalIntensity = calculateTotalIntensityForMsLimsSpectrum(currentId.getSpectrumFileId());
                 }
@@ -3963,7 +3942,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                     int fragmentIonCount = getTotalFragmentIonCount(data);
 
                                     String internalFrameTitle = currentIdentification.getModifiedSequence() +
-                                            " (SID: " + currentIdentification.getSpectrumFileId() 
+                                            " (SID: " + currentIdentification.getSpectrumFileId()
                                             + ", dp:" + fragmentIonCount + ")";
 
                                     insertMassErrorPlot(isBubblePlot, data, internalFrameTitle,
@@ -3997,9 +3976,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                             int fragmentIonCount = getTotalFragmentIonCount(data);
 
                             if (properties.getCurrentlySelectedRowsInSpectraTable().size() == 1 || allPlotsHaveSameSequence) {
-                                internalFrameTitle = properties.getCurrentlySelectedRowsInSpectraTable().get(0).getModifiedSequence()
-                                        + " (" + properties.getCurrentlySelectedRowsInSpectraTable().size() 
-                                        + " spectra, dp: " + fragmentIonCount + ")";
+                                internalFrameTitle = properties.getCurrentlySelectedRowsInSpectraTable().get(0).getModifiedSequence() + " (" + properties.getCurrentlySelectedRowsInSpectraTable().size() + " spectra, dp: " + fragmentIonCount + ")";
                             }
 
                             insertMassErrorPlot(isBubblePlot, data, internalFrameTitle,
@@ -4020,7 +3997,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
      * @param data
      * @return the total number of data points in the given data set
      */
-    private int getTotalFragmentIonCount(HashMap<String, ArrayList<XYZDataPoint>> data){
+    private int getTotalFragmentIonCount(HashMap<String, ArrayList<XYZDataPoint>> data) {
 
         int count = 0;
 
@@ -5300,6 +5277,59 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
     }//GEN-LAST:event_showAverageJMenuItemActionPerformed
 
     /**
+     * Resizes components in relation to the new size of the frame.
+     *
+     * @param evt
+     */
+    private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
+
+        if (initialSizeHasBeenSet) {
+
+            // set the size of the results and spectra table task panes
+            int newHeight = (resultsJScrollPane.getHeight() / 2) - 84; // ToDo: remove hardcoding
+            searchResultJXPanel.setPreferredSize(new Dimension(0, newHeight));
+            spectraJXPanel.setPreferredSize(new Dimension(0, newHeight));
+
+            // set the size of the plot task panes
+            newHeight = resultsJScrollPane.getHeight() - 148; // ToDo: remove hardcoding
+            plotsAndAnalysesJScrollPane.setPreferredSize(new Dimension(0, newHeight));
+
+
+            // move the spectrum and box plot tool bars
+            spectrumPanelToolBarJInternalFrame.setBounds(
+                    (int) plotsAndAnalysesJDesktopPane.getBounds().getWidth() - 100,
+                    (int) spectrumPanelToolBarJInternalFrame.getBounds().getY(),
+                    (int) spectrumPanelToolBarJInternalFrame.getBounds().getWidth(),
+                    (int) spectrumPanelToolBarJInternalFrame.getBounds().getHeight());
+
+            boxPlotPanelToolBarJInternalFrame.setBounds(
+                    (int) plotsAndAnalysesJDesktopPane.getBounds().getWidth() - 120,
+                    (int) boxPlotPanelToolBarJInternalFrame.getBounds().getY(),
+                    (int) boxPlotPanelToolBarJInternalFrame.getBounds().getWidth(),
+                    (int) boxPlotPanelToolBarJInternalFrame.getBounds().getHeight());
+
+
+            repaint();
+
+            // invoke later to give time for components to update
+            SwingUtilities.invokeLater(new Runnable() {
+
+                public void run() {
+                    orderInternalFrames();
+                }
+            });
+        }
+    }//GEN-LAST:event_formComponentResized
+
+    /**
+     * @see #formComponentResized(java.awt.event.ComponentEvent) 
+     */
+    private void formWindowStateChanged(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowStateChanged
+        formComponentResized(null);
+        setVisible(true);
+    }//GEN-LAST:event_formWindowStateChanged
+
+    /**
      * Makes sure that only the selected data series are visible.
      *
      * @param selected
@@ -5338,6 +5368,12 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
 
+        if (properties.getAllInternalFrames().size() <= 4) {
+            plotsAndAnalysesJDesktopPane.setPreferredSize(plotsAndAnalysesJScrollPane.getMinimumSize());
+            plotPaneCurrentPreferredSize = plotsAndAnalysesJDesktopPane.getPreferredSize();
+            plotPaneCurrentScrollValue = 0;
+        }
+
         Iterator<Integer> iterator = properties.getAllInternalFrames().keySet().iterator();
 
         int index = 0;
@@ -5346,11 +5382,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
             setLocationOfInternalFrame(properties.getAllInternalFrames().get(iterator.next()), index++);
         }
 
-        if (properties.getAllInternalFrames().size() <= 4) {
-            plotsAndAnalysesJDesktopPane.setPreferredSize(plotsAndAnalysesJScrollPane.getMinimumSize());
-            plotPaneCurrentPreferredSize = plotsAndAnalysesJDesktopPane.getPreferredSize();
-            plotPaneCurrentScrollValue = 0;
-        }
+        setVisible(true);
 
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     }
@@ -5579,8 +5611,8 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
         int temp = index / numberPerRow;
 
-        int width = 370;  // ToDo: this number should not have to be hardcoded...
-        int height = 220; // ToDo: this number should not have to be hardcoded...
+        int width = (plotsAndAnalysesJScrollPane.getWidth() - spaceBetween*6) / numberPerRow;
+        int height = (plotsAndAnalysesJScrollPane.getHeight() - spaceBetween*5) / numberPerRow;
 
         int xCorr = spaceBetween + (spaceBetween * (index % numberPerRow + 1)) + (index % numberPerRow * width);
         int yCorr = spaceBetween + (height * temp) + (spaceBetween * (temp + 1));
@@ -6554,27 +6586,27 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
      */
     public Connection getConnection() {
 
-        if(conn != null){
+        if (conn != null) {
 
             int value = JOptionPane.OK_OPTION;
 
-            while(value != JOptionPane.CANCEL_OPTION){
+            while (value != JOptionPane.CANCEL_OPTION) {
 
                 // verify that the connection is still alive. if not, open a new connection
-                try{
+                try {
                     Statement s = conn.createStatement();
                     s.execute("show columns in spectrumfile");
-                    
+
                     // get out of the while loop
                     value = JOptionPane.CANCEL_OPTION;
-                } catch(SQLException e){
+                } catch (SQLException e) {
 
                     conn = null;
 
                     value = JOptionPane.showConfirmDialog(this, "Database connection is no longer available. Please reconnect.",
                             "Database Connection Failure", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
 
-                    if(value == JOptionPane.OK_OPTION){
+                    if (value == JOptionPane.OK_OPTION) {
                         new DatabaseDialog(this, true);
                     }
                 }
