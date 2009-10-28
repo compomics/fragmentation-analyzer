@@ -34,6 +34,9 @@ public class PlotLabelSelection extends javax.swing.JDialog {
                 == fragmentationAnalyzer.getProperties().PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE){
             fragmentIonTypeJRadioButton.setSelected(true);
         } else if(fragmentationAnalyzer.getProperties().getCurrentLabelType()
+                == fragmentationAnalyzer.getProperties().PLOT_LABEL_TYPE_IDENTIFICATION_ID){
+            spectrumIdJRadioButton.setSelected(true);
+        } else if(fragmentationAnalyzer.getProperties().getCurrentLabelType()
                 == fragmentationAnalyzer.getProperties().PLOT_LABEL_TYPE_FRAGMENT_ION_SCORING_TYPE){
             if(fragmentIonScoringTypeJRadioButton.isEnabled()){
                 fragmentIonScoringTypeJRadioButton.setSelected(true);
@@ -58,6 +61,7 @@ public class PlotLabelSelection extends javax.swing.JDialog {
     private void enableOkButton(){
         if(instrumentNameJRadioButton.isSelected() ||
                 fragmentIonTypeJRadioButton.isSelected() ||
+                spectrumIdJRadioButton.isSelected() ||
                 fragmentIonScoringTypeJRadioButton.isSelected() ||
                 fragmentIonThresholdJRadioButton.isSelected()){
             okJButton.setEnabled(true);
@@ -81,6 +85,7 @@ public class PlotLabelSelection extends javax.swing.JDialog {
         fragmentIonTypeJRadioButton = new javax.swing.JRadioButton();
         fragmentIonScoringTypeJRadioButton = new javax.swing.JRadioButton();
         fragmentIonThresholdJRadioButton = new javax.swing.JRadioButton();
+        spectrumIdJRadioButton = new javax.swing.JRadioButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Select the Data Point Label");
@@ -143,6 +148,11 @@ public class PlotLabelSelection extends javax.swing.JDialog {
             }
         });
 
+        buttonGroup.add(spectrumIdJRadioButton);
+        spectrumIdJRadioButton.setText("Identification ID");
+        spectrumIdJRadioButton.setToolTipText("<html>\nUse the identification ID as the data<br>\npoint label and and coloring scheme\n</html>");
+        spectrumIdJRadioButton.setIconTextGap(15);
+
         org.jdesktop.layout.GroupLayout jPanel1Layout = new org.jdesktop.layout.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -150,11 +160,16 @@ public class PlotLabelSelection extends javax.swing.JDialog {
             .add(jPanel1Layout.createSequentialGroup()
                 .add(18, 18, 18)
                 .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(fragmentIonThresholdJRadioButton)
-                    .add(fragmentIonScoringTypeJRadioButton)
+                    .add(spectrumIdJRadioButton)
                     .add(fragmentIonTypeJRadioButton)
                     .add(instrumentNameJRadioButton))
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(132, Short.MAX_VALUE))
+            .add(org.jdesktop.layout.GroupLayout.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(18, Short.MAX_VALUE)
+                .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(fragmentIonThresholdJRadioButton)
+                    .add(fragmentIonScoringTypeJRadioButton))
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -163,6 +178,8 @@ public class PlotLabelSelection extends javax.swing.JDialog {
                 .add(instrumentNameJRadioButton)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(fragmentIonTypeJRadioButton)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(spectrumIdJRadioButton)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(fragmentIonScoringTypeJRadioButton)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
@@ -227,6 +244,9 @@ public class PlotLabelSelection extends javax.swing.JDialog {
         } else if(fragmentIonTypeJRadioButton.isSelected()){
             fragmentationAnalyzer.getProperties().setCurrentLabelType(
                     fragmentationAnalyzer.getProperties().PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE);
+        } else if(spectrumIdJRadioButton.isSelected()){
+            fragmentationAnalyzer.getProperties().setCurrentLabelType(
+                    fragmentationAnalyzer.getProperties().PLOT_LABEL_TYPE_IDENTIFICATION_ID);
         } else if(fragmentIonScoringTypeJRadioButton.isSelected()){
             fragmentationAnalyzer.getProperties().setCurrentLabelType(
                     fragmentationAnalyzer.getProperties().PLOT_LABEL_TYPE_FRAGMENT_ION_SCORING_TYPE);
@@ -276,5 +296,6 @@ public class PlotLabelSelection extends javax.swing.JDialog {
     private javax.swing.JRadioButton instrumentNameJRadioButton;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JButton okJButton;
+    private javax.swing.JRadioButton spectrumIdJRadioButton;
     // End of variables declaration//GEN-END:variables
 }

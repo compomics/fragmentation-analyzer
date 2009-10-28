@@ -4,11 +4,15 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import javax.swing.table.DefaultTableModel;
 import no.uib.fragmentation_analyzer.util.Properties;
 import org.jfree.chart.ChartPanel;
+import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.Marker;
 import org.jfree.chart.plot.XYPlot;
+import org.jfree.data.category.CategoryDataset;
+import org.jfree.data.statistics.DefaultBoxAndWhiskerCategoryDataset;
 import org.jfree.data.xy.XYDataset;
 import org.jfree.ui.Layer;
 
@@ -52,27 +56,44 @@ public class MassErrorDataSeriesSelection extends javax.swing.JDialog {
      * Inserts the data about the data series into the table.
      */
     private void insertDataSeries() {
-        XYDataset xyDataSet = ((XYPlot) chartPanel.getChart().getPlot()).getDataset(0);
 
-        ArrayList<String> seriesKeys = new ArrayList<String>();
-        seriesKeyToSeriesNumber = new HashMap<String, Integer>();
+        if (chartPanel.getChart().getPlot() instanceof XYPlot) {
+            XYDataset xyDataSet = ((XYPlot) chartPanel.getChart().getPlot()).getDataset(0);
 
-        // get all the data series keys
-        for (int i = 0; i < xyDataSet.getSeriesCount(); i++) {
-            seriesKeys.add(xyDataSet.getSeriesKey(i).toString());
-            seriesKeyToSeriesNumber.put(xyDataSet.getSeriesKey(i).toString(), i);
-        }
+            ArrayList<String> seriesKeys = new ArrayList<String>();
+            seriesKeyToSeriesNumber = new HashMap<String, Integer>();
 
-        // sort the series keys in acending order
-        java.util.Collections.sort(seriesKeys);
+            // get all the data series keys
+            for (int i = 0; i < xyDataSet.getSeriesCount(); i++) {
+                seriesKeys.add(xyDataSet.getSeriesKey(i).toString());
+                seriesKeyToSeriesNumber.put(xyDataSet.getSeriesKey(i).toString(), i);
+            }
 
-        // add the series keys to the table
-        for (int i = 0; i < seriesKeys.size(); i++) {
-            ((DefaultTableModel) dataSeriesJXTable.getModel()).addRow(new Object[]{
-                        new Integer((i + 1)), seriesKeys.get(i),
-                        ((XYPlot) chartPanel.getChart().getPlot()).getRenderer(0).isSeriesVisible(
-                        seriesKeyToSeriesNumber.get(seriesKeys.get(i)))
-                    });
+            // sort the series keys in acending order
+            java.util.Collections.sort(seriesKeys);
+
+            // add the series keys to the table
+            for (int i = 0; i < seriesKeys.size(); i++) {
+                ((DefaultTableModel) dataSeriesJXTable.getModel()).addRow(new Object[]{
+                            new Integer((i + 1)), seriesKeys.get(i),
+                            ((XYPlot) chartPanel.getChart().getPlot()).getRenderer(0).isSeriesVisible(
+                            seriesKeyToSeriesNumber.get(seriesKeys.get(i)))
+                        });
+            }
+        } else if (chartPanel.getChart().getPlot() instanceof CategoryPlot) {
+
+            CategoryDataset categoryDataset = ((CategoryPlot) chartPanel.getChart().getPlot()).getDataset(0);
+
+            List columnKeys = categoryDataset.getColumnKeys();
+
+            // add the series keys to the table
+            for (int i = 0; i < columnKeys.size(); i++) {
+
+                ((DefaultTableModel) dataSeriesJXTable.getModel()).addRow(new Object[]{
+                            new Integer((i + 1)), columnKeys.get(i),
+                            true
+                        });
+            }
         }
     }
 
@@ -220,8 +241,14 @@ public class MassErrorDataSeriesSelection extends javax.swing.JDialog {
      */
     private void okJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okJButtonActionPerformed
 
+        Collection tempMarkers = null;
+
         // get the markers
-        Collection tempMarkers = ((XYPlot) chartPanel.getChart().getPlot()).getDomainMarkers(Layer.BACKGROUND);
+        if(chartPanel.getChart().getPlot() instanceof XYPlot){
+            tempMarkers = ((XYPlot) chartPanel.getChart().getPlot()).getDomainMarkers(Layer.BACKGROUND);
+        } else if(chartPanel.getChart().getPlot() instanceof CategoryPlot){
+            tempMarkers = ((CategoryPlot) chartPanel.getChart().getPlot()).getDomainMarkers(Layer.BACKGROUND);
+        }
 
         HashMap<String, Marker> markers = new HashMap<String, Marker>();
 
@@ -241,8 +268,16 @@ public class MassErrorDataSeriesSelection extends javax.swing.JDialog {
             boolean isCurrentlySelected = ((Boolean) dataSeriesJXTable.getValueAt(i, 2)).booleanValue();
 
             // update the data series selection
-            ((XYPlot) chartPanel.getChart().getPlot()).getRenderer(0).setSeriesVisible(
-                    seriesKeyToSeriesNumber.get(currentSeriesKey), isCurrentlySelected);
+            if (chartPanel.getChart().getPlot() instanceof XYPlot) {
+                ((XYPlot) chartPanel.getChart().getPlot()).getRenderer(0).setSeriesVisible(
+                        seriesKeyToSeriesNumber.get(currentSeriesKey), isCurrentlySelected);
+            } else if (chartPanel.getChart().getPlot() instanceof CategoryPlot) {
+
+                if(!isCurrentlySelected){
+                    ((DefaultBoxAndWhiskerCategoryDataset) ((CategoryPlot)
+                            chartPanel.getChart().getPlot()).getDataset()).removeColumn(currentSeriesKey);
+                }
+            }
 
             // update the marker
             if (markers.get(currentSeriesKey) != null) {

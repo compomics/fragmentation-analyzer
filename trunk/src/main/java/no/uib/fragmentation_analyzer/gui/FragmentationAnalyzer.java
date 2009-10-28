@@ -74,6 +74,7 @@ import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.Marker;
+import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.title.LegendTitle;
 import org.jfree.data.statistics.DefaultBoxAndWhiskerCategoryDataset;
@@ -170,7 +171,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         // make sure the main frame is not too wide for the screen
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 
-        if(dim.getWidth() < this.getWidth()){
+        if (dim.getWidth() < this.getWidth()) {
             this.setPreferredSize(new Dimension(dim.width - 50, this.getPreferredSize().height));
             pack();
         }
@@ -283,8 +284,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         internalFramesJPopupMenu = new javax.swing.JPopupMenu();
         showSpectrumToolBarJMenuItem = new javax.swing.JMenuItem();
         showBoxPlotToolBarJMenuItem = new javax.swing.JMenuItem();
-        showScatterPlotToolBarJMenuItem = new javax.swing.JMenuItem();
-        showBubblePlotToolBarJMenuItem = new javax.swing.JMenuItem();
+        showDataSeriesSelectionJMenuItem = new javax.swing.JMenuItem();
         jSeparator2 = new javax.swing.JSeparator();
         showLegendsJMenuItem = new javax.swing.JMenuItem();
         showMarkersJMenuItem = new javax.swing.JMenuItem();
@@ -435,21 +435,13 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         });
         internalFramesJPopupMenu.add(showBoxPlotToolBarJMenuItem);
 
-        showScatterPlotToolBarJMenuItem.setText("Data Series Selection");
-        showScatterPlotToolBarJMenuItem.addActionListener(new java.awt.event.ActionListener() {
+        showDataSeriesSelectionJMenuItem.setText("Data Series Selection");
+        showDataSeriesSelectionJMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                showScatterPlotToolBarJMenuItemActionPerformed(evt);
+                showDataSeriesSelectionJMenuItemActionPerformed(evt);
             }
         });
-        internalFramesJPopupMenu.add(showScatterPlotToolBarJMenuItem);
-
-        showBubblePlotToolBarJMenuItem.setText("Data Series Selection");
-        showBubblePlotToolBarJMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                showBubblePlotToolBarJMenuItemActionPerformed(evt);
-            }
-        });
-        internalFramesJPopupMenu.add(showBubblePlotToolBarJMenuItem);
+        internalFramesJPopupMenu.add(showDataSeriesSelectionJMenuItem);
         internalFramesJPopupMenu.add(jSeparator2);
 
         showLegendsJMenuItem.setText("Hide Legend");
@@ -935,7 +927,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         });
 
         searchResultsJComboBox.setMaximumRowCount(12);
-        searchResultsJComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { " - Select Analysis Type - ", "List Individual Identifications", "Intensity Box Plot", "Mass Error Scatter Plot", "Mass Error Bubble Plot" }));
+        searchResultsJComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { " - Select Analysis Type - ", "List Individual Identifications", "Intensity Box Plot", "Mass Error Scatter Plot", "Mass Error Bubble Plot", "Mass Error Box Plot" }));
         searchResultsJComboBox.setPreferredSize(new java.awt.Dimension(99, 20));
         searchResultsJComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1033,7 +1025,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         });
 
         spectraJComboBox.setMaximumRowCount(12);
-        spectraJComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { " - Select Analysis Type - ", "View Spectra", "Mass Error Scatter Plot", "Mass Error Bubble Plot" }));
+        spectraJComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { " - Select Analysis Type - ", "View Spectra", "Mass Error Scatter Plot", "Mass Error Bubble Plot", "Mass Error Box Plot" }));
         spectraJComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 spectraJComboBoxActionPerformed(evt);
@@ -2245,7 +2237,8 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         }
 
         if (searchResultsJComboBox.getSelectedIndex() == Properties.SEARCH_RESULTS_MASS_ERROR_SCATTER_PLOT ||
-                searchResultsJComboBox.getSelectedIndex() == Properties.SEARCH_RESULTS_MASS_ERROR_BUBBLE_PLOT) {
+                searchResultsJComboBox.getSelectedIndex() == Properties.SEARCH_RESULTS_MASS_ERROR_BUBBLE_PLOT||
+                searchResultsJComboBox.getSelectedIndex() == Properties.SEARCH_RESULTS_MASS_ERROR_BOX_PLOT) {
             daOrPpmSearchResultsJComboBox.setEnabled(true);
             combineSearchResultsJComboBox.setEnabled(true);
         } else {
@@ -2644,7 +2637,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                     }
                                 }
 
-                                CategoryPlot plot = PlotUtil.getCategoryPlot(dataSet);
+                                CategoryPlot plot = PlotUtil.getCategoryPlot(dataSet, "Sequence", "Intensity");
 
                                 // add a category marker for the modified residue
                                 if (!singleSearch) {
@@ -2840,16 +2833,156 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                 if (singleSearch) {
                                     internalFrameTitle = properties.getCurrentlySelectedRowsInSearchTable().get(0).getModifiedSequence() +
                                             " (" + properties.getCurrentlySelectedRowsInSearchTable().get(0).getCountA()
-                                            + ", dp: " + fragmentIonCount + ")";
+                                            + " spectra, dp: " + fragmentIonCount + ")";
                                 } else {
                                     internalFrameTitle = properties.getCurrentlySelectedRowsInSearchTable().get(0).getModifiedSequence() +
                                             " (" + properties.getCurrentlySelectedRowsInSearchTable().get(0).getCountA() + " u/" +
-                                            properties.getCurrentlySelectedRowsInSearchTable().get(0).getCountB() + " m"
-                                            + ", dp: " + fragmentIonCount + ")";
+                                            properties.getCurrentlySelectedRowsInSearchTable().get(0).getCountB()
+                                            + " m" + ", dp: " + fragmentIonCount + ")";
                                 }
                             }
 
                             insertMassErrorPlot(isBubblePlot, data, internalFrameTitle,
+                                    daOrPpmSearchResultsJComboBox.getSelectedIndex() == 1);
+                        }
+                    } else if (searchResultsJComboBox.getSelectedIndex() == Properties.SEARCH_RESULTS_MASS_ERROR_BOX_PLOT) {
+
+                        plotsAnalysesJXTaskPane.setExpanded(true);
+                        searchResultsJXTaskPane.setExpanded(false);
+                        spectraJXTaskPane.setExpanded(false);
+
+                        progressDialog.setIntermidiate(false);
+                        progressDialog.setTitle("Running Analysis. Please Wait...");
+
+                        HashMap<String, ArrayList<Double>> data = new HashMap<String, ArrayList<Double>>();
+
+                        for (int i = 0; i < properties.getCurrentlySelectedRowsInSearchTable().size() && !cancelProgress; i++) {
+
+                            progressDialog.setValue(i + 1);
+                            progressDialog.setString("(" + (i + 1) + "/" +
+                                    properties.getCurrentlySelectedRowsInSearchTable().size() + ")");
+
+                            try {
+
+                                progressDialog.setString("" + (i + 1) + "/" +
+                                        properties.getCurrentlySelectedRowsInSearchTable().size());
+                                int localCounter = 0;
+
+                                IdentificationTableRow currentlySelectedRow =
+                                        properties.getCurrentlySelectedRowsInSearchTable().get(i);
+                                String currentSequence = currentlySelectedRow.getSequence();
+                                String currentModifiedSequence = currentlySelectedRow.getModifiedSequence();
+
+
+                                // check for search type. if count 2 exists there are more than one id per line
+                                if (!singleSearch) {
+
+                                    progressDialog.setMax(currentlySelectedRow.getCountA() + currentlySelectedRow.getCountB());
+                                    progressDialog.setValue(localCounter);
+
+                                    ArrayList<ReducedIdentification> currentIdentifications =
+                                            properties.getIdentificationMap().get(currentSequence);
+
+                                    // add the unmodified sequences
+                                    for (int j = 0; j < currentIdentifications.size() && !cancelProgress; j++) {
+
+                                        ReducedIdentification currentId = currentIdentifications.get(j);
+
+                                        if (!currentId.isModified()) {
+
+                                            addFragmentIonsToMassErrorBoxPlot(data, currentId,
+                                                    daOrPpmSearchResultsJComboBox.getSelectedIndex() == 1);
+
+                                            progressDialog.setValue(++localCounter);
+                                        }
+                                    }
+
+                                    // add the modified sequences
+                                    for (int j = 0; j < currentIdentifications.size() && !cancelProgress; j++) {
+
+                                        ReducedIdentification currentId = currentIdentifications.get(j);
+
+                                        if (currentId.getModifiedSequence().equalsIgnoreCase(currentModifiedSequence)) {
+                                            addFragmentIonsToMassErrorBoxPlot(data, currentId,
+                                                    daOrPpmSearchResultsJComboBox.getSelectedIndex() == 1);
+                                            progressDialog.setValue(++localCounter);
+                                        }
+                                    }
+                                } else {
+
+                                    progressDialog.setMax(currentlySelectedRow.getCountA());
+                                    progressDialog.setValue(localCounter);
+
+                                    ArrayList<ReducedIdentification> currentIdentifications =
+                                            properties.getIdentificationMap().get(currentModifiedSequence);
+
+                                    for (int j = 0; j < currentIdentifications.size() && !cancelProgress; j++) {
+                                        ReducedIdentification currentId = currentIdentifications.get(j);
+                                        addFragmentIonsToMassErrorBoxPlot(data, currentId,
+                                                daOrPpmSearchResultsJComboBox.getSelectedIndex() == 1);
+                                        progressDialog.setValue(++localCounter);
+                                    }
+                                }
+
+                                // if single plot is selected create the plot now
+                                if (combineSearchResultsJComboBox.getSelectedIndex() == 0) {
+
+                                    String internalFrameTitle = "Mass Error Box Plot";
+
+                                    //int fragmentIonCount = Util.getTotalFragmentIonCount(data);
+
+                                    if (singleSearch) {
+                                        internalFrameTitle = currentModifiedSequence +
+                                                " (" + currentlySelectedRow.getCountA() + " spectra)";
+                                        //+ ", dp: " + fragmentIonCount + ")";
+                                    } else {
+                                        internalFrameTitle = currentModifiedSequence +
+                                                " (" + currentlySelectedRow.getCountA() + " u/" +
+                                                currentlySelectedRow.getCountB() + " m)";
+                                        //+ ", dp: " + fragmentIonCount + ")";
+                                    }
+
+                                    insertMassErrorBoxPlot(data, internalFrameTitle,
+                                            daOrPpmSearchResultsJComboBox.getSelectedIndex() == 1);
+
+                                    data = new HashMap<String, ArrayList<Double>>();
+                                }
+                            } catch (IOException e) {
+                                JOptionPane.showMessageDialog(null,
+                                        "An error occured when trying to create a plot.\n" +
+                                        "See ../Properties/ErrorLog.txt for more details.",
+                                        "Error Creating Plot", JOptionPane.ERROR_MESSAGE);
+                                Util.writeToErrorLog("Error when creating plot: ");
+                                e.printStackTrace();
+                            } catch (SQLException e) {
+                                JOptionPane.showMessageDialog(null,
+                                        "An error occured when accessing the database.\n" +
+                                        "See ../Properties/ErrorLog.txt for more details.",
+                                        "Error Accessing Database", JOptionPane.ERROR_MESSAGE);
+                                Util.writeToErrorLog("Error when accessing databse: ");
+                                e.printStackTrace();
+                            }
+                        }
+
+                        // if combine plot is selected than create the plot now
+                        if (combineSearchResultsJComboBox.getSelectedIndex() == 1) {
+
+                            String internalFrameTitle = "Mass Error Box Plot";
+
+                            //int fragmentIonCount = Util.getTotalFragmentIonCount(data);
+
+//                            if (singleSearch) {
+//                                internalFrameTitle = currentModifiedSequence +
+//                                        " (" + currentlySelectedRow.getCountA() + " spectra";
+//                                //+ ", dp: " + fragmentIonCount + ")";
+//                            } else {
+//                                internalFrameTitle = currentModifiedSequence +
+//                                        " (" + currentlySelectedRow.getCountA() + " u/" +
+//                                        currentlySelectedRow.getCountB() + " m";
+//                                //+ ", dp: " + fragmentIonCount + ")";
+//                            }
+
+                            insertMassErrorBoxPlot(data, internalFrameTitle,
                                     daOrPpmSearchResultsJComboBox.getSelectedIndex() == 1);
                         }
                     }
@@ -2859,8 +2992,67 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                 }
             }.start();
         }
-
 }//GEN-LAST:event_searchResultsJButtonActionPerformed
+
+    /**
+     * Creates and inserts a mass error box plot.
+     *
+     * @param data the data to plot
+     * @param title the title of the plot
+     * @param usePpm true if ppm is used as the mass error, false otherwise
+     */
+    private void insertMassErrorBoxPlot(HashMap<String, ArrayList<Double>> data, String title, boolean usePpm) {
+
+        DefaultBoxAndWhiskerCategoryDataset dataSet = new DefaultBoxAndWhiskerCategoryDataset();
+
+        Iterator<String> iterator = data.keySet().iterator();
+
+        ArrayList<String> keys = new ArrayList<String>();
+
+        while (iterator.hasNext()) {
+            keys.add(iterator.next());
+        }
+
+        java.util.Collections.sort(keys);
+
+        for(int i=0; i<keys.size(); i++){
+            String currentKey = keys.get(i);
+            PlotUtil.addValuesToBoxPlot(dataSet, data.get(currentKey), "1", currentKey);
+        }
+
+        String rangeAxisLabel = "";
+
+        if(usePpm){
+            rangeAxisLabel = "Mass Error (ppm)";
+        } else{
+            rangeAxisLabel = "Mass Error (Da)";
+        }
+
+        CategoryPlot plot = PlotUtil.getCategoryPlot(dataSet, "Fragment Ion Type", rangeAxisLabel);
+
+        
+        plot.setOrientation(PlotOrientation.HORIZONTAL);
+
+        JFreeChart chart = new JFreeChart(
+                null,
+                new Font("SansSerif", Font.BOLD, 10),
+                plot,
+                true);
+
+        chart.removeLegend();
+
+        ChartPanel chartPanel = new ChartPanel(chart);
+
+        String plotType = "MassErrorBoxPlot";
+
+        FragmentationAnalyzerJInternalFrame internalFrame = new FragmentationAnalyzerJInternalFrame(
+                title, true, true, true, chartPanel, plotType, internalFrameUniqueIdCounter);
+        internalFrame.add(chartPanel);
+
+        insertInternalFrame(internalFrame);
+        properties.getAllChartFrames().put(internalFrameUniqueIdCounter, chart);
+        internalFrameUniqueIdCounter++;
+    }
 
     /**
      * Inserts a mass error plot (bubble or scatter) in an internal frame in the plotting pane.
@@ -3026,6 +3218,9 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                 switchYandZAxis, mzValue, massError, intensity, bubbleScaling);
                     } else if (properties.getCurrentLabelType() == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE) {
                         addXYZDataPoint(data, fragmentIonType, switchYandZAxis, mzValue, massError, intensity, bubbleScaling);
+                    } else if (properties.getCurrentLabelType() == Properties.PLOT_LABEL_TYPE_IDENTIFICATION_ID) {
+                        addXYZDataPoint(data, currentIdentification.getIdentificationId().toString(), switchYandZAxis,
+                                mzValue, massError, intensity, bubbleScaling);
                     } else if (properties.getCurrentLabelType() == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_SCORING_TYPE) {
 
                         String dataSeriesLabel = "" + fragmentIons.get(j).getL_ionscoringid();
@@ -3070,6 +3265,87 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                             massError, intensity, bubbleScaling);
                 } else if (properties.getCurrentLabelType() == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE) {
                     addXYZDataPoint(data, fragmentIonType, switchYandZAxis, mzValue, massError, intensity, bubbleScaling);
+                } else if (properties.getCurrentLabelType() == Properties.PLOT_LABEL_TYPE_IDENTIFICATION_ID) {
+                    addXYZDataPoint(data, currentIdentification.getIdentificationId().toString(), switchYandZAxis,
+                            mzValue, massError, intensity, bubbleScaling);
+                }
+            }
+        }
+    }
+
+    /**
+     * Add the fragment ions to an XYZ plot data series.
+     *
+     * @param data the data to be added
+     * @param currentIdentification the current identification
+     * @param normalize if true the z values are normalized
+     * @param bubbleScaling the scaling value for the bubble size
+     * @param switchYandZAxis if true the Y and Z values provied in the data set are switched
+     * @param usePpmForMassError if true ppm is calculated and used for the mass error value,
+     *                           otherwise the given mass error is used
+     * @throws IOException
+     * @throws SQLException
+     */
+    private void addFragmentIonsToMassErrorBoxPlot(HashMap<String, ArrayList<Double>> data,
+            ReducedIdentification currentIdentification, boolean usePpmForMassError) throws IOException, SQLException {
+
+        if (currentDataSetIsFromMsLims) {
+
+            Vector<Fragmention> fragmentIons = (Vector<Fragmention>) Fragmention.getAllFragmentions(
+                    getConnection(), (long) currentIdentification.getIdentificationId());
+
+            for (int j = 0; j < fragmentIons.size(); j++) {
+
+                if (isScoringTypeSelected(fragmentIons.get(j).getL_ionscoringid())) {
+
+                    double mzValue = fragmentIons.get(j).getMz().doubleValue();
+                    double massError = fragmentIons.get(j).getMassdelta().doubleValue();
+
+                    String fragmentIonType = fragmentIons.get(j).getIonname();
+                    int fragmentIonNumber = (int) fragmentIons.get(j).getFragmentionnumber();
+
+                    if (fragmentIonType.startsWith("a") || fragmentIonType.startsWith("b") || fragmentIonType.startsWith("c") ||
+                            fragmentIonType.startsWith("x") || fragmentIonType.startsWith("y") || fragmentIonType.startsWith("z")) {
+                        if (fragmentIonType.length() > 1) {
+                            fragmentIonType = fragmentIonType.substring(0, 1) + "[" + fragmentIonNumber + "]" + fragmentIonType.substring(1);
+                        } else {
+                            fragmentIonType = fragmentIonType.substring(0, 1) + fragmentIonNumber;
+                        }
+                    }
+
+                    if (usePpmForMassError) {
+                        massError = Util.getPpmError(mzValue, massError);
+                    }
+
+                    if (data.get(fragmentIonType) != null) {
+                        data.get(fragmentIonType).add(massError);
+                    } else {
+                        ArrayList<Double> temp = new ArrayList<Double>();
+                        temp.add(massError);
+                        data.put(fragmentIonType, temp);
+                    }
+                }
+            }
+        } else {
+            // get the fragment ions
+            ArrayList<FragmentIon> fragmentIons = getFragmentIons(currentIdentification.getSpectrumFileId(), null);
+
+            for (int k = 0; k < fragmentIons.size(); k++) {
+                double mzValue = fragmentIons.get(k).getFragmenIonMz().doubleValue();
+                double massError = fragmentIons.get(k).getFragmentIonMassError().doubleValue();
+
+                String fragmentIonType = fragmentIons.get(k).getFragmentIonType();
+
+                if (usePpmForMassError) {
+                    massError = Util.getPpmError(mzValue, massError);
+                }
+
+                if (data.get(fragmentIonType) != null) {
+                    data.get(fragmentIonType).add(massError);
+                } else {
+                    ArrayList<Double> temp = new ArrayList<Double>();
+                    temp.add(massError);
+                    data.put(fragmentIonType, temp);
                 }
             }
         }
@@ -3246,7 +3522,8 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
             spectraJButton.setToolTipText(spectraAnalysisButtonDisabledToolTip);
         }
 
-        if (spectraJComboBox.getSelectedIndex() != Properties.SPECTRA_VIEW_SPECTRUM && spectraJComboBox.getSelectedIndex() != 0) {
+        if (spectraJComboBox.getSelectedIndex() != Properties.SPECTRA_VIEW_SPECTRUM
+                && spectraJComboBox.getSelectedIndex() != 0) {
             daOrPpmSpectraJComboBox.setEnabled(true);
             combineSpectraJComboBox.setEnabled(true);
         } else {
@@ -3256,7 +3533,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
     }//GEN-LAST:event_spectraJComboBoxActionPerformed
 
     /**
-     * Starts the analysis type selected in the spectra anakysis combo box.
+     * Starts the analysis type selected in the spectra analysis combo box.
      * Inserts the result into the analysis/plot frame.
      *
      * @param evt
@@ -3474,6 +3751,60 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
                             insertMassErrorPlot(isBubblePlot, data, internalFrameTitle,
                                     daOrPpmSpectraJComboBox.getSelectedIndex() == 1);
+                        }
+                    } else if (spectraJComboBox.getSelectedIndex() == Properties.SPECTRA_MASS_ERROR_BOX_PLOT){
+
+                        HashMap<String, ArrayList<Double>> data = new HashMap<String, ArrayList<Double>>();
+
+                        for (int i = 0; i < properties.getCurrentlySelectedRowsInSpectraTable().size() && !cancelProgress; i++) {
+
+                            try {
+                                Integer currentId = properties.getCurrentlySelectedRowsInSpectraTable().get(i).getIdentificationId();
+                                ReducedIdentification currentIdentification =
+                                        properties.getAllIdentifications().get(currentId);
+
+                                progressDialog.setValue(i + 1);
+
+                                addFragmentIonsToMassErrorBoxPlot(data, currentIdentification,
+                                                    daOrPpmSearchResultsJComboBox.getSelectedIndex() == 1);
+
+
+                                // if not combine create plot
+                                if (combineSpectraJComboBox.getSelectedIndex() == 0) {
+
+                                    String internalFrameTitle = currentIdentification.getModifiedSequence() +
+                                            " (SID: " + currentIdentification.getSpectrumFileId() + ")";
+
+                                    insertMassErrorBoxPlot(data, internalFrameTitle,
+                                            daOrPpmSearchResultsJComboBox.getSelectedIndex() == 1);
+
+                                    data = new HashMap<String, ArrayList<Double>>();
+                                }
+                            } catch (SQLException e) {
+                                JOptionPane.showMessageDialog(
+                                        null, "An error occured when accessing the database." +
+                                        "See ../Properties/ErrorLog.txt for more details.",
+                                        "Error Accessing Database", JOptionPane.ERROR_MESSAGE);
+                                Util.writeToErrorLog("Error when accessing the database: ");
+                                e.printStackTrace();
+                            } catch (IOException e) {
+                                JOptionPane.showMessageDialog(
+                                        null, "An error occured when trying to create a mass error plot." +
+                                        "See ../Properties/ErrorLog.txt for more details.",
+                                        "Error Creating Mass Error Plot", JOptionPane.ERROR_MESSAGE);
+                                Util.writeToErrorLog("Error when creating mass error plot: ");
+                                e.printStackTrace();
+                            }
+                        }
+
+
+                        // if combine create plot here
+                        if (combineSpectraJComboBox.getSelectedIndex() == 1) {
+
+                            String internalFrameTitle = "Mass Error Box Plot";
+
+                            insertMassErrorBoxPlot(data, internalFrameTitle,
+                                    daOrPpmSearchResultsJComboBox.getSelectedIndex() == 1);
                         }
                     }
 
@@ -4163,7 +4494,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
      * Opens a MassErrorDataSeriesSelection dialog where the data series
      * to be displayed can be choosen.
      */
-    private void showScatterPlotToolBarJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showScatterPlotToolBarJMenuItemActionPerformed
+    private void showDataSeriesSelectionJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showDataSeriesSelectionJMenuItemActionPerformed
         boxPlotPanelToolBarJInternalFrame.setVisible(false);
         spectrumPanelToolBarJInternalFrame.setVisible(false);
 
@@ -4182,14 +4513,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                 new MassErrorDataSeriesSelection(this, true, currentFrame.getChartPanel());
             }
         }
-    }//GEN-LAST:event_showScatterPlotToolBarJMenuItemActionPerformed
-
-    /**
-     * @see #showSpectrumToolBarJMenuItemActionPerformed(java.awt.event.ActionEvent) 
-     */
-    private void showBubblePlotToolBarJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showBubblePlotToolBarJMenuItemActionPerformed
-        showScatterPlotToolBarJMenuItemActionPerformed(null);
-    }//GEN-LAST:event_showBubblePlotToolBarJMenuItemActionPerformed
+    }//GEN-LAST:event_showDataSeriesSelectionJMenuItemActionPerformed
 
     /**
      * Opens a dialog where the preferences can be set.
@@ -4658,7 +4982,8 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
             internalFrame.setFrameIcon(new javax.swing.ImageIcon(getClass().getResource(
                     "/no/uib/fragmentation_analyzer/icons/spectrum.GIF")));
         } else if (internalFrame.getInternalFrameType().equalsIgnoreCase("BoxPlot") ||
-                internalFrame.getInternalFrameType().equalsIgnoreCase("BoxPlot_modification")) {
+                internalFrame.getInternalFrameType().equalsIgnoreCase("BoxPlot_modification") ||
+                internalFrame.getInternalFrameType().equalsIgnoreCase("MassErrorBoxPlot")) {
             internalFrame.setFrameIcon(new javax.swing.ImageIcon(getClass().getResource(
                     "/no/uib/fragmentation_analyzer/icons/box_plot_small.GIF")));
         } else if (internalFrame.getInternalFrameType().equalsIgnoreCase("MassErrorBubblePlot")) {
@@ -4693,47 +5018,44 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                     showSpectrumToolBarJMenuItem.setVisible(true);
                     showBoxPlotToolBarJMenuItem.setEnabled(false);
                     showBoxPlotToolBarJMenuItem.setVisible(false);
-                    showScatterPlotToolBarJMenuItem.setEnabled(false);
-                    showScatterPlotToolBarJMenuItem.setVisible(false);
-                    showBubblePlotToolBarJMenuItem.setEnabled(false);
-                    showBubblePlotToolBarJMenuItem.setVisible(false);
+                    showDataSeriesSelectionJMenuItem.setEnabled(false);
+                    showDataSeriesSelectionJMenuItem.setVisible(false);
                 } else if (temp.getInternalFrameType().equalsIgnoreCase("BoxPlot") ||
                         temp.getInternalFrameType().equalsIgnoreCase("BoxPlot_modification")) {
                     showSpectrumToolBarJMenuItem.setEnabled(false);
                     showSpectrumToolBarJMenuItem.setVisible(false);
                     showBoxPlotToolBarJMenuItem.setEnabled(true);
                     showBoxPlotToolBarJMenuItem.setVisible(true);
-                    showScatterPlotToolBarJMenuItem.setEnabled(false);
-                    showScatterPlotToolBarJMenuItem.setVisible(false);
-                    showBubblePlotToolBarJMenuItem.setEnabled(false);
-                    showBubblePlotToolBarJMenuItem.setVisible(false);
+                    showDataSeriesSelectionJMenuItem.setEnabled(false);
+                    showDataSeriesSelectionJMenuItem.setVisible(false);
                 } else if (temp.getInternalFrameType().equalsIgnoreCase("MassErrorScatterPlot")) {
                     showSpectrumToolBarJMenuItem.setEnabled(false);
                     showSpectrumToolBarJMenuItem.setVisible(false);
                     showBoxPlotToolBarJMenuItem.setEnabled(false);
                     showBoxPlotToolBarJMenuItem.setVisible(false);
-                    showScatterPlotToolBarJMenuItem.setEnabled(true);
-                    showScatterPlotToolBarJMenuItem.setVisible(true);
-                    showBubblePlotToolBarJMenuItem.setEnabled(false);
-                    showBubblePlotToolBarJMenuItem.setVisible(false);
+                    showDataSeriesSelectionJMenuItem.setEnabled(true);
+                    showDataSeriesSelectionJMenuItem.setVisible(true);
                 } else if (temp.getInternalFrameType().equalsIgnoreCase("MassErrorBubblePlot")) {
                     showSpectrumToolBarJMenuItem.setEnabled(false);
                     showSpectrumToolBarJMenuItem.setVisible(false);
                     showBoxPlotToolBarJMenuItem.setEnabled(false);
                     showBoxPlotToolBarJMenuItem.setVisible(false);
-                    showScatterPlotToolBarJMenuItem.setEnabled(false);
-                    showScatterPlotToolBarJMenuItem.setVisible(false);
-                    showBubblePlotToolBarJMenuItem.setEnabled(true);
-                    showBubblePlotToolBarJMenuItem.setVisible(true);
+                    showDataSeriesSelectionJMenuItem.setEnabled(false);
+                    showDataSeriesSelectionJMenuItem.setVisible(false);
+                } else if(temp.getInternalFrameType().equalsIgnoreCase("MassErrorBoxPlot")){
+                    showSpectrumToolBarJMenuItem.setEnabled(false);
+                    showSpectrumToolBarJMenuItem.setVisible(false);
+                    showBoxPlotToolBarJMenuItem.setEnabled(false);
+                    showBoxPlotToolBarJMenuItem.setVisible(false);
+                    showDataSeriesSelectionJMenuItem.setEnabled(true);
+                    showDataSeriesSelectionJMenuItem.setVisible(true);
                 } else {
                     showSpectrumToolBarJMenuItem.setEnabled(false);
                     showSpectrumToolBarJMenuItem.setVisible(false);
                     showBoxPlotToolBarJMenuItem.setEnabled(false);
                     showBoxPlotToolBarJMenuItem.setVisible(false);
-                    showScatterPlotToolBarJMenuItem.setEnabled(false);
-                    showScatterPlotToolBarJMenuItem.setVisible(false);
-                    showBubblePlotToolBarJMenuItem.setEnabled(false);
-                    showBubblePlotToolBarJMenuItem.setVisible(false);
+                    showDataSeriesSelectionJMenuItem.setEnabled(false);
+                    showDataSeriesSelectionJMenuItem.setVisible(false);
                 }
             }
 
@@ -4870,8 +5192,8 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
         int temp = index / numberPerRow;
 
-        int width = (plotsAndAnalysesJScrollPane.getWidth() - spaceBetween*6) / numberPerRow;
-        int height = (plotsAndAnalysesJScrollPane.getHeight() - spaceBetween*5) / numberPerRow;
+        int width = (plotsAndAnalysesJScrollPane.getWidth() - spaceBetween * 6) / numberPerRow;
+        int height = (plotsAndAnalysesJScrollPane.getHeight() - spaceBetween * 5) / numberPerRow;
 
         int xCorr = spaceBetween + (spaceBetween * (index % numberPerRow + 1)) + (index % numberPerRow * width);
         int yCorr = spaceBetween + (height * temp) + (spaceBetween * (temp + 1));
@@ -5763,10 +6085,9 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
     private javax.swing.JPopupMenu selectSpectraJPopupMenu;
     private javax.swing.JMenuItem showAverageJMenuItem;
     private javax.swing.JMenuItem showBoxPlotToolBarJMenuItem;
-    private javax.swing.JMenuItem showBubblePlotToolBarJMenuItem;
+    private javax.swing.JMenuItem showDataSeriesSelectionJMenuItem;
     private javax.swing.JMenuItem showLegendsJMenuItem;
     private javax.swing.JMenuItem showMarkersJMenuItem;
-    private javax.swing.JMenuItem showScatterPlotToolBarJMenuItem;
     private javax.swing.JMenuItem showSpectrumToolBarJMenuItem;
     private javax.swing.JButton spectraJButton;
     private javax.swing.JComboBox spectraJComboBox;
