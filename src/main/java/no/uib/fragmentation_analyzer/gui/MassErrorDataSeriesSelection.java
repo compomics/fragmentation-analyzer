@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import org.jdesktop.swingx.decorator.SortOrder;
 import javax.swing.table.DefaultTableModel;
 import no.uib.fragmentation_analyzer.util.Properties;
 import org.jfree.chart.ChartPanel;
@@ -26,6 +27,7 @@ public class MassErrorDataSeriesSelection extends javax.swing.JDialog {
     private ChartPanel chartPanel;
     private HashMap<String, Integer> seriesKeyToSeriesNumber;
     private boolean selectAllSeries = true;
+    private FragmentationAnalyzer fragmentationAnalyzer;
 
     /**
      * Creates a new MassErrorDataSeriesSelection dialog and makes it visible
@@ -38,6 +40,7 @@ public class MassErrorDataSeriesSelection extends javax.swing.JDialog {
         super(fragmentationAnalyzer, modal);
         initComponents();
 
+        this.fragmentationAnalyzer = fragmentationAnalyzer;
         this.chartPanel = chartPanel;
 
         insertDataSeries();
@@ -109,6 +112,9 @@ public class MassErrorDataSeriesSelection extends javax.swing.JDialog {
         selectSeriesJPopupMenu = new javax.swing.JPopupMenu();
         selectAllSeriesJMenuItem = new javax.swing.JMenuItem();
         invertSelectionJMenuItem = new javax.swing.JMenuItem();
+        highlightSelectionJMenu = new javax.swing.JMenu();
+        selectHighlightedJMenuItem = new javax.swing.JMenuItem();
+        deselectHighlightedJMenuItem = new javax.swing.JMenuItem();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         dataSeriesJXTable = new org.jdesktop.swingx.JXTable();
@@ -131,6 +137,26 @@ public class MassErrorDataSeriesSelection extends javax.swing.JDialog {
             }
         });
         selectSeriesJPopupMenu.add(invertSelectionJMenuItem);
+
+        highlightSelectionJMenu.setText("Highlight Selection");
+
+        selectHighlightedJMenuItem.setText("Select Highlighted");
+        selectHighlightedJMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                selectHighlightedJMenuItemActionPerformed(evt);
+            }
+        });
+        highlightSelectionJMenu.add(selectHighlightedJMenuItem);
+
+        deselectHighlightedJMenuItem.setText("Deselect Highlighted");
+        deselectHighlightedJMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deselectHighlightedJMenuItemActionPerformed(evt);
+            }
+        });
+        highlightSelectionJMenu.add(deselectHighlightedJMenuItem);
+
+        selectSeriesJPopupMenu.add(highlightSelectionJMenu);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Data Series Selection");
@@ -280,7 +306,7 @@ public class MassErrorDataSeriesSelection extends javax.swing.JDialog {
             }
 
             // update the marker
-            if (markers.get(currentSeriesKey) != null) {
+            if (markers.get(currentSeriesKey) != null && fragmentationAnalyzer.showMarkers()) {
                 if (isCurrentlySelected) {
                     markers.get(currentSeriesKey).setAlpha(Properties.DEFAULT_VISIBLE_MARKER_ALPHA);
                 } else {
@@ -360,15 +386,78 @@ public class MassErrorDataSeriesSelection extends javax.swing.JDialog {
 
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 }//GEN-LAST:event_invertSelectionJMenuItemActionPerformed
+
+    /**
+     * Selects all the higlighted rows in the search results table.
+     *
+     * @param evt
+     */
+    private void selectHighlightedJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectHighlightedJMenuItemActionPerformed
+        selectHighlighted(true);
+}//GEN-LAST:event_selectHighlightedJMenuItemActionPerformed
+
+    /**
+     * Deselects all the higlighted rows in the search results table.
+     *
+     * @param evt
+     */
+    private void deselectHighlightedJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deselectHighlightedJMenuItemActionPerformed
+        selectHighlighted(false);
+}//GEN-LAST:event_deselectHighlightedJMenuItemActionPerformed
+
+    /**
+     * Selects or deselects all the higlighted rows.
+     *
+     * @param select if true the rows are selected, if false the rows are deselected
+     */
+    private void selectHighlighted(boolean select) {
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
+
+        selectAllSeries = true;
+
+        boolean columnWasSorted = false;
+        int sortedTableColumn = -1;
+        SortOrder sortOrder = null;
+
+        if (dataSeriesJXTable.getSortedColumn() != null) {
+            sortedTableColumn = dataSeriesJXTable.getSortedColumn().getModelIndex();
+            sortOrder = dataSeriesJXTable.getSortOrder(sortedTableColumn);
+            dataSeriesJXTable.setSortable(false);
+            columnWasSorted = true;
+        }
+
+        int column = dataSeriesJXTable.getColumnCount() - 1;
+
+        int[] selectedRows = dataSeriesJXTable.getSelectedRows();
+
+        for (int i = 0; i < selectedRows.length; i++) {
+
+            int currentRow = selectedRows[i];
+
+            // select the row
+            dataSeriesJXTable.setValueAt(new Boolean(select), currentRow, column);
+        }
+
+        if (columnWasSorted) {
+            dataSeriesJXTable.setSortable(true);
+            dataSeriesJXTable.setSortOrder(sortedTableColumn, sortOrder);
+        }
+
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelJButton;
     private org.jdesktop.swingx.JXTable dataSeriesJXTable;
+    private javax.swing.JMenuItem deselectHighlightedJMenuItem;
+    private javax.swing.JMenu highlightSelectionJMenu;
     private javax.swing.JMenuItem invertSelectionJMenuItem;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JButton okJButton;
     private javax.swing.JMenuItem selectAllSeriesJMenuItem;
+    private javax.swing.JMenuItem selectHighlightedJMenuItem;
     private javax.swing.JPopupMenu selectSeriesJPopupMenu;
     // End of variables declaration//GEN-END:variables
 }
