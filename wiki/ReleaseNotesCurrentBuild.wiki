@@ -7,4 +7,6 @@
  * NEW FEATURE: Mass Error Box Plots can now be created.
  * NEW FEATURE: The identification ID can now be used as the data point label in bubble and scatter plots.
  * FEATURE IMPROVEMENT: If the ms_lims connection goes down, it is now possible to reconnect without having to reload the dataset. 
+ * FEATURE IMPROVEMENT: Added a 'Select Highlighted' option to the series selection dialog.
  * BUG FIX: Fixed a possible 'null pointer exception' in the table header column tips.
+ * BUG FIX: Fixed a bug where the markers were being turned on when changing the data series selection.
