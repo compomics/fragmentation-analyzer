@@ -257,6 +257,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         resultsColumnToolTips.add("Identified Peptide Sequence with Modifications and Terminals");
         resultsColumnToolTips.add("Number of Unmodified Matches");
         resultsColumnToolTips.add("Number of Modified Matches");
+        resultsColumnToolTips.add(null);
 
         spectraColumnToolTips = new Vector();
         spectraColumnToolTips.add(null);
@@ -265,6 +266,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         spectraColumnToolTips.add("Identified Peptide Sequence");
         spectraColumnToolTips.add("Identified Peptide Sequence with Modifications and Terminals");
         spectraColumnToolTips.add("Instrument Used");
+        spectraColumnToolTips.add(null);
     }
 
     public void cancelProgress() {
@@ -1494,8 +1496,8 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         boxPlotPanelToolBarJInternalFrame.setBounds(660, 70, 100, 240);
         plotsAndAnalysesJDesktopPane.add(boxPlotPanelToolBarJInternalFrame, javax.swing.JLayeredPane.POPUP_LAYER);
 
-        internalFrameTipJLabel.setFont(new java.awt.Font("Tahoma", 2, 10));
-        internalFrameTipJLabel.setText("Right click in the plot or on the plot title bar for plot options.");
+        internalFrameTipJLabel.setFont(new java.awt.Font("Tahoma", 2, 10)); // NOI18N
+        internalFrameTipJLabel.setText("Right click in the plot or on the plot title bar for plot options");
         internalFrameTipJLabel.setBounds(30, 0, 270, 20);
         plotsAndAnalysesJDesktopPane.add(internalFrameTipJLabel, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
@@ -2041,10 +2043,10 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         resultsColumnToolTips.add("Identified Peptide Sequence");
         resultsColumnToolTips.add("Identified Peptide Sequence with Modifications and Terminals");
 
-
         if (hide) {
             searchResultsJXTable.getColumnExt("#2").setVisible(false);
             resultsColumnToolTips.add("Number of Matches");
+            resultsColumnToolTips.add(null);
         } else {
             searchResultsJXTable.getColumnExt("#2").setVisible(true);
             resultsColumnToolTips.add("Number of Unmodified Matches");
@@ -3303,13 +3305,18 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
                     String fragmentIonType = fragmentIons.get(j).getIonname();
                     int fragmentIonNumber = (int) fragmentIons.get(j).getFragmentionnumber();
+                    String fragmentIonNumberAsString = "" + fragmentIonNumber;
+
+                    if(fragmentIonNumber < 10){
+                        fragmentIonNumberAsString = "0" + fragmentIonNumberAsString;
+                    }
 
                     if (fragmentIonType.startsWith("a") || fragmentIonType.startsWith("b") || fragmentIonType.startsWith("c") ||
                             fragmentIonType.startsWith("x") || fragmentIonType.startsWith("y") || fragmentIonType.startsWith("z")) {
                         if (fragmentIonType.length() > 1) {
-                            fragmentIonType = fragmentIonType.substring(0, 1) + "[" + fragmentIonNumber + "]" + fragmentIonType.substring(1);
+                            fragmentIonType = fragmentIonType.substring(0, 1) + "[" + fragmentIonNumberAsString + "]" + fragmentIonType.substring(1);
                         } else {
-                            fragmentIonType = fragmentIonType.substring(0, 1) + fragmentIonNumber;
+                            fragmentIonType = fragmentIonType.substring(0, 1) + fragmentIonNumberAsString;
                         }
                     }
 
@@ -3338,6 +3345,11 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
                 if (usePpmForMassError) {
                     massError = Util.getPpmError(mzValue, massError);
+                }
+
+                if(fragmentIons.get(k).getFragmentIonNumber() < 10){
+                    fragmentIonType = fragmentIonType.replaceFirst("" + fragmentIons.get(k).getFragmentIonNumber(),
+                            "0" + fragmentIons.get(k).getFragmentIonNumber());
                 }
 
                 if (data.get(fragmentIonType) != null) {
@@ -5040,8 +5052,8 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                     showSpectrumToolBarJMenuItem.setVisible(false);
                     showBoxPlotToolBarJMenuItem.setEnabled(false);
                     showBoxPlotToolBarJMenuItem.setVisible(false);
-                    showDataSeriesSelectionJMenuItem.setEnabled(false);
-                    showDataSeriesSelectionJMenuItem.setVisible(false);
+                    showDataSeriesSelectionJMenuItem.setEnabled(true);
+                    showDataSeriesSelectionJMenuItem.setVisible(true);
                 } else if(temp.getInternalFrameType().equalsIgnoreCase("MassErrorBoxPlot")){
                     showSpectrumToolBarJMenuItem.setEnabled(false);
                     showSpectrumToolBarJMenuItem.setVisible(false);
