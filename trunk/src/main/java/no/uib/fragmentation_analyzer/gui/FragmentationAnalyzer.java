@@ -80,6 +80,7 @@ import org.jfree.chart.title.LegendTitle;
 import org.jfree.data.statistics.DefaultBoxAndWhiskerCategoryDataset;
 import org.jfree.data.xy.DefaultXYDataset;
 import org.jfree.data.xy.DefaultXYZDataset;
+import org.jfree.data.xy.XYDataset;
 import org.jfree.ui.Layer;
 import org.jfree.ui.RectangleEdge;
 
@@ -271,6 +272,15 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
     public void cancelProgress() {
         cancelProgress = true;
+    }
+
+    /**
+     * Returns true of the markers are showing, false otherwise.
+     *
+     * @return true of the markers are showing, false otherwise
+     */
+    public boolean showMarkers(){
+        return showMarkers;
     }
 
     /** This method is called from within the constructor to
@@ -2239,7 +2249,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         }
 
         if (searchResultsJComboBox.getSelectedIndex() == Properties.SEARCH_RESULTS_MASS_ERROR_SCATTER_PLOT ||
-                searchResultsJComboBox.getSelectedIndex() == Properties.SEARCH_RESULTS_MASS_ERROR_BUBBLE_PLOT||
+                searchResultsJComboBox.getSelectedIndex() == Properties.SEARCH_RESULTS_MASS_ERROR_BUBBLE_PLOT ||
                 searchResultsJComboBox.getSelectedIndex() == Properties.SEARCH_RESULTS_MASS_ERROR_BOX_PLOT) {
             daOrPpmSearchResultsJComboBox.setEnabled(true);
             combineSearchResultsJComboBox.setEnabled(true);
@@ -3017,22 +3027,22 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
         java.util.Collections.sort(keys);
 
-        for(int i=0; i<keys.size(); i++){
+        for (int i = 0; i < keys.size(); i++) {
             String currentKey = keys.get(i);
             PlotUtil.addValuesToBoxPlot(dataSet, data.get(currentKey), "1", currentKey);
         }
 
         String rangeAxisLabel = "";
 
-        if(usePpm){
+        if (usePpm) {
             rangeAxisLabel = "Mass Error (ppm)";
-        } else{
+        } else {
             rangeAxisLabel = "Mass Error (Da)";
         }
 
         CategoryPlot plot = PlotUtil.getCategoryPlot(dataSet, "Fragment Ion Type", rangeAxisLabel);
 
-        
+
         plot.setOrientation(PlotOrientation.HORIZONTAL);
 
         JFreeChart chart = new JFreeChart(
@@ -3185,13 +3195,19 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
                     String fragmentIonType = fragmentIons.get(j).getIonname();
                     int fragmentIonNumber = (int) fragmentIons.get(j).getFragmentionnumber();
+                    String fragmentIonNumberAsString = "" + fragmentIonNumber;
+
+                    // add padding enable correct sorting
+                    if (fragmentIonNumber < 10) {
+                        fragmentIonNumberAsString = "0" + fragmentIonNumberAsString;
+                    }
 
                     if (fragmentIonType.startsWith("a") || fragmentIonType.startsWith("b") || fragmentIonType.startsWith("c") ||
                             fragmentIonType.startsWith("x") || fragmentIonType.startsWith("y") || fragmentIonType.startsWith("z")) {
                         if (fragmentIonType.length() > 1) {
-                            fragmentIonType = fragmentIonType.substring(0, 1) + "[" + fragmentIonNumber + "]" + fragmentIonType.substring(1);
+                            fragmentIonType = fragmentIonType.substring(0, 1) + "[" + fragmentIonNumberAsString + "]" + fragmentIonType.substring(1);
                         } else {
-                            fragmentIonType = fragmentIonType.substring(0, 1) + fragmentIonNumber;
+                            fragmentIonType = fragmentIonType.substring(0, 1) + fragmentIonNumberAsString;
                         }
                     }
 
@@ -3253,6 +3269,12 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
                 String fragmentIonType = fragmentIons.get(k).getFragmentIonType();
 
+                // add padding enable correct sorting
+                if (fragmentIons.get(k).getFragmentIonNumber() < 10) {
+                    fragmentIonType = fragmentIonType.replaceFirst("" + fragmentIons.get(k).getFragmentIonNumber(),
+                            "0" + fragmentIons.get(k).getFragmentIonNumber());
+                }
+
                 if (usePpmForMassError) {
                     massError = Util.getPpmError(mzValue, massError);
                 }
@@ -3307,7 +3329,8 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                     int fragmentIonNumber = (int) fragmentIons.get(j).getFragmentionnumber();
                     String fragmentIonNumberAsString = "" + fragmentIonNumber;
 
-                    if(fragmentIonNumber < 10){
+                    // add padding enable correct sorting
+                    if (fragmentIonNumber < 10) {
                         fragmentIonNumberAsString = "0" + fragmentIonNumberAsString;
                     }
 
@@ -3347,7 +3370,8 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                     massError = Util.getPpmError(mzValue, massError);
                 }
 
-                if(fragmentIons.get(k).getFragmentIonNumber() < 10){
+                // add padding enable correct sorting
+                if (fragmentIons.get(k).getFragmentIonNumber() < 10) {
                     fragmentIonType = fragmentIonType.replaceFirst("" + fragmentIons.get(k).getFragmentIonNumber(),
                             "0" + fragmentIons.get(k).getFragmentIonNumber());
                 }
@@ -3764,7 +3788,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                             insertMassErrorPlot(isBubblePlot, data, internalFrameTitle,
                                     daOrPpmSpectraJComboBox.getSelectedIndex() == 1);
                         }
-                    } else if (spectraJComboBox.getSelectedIndex() == Properties.SPECTRA_MASS_ERROR_BOX_PLOT){
+                    } else if (spectraJComboBox.getSelectedIndex() == Properties.SPECTRA_MASS_ERROR_BOX_PLOT) {
 
                         HashMap<String, ArrayList<Double>> data = new HashMap<String, ArrayList<Double>>();
 
@@ -3778,7 +3802,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                 progressDialog.setValue(i + 1);
 
                                 addFragmentIonsToMassErrorBoxPlot(data, currentIdentification,
-                                                    daOrPpmSearchResultsJComboBox.getSelectedIndex() == 1);
+                                        daOrPpmSearchResultsJComboBox.getSelectedIndex() == 1);
 
 
                                 // if not combine create plot
@@ -3986,7 +4010,8 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                 if (currentLabel.lastIndexOf("+") == -1) {
 
                     // test needed to be able to show ions in the "other" group
-                    if (currentLabel.startsWith("a") || currentLabel.startsWith("b") || currentLabel.startsWith("c") || currentLabel.startsWith("x") || currentLabel.startsWith("y") || currentLabel.startsWith("z")) {
+                    if (currentLabel.startsWith("a") || currentLabel.startsWith("b") || currentLabel.startsWith("c")
+                            || currentLabel.startsWith("x") || currentLabel.startsWith("y") || currentLabel.startsWith("z")) {
                         if (!chargeOneJCheckBox.isSelected()) {
                             useAnnotation = false;
                         }
@@ -4801,27 +4826,49 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
         for (int i = 0; i < keys.size(); i++) {
 
-            ChartPanel tepmChartPanel = properties.getAllInternalFrames().get(keys.get(i)).getChartPanel();
+            ChartPanel tempChartPanel = properties.getAllInternalFrames().get(keys.get(i)).getChartPanel();
 
-            if (tepmChartPanel != null) {
+            if (tempChartPanel != null) {
 
                 Collection markers = null;
 
-                if (tepmChartPanel.getChart().getPlot() instanceof XYPlot) {
-                    markers = ((XYPlot) tepmChartPanel.getChart().getPlot()).getDomainMarkers(Layer.BACKGROUND);
-                } else if (tepmChartPanel.getChart().getPlot() instanceof CategoryPlot) {
-                    markers = ((CategoryPlot) tepmChartPanel.getChart().getPlot()).getDomainMarkers(Layer.BACKGROUND);
+                if (tempChartPanel.getChart().getPlot() instanceof XYPlot) {
+                    markers = ((XYPlot) tempChartPanel.getChart().getPlot()).getDomainMarkers(Layer.BACKGROUND);
+                } else if (tempChartPanel.getChart().getPlot() instanceof CategoryPlot) {
+                    markers = ((CategoryPlot) tempChartPanel.getChart().getPlot()).getDomainMarkers(Layer.BACKGROUND);
                 }
 
                 if (markers != null) {
                     Iterator markerIterator = markers.iterator();
 
+                    HashMap<String, Integer> seriesKeyToSeriesNumber = new HashMap<String, Integer>();
+
+                    if (tempChartPanel.getChart().getPlot() instanceof XYPlot) {
+                        XYDataset xyDataSet = ((XYPlot) tempChartPanel.getChart().getPlot()).getDataset(0);
+
+                        // get all the data series keys
+                        for (int j = 0; j < xyDataSet.getSeriesCount(); j++) {
+                            seriesKeyToSeriesNumber.put(xyDataSet.getSeriesKey(j).toString(), j);
+                        }
+                    }
+
                     while (markerIterator.hasNext()) {
 
+                        Marker tempMarker = ((Marker) markerIterator.next());
+
                         if (showMarkers) {
-                            ((Marker) markerIterator.next()).setAlpha(Properties.DEFAULT_VISIBLE_MARKER_ALPHA);
-                        } else {
-                            ((Marker) markerIterator.next()).setAlpha(Properties.DEFAULT_NON_VISIBLE_MARKER_ALPHA);
+                            if (tempChartPanel.getChart().getPlot() instanceof XYPlot) {
+                                if (((XYPlot) tempChartPanel.getChart().getPlot()).getRenderer(0).isSeriesVisible(
+                                    seriesKeyToSeriesNumber.get(tempMarker.getLabel()))) {
+                                    tempMarker.setAlpha(Properties.DEFAULT_VISIBLE_MARKER_ALPHA);
+                                } else {
+                                    tempMarker.setAlpha(Properties.DEFAULT_NON_VISIBLE_MARKER_ALPHA);
+                                }
+                            } else if(tempChartPanel.getChart().getPlot() instanceof CategoryPlot){
+                                tempMarker.setAlpha(Properties.DEFAULT_VISIBLE_MARKER_ALPHA);
+                            }
+                        } else{
+                            tempMarker.setAlpha(Properties.DEFAULT_NON_VISIBLE_MARKER_ALPHA);
                         }
                     }
                 }
@@ -5054,7 +5101,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                     showBoxPlotToolBarJMenuItem.setVisible(false);
                     showDataSeriesSelectionJMenuItem.setEnabled(true);
                     showDataSeriesSelectionJMenuItem.setVisible(true);
-                } else if(temp.getInternalFrameType().equalsIgnoreCase("MassErrorBoxPlot")){
+                } else if (temp.getInternalFrameType().equalsIgnoreCase("MassErrorBoxPlot")) {
                     showSpectrumToolBarJMenuItem.setEnabled(false);
                     showSpectrumToolBarJMenuItem.setVisible(false);
                     showBoxPlotToolBarJMenuItem.setEnabled(false);
