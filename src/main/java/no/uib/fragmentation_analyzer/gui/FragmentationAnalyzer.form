@@ -1705,7 +1705,7 @@
                             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                               <Font name="Tahoma" size="10" style="2"/>
                             </Property>
-                            <Property name="text" type="java.lang.String" value="Right click in the plot or on the plot title bar for plot options."/>
+                            <Property name="text" type="java.lang.String" value="Right click in the plot or on the plot title bar for plot options"/>
                           </Properties>
                           <Constraints>
                             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JLayeredPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JLayeredPaneSupportLayout$JLayeredPaneConstraintsDescription">
