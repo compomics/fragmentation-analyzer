@@ -212,13 +212,16 @@ public class PlotUtil {
      * Returns a category plot based on the provided data.
      *
      * @param dataSet
+     * @param xAxisLabel
+     * @param yAxisLabel
      * @return
      */
-    public static CategoryPlot getCategoryPlot(CategoryDataset dataSet) {
-        CategoryAxis xAxis = new CategoryAxis("Sequence");
+    public static CategoryPlot getCategoryPlot(CategoryDataset dataSet, String xAxisLabel,
+            String yAxisLabel) {
+        CategoryAxis xAxis = new CategoryAxis(xAxisLabel);
         xAxis.setLabelFont(new Font("SansSerif", Font.PLAIN, 10));
 
-        NumberAxis yAxis = new NumberAxis("Intensity");
+        NumberAxis yAxis = new NumberAxis(yAxisLabel);
         yAxis.setLabelFont(new Font("SansSerif", Font.PLAIN, 10));
         yAxis.setAutoRangeIncludesZero(false);
 
@@ -389,7 +392,8 @@ public class PlotUtil {
                     averageYValue += tempXYZData[1][i];
                 } else if (properties.getCurrentLabelType() == Properties.PLOT_LABEL_TYPE_INSTRUMENT ||
                         properties.getCurrentLabelType() == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_SCORING_TYPE ||
-                        properties.getCurrentLabelType() == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_THRESHOLD) {
+                        properties.getCurrentLabelType() == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_THRESHOLD ||
+                        properties.getCurrentLabelType() == Properties.PLOT_LABEL_TYPE_IDENTIFICATION_ID) {
                     if (xAndYValues.containsKey(tempXYZData[0][i])) {
                         ArrayList<Double> tempYValues = xAndYValues.get(tempXYZData[0][i]);
                         tempYValues.add(tempXYZData[1][i]);
@@ -406,7 +410,8 @@ public class PlotUtil {
                 average.put(tempXYZData[0][0], (averageYValue / currentData.size()));
             } else if (properties.getCurrentLabelType() == Properties.PLOT_LABEL_TYPE_INSTRUMENT ||
                     properties.getCurrentLabelType() == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_SCORING_TYPE ||
-                    properties.getCurrentLabelType() == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_THRESHOLD) {
+                    properties.getCurrentLabelType() == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_THRESHOLD ||
+                    properties.getCurrentLabelType() == Properties.PLOT_LABEL_TYPE_IDENTIFICATION_ID) {
 
                 Iterator<Double> xValuesIterator = xAndYValues.keySet().iterator();
 
@@ -465,7 +470,8 @@ public class PlotUtil {
                     averageZValue += tempXYData[1][i];
                 } else if (properties.getCurrentLabelType() == Properties.PLOT_LABEL_TYPE_INSTRUMENT ||
                         properties.getCurrentLabelType() == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_SCORING_TYPE ||
-                        properties.getCurrentLabelType() == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_THRESHOLD) {
+                        properties.getCurrentLabelType() == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_THRESHOLD ||
+                        properties.getCurrentLabelType() == Properties.PLOT_LABEL_TYPE_IDENTIFICATION_ID) {
                     if (xAndZValues.containsKey(tempXYData[0][i])) {
                         ArrayList<Double> tempZValues = xAndZValues.get(tempXYData[0][i]);
                         tempZValues.add(tempXYData[1][i]);
@@ -482,7 +488,8 @@ public class PlotUtil {
                 average.put(tempXYData[0][0], (averageZValue / currentData.size()));
             } else if (properties.getCurrentLabelType() == Properties.PLOT_LABEL_TYPE_INSTRUMENT ||
                     properties.getCurrentLabelType() == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_SCORING_TYPE ||
-                    properties.getCurrentLabelType() == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_THRESHOLD) {
+                    properties.getCurrentLabelType() == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_THRESHOLD ||
+                    properties.getCurrentLabelType() == Properties.PLOT_LABEL_TYPE_IDENTIFICATION_ID) {
 
                 Iterator<Double> xValuesIterator = xAndZValues.keySet().iterator();
 

@@ -24,10 +24,10 @@ public class Properties {
     private String passwordDatabase;
     public static final int GENERAL_SEARCH = 1, MODIFICATION_SEARCH = 2;
     public static final int SEARCH_RESULTS_SHOW_INDIVIDUAL_SPECTRA = 1, SEARCH_RESULTS_INTENSITY_BOX_PLOT = 2,
-            SEARCH_RESULTS_MASS_ERROR_SCATTER_PLOT = 3,
-            SEARCH_RESULTS_MASS_ERROR_BUBBLE_PLOT = 4;
+            SEARCH_RESULTS_MASS_ERROR_SCATTER_PLOT = 3, SEARCH_RESULTS_MASS_ERROR_BUBBLE_PLOT = 4,
+            SEARCH_RESULTS_MASS_ERROR_BOX_PLOT = 5;
     public static final int SPECTRA_VIEW_SPECTRUM = 1, SPECTRA_MASS_ERROR_SCATTER_PLOT = 2,
-            SPECTRA_MASS_ERROR_BUBBLE_PLOT = 3;
+            SPECTRA_MASS_ERROR_BUBBLE_PLOT = 3, SPECTRA_MASS_ERROR_BOX_PLOT = 4;
     private Color defaultMarkerColor = new Color(0, 0, 255, 25); // light blue
     private Color bFragmentIonColor = new Color(0, 0, 255, 25); // light  blue
     private Color yFragmentIonColor = new Color(0, 255, 0, 25); // light green
@@ -35,7 +35,8 @@ public class Properties {
     public static final float DEFAULT_VISIBLE_MARKER_ALPHA = 1.0f;
     public static final float DEFAULT_NON_VISIBLE_MARKER_ALPHA = 0.0f;
     public static final int PLOT_LABEL_TYPE_INSTRUMENT = 0, PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE = 1,
-            PLOT_LABEL_TYPE_FRAGMENT_ION_SCORING_TYPE = 2, PLOT_LABEL_TYPE_FRAGMENT_ION_THRESHOLD = 3;
+            PLOT_LABEL_TYPE_IDENTIFICATION_ID = 2, PLOT_LABEL_TYPE_FRAGMENT_ION_SCORING_TYPE = 3,
+            PLOT_LABEL_TYPE_FRAGMENT_ION_THRESHOLD = 4;
     public static final long Y_ION = 7, B_ION = 1;
     private String currentDataSetFolder = null, currentDataSetName = null;
     private HashMap<String, Integer> extractedInternalModifications, extractedNTermModifications,
