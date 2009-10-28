@@ -5333,7 +5333,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
             Fragmention currentFragmentIon = fragmentIons.get(i);
 
-            if (isScoringTypeSelected(currentFragmentIon.getL_identificationid())) {
+            if (isScoringTypeSelected(currentFragmentIon.getL_ionscoringid())) {
 
                 int fragmentIonNumber = (int) currentFragmentIon.getFragmentionnumber();
                 String ionName = currentFragmentIon.getIonname();
@@ -5358,9 +5358,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         }
 
         properties.getAllAnnotations().put(internalFrameUniqueIdCounter, currentAnnotations);
-
         spectrumPanel.setAnnotations(currentAnnotations);
-
         properties.getLinkedSpectrumPanels().put(new Integer(internalFrameUniqueIdCounter), spectrumPanel);
 
         return spectrumPanel;
