@@ -3,6 +3,19 @@
 
 ----
 
+*Changes in FragmentationAnalyzer v1.2 - (Oct. 29. 2009):*
+ * NEW FEATURE: Resizing of the main frame is now supported.
+ * NEW FEATURE: The total number of fragment ions is now shown in the title bar of some of the mass error plots.
+ * NEW FEATURE: Mass Error Box Plots can now be created.
+ * NEW FEATURE: The identification ID can now be used as the data point label in bubble and scatter plots.
+ * FEATURE IMPROVEMENT: If the ms_lims connection goes down, it is now possible to reconnect without having to reload the dataset. 
+ * FEATURE IMPROVEMENT: Added a 'Select Highlighted' option to the series selection dialog.
+ * BUG FIX: Fixed a bug that resulted in the spectrum annotations not showing up for data from ms_lims.
+ * BUG FIX: Fixed a possible 'null pointer exception' in the table header column tips.
+ * BUG FIX: Fixed a bug where the markers were being turned on when changing the data series selection
+
+----
+
 *Changes in FragmentationAnalyzer v1.1.1 - (Oct. 20. 2009):*
  * NEW FEATURE: The spectrum total intensity is now extracted from the ms_lims database (if avaiable) (requires ms_lims 7.1). This drastically decreased the time required to plot Mass Error Bubble Plots and Intensity Box Plots.
  * NEW FEATURE: The option of using the mass error threshold as the data label has been added (for ms_lims only). 
@@ -10,6 +23,8 @@
  * BUG FIX: The progress bar shown when retrieving identifications from ms_lims no longer halts too long at 100%.
  * BUG FIX: The insert data set feature could result in an error if the folder contained non-valid data sets.
  * BUG FIX: The OK button in the database login dialog can now become enabled when pasting content into the fields and not just when typing.
+
+Download Count: 4
 
 ----
 
