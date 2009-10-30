@@ -2,4 +2,9 @@
 
 ----
 
-(currently no changes)
+ * NEW FEATURE: Fragment Ion Probability plots can now be created.
+ * NEW FEATURE: Intensity box plot is now supported for the spectra table as well.
+ * FEATURE IMPROVEMENT: Made sure that the sequence and spectra and fragment ion counters are always shown in the plot title bar when possible.
+ * FEATURE IMPROVEMENT: The average mass error line has been made wider.
+ * BUG FIX: Fixed a bug that resulted in a dialog appearing when closing the tool if used off-line.
+ * BUG FIX: Fixed a bug in the data source selection that could result in an incorrect data set being opened when the table was sorted.
