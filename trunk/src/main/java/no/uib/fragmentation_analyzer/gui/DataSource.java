@@ -1429,7 +1429,7 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
             }
         }
 
-        String currentDatasetName = (String) ((DefaultTableModel) dataSetsJXTable.getModel()).getValueAt(selectedIndex, 1);
+        String currentDatasetName = (String) dataSetsJXTable.getValueAt(selectedIndex, 1);
 
         fragmentationAnalyzer.getProperties().setCurrentDataSetName(currentDatasetName);
 
