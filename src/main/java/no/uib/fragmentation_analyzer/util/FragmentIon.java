@@ -17,7 +17,7 @@ public class FragmentIon {
      */
     private Integer identificationId;
     /**
-     * The fragment ion type, e.g., y3, b2-H2O.
+     * The fragment ion type, e.g., y3, b[2]-H2O.
      */
     private String fragmentIonType;
     /**
@@ -64,7 +64,7 @@ public class FragmentIon {
      *
      * @param aFragmentIonId id of the fragment ion
      * @param aIdentificationId id of the identification using the fragment ions
-     * @param aFragmentIonType fragment ion type, e.g., y3, b2-H2O
+     * @param aFragmentIonType fragment ion type, e.g., y3, b[2]-H2O
      * @param aFragmentIonMz theoretical m/z value of the fragment ion
      * @param aFragmentIonIntensity intensity of the fragment ion
      * @param aFragmentIonNumber fragment ion number of the fragment ion. E.g, y3 has a fragment ion number of 3
@@ -188,5 +188,59 @@ public class FragmentIon {
      */
     public void setFragmentMassError(Double fragmentIonMassError) {
         this.fragmentIonMassError = fragmentIonMassError;
+    }
+
+    /**
+     * Returns the label for the fragment ion type.
+     * For example y3 returns y, y[4]++-H2O returns y++-H2O etc.
+     * Note: For precusor and immonium ions the fragment ion type is returned.
+     *
+     * @return the label for the fragment ion type
+     */
+    public String getFragmentIonLabel(){
+
+        String label = "";
+
+        if(fragmentIonNumber == 0){
+            label = fragmentIonType;
+        } else{
+
+            // get the main label type, e.g., a, b, c, x, y or z
+            label = fragmentIonType.substring(0, 1);
+
+            // add the charge and/or neutral loss part
+            if(fragmentIonType.indexOf("]") != -1){
+                label += fragmentIonType.substring(fragmentIonType.indexOf("]") + 1);
+            }
+        }
+
+        return label;
+    }
+
+    /**
+     * Returns the label for the given fragment ion type.
+     * For example y3 returns y, y[4]++-H2O returns y++-H2O etc.
+     * Note: For precusor and immonium ions the fragment ion type is returned.
+     *
+     * @return the label for the fragment ion type
+     */
+    public static String getFragmentIonLabel(String fragmentIonType, int fragmentIonNumber){
+
+        String label = "";
+
+        if(fragmentIonNumber == 0){
+            label = fragmentIonType;
+        } else{
+
+            // get the main label type, e.g., a, b, c, x, y or z
+            label = fragmentIonType.substring(0, 1);
+
+            // add the charge and/or neutral loss part
+            if(fragmentIonType.indexOf("]") != -1){
+                label += fragmentIonType.substring(fragmentIonType.indexOf("]") + 1);
+            }
+        }
+
+        return label;
     }
 }

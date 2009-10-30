@@ -9,8 +9,10 @@ import java.util.Iterator;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.CategoryAxis;
+import org.jfree.chart.axis.CategoryLabelPositions;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.labels.BoxAndWhiskerToolTipGenerator;
+import org.jfree.chart.labels.StandardCategoryToolTipGenerator;
 import org.jfree.chart.labels.StandardXYToolTipGenerator;
 import org.jfree.chart.plot.CategoryMarker;
 import org.jfree.chart.plot.CategoryPlot;
@@ -18,17 +20,20 @@ import org.jfree.chart.plot.DatasetRenderingOrder;
 import org.jfree.chart.plot.IntervalMarker;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.renderer.category.BarRenderer;
 import org.jfree.chart.renderer.category.BoxAndWhiskerRenderer;
 import org.jfree.chart.renderer.xy.DefaultXYItemRenderer;
 import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.data.category.CategoryDataset;
+import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.statistics.DefaultBoxAndWhiskerCategoryDataset;
 import org.jfree.data.xy.DefaultXYDataset;
 import org.jfree.data.xy.DefaultXYZDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 import org.jfree.ui.Layer;
+import org.jfree.ui.RectangleEdge;
 import org.jfree.ui.RectangleInsets;
 import org.jfree.ui.TextAnchor;
 
@@ -38,6 +43,168 @@ import org.jfree.ui.TextAnchor;
  * @author  Harald Barsnes
  */
 public class PlotUtil {
+
+    private static final float LINE_WIDTH = 4;
+
+    /**
+     * Returns a line plot based on the provided data.
+     *
+     * @param dataSet
+     * @param xAxisLabel
+     * @param yAxisLabel
+     * @return
+     */
+    public static JFreeChart getBarPlot(HashMap<String, Integer> data, int numberOfSpectra,
+            String xAxisLabel, String yAxisLabel) {
+
+        // sort the keys
+        ArrayList<String> sortedKeys = new ArrayList<String>();
+
+        Iterator<String> iterator = data.keySet().iterator();
+
+        while (iterator.hasNext()) {
+            String key = iterator.next();
+            sortedKeys.add(key);
+        }
+
+        java.util.Collections.sort(sortedKeys);
+
+
+        // add the data to the plot
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+
+        for(int i=0; i< sortedKeys.size(); i++){
+            String key = sortedKeys.get(i);
+            dataset.addValue(data.get(key).doubleValue() / numberOfSpectra, "1", key);
+        }
+
+
+        // create the chart
+        JFreeChart chart = ChartFactory.createBarChart(
+                null, // title
+                xAxisLabel, // xAxisLabel
+                yAxisLabel, // yAxisLabel
+                dataset, // XYZDataset
+                PlotOrientation.VERTICAL, // orientation
+                true, // legend
+                true, // tooltips
+                false); // urls
+
+        chart.getLegend().setItemFont(new Font("SansSerif", Font.PLAIN, 10));
+        chart.getLegend().setPosition(RectangleEdge.BOTTOM);
+        chart.setBackgroundPaint(new Color(225, 225, 225));
+        chart.removeLegend();
+
+        CategoryPlot plot = chart.getCategoryPlot();
+        plot.setBackgroundPaint(Color.WHITE);
+        plot.setDomainGridlinePaint(Color.BLACK);
+        plot.setRangeGridlinePaint(Color.BLACK);
+
+        plot.getDomainAxis().setLabelFont(new Font("SansSerif", Font.PLAIN, 10));
+        plot.getRangeAxis().setLabelFont(new Font("SansSerif", Font.PLAIN, 10));
+        plot.getDomainAxis().setTickLabelFont(new Font("SansSerif", Font.PLAIN, 10));
+        plot.getRangeAxis().setTickLabelFont(new Font("SansSerif", Font.PLAIN, 10));
+
+        // set the range to only include valid percatage values (and leave some padding at the top)
+        plot.getRangeAxis().setRange(0, 1.04);
+
+        // label direction
+        plot.getDomainAxis().setCategoryLabelPositions(CategoryLabelPositions.UP_45);
+
+        // make sure that tooltip is generated
+        BarRenderer renderer = (BarRenderer) plot.getRenderer();
+        renderer.setBaseToolTipGenerator(new StandardCategoryToolTipGenerator());
+
+        return chart;
+    }
+
+    /**
+     * Returns a line plot based on the provided data.
+     *
+     * @param dataSet
+     * @param xAxisLabel
+     * @param yAxisLabel
+     * @return
+     */
+    public static JFreeChart getLinePlot(HashMap<String, int[]> data, int numberOfSpectra,
+            String xAxisLabel, String yAxisLabel) {
+
+        // sort the keys
+        ArrayList<String> sortedKeys = new ArrayList<String>();
+
+        Iterator<String> iterator = data.keySet().iterator();
+
+        while (iterator.hasNext()) {
+            String key = iterator.next();
+            sortedKeys.add(key);
+        }
+
+        java.util.Collections.sort(sortedKeys);
+
+
+        // add the data to the plot
+        XYSeriesCollection dataset = new XYSeriesCollection();
+
+        for(int i=0; i< sortedKeys.size(); i++){
+
+            String key = sortedKeys.get(i);
+
+            int[] tempArray = data.get(key);
+
+            XYSeries tempDataSeries = new XYSeries(key);
+
+            for (int j = 1; j < tempArray.length - 1; j++) {
+                tempDataSeries.add(j, ((double) tempArray[j]) / numberOfSpectra);
+            }
+
+            dataset.addSeries(tempDataSeries);
+        }
+
+
+        // create the chart
+        JFreeChart chart = ChartFactory.createXYLineChart(
+                null, // title
+                xAxisLabel, // xAxisLabel
+                yAxisLabel, // yAxisLabel
+                dataset, // XYZDataset
+                PlotOrientation.VERTICAL, // orientation
+                true, // legend
+                true, // tooltips
+                false); // urls
+
+        chart.getLegend().setItemFont(new Font("SansSerif", Font.PLAIN, 10));
+        chart.getLegend().setPosition(RectangleEdge.BOTTOM);
+        chart.setBackgroundPaint(new Color(225, 225, 225));
+
+        XYPlot plot = chart.getXYPlot();
+        plot.setBackgroundPaint(Color.WHITE);
+        plot.setDomainGridlinePaint(Color.BLACK);
+        plot.setRangeGridlinePaint(Color.BLACK);
+
+        NumberAxis rangeAxis = (NumberAxis) plot.getDomainAxis();
+        rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
+
+        plot.getDomainAxis().setLabelFont(new Font("SansSerif", Font.PLAIN, 10));
+        plot.getRangeAxis().setLabelFont(new Font("SansSerif", Font.PLAIN, 10));
+        plot.getDomainAxis().setTickLabelFont(new Font("SansSerif", Font.PLAIN, 10));
+        plot.getRangeAxis().setTickLabelFont(new Font("SansSerif", Font.PLAIN, 10));
+
+        // set the range to only include valid percatage values (and leave some padding at the top)
+        plot.getRangeAxis().setRange(0, 1.04);
+
+        // make sure that tooltip is generated
+        XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer(true, false);
+        renderer.setBaseToolTipGenerator(new StandardXYToolTipGenerator());
+
+        // increase the width of all lines
+        for(int i=0; i<dataset.getSeriesCount(); i++){
+            renderer.setSeriesStroke(i, new BasicStroke(LINE_WIDTH, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+        }
+        
+        plot.setRenderer(renderer);
+
+        return chart;
+    }
 
     /**
      * Adds the average mass error line to the plot.
@@ -76,6 +243,8 @@ public class PlotUtil {
 
         // make the mass error line visble or not
         ((XYPlot) chart.getPlot()).getRenderer(1).setSeriesVisible(0, showAverageMassError);
+        ((XYPlot) chart.getPlot()).getRenderer(1).setSeriesStroke(0,
+                new BasicStroke(LINE_WIDTH, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
 
         // makes sure that the average mass error line is rendered last, i.e., to the front
         ((XYPlot) chart.getPlot()).setDatasetRenderingOrder(DatasetRenderingOrder.FORWARD);
@@ -367,15 +536,25 @@ public class PlotUtil {
     public static DefaultXYZDataset addXYZDataSeries(HashMap<String, ArrayList<XYZDataPoint>> data,
             HashMap<Double, Double> average, Properties properties) {
 
-        DefaultXYZDataset dataset = new DefaultXYZDataset();
+        // sort the keys
+        ArrayList<String> sortedKeys = new ArrayList<String>();
 
         Iterator<String> iterator = data.keySet().iterator();
 
+        while (iterator.hasNext()) {
+            String key = iterator.next();
+            sortedKeys.add(key);
+        }
+
+        java.util.Collections.sort(sortedKeys);
+
+        DefaultXYZDataset dataset = new DefaultXYZDataset();
+
         HashMap<Double, ArrayList<Double>> xAndYValues = new HashMap<Double, ArrayList<Double>>();
 
-        while (iterator.hasNext()) {
+        for(int j =0; j <sortedKeys.size(); j++){
 
-            String key = iterator.next();
+            String key = sortedKeys.get(j);
 
             ArrayList<XYZDataPoint> currentData = data.get(key);
 
@@ -446,15 +625,25 @@ public class PlotUtil {
     public static DefaultXYDataset addXYDataSeries(HashMap<String, ArrayList<XYZDataPoint>> data,
             HashMap<Double, Double> average, Properties properties) {
 
-        DefaultXYDataset dataset = new DefaultXYDataset();
-
-        HashMap<Double, ArrayList<Double>> xAndZValues = new HashMap<Double, ArrayList<Double>>();
+        // sort the keys
+        ArrayList<String> sortedKeys = new ArrayList<String>();
 
         Iterator<String> iterator = data.keySet().iterator();
 
         while (iterator.hasNext()) {
-
             String key = iterator.next();
+            sortedKeys.add(key);
+        }
+
+        java.util.Collections.sort(sortedKeys);
+
+        DefaultXYDataset dataset = new DefaultXYDataset();
+
+        HashMap<Double, ArrayList<Double>> xAndZValues = new HashMap<Double, ArrayList<Double>>();
+
+        for(int j=0; j<sortedKeys.size(); j++){
+
+            String key = sortedKeys.get(j);
 
             ArrayList<XYZDataPoint> currentData = data.get(key);
 
