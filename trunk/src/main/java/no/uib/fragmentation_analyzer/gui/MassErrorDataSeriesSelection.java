@@ -306,7 +306,7 @@ public class MassErrorDataSeriesSelection extends javax.swing.JDialog {
             }
 
             // update the marker
-            if (markers.get(currentSeriesKey) != null && fragmentationAnalyzer.showMarkers()) {
+            if (markers.get(currentSeriesKey) != null && fragmentationAnalyzer.getProperties().showMarkers()) {
                 if (isCurrentlySelected) {
                     markers.get(currentSeriesKey).setAlpha(Properties.DEFAULT_VISIBLE_MARKER_ALPHA);
                 } else {
