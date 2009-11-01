@@ -8,7 +8,7 @@ import javax.swing.JList;
 import javax.swing.SwingConstants;
 
 /**
- * ListCellRenderer with alignment functionality.
+ * ListCellRenderer with alignment and icon image functionality.
  *
  * @author Harald Barsnes
  */

@@ -55,6 +55,7 @@ public class Properties {
     private ArrayList<SpectrumTableRow> currentlySelectedRowsInSpectraTable = new ArrayList<SpectrumTableRow>();
     private int currentLabelType = 0; // no type selected
     private String modificationPattern = "[<][^<]*[>]";
+    private boolean showLegend = true, showMarkers = false, showAverageMassError = false;
         
     /**
      * Creates a new empty Properties object.
@@ -401,5 +402,47 @@ public class Properties {
      */
     public int getCurrentLabelType() {
         return currentLabelType;
+    }
+
+    /**
+     * @return the showLegend
+     */
+    public boolean showLegend() {
+        return showLegend;
+    }
+
+    /**
+     * @param showLegend the showLegend to set
+     */
+    public void setShowLegend(boolean showLegend) {
+        this.showLegend = showLegend;
+    }
+
+    /**
+     * @return the showMarkers
+     */
+    public boolean showMarkers() {
+        return showMarkers;
+    }
+
+    /**
+     * @param showMarkers the showMarkers to set
+     */
+    public void setShowMarkers(boolean showMarkers) {
+        this.showMarkers = showMarkers;
+    }
+
+    /**
+     * @return the showAverageMassError
+     */
+    public boolean showAverageMassError() {
+        return showAverageMassError;
+    }
+
+    /**
+     * @param showAverageMassError the showAverageMassError to set
+     */
+    public void setShowAverageMassError(boolean showAverageMassError) {
+        this.showAverageMassError = showAverageMassError;
     }
 }

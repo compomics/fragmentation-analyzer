@@ -30,6 +30,14 @@ public class Preferences extends javax.swing.JDialog {
         significantNotUsedJCheckBox.setSelected(fragmentationAnalyzer.getUserProperties().isSignificantNotScoringFragmentIon());
         significantAndUsedJCheckBox.setSelected(fragmentationAnalyzer.getUserProperties().isSignificantScoringFragmentIon());
 
+        if(fragmentationAnalyzer.getUserProperties().normalizeIntensites()){
+            totalIntensityNormalizationJRadioButton.setSelected(true);
+            unnormalizedJRadioButton.setSelected(false);
+        } else {
+            totalIntensityNormalizationJRadioButton.setSelected(false);
+            unnormalizedJRadioButton.setSelected(true);
+        }
+        
         setLocationRelativeTo(fragmentationAnalyzer);
         setVisible(true);
     }
@@ -43,6 +51,7 @@ public class Preferences extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        normalizationButtonGroup = new javax.swing.ButtonGroup();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         defaultBubbleScalingJTextField = new javax.swing.JTextField();
@@ -55,6 +64,9 @@ public class Preferences extends javax.swing.JDialog {
         notSignificantNotUsedJCheckBox = new javax.swing.JCheckBox();
         significantNotUsedJCheckBox = new javax.swing.JCheckBox();
         significantAndUsedJCheckBox = new javax.swing.JCheckBox();
+        jPanel3 = new javax.swing.JPanel();
+        totalIntensityNormalizationJRadioButton = new javax.swing.JRadioButton();
+        unnormalizedJRadioButton = new javax.swing.JRadioButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Preferences");
@@ -92,6 +104,7 @@ public class Preferences extends javax.swing.JDialog {
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
                 .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(jLabel1)
                     .add(defaultBubbleScalingJTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
@@ -151,6 +164,39 @@ public class Preferences extends javax.swing.JDialog {
                 .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Intensity Normalization", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 11), new java.awt.Color(0, 0, 0))); // NOI18N
+
+        normalizationButtonGroup.add(totalIntensityNormalizationJRadioButton);
+        totalIntensityNormalizationJRadioButton.setText("Total Intensity Normalization");
+        totalIntensityNormalizationJRadioButton.setToolTipText("<html>Divide the intensity values by the total intensity of the spectrum</html>");
+        totalIntensityNormalizationJRadioButton.setIconTextGap(15);
+
+        normalizationButtonGroup.add(unnormalizedJRadioButton);
+        unnormalizedJRadioButton.setText("Unnormalized");
+        unnormalizedJRadioButton.setToolTipText("<html>No normalization, use the unnormalized intensity values</html>");
+        unnormalizedJRadioButton.setIconTextGap(15);
+
+        org.jdesktop.layout.GroupLayout jPanel3Layout = new org.jdesktop.layout.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .add(jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(totalIntensityNormalizationJRadioButton)
+                    .add(unnormalizedJRadioButton))
+                .addContainerGap(141, Short.MAX_VALUE))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .add(totalIntensityNormalizationJRadioButton)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(unnormalizedJRadioButton)
+                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
         org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -158,8 +204,9 @@ public class Preferences extends javax.swing.JDialog {
             .add(layout.createSequentialGroup()
                 .addContainerGap()
                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(jPanel2, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, jPanel3, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .add(jPanel1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .add(jPanel2, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .add(jSeparator1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 336, Short.MAX_VALUE)
                     .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
                         .add(okJButton)
@@ -177,6 +224,8 @@ public class Preferences extends javax.swing.JDialog {
                 .add(jPanel1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(jPanel2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(jPanel3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .add(18, 18, 18)
                 .add(jSeparator1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
@@ -244,6 +293,12 @@ public class Preferences extends javax.swing.JDialog {
                 fragmentationAnalyzer.getUserProperties().setSignificantScoringFragmentIon(significantAndUsedJCheckBox.isSelected());
             }
         }
+        
+        if(!error){
+            fragmentationAnalyzer.getUserProperties().setNormalizeIntensites(totalIntensityNormalizationJRadioButton.isSelected());
+        }
+        
+        fragmentationAnalyzer.getUserProperties().saveUserPropertiesToFile();
 
         if (!error) {
             cancelJButtonActionPerformed(null);
@@ -257,11 +312,15 @@ public class Preferences extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JSeparator jSeparator1;
+    private javax.swing.ButtonGroup normalizationButtonGroup;
     private javax.swing.JCheckBox notSignificantNotUsedJCheckBox;
     private javax.swing.JButton okJButton;
     private javax.swing.JTextField ppmBubbleScalingJTextField;
     private javax.swing.JCheckBox significantAndUsedJCheckBox;
     private javax.swing.JCheckBox significantNotUsedJCheckBox;
+    private javax.swing.JRadioButton totalIntensityNormalizationJRadioButton;
+    private javax.swing.JRadioButton unnormalizedJRadioButton;
     // End of variables declaration//GEN-END:variables
 }
