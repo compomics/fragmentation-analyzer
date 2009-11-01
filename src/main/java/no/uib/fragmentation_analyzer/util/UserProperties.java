@@ -35,6 +35,7 @@ public class UserProperties implements ProgressDialogParent {
     private boolean notSignificantNotScoringFragmentIon = false;
     private boolean significantNotScoringFragmentIon = true;
     private boolean significantScoringFragmentIon = true;
+    private boolean normalizeIntensites = true;
 
     /**
      * Creates a new UserProperties object
@@ -118,20 +119,27 @@ public class UserProperties implements ProgressDialogParent {
             // get the fragment ion scoring types, requires v1.1 or newer
             s = b.readLine();
 
-            if(s != null){
+            if (s != null) {
                 notSignificantNotScoringFragmentIon = new Boolean(s.substring(s.indexOf(": ") + 2));
             }
 
             s = b.readLine();
 
-            if(s != null){
+            if (s != null) {
                 significantNotScoringFragmentIon = new Boolean(s.substring(s.indexOf(": ") + 2));
             }
 
             s = b.readLine();
 
-            if(s != null){
+            if (s != null) {
                 significantScoringFragmentIon = new Boolean(s.substring(s.indexOf(": ") + 2));
+            }
+
+            // get the fragment ion scoring types, requires v1.3 or newer
+            s = b.readLine();
+
+            if (s != null) {
+                normalizeIntensites = new Boolean(s.substring(s.indexOf(": ") + 2));
             }
 
             b.close();
@@ -435,6 +443,7 @@ public class UserProperties implements ProgressDialogParent {
             f.write("NotSignificantNotScoringFragmentIon: " + notSignificantNotScoringFragmentIon + "\n");
             f.write("SignificantNotScoringFragmentIon: " + significantNotScoringFragmentIon + "\n");
             f.write("SignificantScoringFragmentIon: " + significantScoringFragmentIon + "\n");
+            f.write("NormalizeIntensites: " + normalizeIntensites + "\n");
 
             f.close();
 
@@ -476,7 +485,7 @@ public class UserProperties implements ProgressDialogParent {
     }
 
     /**
-     * Returne the name of server host
+     * Returns the name of server host
      * 
      * @return the name of server host
      */
@@ -576,7 +585,7 @@ public class UserProperties implements ProgressDialogParent {
         cancelProgress = true;
     }
 
-        /**
+    /**
      * @return the notSignificantNotScoringFragmentIon
      */
     public boolean isNotSignificantNotScoringFragmentIon() {
@@ -616,5 +625,19 @@ public class UserProperties implements ProgressDialogParent {
      */
     public void setSignificantScoringFragmentIon(boolean significantScoringFragmentIon) {
         this.significantScoringFragmentIon = significantScoringFragmentIon;
+    }
+
+    /**
+     * @return the normalizeIntensites
+     */
+    public boolean normalizeIntensites() {
+        return normalizeIntensites;
+    }
+
+    /**
+     * @param normalizeIntensites the normalizeIntensites to set
+     */
+    public void setNormalizeIntensites(boolean normalizeIntensites) {
+        this.normalizeIntensites = normalizeIntensites;
     }
 }
