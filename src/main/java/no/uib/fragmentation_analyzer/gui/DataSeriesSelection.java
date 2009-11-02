@@ -13,6 +13,7 @@ import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.Marker;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.data.category.CategoryDataset;
+import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.statistics.DefaultBoxAndWhiskerCategoryDataset;
 import org.jfree.data.xy.XYDataset;
 import org.jfree.ui.Layer;
@@ -28,6 +29,7 @@ public class DataSeriesSelection extends javax.swing.JDialog {
     private HashMap<String, Integer> seriesKeyToSeriesNumber;
     private boolean selectAllSeries = true;
     private FragmentationAnalyzer fragmentationAnalyzer;
+    private FragmentationAnalyzerJInternalFrame currentFrame;
 
     /**
      * Creates a new DataSeriesSelection dialog and makes it visible
@@ -36,12 +38,14 @@ public class DataSeriesSelection extends javax.swing.JDialog {
      * @param chartPanel
      * @param modal
      */
-    public DataSeriesSelection(FragmentationAnalyzer fragmentationAnalyzer, boolean modal, ChartPanel chartPanel) {
+    public DataSeriesSelection(FragmentationAnalyzer fragmentationAnalyzer, boolean modal, 
+            FragmentationAnalyzerJInternalFrame currentFrame) {
         super(fragmentationAnalyzer, modal);
         initComponents();
 
         this.fragmentationAnalyzer = fragmentationAnalyzer;
-        this.chartPanel = chartPanel;
+        this.currentFrame = currentFrame;
+        chartPanel = currentFrame.getChartPanel();
 
         insertDataSeries();
 
@@ -88,6 +92,7 @@ public class DataSeriesSelection extends javax.swing.JDialog {
             CategoryDataset categoryDataset = ((CategoryPlot) chartPanel.getChart().getPlot()).getDataset(0);
 
             List columnKeys = categoryDataset.getColumnKeys();
+            seriesKeyToSeriesNumber = new HashMap<String, Integer>();
 
             // add the series keys to the table
             for (int i = 0; i < columnKeys.size(); i++) {
@@ -96,6 +101,7 @@ public class DataSeriesSelection extends javax.swing.JDialog {
                             new Integer((i + 1)), columnKeys.get(i),
                             true
                         });
+                seriesKeyToSeriesNumber.put(columnKeys.get(i).toString(), i);
             }
         }
     }
@@ -287,6 +293,8 @@ public class DataSeriesSelection extends javax.swing.JDialog {
             }
         }
 
+        int totalNumberOfFragmentIons = 0;
+
         // read the contents of the table and update the data series selection
         for (int i = 0; i < dataSeriesJXTable.getRowCount(); i++) {
 
@@ -295,13 +303,41 @@ public class DataSeriesSelection extends javax.swing.JDialog {
 
             // update the data series selection
             if (chartPanel.getChart().getPlot() instanceof XYPlot) {
+
+                // set the series visible or not visible
                 ((XYPlot) chartPanel.getChart().getPlot()).getRenderer(0).setSeriesVisible(
                         seriesKeyToSeriesNumber.get(currentSeriesKey), isCurrentlySelected);
+
+                // update the fragment ion number
+                if(((XYPlot) chartPanel.getChart().getPlot()).getRenderer(0).isSeriesVisible(
+                        seriesKeyToSeriesNumber.get(currentSeriesKey))){
+                    totalNumberOfFragmentIons += ((XYPlot) chartPanel.getChart().getPlot()).getDataset().getItemCount(
+                            seriesKeyToSeriesNumber.get(currentSeriesKey));
+                }
+
             } else if (chartPanel.getChart().getPlot() instanceof CategoryPlot) {
 
+                // update the data series selection
+                // NB: for category plots this is a non-reverable process
                 if(!isCurrentlySelected){
-                    ((DefaultBoxAndWhiskerCategoryDataset) ((CategoryPlot)
+                    if(((CategoryPlot) chartPanel.getChart().getPlot()).getDataset() instanceof DefaultCategoryDataset){
+                        ((DefaultCategoryDataset) ((CategoryPlot)
                             chartPanel.getChart().getPlot()).getDataset()).removeColumn(currentSeriesKey);
+                    } else if(((CategoryPlot) chartPanel.getChart().getPlot()).getDataset() instanceof DefaultBoxAndWhiskerCategoryDataset){
+                        ((DefaultBoxAndWhiskerCategoryDataset) ((CategoryPlot)
+                            chartPanel.getChart().getPlot()).getDataset()).removeColumn(currentSeriesKey);
+                    }
+                } else {
+
+                    // update the fragment ion number
+                    // ToDo: find a way of doing this
+//                    if(((XYPlot) chartPanel.getChart().getPlot()).getDataset() instanceof DefaultCategoryDataset){
+//                        totalNumberOfFragmentIons += ((DefaultCategoryDataset) ((CategoryPlot)
+//                            chartPanel.getChart().getPlot()).getDataset()).getRowCount();
+//                    } else if(((XYPlot) chartPanel.getChart().getPlot()).getDataset() instanceof DefaultBoxAndWhiskerCategoryDataset){
+//                        totalNumberOfFragmentIons += ((DefaultBoxAndWhiskerCategoryDataset) ((CategoryPlot)
+//                            chartPanel.getChart().getPlot()).getDataset()).getRowCount();
+//                    }
                 }
             }
 
@@ -315,6 +351,22 @@ public class DataSeriesSelection extends javax.swing.JDialog {
             }
         }
 
+        String oldTitle = currentFrame.getTitle();
+
+        if(totalNumberOfFragmentIons > 0){
+            if(oldTitle.lastIndexOf(",") != -1){
+                currentFrame.setTitle(oldTitle.substring(0, oldTitle.lastIndexOf(",") + 2) + totalNumberOfFragmentIons +
+                " fragment ions)");
+            } else {
+                currentFrame.setTitle(oldTitle.substring(0, oldTitle.length() - 1) + ", " + totalNumberOfFragmentIons +
+                " fragment ions)");
+            }
+        } else {
+            if(oldTitle.lastIndexOf(",") != -1){
+                currentFrame.setTitle(oldTitle.substring(0, oldTitle.lastIndexOf(",")) + ")");
+            }
+        }
+        
         closeDialogJButtonActionPerformed(null);
 
     }//GEN-LAST:event_okJButtonActionPerformed

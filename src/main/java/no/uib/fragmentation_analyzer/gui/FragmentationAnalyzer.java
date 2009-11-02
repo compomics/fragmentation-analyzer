@@ -46,7 +46,9 @@ import java.util.TreeSet;
 import java.util.Vector;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JOptionPane;
+import javax.swing.JPopupMenu;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
@@ -111,6 +113,9 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
     private String searchResultAnalysisButtonDisabledToolTip = "Select at least one row in the Search Results table";
     private String spectraAnalysisButtonDisabledToolTip = "Select at least one row in the Individual Spectra table";
     private boolean initialSizeHasBeenSet = false;
+
+    //Popup state to prevent feedback
+    private boolean stateCmb = false;
 
     /**
      * Creates a new FragmentationAnalyzer frame and makes it visible. Then opens
@@ -594,6 +599,15 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
         instrument1JComboBox.setMaximumRowCount(20);
         instrument1JComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "- Select -" }));
+        instrument1JComboBox.addPopupMenuListener(new javax.swing.event.PopupMenuListener() {
+            public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
+            }
+            public void popupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {
+            }
+            public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
+                instrument1JComboBoxPopupMenuWillBecomeVisible(evt);
+            }
+        });
         instrument1JComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 instrument1JComboBoxActionPerformed(evt);
@@ -603,6 +617,15 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         instrument2JComboBox.setMaximumRowCount(20);
         instrument2JComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "- Select -" }));
         instrument2JComboBox.setEnabled(false);
+        instrument2JComboBox.addPopupMenuListener(new javax.swing.event.PopupMenuListener() {
+            public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
+            }
+            public void popupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {
+            }
+            public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
+                instrument2JComboBoxPopupMenuWillBecomeVisible(evt);
+            }
+        });
         instrument2JComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 instrument2JComboBoxActionPerformed(evt);
@@ -612,6 +635,15 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         instrument3JComboBox.setMaximumRowCount(20);
         instrument3JComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "- Select -" }));
         instrument3JComboBox.setEnabled(false);
+        instrument3JComboBox.addPopupMenuListener(new javax.swing.event.PopupMenuListener() {
+            public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
+            }
+            public void popupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {
+            }
+            public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
+                instrument3JComboBoxPopupMenuWillBecomeVisible(evt);
+            }
+        });
 
         org.jdesktop.layout.GroupLayout jXPanel7Layout = new org.jdesktop.layout.GroupLayout(jXPanel7);
         jXPanel7.setLayout(jXPanel7Layout);
@@ -676,6 +708,15 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
         nTermJComboBox.setMaximumRowCount(20);
         nTermJComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "- Select -" }));
+        nTermJComboBox.addPopupMenuListener(new javax.swing.event.PopupMenuListener() {
+            public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
+            }
+            public void popupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {
+            }
+            public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
+                nTermJComboBoxPopupMenuWillBecomeVisible(evt);
+            }
+        });
         nTermJComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 nTermJComboBoxActionPerformed(evt);
@@ -686,6 +727,15 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
         cTermJComboBox.setMaximumRowCount(20);
         cTermJComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "- Select -" }));
+        cTermJComboBox.addPopupMenuListener(new javax.swing.event.PopupMenuListener() {
+            public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
+            }
+            public void popupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {
+            }
+            public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
+                cTermJComboBoxPopupMenuWillBecomeVisible(evt);
+            }
+        });
         cTermJComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cTermJComboBoxActionPerformed(evt);
@@ -696,6 +746,15 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
         chargeJComboBox.setMaximumRowCount(20);
         chargeJComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "- Select -" }));
+        chargeJComboBox.addPopupMenuListener(new javax.swing.event.PopupMenuListener() {
+            public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
+            }
+            public void popupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {
+            }
+            public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
+                chargeJComboBoxPopupMenuWillBecomeVisible(evt);
+            }
+        });
         chargeJComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 chargeJComboBoxActionPerformed(evt);
@@ -771,6 +830,15 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
         modification1JComboBox.setMaximumRowCount(20);
         modification1JComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "- Select -" }));
+        modification1JComboBox.addPopupMenuListener(new javax.swing.event.PopupMenuListener() {
+            public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
+            }
+            public void popupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {
+            }
+            public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
+                modification1JComboBoxPopupMenuWillBecomeVisible(evt);
+            }
+        });
         modification1JComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 modification1JComboBoxActionPerformed(evt);
@@ -785,6 +853,15 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         modification2JComboBox.setMaximumRowCount(20);
         modification2JComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "- Select -" }));
         modification2JComboBox.setEnabled(false);
+        modification2JComboBox.addPopupMenuListener(new javax.swing.event.PopupMenuListener() {
+            public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
+            }
+            public void popupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {
+            }
+            public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
+                modification2JComboBoxPopupMenuWillBecomeVisible(evt);
+            }
+        });
         modification2JComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 modification2JComboBoxActionPerformed(evt);
@@ -799,6 +876,15 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         modification3JComboBox.setMaximumRowCount(20);
         modification3JComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "- Select -" }));
         modification3JComboBox.setEnabled(false);
+        modification3JComboBox.addPopupMenuListener(new javax.swing.event.PopupMenuListener() {
+            public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
+            }
+            public void popupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {
+            }
+            public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
+                modification3JComboBoxPopupMenuWillBecomeVisible(evt);
+            }
+        });
 
         org.jdesktop.layout.GroupLayout jXPanel3Layout = new org.jdesktop.layout.GroupLayout(jXPanel3);
         jXPanel3.setLayout(jXPanel3Layout);
@@ -930,7 +1016,16 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
         searchResultsJComboBox.setMaximumRowCount(12);
         searchResultsJComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { " - Select Analysis Type - ", "List Individual Identifications", "Intensity Box Plot", "Mass Error Scatter Plot", "Mass Error Bubble Plot", "Mass Error Box Plot", "Fragment Ion Probability Plot" }));
-        searchResultsJComboBox.setPreferredSize(new java.awt.Dimension(99, 20));
+        searchResultsJComboBox.setPreferredSize(new java.awt.Dimension(190, 20));
+        searchResultsJComboBox.addPopupMenuListener(new javax.swing.event.PopupMenuListener() {
+            public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
+            }
+            public void popupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {
+            }
+            public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
+                searchResultsJComboBoxPopupMenuWillBecomeVisible(evt);
+            }
+        });
         searchResultsJComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 searchResultsJComboBoxActionPerformed(evt);
@@ -1028,6 +1123,16 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
         spectraJComboBox.setMaximumRowCount(12);
         spectraJComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { " - Select Analysis Type - ", "View Spectra", "Intensity Box Plot", "Mass Error Scatter Plot", "Mass Error Bubble Plot", "Mass Error Box Plot", "Fragment Ion Probability Plot" }));
+        spectraJComboBox.setPreferredSize(new java.awt.Dimension(190, 20));
+        spectraJComboBox.addPopupMenuListener(new javax.swing.event.PopupMenuListener() {
+            public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
+            }
+            public void popupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {
+            }
+            public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
+                spectraJComboBoxPopupMenuWillBecomeVisible(evt);
+            }
+        });
         spectraJComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 spectraJComboBoxActionPerformed(evt);
@@ -2298,6 +2403,9 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
                 @Override
                 public void run() {
+
+                    // ToDo: a lot of the code below is repeated for each plotting type and ought
+                    //       to be combined to simplify the code
 
                     int rowCounter = 0;
                     boolean singleSearch = !searchResultsJXTable.getColumnExt("#2").isVisible();
@@ -3945,6 +4053,9 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                 @Override
                 public void run() {
 
+                    // ToDo: a lot of the code below is repeated for each plotting type and ought
+                    //       to be combined to simplify the code
+
                     progressDialog.setMax(properties.getCurrentlySelectedRowsInSpectraTable().size());
 
                     resultsJScrollPane.getVerticalScrollBar().setValue(resultsJScrollPane.getVerticalScrollBar().getVisibleAmount());
@@ -3996,7 +4107,6 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                             } else {
 
                                 try {
-
                                     File spectrumFile = new File(properties.getCurrentDataSetFolder() + "/spectra/" + currentSpectrumId + ".pkl");
                                     PKLFile pklFile = Util.parsePKLFile(spectrumFile);
 
@@ -4102,9 +4212,17 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
                             if (properties.getCurrentlySelectedRowsInSpectraTable().size() == 1 || allPlotsHaveSameSequence) {
                                 internalFrameTitle = properties.getCurrentlySelectedRowsInSpectraTable().get(0).getModifiedSequence();
+                            } else {
+                                internalFrameTitle += " (";
                             }
 
-                            internalFrameTitle += " (" + properties.getCurrentlySelectedRowsInSpectraTable().size()
+                            if(properties.getCurrentlySelectedRowsInSpectraTable().size() == 1){
+                                internalFrameTitle += " (SID: " + properties.getCurrentlySelectedRowsInSpectraTable().get(0).getSpectrumId() + ", ";
+                            } else {
+                                internalFrameTitle += " (";
+                            }
+
+                            internalFrameTitle += properties.getCurrentlySelectedRowsInSpectraTable().size()
                                     + " spectra, " + totalNumberOfFragmentIons + " fragment ions)";
 
                             insertMassErrorPlot(isBubblePlot, data, internalFrameTitle,
@@ -4165,13 +4283,19 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
                             String internalFrameTitle = "";
 
-                            if (verifyEqualModifiedSeqences(false)) {
+                            if (verifyEqualModifiedSeqences(false) || properties.getCurrentlySelectedRowsInSpectraTable().size() == 1) {
                                 internalFrameTitle += properties.getCurrentlySelectedRowsInSpectraTable().get(0).getModifiedSequence();
                             } else {
                                 internalFrameTitle += "Mass Error Box Plot";
                             }
 
-                            internalFrameTitle += " (" + properties.getCurrentlySelectedRowsInSpectraTable().size() + " spectra, "
+                            if(properties.getCurrentlySelectedRowsInSpectraTable().size() == 1){
+                                internalFrameTitle += " (SID: " + properties.getCurrentlySelectedRowsInSpectraTable().get(0).getSpectrumId() + ", ";
+                            } else {
+                                internalFrameTitle += " (";
+                            }
+
+                            internalFrameTitle += properties.getCurrentlySelectedRowsInSpectraTable().size() + " spectra, "
                                     + totalNumberOfFragmentIons + " fragment ions)";
 
                             insertMassErrorBoxPlot(data, internalFrameTitle,
@@ -4353,7 +4477,9 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
                                     ChartPanel chartPanel = new ChartPanel(lineChart);
 
-                                    String internalFrameTitle = "" + currentIdentification.getModifiedSequence() + " (1 spectrum, " + totalNumberOfFragmentIons + " fragment ions)";
+                                    String internalFrameTitle = "" + currentIdentification.getModifiedSequence() 
+                                            + " (SID: " + currentIdentification.getSpectrumFileId() + ", 1 spectrum, "
+                                            + totalNumberOfFragmentIons + " fragment ions)";
                                     String plotType = "FragmentIonProbabilityPlot";
 
                                     FragmentationAnalyzerJInternalFrame internalFrame = new FragmentationAnalyzerJInternalFrame(
@@ -4424,14 +4550,20 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
                             String internalFrameTitle = "";
 
-                            if (verifyEqualModifiedSeqences(false)) {
+                            if (verifyEqualModifiedSeqences(false) || properties.getCurrentlySelectedRowsInSpectraTable().size() == 1) {
                                 internalFrameTitle = properties.getCurrentlySelectedRowsInSpectraTable().get(0).getModifiedSequence();
                             } else {
                                 internalFrameTitle = "Fragment Ion Probability Plot";
                             }
 
-                            internalFrameTitle += " (" + properties.getCurrentlySelectedRowsInSpectraTable().size() + " spectra, "
-                                    + totalNumberOfFragmentIons + " fragment ions)";
+                            if(properties.getCurrentlySelectedRowsInSpectraTable().size() == 1){
+                                internalFrameTitle += " (SID: " + properties.getCurrentlySelectedRowsInSpectraTable().get(0).getSpectrumId() + ", ";
+                            } else {
+                                internalFrameTitle += " (";
+                            }
+
+                            internalFrameTitle += properties.getCurrentlySelectedRowsInSpectraTable().size() 
+                                    + " spectra, " + totalNumberOfFragmentIons + " fragment ions)";
 
                             String plotType = "FragmentIonProbabilityPlot";
 
@@ -5271,7 +5403,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
     /**
      * Opens a DataSeriesSelection dialog where the data series
-     * to be displayed can be choosen.
+     * to be displayed can be chosen.
      */
     private void showDataSeriesSelectionJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showDataSeriesSelectionJMenuItemActionPerformed
         boxPlotPanelToolBarJInternalFrame.setVisible(false);
@@ -5289,7 +5421,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
             if (currentFrame.isSelected()) {
                 selectedFrameFound = true;
-                new DataSeriesSelection(this, true, currentFrame.getChartPanel());
+                new DataSeriesSelection(this, true, currentFrame);
             }
         }
     }//GEN-LAST:event_showDataSeriesSelectionJMenuItemActionPerformed
@@ -5714,6 +5846,106 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
     }//GEN-LAST:event_formWindowStateChanged
 
     /**
+     * @see #setVariableComoboBoxPopupMenuWidth()
+     */
+    private void nTermJComboBoxPopupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {//GEN-FIRST:event_nTermJComboBoxPopupMenuWillBecomeVisible
+        setVariableComoboBoxPopupMenuWidth(evt);
+    }//GEN-LAST:event_nTermJComboBoxPopupMenuWillBecomeVisible
+
+    /**
+     * @see #setVariableComoboBoxPopupMenuWidth()
+     */
+    private void chargeJComboBoxPopupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {//GEN-FIRST:event_chargeJComboBoxPopupMenuWillBecomeVisible
+        setVariableComoboBoxPopupMenuWidth(evt);
+    }//GEN-LAST:event_chargeJComboBoxPopupMenuWillBecomeVisible
+
+    /**
+     * @see #setVariableComoboBoxPopupMenuWidth()
+     */
+    private void instrument1JComboBoxPopupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {//GEN-FIRST:event_instrument1JComboBoxPopupMenuWillBecomeVisible
+        setVariableComoboBoxPopupMenuWidth(evt);
+    }//GEN-LAST:event_instrument1JComboBoxPopupMenuWillBecomeVisible
+
+    /**
+     * @see #setVariableComoboBoxPopupMenuWidth()
+     */
+    private void instrument2JComboBoxPopupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {//GEN-FIRST:event_instrument2JComboBoxPopupMenuWillBecomeVisible
+        setVariableComoboBoxPopupMenuWidth(evt);
+    }//GEN-LAST:event_instrument2JComboBoxPopupMenuWillBecomeVisible
+
+    /**
+     * @see #setVariableComoboBoxPopupMenuWidth()
+     */
+    private void instrument3JComboBoxPopupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {//GEN-FIRST:event_instrument3JComboBoxPopupMenuWillBecomeVisible
+        setVariableComoboBoxPopupMenuWidth(evt);
+    }//GEN-LAST:event_instrument3JComboBoxPopupMenuWillBecomeVisible
+
+    /**
+     * @see #setVariableComoboBoxPopupMenuWidth()
+     */
+    private void cTermJComboBoxPopupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {//GEN-FIRST:event_cTermJComboBoxPopupMenuWillBecomeVisible
+        setVariableComoboBoxPopupMenuWidth(evt);
+    }//GEN-LAST:event_cTermJComboBoxPopupMenuWillBecomeVisible
+
+    /**
+     * @see #setVariableComoboBoxPopupMenuWidth()
+     */
+    private void modification1JComboBoxPopupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {//GEN-FIRST:event_modification1JComboBoxPopupMenuWillBecomeVisible
+        setVariableComoboBoxPopupMenuWidth(evt);
+    }//GEN-LAST:event_modification1JComboBoxPopupMenuWillBecomeVisible
+
+    /**
+     * @see #setVariableComoboBoxPopupMenuWidth()
+     */
+    private void modification2JComboBoxPopupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {//GEN-FIRST:event_modification2JComboBoxPopupMenuWillBecomeVisible
+        setVariableComoboBoxPopupMenuWidth(evt);
+    }//GEN-LAST:event_modification2JComboBoxPopupMenuWillBecomeVisible
+
+    /**
+     * @see #setVariableComoboBoxPopupMenuWidth()
+     */
+    private void modification3JComboBoxPopupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {//GEN-FIRST:event_modification3JComboBoxPopupMenuWillBecomeVisible
+        setVariableComoboBoxPopupMenuWidth(evt);
+    }//GEN-LAST:event_modification3JComboBoxPopupMenuWillBecomeVisible
+
+    /**
+     * @see #setVariableComoboBoxPopupMenuWidth()
+     */
+    private void searchResultsJComboBoxPopupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {//GEN-FIRST:event_searchResultsJComboBoxPopupMenuWillBecomeVisible
+        setVariableComoboBoxPopupMenuWidth(evt);
+    }//GEN-LAST:event_searchResultsJComboBoxPopupMenuWillBecomeVisible
+
+    /**
+     * @see #setVariableComoboBoxPopupMenuWidth()
+     */
+    private void spectraJComboBoxPopupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {//GEN-FIRST:event_spectraJComboBoxPopupMenuWillBecomeVisible
+        setVariableComoboBoxPopupMenuWidth(evt);
+    }//GEN-LAST:event_spectraJComboBoxPopupMenuWillBecomeVisible
+
+    /**
+     * Makes sure that the combox is always wide enough to 
+     * display the longest element.
+     */
+    private void setVariableComoboBoxPopupMenuWidth(javax.swing.event.PopupMenuEvent evt){
+        JComboBox box = (JComboBox) evt.getSource();
+        Object comp = box.getUI().getAccessibleChild(box, 0);
+
+        if (!(comp instanceof JPopupMenu)) return;
+
+        JPopupMenu popupMenu = (JPopupMenu) comp;
+
+        JComponent scrollPane = (JComponent) popupMenu.getComponent(0);
+        Dimension size = new Dimension();
+
+        if(box.getPreferredSize().width > scrollPane.getPreferredSize().width){
+            size.width = box.getPreferredSize().width;
+            size.height = scrollPane.getPreferredSize().height;
+            scrollPane.setPreferredSize(size);
+            scrollPane.setMaximumSize(size);
+        }
+    }
+
+    /**
      * Makes sure that only the selected data series are visible.
      *
      * @param selected
@@ -5722,24 +5954,46 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
      */
     private void setSeriesVisible(boolean selected, int seriesIndex, String currentPlotType) {
 
-        Iterator<Integer> iterator = properties.getAllChartFrames().keySet().iterator();
+        if(boxPlotPanelToolBarJInternalFrame.isVisible()){
 
-        while (iterator.hasNext()) {
+            Iterator<Integer> iterator = properties.getAllChartFrames().keySet().iterator();
 
-            Integer key = iterator.next();
+            while (iterator.hasNext()) {
 
-            JFreeChart tempChart = properties.getAllChartFrames().get(key);
-            String tempPlotType = properties.getAllInternalFrames().get(key).getInternalFrameType();
+                Integer key = iterator.next();
 
-            if (tempPlotType.equalsIgnoreCase(currentPlotType)) {
+                JFreeChart tempChart = properties.getAllChartFrames().get(key);
+                String tempPlotType = properties.getAllInternalFrames().get(key).getInternalFrameType();
 
-                if (tempPlotType.equalsIgnoreCase("BoxPlot") ||
-                        tempPlotType.equalsIgnoreCase("BoxPlot_modification")) {
-                    ((CategoryPlot) tempChart.getPlot()).getRenderer(0).setSeriesVisible(seriesIndex, selected);
-                } else if (tempPlotType.equalsIgnoreCase("MassErrorScatterPlot")) {
-                    ((XYPlot) tempChart.getPlot()).getRenderer(0).setSeriesVisible(seriesIndex, selected);
-                } else if (tempPlotType.equalsIgnoreCase("MassErrorBubblePlot")) {
-                    ((XYPlot) tempChart.getPlot()).getRenderer(0).setSeriesVisible(seriesIndex, selected);
+                if (tempPlotType.equalsIgnoreCase(currentPlotType)) {
+
+                    if (tempPlotType.equalsIgnoreCase("BoxPlot") ||
+                            tempPlotType.equalsIgnoreCase("BoxPlot_modification")) {
+                        ((CategoryPlot) tempChart.getPlot()).getRenderer(0).setSeriesVisible(seriesIndex, selected);
+
+                        // update the total fragment ion counter in the title bar
+                        // note: at the moment the fragment ion count is simply removed
+                        String oldTitle = properties.getAllInternalFrames().get(key).getTitle();
+                        if(oldTitle.lastIndexOf(",") != -1){
+                            String newTitle = oldTitle.substring(0, oldTitle.lastIndexOf(",")) + ")";
+                            properties.getAllInternalFrames().get(key).setTitle(newTitle);
+                        }
+
+
+                        // ToDo: find a way to do this
+                        // code below does not work
+    //                    String newTitle = oldTitle.substring(0, oldTitle.lastIndexOf(",") + 2);
+    //
+    //                    int oldFragmentIonCountAsString =
+    //                            new Integer(oldTitle.substring(
+    //                            oldTitle.lastIndexOf(",") + 2, oldTitle.lastIndexOf("fragment ions") - 1)).intValue();
+    //
+    //                    if(selected){
+    //                        oldFragmentIonCountAsString += ((CategoryPlot) tempChart.getPlot()).getDataset().get;
+    //                    } else {
+    //                        oldFragmentIonCountAsString -= ;
+    //                    }
+                    }
                 }
             }
         }
