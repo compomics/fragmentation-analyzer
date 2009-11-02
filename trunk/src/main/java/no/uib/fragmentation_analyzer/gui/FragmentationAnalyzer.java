@@ -5270,7 +5270,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
     }//GEN-LAST:event_yIonsModifiedJCheckBoxActionPerformed
 
     /**
-     * Opens a MassErrorDataSeriesSelection dialog where the data series
+     * Opens a DataSeriesSelection dialog where the data series
      * to be displayed can be choosen.
      */
     private void showDataSeriesSelectionJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showDataSeriesSelectionJMenuItemActionPerformed
@@ -5289,7 +5289,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
             if (currentFrame.isSelected()) {
                 selectedFrameFound = true;
-                new MassErrorDataSeriesSelection(this, true, currentFrame.getChartPanel());
+                new DataSeriesSelection(this, true, currentFrame.getChartPanel());
             }
         }
     }//GEN-LAST:event_showDataSeriesSelectionJMenuItemActionPerformed

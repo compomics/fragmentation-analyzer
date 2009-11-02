@@ -22,7 +22,7 @@ import org.jfree.ui.Layer;
  *
  * @author Harald Barsnes
  */
-public class MassErrorDataSeriesSelection extends javax.swing.JDialog {
+public class DataSeriesSelection extends javax.swing.JDialog {
 
     private ChartPanel chartPanel;
     private HashMap<String, Integer> seriesKeyToSeriesNumber;
@@ -30,13 +30,13 @@ public class MassErrorDataSeriesSelection extends javax.swing.JDialog {
     private FragmentationAnalyzer fragmentationAnalyzer;
 
     /**
-     * Creates a new MassErrorDataSeriesSelection dialog and makes it visible
+     * Creates a new DataSeriesSelection dialog and makes it visible
      *
      * @param fragmentationAnalyzer
      * @param chartPanel
      * @param modal
      */
-    public MassErrorDataSeriesSelection(FragmentationAnalyzer fragmentationAnalyzer, boolean modal, ChartPanel chartPanel) {
+    public DataSeriesSelection(FragmentationAnalyzer fragmentationAnalyzer, boolean modal, ChartPanel chartPanel) {
         super(fragmentationAnalyzer, modal);
         initComponents();
 
