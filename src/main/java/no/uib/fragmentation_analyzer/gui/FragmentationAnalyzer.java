@@ -4317,6 +4317,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                         double[][] yIntensities = new double[currentSequence.length()][properties.getCurrentlySelectedRowsInSpectraTable().size()];
 
                         progressDialog.setTitle("Extracting Fragment Ions. Please Wait...");
+                        progressDialog.setIntermidiate(false);
                         progressDialog.setMax(properties.getCurrentlySelectedRowsInSpectraTable().size());
                         progressDialog.setValue(0);
 
@@ -4345,10 +4346,6 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                     // get all y fragments
                                     totalNumberOfFragmentIons += getAllFragmentsFromFragmentIonsFile(currentIdentification, yIntensities, i, "y");
                                 }
-
-                                progressDialog.setIntermidiate(true);
-                                progressDialog.setTitle("Creating Box Plot. Please Wait...");
-
 
                                 // lists of all non null B and Y values
                                 ArrayList<Double> nonNullBValues = new ArrayList<Double>();
@@ -4390,6 +4387,9 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                 e.printStackTrace();
                             }
                         }
+
+                        progressDialog.setIntermidiate(true);
+                        progressDialog.setTitle("Creating Box Plot. Please Wait...");
 
                         CategoryPlot plot = PlotUtil.getCategoryPlot(dataSet, "Sequence", "Intensity");
 
@@ -6011,13 +6011,24 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
             plotPaneCurrentPreferredSize = plotsAndAnalysesJDesktopPane.getPreferredSize();
             plotPaneCurrentScrollValue = 0;
         }
-
+        
+        
+        // sort the internal frames in increasing order depending on the unique internal frame index
         Iterator<Integer> iterator = properties.getAllInternalFrames().keySet().iterator();
 
-        int index = 0;
+        ArrayList<Integer> sortedKeys = new ArrayList<Integer>();
 
         while (iterator.hasNext()) {
-            setLocationOfInternalFrame(properties.getAllInternalFrames().get(iterator.next()), index++);
+            Integer key = iterator.next();
+            sortedKeys.add(key);
+        }
+
+        java.util.Collections.sort(sortedKeys);
+
+
+        // update the location of the frames
+        for(int i=0; i < sortedKeys.size(); i++) {
+            setLocationOfInternalFrame(properties.getAllInternalFrames().get(sortedKeys.get(i)), i);
         }
 
         setVisible(true);
