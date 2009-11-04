@@ -128,7 +128,7 @@ public class DataSeriesSelection extends javax.swing.JDialog {
         cancelJButton = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JSeparator();
 
-        selectAllSeriesJMenuItem.setText("Select/Deselect All");
+        selectAllSeriesJMenuItem.setText("Select All");
         selectAllSeriesJMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 selectAllSeriesJMenuItemActionPerformed(evt);
@@ -415,6 +415,12 @@ public class DataSeriesSelection extends javax.swing.JDialog {
         }
 
         selectAllSeries = !selectAllSeries;
+        
+        if(selectAllSeries){
+            selectAllSeriesJMenuItem.setText("Select All");
+        } else {
+            selectAllSeriesJMenuItem.setText("Deselect All");
+        }
 
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 }//GEN-LAST:event_selectAllSeriesJMenuItemActionPerformed
@@ -428,6 +434,7 @@ public class DataSeriesSelection extends javax.swing.JDialog {
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
 
         selectAllSeries = true;
+        selectAllSeriesJMenuItem.setText("Select All");
 
         for (int i = 0; i < dataSeriesJXTable.getRowCount(); i++) {
             dataSeriesJXTable.setValueAt(
@@ -466,6 +473,7 @@ public class DataSeriesSelection extends javax.swing.JDialog {
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
 
         selectAllSeries = true;
+        selectAllSeriesJMenuItem.setText("Select All");
 
         boolean columnWasSorted = false;
         int sortedTableColumn = -1;

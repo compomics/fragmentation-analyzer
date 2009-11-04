@@ -487,7 +487,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         });
         internalFramesJPopupMenu.add(removeAllInternalFramesJMenuItem);
 
-        selectAllIdentificationsJMenuItem.setText("Select/Deselect All");
+        selectAllIdentificationsJMenuItem.setText("Select All");
         selectAllIdentificationsJMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 selectAllIdentificationsJMenuItemActionPerformed(evt);
@@ -523,7 +523,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
         selectIdentificationsJPopupMenu.add(highlightIdentificationsJMenu);
 
-        selectAllSpectrtaJMenuItem.setText("Select/Deselect All");
+        selectAllSpectrtaJMenuItem.setText("Select All");
         selectAllSpectrtaJMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 selectAllSpectrtaJMenuItemActionPerformed(evt);
@@ -979,7 +979,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
             searchTypeJXPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(searchTypeJXPanelLayout.createSequentialGroup()
                 .add(28, 28, 28)
-                .add(searchJButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 285, Short.MAX_VALUE)
+                .add(searchJButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 284, Short.MAX_VALUE)
                 .add(35, 35, 35))
             .add(searchTypeJXPanelLayout.createSequentialGroup()
                 .add(38, 38, 38)
@@ -1860,6 +1860,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                         spectraJButton.setToolTipText(spectraAnalysisButtonDisabledToolTip);
 
                         selectAllIdentifications = true;
+                        selectAllIdentificationsJMenuItem.setText("Select All");
 
                         Integer charge = new Integer(Util.removeOccurenceCount(((String) chargeJComboBox.getSelectedItem())));
 
@@ -2464,6 +2465,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                         spectraJXTable.resetSortOrder();
                         properties.setCurrentlySelectedRowsInSpectraTable(new ArrayList<SpectrumTableRow>());
                         selectAllSpectra = true;
+                        selectAllSpectrtaJMenuItem.setText("Select All");
                         spectraJComboBoxActionPerformed(null);
 
                         for (int i = 0; i < properties.getCurrentlySelectedRowsInSearchTable().size() && !cancelProgress; i++) {
@@ -2561,6 +2563,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                             ((DefaultTableModel) spectraJXTable.getModel()).setRowCount(0);
                             properties.setCurrentlySelectedRowsInSpectraTable(new ArrayList<SpectrumTableRow>());
                             selectAllSpectra = true;
+                            selectAllSpectrtaJMenuItem.setText("Select All");
                             spectraJComboBoxActionPerformed(null);
                         }
                     } else if (searchResultsJComboBox.getSelectedIndex() == Properties.SEARCH_RESULTS_INTENSITY_BOX_PLOT) {
@@ -5133,6 +5136,12 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
         selectAllIdentifications = !selectAllIdentifications;
 
+        if(selectAllIdentifications){
+            selectAllIdentificationsJMenuItem.setText("Select All");
+        } else {
+            selectAllIdentificationsJMenuItem.setText("Deselect All");
+        }
+
         if (columnWasSorted) {
             searchResultsJXTable.setSortable(true);
             searchResultsJXTable.setSortOrder(sortedTableColumn, sortOrder);
@@ -5150,6 +5159,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
 
         selectAllIdentifications = true;
+        selectAllIdentificationsJMenuItem.setText("Select All");
 
         boolean columnWasSorted = false;
         int sortedTableColumn = -1;
@@ -5251,6 +5261,12 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
         selectAllSpectra = !selectAllSpectra;
 
+        if(selectAllSpectra){
+            selectAllSpectrtaJMenuItem.setText("Select All");
+        } else {
+            selectAllSpectrtaJMenuItem.setText("Deselect All");
+        }
+
         if (columnWasSorted) {
             spectraJXTable.setSortable(true);
             spectraJXTable.setSortOrder(sortedTableColumn, sortOrder);
@@ -5268,6 +5284,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
 
         selectAllSpectra = true;
+        selectAllSpectrtaJMenuItem.setText("Select All");
 
         boolean columnWasSorted = false;
         int sortedTableColumn = -1;
@@ -5547,6 +5564,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
 
         selectAllIdentifications = true;
+        selectAllIdentificationsJMenuItem.setText("Select All");
 
         boolean columnWasSorted = false;
         int sortedTableColumn = -1;
@@ -5625,6 +5643,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
 
         selectAllSpectra = true;
+        selectAllSpectrtaJMenuItem.setText("Select All");
 
         boolean columnWasSorted = false;
         int sortedTableColumn = -1;

@@ -10,7 +10,7 @@
       <SubComponents>
         <MenuItem class="javax.swing.JMenuItem" name="selectAllSeriesJMenuItem">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Select/Deselect All"/>
+            <Property name="text" type="java.lang.String" value="Select All"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="selectAllSeriesJMenuItemActionPerformed"/>
