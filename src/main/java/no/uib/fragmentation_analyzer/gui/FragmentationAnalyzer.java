@@ -37,6 +37,8 @@ import java.net.URL;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -2357,6 +2359,10 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
             daOrPpmSearchResultsJComboBox.setEnabled(false);
             combineSearchResultsJComboBox.setEnabled(true);
         }
+
+        if (searchResultsJComboBox.getSelectedIndex() == Properties.SEARCH_RESULTS_INTENSITY_BOX_PLOT) {
+            combineSearchResultsJComboBox.setSelectedItem("Single");
+        }
     }//GEN-LAST:event_searchResultsJComboBoxActionPerformed
 
     /**
@@ -2368,8 +2374,23 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
         cancelProgress = false;
 
+        // if more than 10 internal frames are to be opened, first ask if the user wants to continue or not
+        if(properties.getCurrentlySelectedRowsInSearchTable().size() > 10 &&
+                combineSearchResultsJComboBox.getSelectedIndex() == Properties.SINGLE_PLOT &&
+                searchResultsJComboBox.getSelectedIndex() != Properties.SEARCH_RESULTS_SHOW_INDIVIDUAL_SPECTRA){
+            int option = JOptionPane.showConfirmDialog(this, "This will open " +
+                    properties.getCurrentlySelectedRowsInSearchTable().size()
+                    + " plots/analysis frames.\nAre you sure you want to continue?", "Continue?",
+                    JOptionPane.YES_NO_OPTION);
+
+            if(option == JOptionPane.NO_OPTION){
+                cancelProgress = true;
+            }
+        }
+
         // get the wanted plot label type from the user
-        if (searchResultsJComboBox.getSelectedIndex() == Properties.SEARCH_RESULTS_MASS_ERROR_SCATTER_PLOT ||
+        if (!cancelProgress &&
+                searchResultsJComboBox.getSelectedIndex() == Properties.SEARCH_RESULTS_MASS_ERROR_SCATTER_PLOT ||
                 searchResultsJComboBox.getSelectedIndex() == Properties.SEARCH_RESULTS_MASS_ERROR_BUBBLE_PLOT) {
             new PlotLabelSelection(this, true, currentDataSetIsFromMsLims);
         }
@@ -3963,6 +3984,11 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
             daOrPpmSpectraJComboBox.setEnabled(false);
             combineSpectraJComboBox.setEnabled(true);
         }
+
+        if(spectraJComboBox.getSelectedIndex() == Properties.SPECTRA_INTENSITY_BOX_PLOT ||
+                spectraJComboBox.getSelectedIndex() == Properties.SPECTRA_VIEW_SPECTRUM){
+            combineSpectraJComboBox.setSelectedItem("Single");
+        }
     }//GEN-LAST:event_spectraJComboBoxActionPerformed
 
     /**
@@ -4007,14 +4033,28 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
         cancelProgress = false;
 
+        // if more than 10 internal frames are to be opened, first ask if the user wants to continue or not
+        if(properties.getCurrentlySelectedRowsInSpectraTable().size() > 10 &&
+                combineSpectraJComboBox.getSelectedIndex() == Properties.SINGLE_PLOT){
+            int option = JOptionPane.showConfirmDialog(this, "This will open " +
+                    properties.getCurrentlySelectedRowsInSpectraTable().size()
+                    + " plots/analysis frames.\nAre you sure you want to continue?", "Continue?",
+                    JOptionPane.YES_NO_OPTION);
+
+            if(option == JOptionPane.NO_OPTION){
+                cancelProgress = true;
+            }
+        }
+
         // get the wanted label type from the user
-        if (spectraJComboBox.getSelectedIndex() == Properties.SPECTRA_MASS_ERROR_BUBBLE_PLOT ||
-                spectraJComboBox.getSelectedIndex() == Properties.SPECTRA_MASS_ERROR_SCATTER_PLOT) {
+        if (!cancelProgress &&
+                (spectraJComboBox.getSelectedIndex() == Properties.SPECTRA_MASS_ERROR_BUBBLE_PLOT ||
+                spectraJComboBox.getSelectedIndex() == Properties.SPECTRA_MASS_ERROR_SCATTER_PLOT)) {
             new PlotLabelSelection(this, true, currentDataSetIsFromMsLims);
         }
 
         // verify that all modified sequences are equal
-        if (spectraJComboBox.getSelectedIndex() == Properties.SPECTRA_INTENSITY_BOX_PLOT) {
+        if (!cancelProgress && spectraJComboBox.getSelectedIndex() == Properties.SPECTRA_INTENSITY_BOX_PLOT) {
             // || spectraJComboBox.getSelectedIndex() == Properties.SPECTRA_ION_PROBABILITY_PLOT){
             cancelProgress = !verifyEqualModifiedSeqences(true);
         }
@@ -6914,9 +6954,15 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
         Iterator<String> iteratorSequence = values.keySet().iterator();
 
+        NumberFormat formatter =  new DecimalFormat("##,###,###");
+
         while (iteratorSequence.hasNext()) {
             String key = iteratorSequence.next();
-            tempInstruments.add(key + " (" + values.get(key) + ")");
+
+            // format the occurence value
+            String occurenceAsString = formatter.format(values.get(key));
+
+            tempInstruments.add(key + " (" + occurenceAsString + ")");
         }
 
         java.util.Collections.sort(tempInstruments);
