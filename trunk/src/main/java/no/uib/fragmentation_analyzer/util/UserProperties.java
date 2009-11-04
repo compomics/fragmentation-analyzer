@@ -20,7 +20,7 @@ import no.uib.fragmentation_analyzer.gui.ProgressDialogParent;
  */
 public class UserProperties implements ProgressDialogParent {
 
-    // defaults user settings, used if the UserProperties file can not be read
+    // default user settings, used if the UserProperties file can not be read
     private String userName = ""; //database user name
     private String serverHost = ""; //database serverhost
     private String schema = ""; //database schema
@@ -36,6 +36,8 @@ public class UserProperties implements ProgressDialogParent {
     private boolean significantNotScoringFragmentIon = true;
     private boolean significantScoringFragmentIon = true;
     private boolean normalizeIntensites = true;
+    private int numberOfPlotsPerRow = 2;
+    private int numberOfPlotsPerColumn = 2;
 
     /**
      * Creates a new UserProperties object
@@ -135,11 +137,24 @@ public class UserProperties implements ProgressDialogParent {
                 significantScoringFragmentIon = new Boolean(s.substring(s.indexOf(": ") + 2));
             }
 
-            // get the fragment ion scoring types, requires v1.3 or newer
+            // get the normalize intensity, requires v1.3 or newer
             s = b.readLine();
 
             if (s != null) {
                 normalizeIntensites = new Boolean(s.substring(s.indexOf(": ") + 2));
+            }
+
+            // get the number of plots per row and column, requires v1.3.1 or newer
+            s = b.readLine();
+
+            if (s != null) {
+                numberOfPlotsPerRow = new Integer(s.substring(s.indexOf(": ") + 2));
+            }
+
+            s = b.readLine();
+
+            if (s != null) {
+                numberOfPlotsPerColumn = new Integer(s.substring(s.indexOf(": ") + 2));
             }
 
             b.close();
@@ -444,6 +459,8 @@ public class UserProperties implements ProgressDialogParent {
             f.write("SignificantNotScoringFragmentIon: " + significantNotScoringFragmentIon + "\n");
             f.write("SignificantScoringFragmentIon: " + significantScoringFragmentIon + "\n");
             f.write("NormalizeIntensites: " + normalizeIntensites + "\n");
+            f.write("NumberOfPlotsPerRow: " + numberOfPlotsPerRow + "\n");
+            f.write("NumberOfPlotsPerColumn: " + numberOfPlotsPerColumn + "\n");
 
             f.close();
 
@@ -639,5 +656,33 @@ public class UserProperties implements ProgressDialogParent {
      */
     public void setNormalizeIntensites(boolean normalizeIntensites) {
         this.normalizeIntensites = normalizeIntensites;
+    }
+
+    /**
+     * @return the numberOfPlotsPerRow
+     */
+    public int getNumberOfPlotsPerRow() {
+        return numberOfPlotsPerRow;
+    }
+
+    /**
+     * @param numberOfPlotsPerRow the numberOfPlotsPerRow to set
+     */
+    public void setNumberOfPlotsPerRow(int numberOfPlotsPerRow) {
+        this.numberOfPlotsPerRow = numberOfPlotsPerRow;
+    }
+
+    /**
+     * @return the numberOfPlotsPerColumn
+     */
+    public int getNumberOfPlotsPerColumn() {
+        return numberOfPlotsPerColumn;
+    }
+
+    /**
+     * @param numberOfPlotsPerColumn the numberOfPlotsPerColumn to set
+     */
+    public void setNumberOfPlotsPerColumn(int numberOfPlotsPerColumn) {
+        this.numberOfPlotsPerColumn = numberOfPlotsPerColumn;
     }
 }
