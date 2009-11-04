@@ -13,3 +13,5 @@
  * BUG FIX: Fixed a bug that resulted in a dialog appearing when closing the tool if used off-line.
  * BUG FIX: Fixed a bug in the data source selection that could result in an incorrect data set being opened when the table was sorted.
  * BUG FIX: Made sure that the drop down boxes are always wide enough to display the widest element.
+ * BUG FIX: Fixed a bug in progress bar that resulted in limited information showed during intensity plot creation for spectra.
+ * BUG FIX: Fixed a bug in the code for ordering the plot frames when deleting a plot. The new order was not always correct.
