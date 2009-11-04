@@ -37,6 +37,9 @@ public class Preferences extends javax.swing.JDialog {
             totalIntensityNormalizationJRadioButton.setSelected(false);
             unnormalizedJRadioButton.setSelected(true);
         }
+
+        plotsPerRowJSpinner.setValue(fragmentationAnalyzer.getUserProperties().getNumberOfPlotsPerRow());
+        plotsPerColumnJSpinner.setValue(fragmentationAnalyzer.getUserProperties().getNumberOfPlotsPerColumn());
         
         setLocationRelativeTo(fragmentationAnalyzer);
         setVisible(true);
@@ -57,6 +60,10 @@ public class Preferences extends javax.swing.JDialog {
         defaultBubbleScalingJTextField = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         ppmBubbleScalingJTextField = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        plotsPerRowJSpinner = new javax.swing.JSpinner();
+        plotsPerColumnJSpinner = new javax.swing.JSpinner();
         okJButton = new javax.swing.JButton();
         cancelJButton = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JSeparator();
@@ -86,6 +93,18 @@ public class Preferences extends javax.swing.JDialog {
         ppmBubbleScalingJTextField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         ppmBubbleScalingJTextField.setToolTipText("<html>\nThe scale used when determining the size<br>\nof the bubbles in a bubble plot using the<br>\nrelative distance measurment, i.e. ppm.\n<html> ");
 
+        jLabel3.setText("Number of Plots Per Row:");
+        jLabel3.setToolTipText("<html>\nThe number of plots shown per row in the Plots/Analyses panel.\n<html> ");
+
+        jLabel4.setText("Number of Plots Per Column:");
+        jLabel4.setToolTipText("<html>\nThe number of plots shown per column in the Plots/Analysis panel.\n<html> ");
+
+        plotsPerRowJSpinner.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(2), Integer.valueOf(1), null, Integer.valueOf(1)));
+        plotsPerRowJSpinner.setToolTipText("<html>\nThe number of plots shown per row in the Plots/Analyses panel.\n<html> ");
+
+        plotsPerColumnJSpinner.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(2), Integer.valueOf(1), null, Integer.valueOf(1)));
+        plotsPerColumnJSpinner.setToolTipText("<html>\nThe number of plots shown per column in the Plots/Analysis panel.\n<html> ");
+
         org.jdesktop.layout.GroupLayout jPanel1Layout = new org.jdesktop.layout.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -94,11 +113,15 @@ public class Preferences extends javax.swing.JDialog {
                 .addContainerGap()
                 .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(jLabel1)
-                    .add(jLabel2))
-                .add(14, 14, 14)
+                    .add(jLabel2)
+                    .add(jLabel4)
+                    .add(jLabel3))
+                .add(9, 9, 9)
                 .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
+                    .add(plotsPerColumnJSpinner, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE)
                     .add(defaultBubbleScalingJTextField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE)
-                    .add(ppmBubbleScalingJTextField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE))
+                    .add(ppmBubbleScalingJTextField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE)
+                    .add(org.jdesktop.layout.GroupLayout.LEADING, plotsPerRowJSpinner, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -112,6 +135,14 @@ public class Preferences extends javax.swing.JDialog {
                 .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(jLabel2)
                     .add(ppmBubbleScalingJTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .add(18, 18, 18)
+                .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(jLabel3)
+                    .add(plotsPerRowJSpinner, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(jLabel4)
+                    .add(plotsPerColumnJSpinner, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -204,8 +235,8 @@ public class Preferences extends javax.swing.JDialog {
             .add(layout.createSequentialGroup()
                 .addContainerGap()
                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, jPanel1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .add(org.jdesktop.layout.GroupLayout.TRAILING, jPanel3, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .add(jPanel1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .add(jPanel2, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .add(jSeparator1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 336, Short.MAX_VALUE)
                     .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
@@ -298,6 +329,35 @@ public class Preferences extends javax.swing.JDialog {
             fragmentationAnalyzer.getUserProperties().setNormalizeIntensites(totalIntensityNormalizationJRadioButton.isSelected());
         }
         
+        if(!error){
+            try{
+                fragmentationAnalyzer.getUserProperties().setNumberOfPlotsPerRow(
+                        ((Integer) plotsPerRowJSpinner.getValue()).intValue());
+            } catch(NumberFormatException e){
+                JOptionPane.showMessageDialog(this,
+                        "Number of plots per row has to be an integer.",
+                        "Plots Per Row", JOptionPane.INFORMATION_MESSAGE);
+                plotsPerRowJSpinner.requestFocus();
+                error = true;
+            }
+        }
+
+        if(!error){
+            try{
+                fragmentationAnalyzer.getUserProperties().setNumberOfPlotsPerColumn(
+                        ((Integer) plotsPerColumnJSpinner.getValue()).intValue());
+            } catch(NumberFormatException e){
+                JOptionPane.showMessageDialog(this,
+                        "Number of plots per column has to be an integer.",
+                        "Plots Per Column", JOptionPane.INFORMATION_MESSAGE);
+                plotsPerRowJSpinner.requestFocus();
+                error = true;
+            }
+        }
+
+        // update the order and size of the internal frames
+        fragmentationAnalyzer.orderInternalFrames();
+        
         fragmentationAnalyzer.getUserProperties().saveUserPropertiesToFile();
 
         if (!error) {
@@ -310,6 +370,8 @@ public class Preferences extends javax.swing.JDialog {
     private javax.swing.JTextField defaultBubbleScalingJTextField;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -317,6 +379,8 @@ public class Preferences extends javax.swing.JDialog {
     private javax.swing.ButtonGroup normalizationButtonGroup;
     private javax.swing.JCheckBox notSignificantNotUsedJCheckBox;
     private javax.swing.JButton okJButton;
+    private javax.swing.JSpinner plotsPerColumnJSpinner;
+    private javax.swing.JSpinner plotsPerRowJSpinner;
     private javax.swing.JTextField ppmBubbleScalingJTextField;
     private javax.swing.JCheckBox significantAndUsedJCheckBox;
     private javax.swing.JCheckBox significantNotUsedJCheckBox;
