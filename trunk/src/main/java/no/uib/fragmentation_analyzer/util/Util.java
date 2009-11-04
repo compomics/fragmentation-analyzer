@@ -388,6 +388,124 @@ public final class Util {
     }
 
     /**
+     * Returns the peak color to be used for the given label.
+     *
+     * @param seriesLabel
+     * @return the peak color
+     */
+    public static Color determineColorOfLine(String seriesLabel) {
+
+        Color currentColor = Color.GRAY;
+
+        if (seriesLabel.startsWith("a")) {
+
+            //turquoise
+            currentColor = new Color(153, 0, 0);
+
+            if (seriesLabel.lastIndexOf("H2O") != -1 || seriesLabel.lastIndexOf("H20") != -1) {
+                //light purple-blue
+                currentColor = new Color(171, 161, 255);
+            } else if (seriesLabel.lastIndexOf("NH3") != -1) {
+                //ugly purple pink
+                currentColor = new Color(248, 151, 202);
+            }
+
+            // change color slightly if a double charge is detected
+            if(seriesLabel.lastIndexOf("++") != -1){
+                currentColor = new Color(currentColor.getRed() - 100, currentColor.getGreen(), currentColor.getBlue());
+            }
+
+        } else if (seriesLabel.startsWith("b")) {
+
+            //dark blue
+            currentColor = new Color(0, 0, 255);
+
+            // change color slightly if a neutral loss is detected
+            if (seriesLabel.lastIndexOf("H2O") != -1 || seriesLabel.lastIndexOf("H20") != -1) {
+                currentColor = new Color(0, 150, 255);
+            } else if (seriesLabel.lastIndexOf("NH3") != -1) {
+                currentColor = new Color(150, 0, 255);
+            }
+
+            // change color slightly if a double charge is detected
+            if(seriesLabel.lastIndexOf("++") != -1){
+                currentColor = new Color(currentColor.getRed(), currentColor.getGreen(), currentColor.getBlue() - 100);
+            }
+
+        } else if (seriesLabel.startsWith("c")) {
+
+            //purple blue
+            currentColor = new Color(188, 0, 255);
+
+            // change color slightly if a neutral loss is detected
+            if (seriesLabel.lastIndexOf("H2O") != -1 || seriesLabel.lastIndexOf("H20") != -1) {
+                currentColor = new Color(188, 150, 255);
+            } else if (seriesLabel.lastIndexOf("NH3") != -1) {
+                currentColor = new Color(255, 0, 255);
+            }
+
+            // change color slightly if a double charge is detected
+            if(seriesLabel.lastIndexOf("++") != -1){
+                currentColor = new Color(currentColor.getRed(), currentColor.getGreen(), currentColor.getBlue() - 100);
+            }
+
+        } else if (seriesLabel.startsWith("x")) {
+
+            //green
+            currentColor = new Color(78, 200, 0);
+
+            // change color slightly if a neutral loss is detected
+            if (seriesLabel.lastIndexOf("H2O") != -1 || seriesLabel.lastIndexOf("H20") != -1) {
+                currentColor = new Color(78, 200, 150);
+            } else if (seriesLabel.lastIndexOf("NH3") != -1) {
+                currentColor = new Color(255, 200, 255);
+            }
+
+            // change color slightly if a double charge is detected
+            if(seriesLabel.lastIndexOf("++") != -1){
+                currentColor = new Color(currentColor.getRed(), currentColor.getGreen() - 100, currentColor.getBlue());
+            }
+
+        } else if (seriesLabel.startsWith("y")) {
+
+            //red
+            currentColor = new Color(255, 0, 0);
+
+             // change color slightly if a neutral loss is detected
+            if (seriesLabel.lastIndexOf("H2O") != -1 || seriesLabel.lastIndexOf("H20") != -1) {
+                currentColor = new Color(255, 150, 0);
+            } else if (seriesLabel.lastIndexOf("NH3") != -1) {
+                currentColor = new Color(255, 0, 150);
+            }
+
+            // change color slightly if a double charge is detected
+            if(seriesLabel.lastIndexOf("++") != -1){
+                currentColor = new Color(currentColor.getRed() - 100, currentColor.getGreen(), currentColor.getBlue());
+            }
+
+        } else if (seriesLabel.startsWith("z")) {
+
+            //dark green
+            currentColor = new Color(64, 179, 0);
+
+             // change color slightly if a neutral loss is detected
+            if (seriesLabel.lastIndexOf("H2O") != -1 || seriesLabel.lastIndexOf("H20") != -1) {
+                currentColor = new Color(64, 179, 150);
+            } else if (seriesLabel.lastIndexOf("NH3") != -1) {
+                currentColor = new Color(255, 179, 150);
+            }
+
+            // change color slightly if a double charge is detected
+            if(seriesLabel.lastIndexOf("++") != -1){
+                currentColor = new Color(currentColor.getRed(), currentColor.getGreen() - 100, currentColor.getBlue());
+            }
+
+        }
+
+        return currentColor;
+    }
+
+    /**
      * Extract the unmodified sequence from the modified sequence. E.g. 'ARMR' from 'NH2-ARTM<Mox>R-COOH'.
      *
      * @param modifiedSequence the modified sequence

@@ -196,9 +196,23 @@ public class PlotUtil {
         XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer(true, false);
         renderer.setBaseToolTipGenerator(new StandardXYToolTipGenerator());
 
-        // increase the width of all lines
+        // set the data series colors
+        for(int i=0; i<sortedKeys.size(); i++){
+            renderer.setSeriesPaint(i, Util.determineColorOfLine(sortedKeys.get(i)));
+        }
+
+        // increase the width of all lines and use dotted lines for the neutral loss and doubly charged ions
         for(int i=0; i<dataset.getSeriesCount(); i++){
-            renderer.setSeriesStroke(i, new BasicStroke(LINE_WIDTH, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+
+            if(sortedKeys.get(i).lastIndexOf("++") != -1 ||
+                    sortedKeys.get(i).lastIndexOf("H2O") != -1 ||
+                    sortedKeys.get(i).lastIndexOf("H20") != -1 ||
+                    sortedKeys.get(i).lastIndexOf("NH3") != -1){
+                renderer.setSeriesStroke(i, new BasicStroke(LINE_WIDTH, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 
+                        1.0f, new float[] {6.0f}, 0f));
+            } else {
+                renderer.setSeriesStroke(i, new BasicStroke(LINE_WIDTH, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+            }
         }
         
         plot.setRenderer(renderer);
