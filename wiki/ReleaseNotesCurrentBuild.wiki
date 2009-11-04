@@ -3,4 +3,4 @@
 ----
 
  * NEW FEATURE: The search parameters section can now be hidden or shown as requested by the user. 
- * NEW FEATUE: The number of plots per row and column in the plotting panel can now be set by the user in the Preferences dialog.
+ * NEW FEATURE: The number of plots per row and column in the plotting panel can now be set by the user in the Preferences dialog.
