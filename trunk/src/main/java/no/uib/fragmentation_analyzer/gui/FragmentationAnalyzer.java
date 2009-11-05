@@ -1686,8 +1686,10 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
         jMenuBar.add(helpJMenu);
 
+        windowJMenu.setMnemonic('W');
         windowJMenu.setText("Window");
 
+        showLeftPanelJMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_L, java.awt.event.InputEvent.CTRL_MASK));
         showLeftPanelJMenuItem.setText("Hide Left Panel");
         showLeftPanelJMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -4058,7 +4060,8 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
         // if more than 10 internal frames are to be opened, first ask if the user wants to continue or not
         if(properties.getCurrentlySelectedRowsInSpectraTable().size() > 10 &&
-                combineSpectraJComboBox.getSelectedIndex() == Properties.SINGLE_PLOT){
+                combineSpectraJComboBox.getSelectedIndex() == Properties.SINGLE_PLOT &&
+                spectraJComboBox.getSelectedIndex() != Properties.SPECTRA_INTENSITY_BOX_PLOT){
             int option = JOptionPane.showConfirmDialog(this, "This will open " +
                     properties.getCurrentlySelectedRowsInSpectraTable().size()
                     + " plots/analysis frames.\nAre you sure you want to continue?", "Continue?",
