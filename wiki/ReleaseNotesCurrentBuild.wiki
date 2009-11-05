@@ -4,4 +4,7 @@
 
  * NEW FEATURE: The search parameters section can now be hidden or shown as requested by the user. 
  * NEW FEATURE: The number of plots per row and column in the plotting panel can now be set by the user in the Preferences dialog.
+ * NEW FEATURE: Importing user settings from previous versions is now supported.
+ * FEATURE IMPROVEMENT: In the search results dialog 'unique identifications' has been changed to 'unique peptides'.
  * BUG FIX: Fixed a bug in the dialog shown when plotting more than 10 plots at once. It was shown too often.
+
