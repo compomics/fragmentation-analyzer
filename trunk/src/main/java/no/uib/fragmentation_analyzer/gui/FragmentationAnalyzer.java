@@ -2023,7 +2023,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
                                             JOptionPane.showMessageDialog(null,
                                                     "#Identifications: " + finalMatchCounter + "\n" +
-                                                    "#Unique Identifications: " + properties.getIdentificationMap().size() + "\n",
+                                                    "#Unique Peptides: " + properties.getIdentificationMap().size() + "\n",
                                                     "Search Results", JOptionPane.INFORMATION_MESSAGE);
                                         } else if (searchType == Properties.MODIFICATION_SEARCH) {
 
