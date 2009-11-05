@@ -240,11 +240,15 @@
         </Menu>
         <Menu class="javax.swing.JMenu" name="windowJMenu">
           <Properties>
+            <Property name="mnemonic" type="int" value="87"/>
             <Property name="text" type="java.lang.String" value="Window"/>
           </Properties>
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="showLeftPanelJMenuItem">
               <Properties>
+                <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
+                  <KeyStroke key="Ctrl+L"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Hide Left Panel"/>
               </Properties>
               <Events>
