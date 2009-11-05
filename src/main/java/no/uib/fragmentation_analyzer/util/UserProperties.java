@@ -79,21 +79,19 @@ public class UserProperties implements ProgressDialogParent {
             // then ask the user if he/she wants to import the old user settings
             if (version.endsWith("*")) {
 
-                // note: importing old user settings is currently disabled
+                int option = JOptionPane.showConfirmDialog(null,
+                        "Are you upgrading from an older version of FragmentationAnalyzer?",
+                        "Upgrading FragmentationAnalyzer?", JOptionPane.YES_NO_OPTION);
 
-//                int option = JOptionPane.showConfirmDialog(null,
-//                        "Are you upgrading from an older version of FragmentationAnalyzer?",
-//                        "Upgrading FragmentationAnalyzer?", JOptionPane.YES_NO_OPTION);
-//
-//                if (option == JOptionPane.YES_OPTION) {
-//                    option = JOptionPane.showConfirmDialog(null,
-//                            "Import the settings from the previous version?",
-//                            "Import Settings?", JOptionPane.YES_NO_OPTION);
-//
-//                    if (option == JOptionPane.YES_OPTION) {
-//                        importOldProperties = true;
-//                    }
-//                }
+                if (option == JOptionPane.YES_OPTION) {
+                    option = JOptionPane.showConfirmDialog(null,
+                            "Import the settings from the previous version?",
+                            "Import Settings?", JOptionPane.YES_NO_OPTION);
+
+                    if (option == JOptionPane.YES_OPTION) {
+                        importOldProperties = true;
+                    }
+                }
 
                 // Removes the '*' at the end of the version number
                 // The '*' is used as a marker showing that the user as
@@ -162,13 +160,15 @@ public class UserProperties implements ProgressDialogParent {
 
             // import old user settings
             if (importOldProperties) {
-                //importUserProperties(); // not currently used
+                importUserProperties();
             }
 
             if (settingsFile != null) {
                 JOptionPane.showMessageDialog(null,
                         "The old settings has been successfully imported.\n" +
-                        "(Changes to the memory settings requires a restart.)",
+                        "(Changes to the memory settings requires a restart.)\n\n" +
+                        "To import your old data sets simply copy the contents\n" +
+                        "of the old DataSets folder.",
                         "Settings Imported", JOptionPane.INFORMATION_MESSAGE);
             }
 
@@ -284,7 +284,7 @@ public class UserProperties implements ProgressDialogParent {
 
                 if (!cancel) {
 
-                    // copy the instrumens, contacts, protocols and samples
+                    // get the old properties folder
                     File propertiesFolder = selectedFile.getParentFile();
 
                     // copy the JavaOptions file
@@ -321,12 +321,13 @@ public class UserProperties implements ProgressDialogParent {
                     }
 
 
-                    option = JOptionPane.showConfirmDialog(null, "Import data sets as well?",
-                            "Import Data Sets?", JOptionPane.YES_NO_OPTION);
-
-                    if (option == JOptionPane.YES_OPTION) {
-                        importDataSets(propertiesFolder, path);
-                    }
+                    // note: importing data sets is currently disabled
+//                    option = JOptionPane.showConfirmDialog(null, "Import data sets as well?",
+//                            "Import Data Sets?", JOptionPane.YES_NO_OPTION);
+//
+//                    if (option == JOptionPane.YES_OPTION) {
+//                        importDataSets(propertiesFolder, path);
+//                    }
 
                     //copy the old UserProperties.prop file
                     readUserPropertiesFromFile(selectedFile);
@@ -373,46 +374,50 @@ public class UserProperties implements ProgressDialogParent {
 
                     File currentDataSet = dataSets[i];
                     String dataSetName = currentDataSet.getName();
-                    File[] files = currentDataSet.listFiles();
-                    new File(path + "/DataSets/" + dataSetName + "/").mkdir();
 
-                    progressDialog.setString("(" + (i + 1) + "/" + dataSets.length + ")");
+                    if(currentDataSet.isDirectory()){
 
-                    for (int j = 0; j < files.length && !cancelProgress; j++) {
+                        File[] files = currentDataSet.listFiles();
+                        new File(path + "/DataSets/" + dataSetName + "/").mkdir();
 
-                        File dataFile = files[j];
+                        progressDialog.setString("(" + (i + 1) + "/" + dataSets.length + ")");
 
-                        if (dataFile.isDirectory()) {
+                        for (int j = 0; j < files.length && !cancelProgress; j++) {
 
-                            progressDialog.setTitle("Importing Spectra. Please Wait...");
-                            progressDialog.setIntermidiate(false);
+                            File dataFile = files[j];
 
-                            File[] spectra = dataFile.listFiles();
+                            if (dataFile.isDirectory()) {
 
-                            progressDialog.setMax(spectra.length);
-                            progressDialog.setValue(0);
+                                progressDialog.setTitle("Importing Spectra. Please Wait...");
+                                progressDialog.setIntermidiate(false);
 
-                            new File(path + "/DataSets/" + dataSetName + "/spectra/").mkdir();
+                                File[] spectra = dataFile.listFiles();
 
-                            // the spectra folder
-                            for (int k = 0; k < spectra.length && !cancelProgress; k++) {
-                                progressDialog.setValue(k);
-                                File spectrum = spectra[k];
-                                Util.copyFile(spectrum, new File(path + "/DataSets/" + dataSetName + "/spectra/" + spectrum.getName()));
-                            }
-                        } else {
+                                progressDialog.setMax(spectra.length);
+                                progressDialog.setValue(0);
 
-                            if (dataFile.getName().equalsIgnoreCase("identifications.txt")) {
-                                progressDialog.setTitle("Importing Identifications. Please Wait...");
+                                new File(path + "/DataSets/" + dataSetName + "/spectra/").mkdir();
+
+                                // the spectra folder
+                                for (int k = 0; k < spectra.length && !cancelProgress; k++) {
+                                    progressDialog.setValue(k);
+                                    File spectrum = spectra[k];
+                                    Util.copyFile(spectrum, new File(path + "/DataSets/" + dataSetName + "/spectra/" + spectrum.getName()));
+                                }
                             } else {
-                                progressDialog.setTitle("Importing Fragment Ions. Please Wait...");
+
+                                if (dataFile.getName().equalsIgnoreCase("identifications.txt")) {
+                                    progressDialog.setTitle("Importing Identifications. Please Wait...");
+                                } else {
+                                    progressDialog.setTitle("Importing Fragment Ions. Please Wait...");
+                                }
+
+                                progressDialog.setIntermidiate(true);
+                                progressDialog.setString("(" + (i + 1) + "/" + dataSets.length + ")");
+
+                                // the identification and fragment ion files
+                                Util.copyFile(dataFile, new File(path + "/DataSets/" + dataSetName + "/" + dataFile.getName()));
                             }
-
-                            progressDialog.setIntermidiate(true);
-                            progressDialog.setString("(" + (i + 1) + "/" + dataSets.length + ")");
-
-                            // the identification and fragment ion files
-                            Util.copyFile(dataFile, new File(path + "/DataSets/" + dataSetName + "/" + dataFile.getName()));
                         }
                     }
                 }
@@ -425,7 +430,6 @@ public class UserProperties implements ProgressDialogParent {
                             "The data sets have been successfully imported.",
                             "Data Sets Imported", JOptionPane.INFORMATION_MESSAGE);
                 }
-
             }
         }.start();
     }
