@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import javax.swing.JOptionPane;
 import org.jdesktop.swingx.decorator.SortOrder;
 import javax.swing.table.DefaultTableModel;
 import no.uib.fragmentation_analyzer.util.Properties;
@@ -294,9 +295,11 @@ public class DataSeriesSelection extends javax.swing.JDialog {
         }
 
         int totalNumberOfFragmentIons = 0;
+        boolean removalWarningGiven = false;
+        boolean cancel = false;
 
         // read the contents of the table and update the data series selection
-        for (int i = 0; i < dataSeriesJXTable.getRowCount(); i++) {
+        for (int i = 0; i < dataSeriesJXTable.getRowCount() && !cancel; i++) {
 
             String currentSeriesKey = (String) dataSeriesJXTable.getValueAt(i, 1);
             boolean isCurrentlySelected = ((Boolean) dataSeriesJXTable.getValueAt(i, 2)).booleanValue();
@@ -311,8 +314,11 @@ public class DataSeriesSelection extends javax.swing.JDialog {
                 // update the fragment ion number
                 if(((XYPlot) chartPanel.getChart().getPlot()).getRenderer(0).isSeriesVisible(
                         seriesKeyToSeriesNumber.get(currentSeriesKey))){
-                    totalNumberOfFragmentIons += ((XYPlot) chartPanel.getChart().getPlot()).getDataset().getItemCount(
-                            seriesKeyToSeriesNumber.get(currentSeriesKey));
+
+                    // update the fragment ion number
+                    // ToDo: find a way of doing this
+//                    totalNumberOfFragmentIons += ((XYPlot) chartPanel.getChart().getPlot()).getDataset().getItemCount(
+//                            seriesKeyToSeriesNumber.get(currentSeriesKey));
                 }
 
             } else if (chartPanel.getChart().getPlot() instanceof CategoryPlot) {
@@ -320,12 +326,41 @@ public class DataSeriesSelection extends javax.swing.JDialog {
                 // update the data series selection
                 // NB: for category plots this is a non-reverable process
                 if(!isCurrentlySelected){
+
                     if(((CategoryPlot) chartPanel.getChart().getPlot()).getDataset() instanceof DefaultCategoryDataset){
-                        ((DefaultCategoryDataset) ((CategoryPlot)
-                            chartPanel.getChart().getPlot()).getDataset()).removeColumn(currentSeriesKey);
+
+                        if(!removalWarningGiven){
+                            int value = JOptionPane.showConfirmDialog(this,
+                                    "Removing data for this plotting type is irreversable. Continue?", "" +
+                                    "Remove Category?", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+                            removalWarningGiven = true;
+
+                            if(value != JOptionPane.YES_OPTION){
+                                cancel = true;
+                            }
+                        }
+
+                        if(!cancel){
+                            ((DefaultCategoryDataset) ((CategoryPlot)
+                                chartPanel.getChart().getPlot()).getDataset()).removeColumn(currentSeriesKey);
+                        }
                     } else if(((CategoryPlot) chartPanel.getChart().getPlot()).getDataset() instanceof DefaultBoxAndWhiskerCategoryDataset){
-                        ((DefaultBoxAndWhiskerCategoryDataset) ((CategoryPlot)
-                            chartPanel.getChart().getPlot()).getDataset()).removeColumn(currentSeriesKey);
+
+                        if(!removalWarningGiven){
+                            int value = JOptionPane.showConfirmDialog(this,
+                                    "Removing data for this plotting type is irreversable. Continue?", "" +
+                                    "Remove Category?", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+                            removalWarningGiven = true;
+
+                            if(value != JOptionPane.YES_OPTION){
+                                cancel = true;
+                            }
+                        }
+
+                        if(!cancel){
+                            ((DefaultBoxAndWhiskerCategoryDataset) ((CategoryPlot)
+                                chartPanel.getChart().getPlot()).getDataset()).removeColumn(currentSeriesKey);
+                        }
                     }
                 } else {
 
@@ -351,19 +386,21 @@ public class DataSeriesSelection extends javax.swing.JDialog {
             }
         }
 
-        String oldTitle = currentFrame.getTitle();
+        if(!cancel){
+            String oldTitle = currentFrame.getTitle();
 
-        if(totalNumberOfFragmentIons > 0){
-            if(oldTitle.lastIndexOf(",") != -1){
-                currentFrame.setTitle(oldTitle.substring(0, oldTitle.lastIndexOf(",") + 2) + totalNumberOfFragmentIons +
-                " fragment ions)");
+            if(totalNumberOfFragmentIons > 0){
+                if(oldTitle.lastIndexOf(",") != -1){
+                    currentFrame.setTitle(oldTitle.substring(0, oldTitle.lastIndexOf(",") + 2) + totalNumberOfFragmentIons +
+                    " fragment ions)");
+                } else {
+                    currentFrame.setTitle(oldTitle.substring(0, oldTitle.length() - 1) + ", " + totalNumberOfFragmentIons +
+                    " fragment ions)");
+                }
             } else {
-                currentFrame.setTitle(oldTitle.substring(0, oldTitle.length() - 1) + ", " + totalNumberOfFragmentIons +
-                " fragment ions)");
-            }
-        } else {
-            if(oldTitle.lastIndexOf(",") != -1){
-                currentFrame.setTitle(oldTitle.substring(0, oldTitle.lastIndexOf(",")) + ")");
+                if(oldTitle.lastIndexOf(",") != -1){
+                    currentFrame.setTitle(oldTitle.substring(0, oldTitle.lastIndexOf(",")) + ")");
+                }
             }
         }
         
