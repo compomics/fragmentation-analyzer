@@ -2,10 +2,4 @@
 
 ----
 
- * NEW FEATURE: The search parameters section can now be hidden or shown as requested by the user. 
- * NEW FEATURE: The number of plots per row and column in the plotting panel can now be set by the user in the Preferences dialog.
- * NEW FEATURE: Importing user settings from previous versions is now supported.
- * FEATURE IMPROVEMENT: In the search results dialog 'unique identifications' has been changed to 'unique peptides'.
- * FEATURE IMPROVMENT: A dialog is now shown if the data is to be removed from category plots explaining that this process is irreversible.
- * BUG FIX: Fixed a bug in the dialog shown when plotting more than 10 plots at once. It was shown too often.
- * BUG FIX: A bug was detected in the fragment ion counter shown after using the DataSeriesSelection dialog. The fragment ion counter is therefore now removed after using the DataSeriesSelection dialog. Hopefully it will be re-added in the future.
+(currently no changes)
