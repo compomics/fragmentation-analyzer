@@ -3,6 +3,17 @@
 
 ----
 
+*Changes in FragmentationAnalyzer v1.3.1 - (Nov. 06. 2009):*
+ * NEW FEATURE: The search parameters section can now be hidden or shown by the user. 
+ * NEW FEATURE: The number of plots per row and column in the plotting panel can now be set by the user in the Preferences dialog.
+ * NEW FEATURE: Importing user settings from previous versions is now supported.
+ * FEATURE IMPROVEMENT: In the search results dialog 'unique identifications' has been changed to 'unique peptides'.
+ * FEATURE IMPROVMENT: A dialog is now shown if the data is to be removed from category plots explaining that this process is irreversible.
+ * BUG FIX: Fixed a bug in the dialog shown when plotting more than 10 plots at once. It was shown too often.
+ * BUG FIX: A bug was detected in the fragment ion counter shown after using the DataSeriesSelection dialog. The fragment ion counter is therefore now removed after using the DataSeriesSelection dialog. Hopefully it will be re-added in the future.
+
+----
+
 *Changes in FragmentationAnalyzer v1.3 - (Nov. 04. 2009):*
  * NEW FEATURE: Fragment Ion Probability plots can now be created.
  * NEW FEATURE: Intensity box plot is now supported for the spectra table as well.
@@ -19,6 +30,8 @@
  * BUG FIX: Made sure that the drop down boxes are always wide enough to display the widest element.
  * BUG FIX: Fixed a bug in progress bar that resulted in limited information showed during intensity plot creation for spectra.
  * BUG FIX: Fixed a bug in the code for ordering the plot frames when deleting a plot. The new order was not always correct.
+
+Download Count: 0
 
 ----
 
