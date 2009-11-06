@@ -65,6 +65,7 @@
         <MenuItem class="javax.swing.JMenuItem" name="removeAllInternalFramesJMenuItem">
           <Properties>
             <Property name="text" type="java.lang.String" value="Remove All"/>
+            <Property name="toolTipText" type="java.lang.String" value="Remove All Plots/Analyes"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="removeAllInternalFramesJMenuItemActionPerformed"/>
