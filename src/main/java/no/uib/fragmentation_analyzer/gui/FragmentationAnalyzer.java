@@ -480,6 +480,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         internalFramesJPopupMenu.add(jSeparator1);
 
         removeAllInternalFramesJMenuItem.setText("Remove All");
+        removeAllInternalFramesJMenuItem.setToolTipText("Remove All Plots/Analyes");
         removeAllInternalFramesJMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 removeAllInternalFramesJMenuItemActionPerformed(evt);
