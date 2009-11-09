@@ -390,16 +390,18 @@ public class DataSeriesSelection extends javax.swing.JDialog {
             String oldTitle = currentFrame.getTitle();
 
             if(totalNumberOfFragmentIons > 0){
-                if(oldTitle.lastIndexOf(",") != -1){
-                    currentFrame.setTitle(oldTitle.substring(0, oldTitle.lastIndexOf(",") + 2) + totalNumberOfFragmentIons +
-                    " fragment ions)");
+                if(oldTitle.indexOf("|") != -1){
+                    currentFrame.setTitle(oldTitle.substring(0, oldTitle.indexOf("|") + 2)
+                            + totalNumberOfFragmentIons + " fragment ions"
+                            + oldTitle.substring(oldTitle.indexOf(" fragment ions") + " fragment ions".length()));
                 } else {
-                    currentFrame.setTitle(oldTitle.substring(0, oldTitle.length() - 1) + ", " + totalNumberOfFragmentIons +
-                    " fragment ions)");
+//                    currentFrame.setTitle(oldTitle.substring(0, oldTitle.length() - 1) + ", " + totalNumberOfFragmentIons +
+//                    " fragment ions)");
                 }
             } else {
-                if(oldTitle.lastIndexOf(",") != -1){
-                    currentFrame.setTitle(oldTitle.substring(0, oldTitle.lastIndexOf(",")) + ")");
+                if(oldTitle.indexOf("|") != -1){
+                    currentFrame.setTitle(oldTitle.substring(0, oldTitle.indexOf("|"))
+                            + oldTitle.substring(oldTitle.indexOf(" fragment ions") + " fragment ions".length()));
                 }
             }
         }

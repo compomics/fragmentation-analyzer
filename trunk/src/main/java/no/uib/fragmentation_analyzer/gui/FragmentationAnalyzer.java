@@ -297,6 +297,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         showMarkersJMenuItem = new javax.swing.JMenuItem();
         showAverageJMenuItem = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JSeparator();
+        setTitleJMenuItem = new javax.swing.JMenuItem();
         removeAllInternalFramesJMenuItem = new javax.swing.JMenuItem();
         selectIdentificationsJPopupMenu = new javax.swing.JPopupMenu();
         selectAllIdentificationsJMenuItem = new javax.swing.JMenuItem();
@@ -423,11 +424,11 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         exitJMenuItem = new javax.swing.JMenuItem();
         editMenu = new javax.swing.JMenu();
         preferencesJMenuItem = new javax.swing.JMenuItem();
+        windowJMenu = new javax.swing.JMenu();
+        showLeftPanelJMenuItem = new javax.swing.JMenuItem();
         helpJMenu = new javax.swing.JMenu();
         helpJMenuItem = new javax.swing.JMenuItem();
         aboutJMenuItem = new javax.swing.JMenuItem();
-        windowJMenu = new javax.swing.JMenu();
-        showLeftPanelJMenuItem = new javax.swing.JMenuItem();
 
         showSpectrumToolBarJMenuItem.setText("Show Spectrum Tool Bar");
         showSpectrumToolBarJMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -478,6 +479,14 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         });
         internalFramesJPopupMenu.add(showAverageJMenuItem);
         internalFramesJPopupMenu.add(jSeparator1);
+
+        setTitleJMenuItem.setText("Set Title");
+        setTitleJMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                setTitleJMenuItemActionPerformed(evt);
+            }
+        });
+        internalFramesJPopupMenu.add(setTitleJMenuItem);
 
         removeAllInternalFramesJMenuItem.setText("Remove All");
         removeAllInternalFramesJMenuItem.setToolTipText("Remove All Plots/Analyes");
@@ -1665,6 +1674,20 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
         jMenuBar.add(editMenu);
 
+        windowJMenu.setMnemonic('W');
+        windowJMenu.setText("Window");
+
+        showLeftPanelJMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_L, java.awt.event.InputEvent.CTRL_MASK));
+        showLeftPanelJMenuItem.setText("Hide Left Panel");
+        showLeftPanelJMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                showLeftPanelJMenuItemActionPerformed(evt);
+            }
+        });
+        windowJMenu.add(showLeftPanelJMenuItem);
+
+        jMenuBar.add(windowJMenu);
+
         helpJMenu.setMnemonic('H');
         helpJMenu.setText("Help");
 
@@ -1686,20 +1709,6 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         helpJMenu.add(aboutJMenuItem);
 
         jMenuBar.add(helpJMenu);
-
-        windowJMenu.setMnemonic('W');
-        windowJMenu.setText("Window");
-
-        showLeftPanelJMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_L, java.awt.event.InputEvent.CTRL_MASK));
-        showLeftPanelJMenuItem.setText("Hide Left Panel");
-        showLeftPanelJMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                showLeftPanelJMenuItemActionPerformed(evt);
-            }
-        });
-        windowJMenu.add(showLeftPanelJMenuItem);
-
-        jMenuBar.add(windowJMenu);
 
         setJMenuBar(jMenuBar);
 
@@ -2020,16 +2029,18 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                         progressDialog.setVisible(false);
                                         progressDialog.dispose();
 
+                                        NumberFormat formatter =  new DecimalFormat("##,###,###");
+
                                         if (searchType == Properties.GENERAL_SEARCH) {
 
                                             JOptionPane.showMessageDialog(null,
-                                                    "#Identifications: " + finalMatchCounter + "\n" +
-                                                    "#Unique Peptides: " + properties.getIdentificationMap().size() + "\n",
+                                                    "#Identifications: " + formatter.format(finalMatchCounter) + "\n" +
+                                                    "#Unique Peptides: " + formatter.format(properties.getIdentificationMap().size()) + "\n",
                                                     "Search Results", JOptionPane.INFORMATION_MESSAGE);
                                         } else if (searchType == Properties.MODIFICATION_SEARCH) {
 
                                             JOptionPane.showMessageDialog(null,
-                                                    "#Sequence Pairs: " + searchResultsJXTable.getRowCount(),
+                                                    "#Sequence Pairs: " + formatter.format(searchResultsJXTable.getRowCount()),
                                                     "Search Results", JOptionPane.INFORMATION_MESSAGE);
                                         }
                                     }
@@ -2971,12 +2982,12 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                     if (singleSearch) {
                                         internalFrameTitle += currentModifiedSequence +
                                                 " (" + currentlySelectedRow.getCountA() + " spectra"
-                                                + ", " + fragmentIonCount + " fragment ions)";
+                                                + "|" + fragmentIonCount + " fragment ions)";
                                     } else {
                                         internalFrameTitle += currentModifiedSequence +
                                                 " (" + currentlySelectedRow.getCountA() + " unmod. spectra/" +
                                                 currentlySelectedRow.getCountB() + " mod. spectra"
-                                                + ", " + fragmentIonCount + " fragment ions)";
+                                                + "|" + fragmentIonCount + " fragment ions)";
                                     }
 
                                     insertMassErrorPlot(isBubblePlot, data, internalFrameTitle,
@@ -3016,14 +3027,14 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
                                 if (singleSearch) {
                                     internalFrameTitle += " (" + properties.getCurrentlySelectedRowsInSearchTable().get(0).getCountA()
-                                            + " spectra, " + fragmentIonCount + " fragment ions)";
+                                            + " spectra|" + fragmentIonCount + " fragment ions)";
                                 } else {
                                     internalFrameTitle += " (" + properties.getCurrentlySelectedRowsInSearchTable().get(0).getCountA()
                                             + " unmod. spectra/" + properties.getCurrentlySelectedRowsInSearchTable().get(0).getCountB()
-                                            + " mod. spectra" + ", " + fragmentIonCount + " fragment ions)";
+                                            + " mod. spectra" + "|" + fragmentIonCount + " fragment ions)";
                                 }
                             } else {
-                                internalFrameTitle += " (" + totalNumberOfSpectra + " spectra, " +
+                                internalFrameTitle += " (" + totalNumberOfSpectra + " spectra|" +
                                         totalNumberOfFragmentIons + " fragment ions)";
                             }
 
@@ -3122,12 +3133,12 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                     if (singleSearch) {
                                         internalFrameTitle += currentModifiedSequence +
                                                 " (" + totalNumberOfSpectra + " spectra"
-                                                + ", " + totalNumberOfFragmenIons + " fragment ions)";
+                                                + "|" + totalNumberOfFragmenIons + " fragment ions)";
                                     } else {
                                         internalFrameTitle += currentModifiedSequence +
                                                 " (" + currentlySelectedRow.getCountA() + " unmod. spectra/" +
                                                 currentlySelectedRow.getCountB() + " mod. spectra"
-                                                + ", " + totalNumberOfFragmenIons + " fragment ions)";
+                                                + "|" + totalNumberOfFragmenIons + " fragment ions)";
                                     }
 
                                     insertMassErrorBoxPlot(data, internalFrameTitle,
@@ -3164,7 +3175,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                             }
 
                             internalFrameTitle += " (" + totalNumberOfSpectra + " spectra"
-                                    + ", " + totalNumberOfFragmenIons + " fragment ions)";
+                                    + "| " + totalNumberOfFragmenIons + " fragment ions)";
 
                             insertMassErrorBoxPlot(data, internalFrameTitle,
                                     daOrPpmSearchResultsJComboBox.getSelectedIndex() == Properties.ACCURACY_PPM);
@@ -3287,7 +3298,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                     ChartPanel chartPanel = new ChartPanel(chart);
 
                                     String internalFrameTitle = "" + currentModifiedSequence
-                                            + " (" + totalNumberOfSpectra + " spectra, "
+                                            + " (" + totalNumberOfSpectra + " spectra|"
                                             + totalNumberOfFragmentIons + " fragment ions)";
                                     String plotType = "FragmentIonProbabilityPlot";
 
@@ -3358,7 +3369,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                             ChartPanel chartPanel = new ChartPanel(chart);
 
                             String internalFrameTitle = "Fragment Ion Probability"
-                                    + " (" + totalNumberOfSpectra + " spectra, "
+                                    + " (" + totalNumberOfSpectra + " spectra|"
                                     + totalNumberOfFragmentIons + " fragment ions)";
 
                             if (properties.getCurrentlySelectedRowsInSearchTable().size() == 1) {
@@ -3495,12 +3506,12 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         // create the plot
         if (isBubblePlot) {
             DefaultXYZDataset dataset = PlotUtil.addXYZDataSeries(data, averageValues, properties);
-            chart = PlotUtil.getBubbleChart(dataset, usePpm, addLegend);
+            chart = PlotUtil.getBubbleChart(dataset, usePpm, addLegend, properties);
             chartPanel = new ChartPanel(chart);
             plotType = "MassErrorBubblePlot";
         } else {
             DefaultXYDataset dataSet = PlotUtil.addXYDataSeries(data, averageValues, properties);
-            chart = PlotUtil.getScatterPlotChart(dataSet, usePpm, addLegend);
+            chart = PlotUtil.getScatterPlotChart(dataSet, usePpm, addLegend, properties);
             chartPanel = new ChartPanel(chart);
             plotType = "MassErrorScatterPlot";
         }
@@ -4246,7 +4257,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
                                     String internalFrameTitle = currentIdentification.getModifiedSequence() +
                                             " (SID: " + currentIdentification.getSpectrumFileId()
-                                            + ", " + totalNumberOfFragmentIons + " fragment ions)";
+                                            + "|" + totalNumberOfFragmentIons + " fragment ions)";
 
                                     insertMassErrorPlot(isBubblePlot, data, internalFrameTitle,
                                             daOrPpmSpectraJComboBox.getSelectedIndex() == Properties.ACCURACY_PPM);
@@ -4290,7 +4301,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                             }
 
                             internalFrameTitle += properties.getCurrentlySelectedRowsInSpectraTable().size()
-                                    + " spectra, " + totalNumberOfFragmentIons + " fragment ions)";
+                                    + " spectra|" + totalNumberOfFragmentIons + " fragment ions)";
 
                             insertMassErrorPlot(isBubblePlot, data, internalFrameTitle,
                                     daOrPpmSpectraJComboBox.getSelectedIndex() == Properties.ACCURACY_PPM);
@@ -4318,7 +4329,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                 if (combineSpectraJComboBox.getSelectedIndex() == Properties.SINGLE_PLOT) {
 
                                     String internalFrameTitle = currentIdentification.getModifiedSequence() +
-                                            " (SID: " + currentIdentification.getSpectrumFileId() + ", "
+                                            " (SID: " + currentIdentification.getSpectrumFileId() + "|"
                                             + totalNumberOfFragmentIons + " fragment ions)";
 
                                     insertMassErrorBoxPlot(data, internalFrameTitle,
@@ -4362,7 +4373,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                 internalFrameTitle += " (";
                             }
 
-                            internalFrameTitle += properties.getCurrentlySelectedRowsInSpectraTable().size() + " spectra, "
+                            internalFrameTitle += properties.getCurrentlySelectedRowsInSpectraTable().size() + " spectra|"
                                     + totalNumberOfFragmentIons + " fragment ions)";
 
                             insertMassErrorBoxPlot(data, internalFrameTitle,
@@ -4477,7 +4488,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                             ChartPanel chartPanel = new ChartPanel(chart);
 
                             String internalFrameTitle = "" + currentModifiedSequence +
-                                    " (" + properties.getCurrentlySelectedRowsInSpectraTable().size() + " spectra, "
+                                    " (" + properties.getCurrentlySelectedRowsInSpectraTable().size() + " spectra|"
                                     + totalNumberOfFragmentIons + " fragment ions)";
                             String plotType = "BoxPlot";
 
@@ -4545,7 +4556,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                     ChartPanel chartPanel = new ChartPanel(lineChart);
 
                                     String internalFrameTitle = "" + currentIdentification.getModifiedSequence() 
-                                            + " (SID: " + currentIdentification.getSpectrumFileId() + ", 1 spectrum, "
+                                            + " (SID: " + currentIdentification.getSpectrumFileId() + ", 1 spectrum|"
                                             + totalNumberOfFragmentIons + " fragment ions)";
                                     String plotType = "FragmentIonProbabilityPlot";
 
@@ -4630,7 +4641,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                             }
 
                             internalFrameTitle += properties.getCurrentlySelectedRowsInSpectraTable().size() 
-                                    + " spectra, " + totalNumberOfFragmentIons + " fragment ions)";
+                                    + " spectra|" + totalNumberOfFragmentIons + " fragment ions)";
 
                             String plotType = "FragmentIonProbabilityPlot";
 
@@ -6037,6 +6048,38 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
     }//GEN-LAST:event_showLeftPanelJMenuItemActionPerformed
 
     /**
+     * Opens a dialog where the new title of the internal frame can be inserted.
+     *
+     * @param evt
+     */
+    private void setTitleJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setTitleJMenuItemActionPerformed
+        Iterator<Integer> iterator = properties.getAllInternalFrames().keySet().iterator();
+
+        boolean selectedFrameFound = false;
+
+        FragmentationAnalyzerJInternalFrame currentFrame = null;
+
+        // find the currently selected internal frame
+        while (iterator.hasNext() && !selectedFrameFound) {
+            Integer key = iterator.next();
+
+            currentFrame = properties.getAllInternalFrames().get(key);
+
+            if (currentFrame.isSelected()) {
+                selectedFrameFound = true;
+            }
+        }
+
+        if(selectedFrameFound){
+            String newTitle = JOptionPane.showInputDialog(this, "New Title:", currentFrame.getTitle());
+
+            if(newTitle != null){
+                currentFrame.setTitle(newTitle);
+            }
+        }
+    }//GEN-LAST:event_setTitleJMenuItemActionPerformed
+
+    /**
      * Makes sure that the combox is always wide enough to 
      * display the longest element.
      */
@@ -7284,6 +7327,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
     private javax.swing.JMenuItem selectHighlightedSpectraJMenuItem;
     private javax.swing.JPopupMenu selectIdentificationsJPopupMenu;
     private javax.swing.JPopupMenu selectSpectraJPopupMenu;
+    private javax.swing.JMenuItem setTitleJMenuItem;
     private javax.swing.JMenuItem showAverageJMenuItem;
     private javax.swing.JMenuItem showBoxPlotToolBarJMenuItem;
     private javax.swing.JMenuItem showDataSeriesSelectionJMenuItem;
