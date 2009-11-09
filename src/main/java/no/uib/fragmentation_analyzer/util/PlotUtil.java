@@ -73,7 +73,7 @@ public class PlotUtil {
         // add the data to the plot
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
-        for(int i=0; i< sortedKeys.size(); i++){
+        for (int i = 0; i < sortedKeys.size(); i++) {
             String key = sortedKeys.get(i);
             dataset.addValue(data.get(key).doubleValue() / numberOfSpectra, "1", key);
         }
@@ -145,7 +145,7 @@ public class PlotUtil {
         // add the data to the plot
         XYSeriesCollection dataset = new XYSeriesCollection();
 
-        for(int i=0; i< sortedKeys.size(); i++){
+        for (int i = 0; i < sortedKeys.size(); i++) {
 
             String key = sortedKeys.get(i);
 
@@ -153,6 +153,8 @@ public class PlotUtil {
 
             XYSeries tempDataSeries = new XYSeries(key);
 
+            // note that the last fragment ion is ignored due to this being the same as the precursor
+            // to include the ion remove the "-1" from the for-loop
             for (int j = 1; j < tempArray.length - 1; j++) {
                 tempDataSeries.add(j, ((double) tempArray[j]) / numberOfSpectra);
             }
@@ -197,24 +199,23 @@ public class PlotUtil {
         renderer.setBaseToolTipGenerator(new StandardXYToolTipGenerator());
 
         // set the data series colors
-        for(int i=0; i<sortedKeys.size(); i++){
+        for (int i = 0; i < sortedKeys.size(); i++) {
             renderer.setSeriesPaint(i, Util.determineColorOfLine(sortedKeys.get(i)));
         }
 
         // increase the width of all lines and use dotted lines for the neutral loss and doubly charged ions
-        for(int i=0; i<dataset.getSeriesCount(); i++){
-
-            if(sortedKeys.get(i).lastIndexOf("++") != -1 ||
+        for (int i = 0; i < dataset.getSeriesCount(); i++) {
+            if (sortedKeys.get(i).lastIndexOf("++") != -1 ||
                     sortedKeys.get(i).lastIndexOf("H2O") != -1 ||
                     sortedKeys.get(i).lastIndexOf("H20") != -1 ||
-                    sortedKeys.get(i).lastIndexOf("NH3") != -1){
-                renderer.setSeriesStroke(i, new BasicStroke(LINE_WIDTH, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 
-                        1.0f, new float[] {6.0f}, 0f));
+                    sortedKeys.get(i).lastIndexOf("NH3") != -1) {
+                renderer.setSeriesStroke(i, new BasicStroke(LINE_WIDTH, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND,
+                        1.0f, new float[]{6.0f}, 0f));
             } else {
                 renderer.setSeriesStroke(i, new BasicStroke(LINE_WIDTH, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
             }
         }
-        
+
         plot.setRenderer(renderer);
 
         return chart;
@@ -423,7 +424,8 @@ public class PlotUtil {
      * @param addLegend if true the legend is visible
      * @return the created chart
      */
-    public static JFreeChart getScatterPlotChart(DefaultXYDataset dataSet, boolean usePpm, boolean addLegend) {
+    public static JFreeChart getScatterPlotChart(DefaultXYDataset dataSet, boolean usePpm, boolean addLegend,
+            Properties properies) {
 
         NumberAxis xAxis = new NumberAxis();
         xAxis.setLabelFont(new Font("SansSerif", Font.PLAIN, 10));
@@ -446,6 +448,13 @@ public class PlotUtil {
         DefaultXYItemRenderer renderer = new DefaultXYItemRenderer();
         renderer.setBaseLinesVisible(false);
         renderer.setBaseToolTipGenerator(new StandardXYToolTipGenerator());
+
+        // set the data series colors if fragment ion label type is currently used
+        if (properies.getCurrentLabelType() == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE) {
+            for (int i = 0; i < dataSet.getSeriesCount(); i++) {
+                renderer.setSeriesPaint(i, Util.determineColorOfLine(dataSet.getSeriesKey(i).toString()));
+            }
+        }
 
         XYPlot plot = new XYPlot(dataSet, xAxis, yAxis, renderer);
         plot.setForegroundAlpha(0.5f);
@@ -566,7 +575,7 @@ public class PlotUtil {
 
         HashMap<Double, ArrayList<Double>> xAndYValues = new HashMap<Double, ArrayList<Double>>();
 
-        for(int j =0; j <sortedKeys.size(); j++){
+        for (int j = 0; j < sortedKeys.size(); j++) {
 
             String key = sortedKeys.get(j);
 
@@ -655,7 +664,7 @@ public class PlotUtil {
 
         HashMap<Double, ArrayList<Double>> xAndZValues = new HashMap<Double, ArrayList<Double>>();
 
-        for(int j=0; j<sortedKeys.size(); j++){
+        for (int j = 0; j < sortedKeys.size(); j++) {
 
             String key = sortedKeys.get(j);
 
@@ -725,7 +734,8 @@ public class PlotUtil {
      * @param addLegend if true the legend is visible
      * @return the created chart
      */
-    public static JFreeChart getBubbleChart(DefaultXYZDataset dataset, boolean usePpm, boolean addLegend) {
+    public static JFreeChart getBubbleChart(DefaultXYZDataset dataSet, boolean usePpm, boolean addLegend,
+            Properties properties) {
 
         String yAxisLabel = "Mass Error (Da)";
 
@@ -737,7 +747,7 @@ public class PlotUtil {
                 null, // title
                 "m/z-value", // xAxisLabel
                 yAxisLabel, // yAxisLabel
-                dataset, // XYZDataset
+                dataSet, // XYZDataset
                 PlotOrientation.VERTICAL, // orientation
                 true, // legend
                 true, // tooltips
@@ -748,8 +758,6 @@ public class PlotUtil {
         plot.setBackgroundPaint(Color.WHITE);
         plot.setDomainGridlinePaint(Color.BLACK);
         plot.setRangeGridlinePaint(Color.BLACK);
-
-        //plot.setRenderer(new XYBubbleRenderer(XYBubbleRenderer.SCALE_ON_BOTH_AXES));
 
         NumberAxis xAxis = (NumberAxis) plot.getDomainAxis();
         xAxis.setLabelFont(new Font("SansSerif", Font.PLAIN, 10));
@@ -764,6 +772,13 @@ public class PlotUtil {
 
         if (!addLegend) {
             chart.removeLegend();
+        }
+
+        // set the data series colors if fragment ion label type is currently used
+        if (properties.getCurrentLabelType() == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE) {
+            for (int i = 0; i < dataSet.getSeriesCount(); i++) {
+                plot.getRenderer().setSeriesPaint(i, Util.determineColorOfLine(dataSet.getSeriesKey(i).toString()));
+            }
         }
 
         return chart;
