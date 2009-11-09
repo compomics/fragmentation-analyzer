@@ -2,4 +2,7 @@
 
 ----
 
-(currently no changes)
+ * NEW FEATURE: It is now possible to edit the title of the plots/analyses frames. 
+ * FEATURE IMPROVEMENT: The numbers in the results dialog are now formatted, e.g., 12345 becomes 12,345. 
+ * FEATURE IMPROVEMENT: The coloring scheme for bubble and scatter plots when using the fragment ion type label type is now the same as for fragment ion probability plots.
+ * BUG FIX: Moved the Help menu to the far right in the menu bar.
