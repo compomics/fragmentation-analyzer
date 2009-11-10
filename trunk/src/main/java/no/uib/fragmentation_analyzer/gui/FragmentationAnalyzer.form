@@ -34,6 +34,14 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="showDataSeriesSelectionJMenuItemActionPerformed"/>
           </Events>
         </MenuItem>
+        <MenuItem class="javax.swing.JMenuItem" name="setTitleJMenuItem">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Edit Plot Title"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="setTitleJMenuItemActionPerformed"/>
+          </Events>
+        </MenuItem>
         <Component class="javax.swing.JSeparator" name="jSeparator2">
         </Component>
         <MenuItem class="javax.swing.JMenuItem" name="showLegendsJMenuItem">
@@ -62,14 +70,6 @@
         </MenuItem>
         <Component class="javax.swing.JSeparator" name="jSeparator1">
         </Component>
-        <MenuItem class="javax.swing.JMenuItem" name="setTitleJMenuItem">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Set Title"/>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="setTitleJMenuItemActionPerformed"/>
-          </Events>
-        </MenuItem>
         <MenuItem class="javax.swing.JMenuItem" name="removeAllInternalFramesJMenuItem">
           <Properties>
             <Property name="text" type="java.lang.String" value="Remove All"/>

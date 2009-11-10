@@ -292,12 +292,12 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         showSpectrumToolBarJMenuItem = new javax.swing.JMenuItem();
         showBoxPlotToolBarJMenuItem = new javax.swing.JMenuItem();
         showDataSeriesSelectionJMenuItem = new javax.swing.JMenuItem();
+        setTitleJMenuItem = new javax.swing.JMenuItem();
         jSeparator2 = new javax.swing.JSeparator();
         showLegendsJMenuItem = new javax.swing.JMenuItem();
         showMarkersJMenuItem = new javax.swing.JMenuItem();
         showAverageJMenuItem = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JSeparator();
-        setTitleJMenuItem = new javax.swing.JMenuItem();
         removeAllInternalFramesJMenuItem = new javax.swing.JMenuItem();
         selectIdentificationsJPopupMenu = new javax.swing.JPopupMenu();
         selectAllIdentificationsJMenuItem = new javax.swing.JMenuItem();
@@ -453,6 +453,14 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
             }
         });
         internalFramesJPopupMenu.add(showDataSeriesSelectionJMenuItem);
+
+        setTitleJMenuItem.setText("Edit Plot Title");
+        setTitleJMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                setTitleJMenuItemActionPerformed(evt);
+            }
+        });
+        internalFramesJPopupMenu.add(setTitleJMenuItem);
         internalFramesJPopupMenu.add(jSeparator2);
 
         showLegendsJMenuItem.setText("Hide Legend");
@@ -479,14 +487,6 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         });
         internalFramesJPopupMenu.add(showAverageJMenuItem);
         internalFramesJPopupMenu.add(jSeparator1);
-
-        setTitleJMenuItem.setText("Set Title");
-        setTitleJMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                setTitleJMenuItemActionPerformed(evt);
-            }
-        });
-        internalFramesJPopupMenu.add(setTitleJMenuItem);
 
         removeAllInternalFramesJMenuItem.setText("Remove All");
         removeAllInternalFramesJMenuItem.setToolTipText("Remove All Plots/Analyes");
