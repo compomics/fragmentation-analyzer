@@ -3208,7 +3208,11 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                         HashMap<String, int[]> sequenceDependentFragmentIons = new HashMap<String, int[]>();
                         HashMap<String, Integer> sequenceIndependentFragmentIons = new HashMap<String, Integer>();
 
+                        HashMap<String, double[][]> averageSequenceDependentFragmentIons = new HashMap<String, double[][]>();
+
                         int totalNumberOfSpectra = 0;
+                        int[] numberOfSpectraOfGivenLength = new int[longestPeptideSequenceLength + 1];
+                        int[] totalNumberOfSpectraOfGivenLength = new int[longestPeptideSequenceLength + 1];
                         int totalNumberOfFragmentIons = 0;
 
                         for (int i = 0; i < properties.getCurrentlySelectedRowsInSearchTable().size() && !cancelProgress; i++) {
@@ -3230,6 +3234,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                 // if the plots are not going to be combined, we can reset the peptide length
                                 if (combineSearchResultsJComboBox.getSelectedIndex() == Properties.SINGLE_PLOT) {
                                     longestPeptideSequenceLength = currentSequence.length();
+                                    numberOfSpectraOfGivenLength = new int[longestPeptideSequenceLength + 1];
                                 }
 
                                 // check for search type. if count 2 exists there are more than one id per line
@@ -3250,6 +3255,12 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                             totalNumberOfFragmentIons += addFragmentIonsToIonProbabilityPlot(currentId, sequenceDependentFragmentIons,
                                                     sequenceIndependentFragmentIons, longestPeptideSequenceLength);
                                             totalNumberOfSpectra++;
+
+                                            // update the totalNumberOfSpectraOfGivenLength array
+                                            for(int k = 1; k < currentId.getSequence().length(); k++){
+                                                numberOfSpectraOfGivenLength[k]++;
+                                            }
+
                                             progressDialog.setValue(++localCounter);
                                         }
                                     }
@@ -3263,6 +3274,12 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                             totalNumberOfFragmentIons += addFragmentIonsToIonProbabilityPlot(currentId, sequenceDependentFragmentIons,
                                                     sequenceIndependentFragmentIons, longestPeptideSequenceLength);
                                             totalNumberOfSpectra++;
+
+                                            // update the totalNumberOfSpectraOfGivenLength array
+                                            for(int k = 1; k < currentId.getSequence().length(); k++){
+                                                numberOfSpectraOfGivenLength[k]++;
+                                            }
+
                                             progressDialog.setValue(++localCounter);
                                         }
                                     }
@@ -3279,6 +3296,12 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                         totalNumberOfFragmentIons += addFragmentIonsToIonProbabilityPlot(currentId, sequenceDependentFragmentIons,
                                                 sequenceIndependentFragmentIons, longestPeptideSequenceLength);
                                         totalNumberOfSpectra++;
+
+                                        // update the totalNumberOfSpectraOfGivenLength array
+                                        for(int k = 1; k < currentId.getSequence().length(); k++){
+                                            numberOfSpectraOfGivenLength[k]++;
+                                        }
+                                        
                                         progressDialog.setValue(++localCounter);
                                     }
                                 }
@@ -3288,7 +3311,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
                                     // create the line plot for the sequence dependent fragment ions
                                     JFreeChart chart = PlotUtil.getLinePlot(sequenceDependentFragmentIons,
-                                            totalNumberOfSpectra,
+                                            numberOfSpectraOfGivenLength,
                                             "Fragment Ion Number", "Occurence (%)");
 
                                     if (!properties.showLegend()) {
@@ -3332,11 +3355,26 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                     properties.getAllChartFrames().put(internalFrameUniqueIdCounter, barChart);
                                     internalFrameUniqueIdCounter++;
 
-                                    sequenceDependentFragmentIons = new HashMap<String, int[]>();
-                                    sequenceIndependentFragmentIons = new HashMap<String, Integer>();
                                     totalNumberOfSpectra = 0;
                                     totalNumberOfFragmentIons = 0;
+                                } else {
+
+                                    // update the totalNumberOfSpectraOfGivenLength array
+                                    for(int k = 1; k < currentSequence.length(); k++){
+                                        totalNumberOfSpectraOfGivenLength[k]++;
+                                    }
+
+                                    // update the list of average sequence dependent fragment ions
+                                    updateAverageSequenceDependentFragmentIons(averageSequenceDependentFragmentIons,
+                                            sequenceDependentFragmentIons, numberOfSpectraOfGivenLength,
+                                            longestPeptideSequenceLength, i,
+                                            properties.getCurrentlySelectedRowsInSearchTable().size());
                                 }
+
+                                sequenceDependentFragmentIons = new HashMap<String, int[]>();
+                                sequenceIndependentFragmentIons = new HashMap<String, Integer>();
+                                numberOfSpectraOfGivenLength = new int[longestPeptideSequenceLength + 1];
+
                             } catch (IOException e) {
                                 JOptionPane.showMessageDialog(null,
                                         "An error occured when trying to create a plot.\n" +
@@ -3358,8 +3396,8 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                         if (combineSearchResultsJComboBox.getSelectedIndex() == Properties.COMBINE_PLOT) {
 
                             // create the line plot for the sequence dependent fragment ions
-                            JFreeChart chart = PlotUtil.getLinePlot(sequenceDependentFragmentIons,
-                                    totalNumberOfSpectra,
+                            JFreeChart chart = PlotUtil.getAverageLinePlot(averageSequenceDependentFragmentIons,
+                                    totalNumberOfSpectraOfGivenLength,
                                     "Fragment Ion Number", "Occurence (%)");
 
                             if (!properties.showLegend()) {
@@ -3417,6 +3455,45 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
             }.start();
         }
 }//GEN-LAST:event_searchResultsJButtonActionPerformed
+
+    /**
+     * Updates the average sequence depedent fragment ions counters.
+     *
+     * @param averageSequenceDependentFragmentIons
+     * @param sequenceDependentFragmentIons
+     * @param totalNumberOfSpectraOfGivenLength
+     * @param spectraCounter
+     * @param maxSpectra
+     */
+    private void updateAverageSequenceDependentFragmentIons(
+            HashMap<String, double[][]> averageSequenceDependentFragmentIons,
+            HashMap<String, int[]> sequenceDependentFragmentIons,
+            int[] numberOfSpectraOfGivenLength,
+            int maxSequenceLength,
+            int spectraCounter,
+            int maxSpectra){
+
+        Iterator<String> iterator = sequenceDependentFragmentIons.keySet().iterator();
+
+        while(iterator.hasNext()){
+
+            String key = iterator.next();
+
+            int[] tempArray = sequenceDependentFragmentIons.get(key);
+
+            for (int j = 1; j < tempArray.length - 1; j++) {
+
+                if(averageSequenceDependentFragmentIons.containsKey(key)) {
+                    double[][] temp = averageSequenceDependentFragmentIons.get(key);
+                    temp[j][spectraCounter] = ((double) tempArray[j]) / numberOfSpectraOfGivenLength[j];
+                } else {
+                    double[][] temp = new double[maxSequenceLength][maxSpectra];
+                    temp[j][spectraCounter] = ((double) tempArray[j]) / numberOfSpectraOfGivenLength[j];
+                    averageSequenceDependentFragmentIons.put(key, temp);
+                }
+            }
+        }
+    }
 
     /**
      * Creates and inserts a mass error box plot.
@@ -4523,7 +4600,11 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                         HashMap<String, int[]> sequenceDependentFragmentIons = new HashMap<String, int[]>();
                         HashMap<String, Integer> sequenceIndependentFragmentIons = new HashMap<String, Integer>();
 
+                        HashMap<String, double[][]> averageSequenceDependentFragmentIons = new HashMap<String, double[][]>();
+
                         int totalNumberOfFragmentIons = 0;
+                        int[] numberOfSpectraOfGivenLength = new int[longestPeptideSequenceLength + 1];
+                        int[] totalNumberOfSpectraOfGivenLength = new int[longestPeptideSequenceLength + 1];
 
                         for (int i = 0; i < properties.getCurrentlySelectedRowsInSpectraTable().size() && !cancelProgress; i++) {
 
@@ -4538,15 +4619,27 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
                                 progressDialog.setValue(i + 1);
 
-                                totalNumberOfFragmentIons += addFragmentIonsToIonProbabilityPlot(currentIdentification, sequenceDependentFragmentIons,
-                                        sequenceIndependentFragmentIons, longestPeptideSequenceLength);
+                                totalNumberOfFragmentIons += addFragmentIonsToIonProbabilityPlot(currentIdentification, 
+                                        sequenceDependentFragmentIons, sequenceIndependentFragmentIons,
+                                        longestPeptideSequenceLength);
+
+                                // if the plots are not going to be combined, we can reset the peptide length
+                                if (combineSearchResultsJComboBox.getSelectedIndex() == Properties.SINGLE_PLOT) {
+                                    longestPeptideSequenceLength = currentIdentification.getSequence().length();
+                                    numberOfSpectraOfGivenLength = new int[currentIdentification.getSequence().length() + 1];
+                                }
+
+                                // update the totalNumberOfSpectraOfGivenLength array
+                                for(int k = 1; k <= currentIdentification.getSequence().length(); k++){
+                                    numberOfSpectraOfGivenLength[k]++;
+                                }
 
                                 // if not combine create plot
                                 if (combineSpectraJComboBox.getSelectedIndex() == Properties.SINGLE_PLOT) {
 
                                     // create the line plot for the sequence dependent fragment ions
                                     JFreeChart lineChart = PlotUtil.getLinePlot(sequenceDependentFragmentIons,
-                                            1,
+                                            numberOfSpectraOfGivenLength,
                                             "Fragment Ion Number", "Occurence (%)");
 
                                     if (!properties.showLegend()) {
@@ -4590,11 +4683,25 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                     properties.getAllChartFrames().put(internalFrameUniqueIdCounter, barChart);
                                     internalFrameUniqueIdCounter++;
 
-
-                                    sequenceDependentFragmentIons = new HashMap<String, int[]>();
-                                    sequenceIndependentFragmentIons = new HashMap<String, Integer>();
                                     totalNumberOfFragmentIons = 0;
+                                } else {
+
+                                    // update the totalNumberOfSpectraOfGivenLength array
+                                    for(int k = 1; k < currentIdentification.getSequence().length(); k++){
+                                        totalNumberOfSpectraOfGivenLength[k]++;
+                                    }
+
+                                    // update the list of average sequence dependent fragment ions
+                                    updateAverageSequenceDependentFragmentIons(averageSequenceDependentFragmentIons,
+                                            sequenceDependentFragmentIons, numberOfSpectraOfGivenLength,
+                                            longestPeptideSequenceLength, i,
+                                            properties.getCurrentlySelectedRowsInSpectraTable().size());
                                 }
+
+                                sequenceDependentFragmentIons = new HashMap<String, int[]>();
+                                sequenceIndependentFragmentIons = new HashMap<String, Integer>();
+                                numberOfSpectraOfGivenLength = new int[longestPeptideSequenceLength + 1];
+
                             } catch (SQLException e) {
                                 JOptionPane.showMessageDialog(
                                         null, "An error occured when accessing the database." +
@@ -4616,8 +4723,8 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                         if (combineSpectraJComboBox.getSelectedIndex() == Properties.COMBINE_PLOT) {
 
                             // create the line plot for the sequence dependent fragment ions
-                            JFreeChart lineChart = PlotUtil.getLinePlot(sequenceDependentFragmentIons,
-                                    properties.getCurrentlySelectedRowsInSpectraTable().size(),
+                            JFreeChart lineChart = PlotUtil.getAverageLinePlot(averageSequenceDependentFragmentIons,
+                                    totalNumberOfSpectraOfGivenLength,
                                     "Fragment Ion Number", "Occurence (%)");
 
                             if (!properties.showLegend()) {
