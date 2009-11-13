@@ -126,7 +126,118 @@ public class PlotUtil {
      * @param yAxisLabel
      * @return
      */
-    public static JFreeChart getLinePlot(HashMap<String, int[]> data, int numberOfSpectra,
+    public static JFreeChart getAverageLinePlot(HashMap<String, double[][]> data, int[] totalNumberOfSpectraOfGivenLength,
+            String xAxisLabel, String yAxisLabel) {
+        
+        // sort the keys
+        ArrayList<String> sortedKeys = new ArrayList<String>();
+
+        Iterator<String> iterator = data.keySet().iterator();
+
+        while (iterator.hasNext()) {
+            String key = iterator.next();
+            sortedKeys.add(key);
+        }
+
+        java.util.Collections.sort(sortedKeys);
+
+
+        // add the data to the plot
+        XYSeriesCollection dataset = new XYSeriesCollection();
+
+        for (int i = 0; i < sortedKeys.size(); i++) {
+
+            String key = sortedKeys.get(i);
+
+            double[][] tempArray = data.get(key);
+           
+            XYSeries tempDataSeries = new XYSeries(key);
+
+            for (int j = 1; j < tempArray.length; j++) {
+
+                double averageValue = 0.0;
+
+                for(int k=0; k<tempArray[j].length; k++){
+                    if(!new Double(tempArray[j][k]).isNaN()){
+                        averageValue += tempArray[j][k];
+                    }
+                }
+
+                averageValue /= totalNumberOfSpectraOfGivenLength[j];
+                tempDataSeries.add(j, averageValue);
+            }
+
+            dataset.addSeries(tempDataSeries);
+        }
+
+
+        // create the chart
+        JFreeChart chart = ChartFactory.createXYLineChart(
+                null, // title
+                xAxisLabel, // xAxisLabel
+                yAxisLabel, // yAxisLabel
+                dataset, // XYZDataset
+                PlotOrientation.VERTICAL, // orientation
+                true, // legend
+                true, // tooltips
+                false); // urls
+
+        chart.getLegend().setItemFont(new Font("SansSerif", Font.PLAIN, 10));
+        chart.getLegend().setPosition(RectangleEdge.BOTTOM);
+        chart.setBackgroundPaint(new Color(225, 225, 225));
+
+        XYPlot plot = chart.getXYPlot();
+        plot.setBackgroundPaint(Color.WHITE);
+        plot.setDomainGridlinePaint(Color.BLACK);
+        plot.setRangeGridlinePaint(Color.BLACK);
+
+        NumberAxis rangeAxis = (NumberAxis) plot.getDomainAxis();
+        rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
+
+        plot.getDomainAxis().setLabelFont(new Font("SansSerif", Font.PLAIN, 10));
+        plot.getRangeAxis().setLabelFont(new Font("SansSerif", Font.PLAIN, 10));
+        plot.getDomainAxis().setTickLabelFont(new Font("SansSerif", Font.PLAIN, 10));
+        plot.getRangeAxis().setTickLabelFont(new Font("SansSerif", Font.PLAIN, 10));
+
+        // set the range to only include valid percatage values (and leave some padding at the top)
+        plot.getRangeAxis().setRange(0, 1.04);
+
+        // make sure that tooltip is generated
+        XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer(true, false);
+        renderer.setBaseToolTipGenerator(new StandardXYToolTipGenerator());
+
+        // set the data series colors
+        for (int i = 0; i < sortedKeys.size(); i++) {
+            renderer.setSeriesPaint(i, Util.determineColorOfLine(sortedKeys.get(i)));
+        }
+
+        // increase the width of all lines and use dotted lines for the neutral loss and doubly charged ions
+        for (int i = 0; i < dataset.getSeriesCount(); i++) {
+            if (sortedKeys.get(i).lastIndexOf("++") != -1 ||
+                    sortedKeys.get(i).lastIndexOf("H2O") != -1 ||
+                    sortedKeys.get(i).lastIndexOf("H20") != -1 ||
+                    sortedKeys.get(i).lastIndexOf("NH3") != -1) {
+                renderer.setSeriesStroke(i, new BasicStroke(LINE_WIDTH, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND,
+                        1.0f, new float[]{6.0f}, 0f));
+            } else {
+                renderer.setSeriesStroke(i, new BasicStroke(LINE_WIDTH, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+            }
+        }
+
+        plot.setRenderer(renderer);
+
+        return chart;
+    }
+
+    /**
+     * Returns a line plot based on the provided data.
+     *
+     * @param dataSet
+     * @param xAxisLabel
+     * @param yAxisLabel
+     * @return
+     */
+    public static JFreeChart getLinePlot(HashMap<String, int[]> data, int[] totalNumberOfSpectraOfGivenLength,
             String xAxisLabel, String yAxisLabel) {
 
         // sort the keys
@@ -156,7 +267,7 @@ public class PlotUtil {
             // note that the last fragment ion is ignored due to this being the same as the precursor
             // to include the ion remove the "-1" from the for-loop
             for (int j = 1; j < tempArray.length - 1; j++) {
-                tempDataSeries.add(j, ((double) tempArray[j]) / numberOfSpectra);
+                tempDataSeries.add(j, ((double) tempArray[j]) / totalNumberOfSpectraOfGivenLength[j]);
             }
 
             dataset.addSeries(tempDataSeries);
