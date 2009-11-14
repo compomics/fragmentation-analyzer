@@ -7,4 +7,5 @@
  * FEATURE IMPROVEMENT: The coloring scheme for bubble and scatter plots when using the fragment ion type label type is now the same as for fragment ion probability plots.
  * FEATURE IMPROVEMENT: The combined fragment ion probability plots now ignore ions that can not be found for a given peptide, e.g., a y10 ion for a peptide of length 8 etc. (Earlier these were counted as a value of 0.) 
  * FEATURE IMPROVEMENT: The combined fragment ion probability plots now only use the average value for each peptide sequence to hinder that a more frequent peptide would influence the combined plot more than a less frequent peptide.
+ * FEATURE IMPROVEMENT: In combined fragment ion probability plots the upper and lower boundaries can now be shown.
  * BUG FIX: Moved the Help menu to the far right in the menu bar.
