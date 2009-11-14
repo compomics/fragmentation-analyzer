@@ -23,6 +23,7 @@ import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.category.BarRenderer;
 import org.jfree.chart.renderer.category.BoxAndWhiskerRenderer;
 import org.jfree.chart.renderer.xy.DefaultXYItemRenderer;
+import org.jfree.chart.renderer.xy.XYErrorRenderer;
 import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.data.category.CategoryDataset;
@@ -32,6 +33,8 @@ import org.jfree.data.xy.DefaultXYDataset;
 import org.jfree.data.xy.DefaultXYZDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
+import org.jfree.data.xy.YIntervalSeries;
+import org.jfree.data.xy.YIntervalSeriesCollection;
 import org.jfree.ui.Layer;
 import org.jfree.ui.RectangleEdge;
 import org.jfree.ui.RectangleInsets;
@@ -44,7 +47,7 @@ import org.jfree.ui.TextAnchor;
  */
 public class PlotUtil {
 
-    private static final float LINE_WIDTH = 4;
+    public static final float LINE_WIDTH = 4;
 
     /**
      * Returns a line plot based on the provided data.
@@ -127,7 +130,7 @@ public class PlotUtil {
      * @return
      */
     public static JFreeChart getAverageLinePlot(HashMap<String, double[][]> data, int[] totalNumberOfSpectraOfGivenLength,
-            String xAxisLabel, String yAxisLabel) {
+            String xAxisLabel, String yAxisLabel, Properties properties) {
         
         // sort the keys
         ArrayList<String> sortedKeys = new ArrayList<String>();
@@ -143,7 +146,7 @@ public class PlotUtil {
 
 
         // add the data to the plot
-        XYSeriesCollection dataset = new XYSeriesCollection();
+        YIntervalSeriesCollection dataset = new YIntervalSeriesCollection();
 
         for (int i = 0; i < sortedKeys.size(); i++) {
 
@@ -151,20 +154,31 @@ public class PlotUtil {
 
             double[][] tempArray = data.get(key);
            
-            XYSeries tempDataSeries = new XYSeries(key);
-
+            YIntervalSeries tempDataSeries = new YIntervalSeries(key);
+ 
             for (int j = 1; j < tempArray.length; j++) {
 
                 double averageValue = 0.0;
+                double max = Double.MIN_VALUE;
+                double min = Double.MAX_VALUE;
 
                 for(int k=0; k<tempArray[j].length; k++){
                     if(!new Double(tempArray[j][k]).isNaN()){
+
+                        if(tempArray[j][k] > max){
+                            max = tempArray[j][k];
+                        }
+
+                        if(tempArray[j][k] < min){
+                            min = tempArray[j][k];
+                        }
+
                         averageValue += tempArray[j][k];
                     }
                 }
 
                 averageValue /= totalNumberOfSpectraOfGivenLength[j];
-                tempDataSeries.add(j, averageValue);
+                tempDataSeries.add(j, averageValue, min, max);
             }
 
             dataset.addSeries(tempDataSeries);
@@ -203,7 +217,16 @@ public class PlotUtil {
         plot.getRangeAxis().setRange(0, 1.04);
 
         // make sure that tooltip is generated
-        XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer(true, false);
+        XYErrorRenderer renderer = new XYErrorRenderer();
+        renderer.setBaseLinesVisible(true);
+        renderer.setBaseShapesVisible(false);
+
+        if(properties.showMaxMin()) {
+            renderer.setErrorStroke(new BasicStroke(LINE_WIDTH/2));
+        } else {
+            renderer.setErrorStroke(new BasicStroke(0));
+        }
+        
         renderer.setBaseToolTipGenerator(new StandardXYToolTipGenerator());
 
         // set the data series colors

@@ -14,6 +14,7 @@ import com.jgoodies.looks.plastic.PlasticLookAndFeel;
 import com.jgoodies.looks.plastic.PlasticXPLookAndFeel;
 import com.jgoodies.looks.plastic.theme.SkyKrupp;
 import com.mysql.jdbc.Driver;
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -80,6 +81,7 @@ import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.Marker;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.renderer.xy.XYErrorRenderer;
 import org.jfree.chart.title.LegendTitle;
 import org.jfree.data.statistics.DefaultBoxAndWhiskerCategoryDataset;
 import org.jfree.data.xy.DefaultXYDataset;
@@ -297,6 +299,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         showLegendsJMenuItem = new javax.swing.JMenuItem();
         showMarkersJMenuItem = new javax.swing.JMenuItem();
         showAverageJMenuItem = new javax.swing.JMenuItem();
+        showMaxMinJMenuItem = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JSeparator();
         removeAllInternalFramesJMenuItem = new javax.swing.JMenuItem();
         selectIdentificationsJPopupMenu = new javax.swing.JPopupMenu();
@@ -486,6 +489,14 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
             }
         });
         internalFramesJPopupMenu.add(showAverageJMenuItem);
+
+        showMaxMinJMenuItem.setText("Show Max and Min Values");
+        showMaxMinJMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                showMaxMinJMenuItemActionPerformed(evt);
+            }
+        });
+        internalFramesJPopupMenu.add(showMaxMinJMenuItem);
         internalFramesJPopupMenu.add(jSeparator1);
 
         removeAllInternalFramesJMenuItem.setText("Remove All");
@@ -3398,7 +3409,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                             // create the line plot for the sequence dependent fragment ions
                             JFreeChart chart = PlotUtil.getAverageLinePlot(averageSequenceDependentFragmentIons,
                                     totalNumberOfSpectraOfGivenLength,
-                                    "Fragment Ion Number", "Occurence (%)");
+                                    "Fragment Ion Number", "Occurence (%)", properties);
 
                             if (!properties.showLegend()) {
                                 chart.getLegend().setVisible(false);
@@ -4725,7 +4736,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                             // create the line plot for the sequence dependent fragment ions
                             JFreeChart lineChart = PlotUtil.getAverageLinePlot(averageSequenceDependentFragmentIons,
                                     totalNumberOfSpectraOfGivenLength,
-                                    "Fragment Ion Number", "Occurence (%)");
+                                    "Fragment Ion Number", "Occurence (%)", properties);
 
                             if (!properties.showLegend()) {
                                 lineChart.getLegend().setVisible(false);
@@ -6187,6 +6198,45 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
     }//GEN-LAST:event_setTitleJMenuItemActionPerformed
 
     /**
+     * Turns the max and min lines in the combined line plot on or off.
+     * 
+     * @param evt
+     */
+    private void showMaxMinJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showMaxMinJMenuItemActionPerformed
+
+        Iterator<Integer> iterator = properties.getAllChartFrames().keySet().iterator();
+
+        properties.setShowMaxMin(!properties.showMaxMin());
+
+        while (iterator.hasNext()) {
+
+            Integer key = iterator.next();
+
+            JFreeChart tempChart = properties.getAllChartFrames().get(key);
+            String tempPlotType = properties.getAllInternalFrames().get(key).getInternalFrameType();
+
+            if (tempPlotType.equalsIgnoreCase("FragmentIonProbabilityPlot")) {
+                if (((XYPlot) tempChart.getPlot()).getRenderer() != null) {
+                    if(properties.showMaxMin()){
+                        ((XYErrorRenderer) ((XYPlot) tempChart.getPlot()).getRenderer()).setErrorStroke(
+                                new BasicStroke(PlotUtil.LINE_WIDTH/2));
+                    } else {
+                        ((XYErrorRenderer) ((XYPlot) tempChart.getPlot()).getRenderer()).setErrorStroke(
+                                new BasicStroke(0));
+                    }
+                }
+            }
+        }
+
+
+        if (properties.showMaxMin()) {
+            showMaxMinJMenuItem.setText("Hide Max and Min Values");
+        } else {
+            showMaxMinJMenuItem.setText("Show Max and Min Values");
+        }
+    }//GEN-LAST:event_showMaxMinJMenuItemActionPerformed
+
+    /**
      * Makes sure that the combox is always wide enough to 
      * display the longest element.
      */
@@ -6357,6 +6407,8 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                     showBoxPlotToolBarJMenuItem.setVisible(false);
                     showDataSeriesSelectionJMenuItem.setEnabled(false);
                     showDataSeriesSelectionJMenuItem.setVisible(false);
+                    showMaxMinJMenuItem.setVisible(false);
+                        showMaxMinJMenuItem.setEnabled(false);
                 } else if (temp.getInternalFrameType().equalsIgnoreCase("BoxPlot") ||
                         temp.getInternalFrameType().equalsIgnoreCase("BoxPlot_modification")) {
                     showSpectrumToolBarJMenuItem.setEnabled(false);
@@ -6365,6 +6417,8 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                     showBoxPlotToolBarJMenuItem.setVisible(true);
                     showDataSeriesSelectionJMenuItem.setEnabled(false);
                     showDataSeriesSelectionJMenuItem.setVisible(false);
+                    showMaxMinJMenuItem.setVisible(false);
+                        showMaxMinJMenuItem.setEnabled(false);
                 } else if (temp.getInternalFrameType().equalsIgnoreCase("MassErrorScatterPlot") ||
                         temp.getInternalFrameType().equalsIgnoreCase("MassErrorBubblePlot") ||
                         temp.getInternalFrameType().equalsIgnoreCase("MassErrorBoxPlot") ||
@@ -6376,6 +6430,14 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                     showBoxPlotToolBarJMenuItem.setVisible(false);
                     showDataSeriesSelectionJMenuItem.setEnabled(true);
                     showDataSeriesSelectionJMenuItem.setVisible(true);
+
+                    if(temp.getInternalFrameType().equalsIgnoreCase("FragmentIonProbabilityPlot")){
+                        showMaxMinJMenuItem.setVisible(true);
+                        showMaxMinJMenuItem.setEnabled(true);
+                    } else {
+                        showMaxMinJMenuItem.setVisible(false);
+                        showMaxMinJMenuItem.setEnabled(false);
+                    }
                 } else {
                     showSpectrumToolBarJMenuItem.setEnabled(false);
                     showSpectrumToolBarJMenuItem.setVisible(false);
@@ -6383,6 +6445,8 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                     showBoxPlotToolBarJMenuItem.setVisible(false);
                     showDataSeriesSelectionJMenuItem.setEnabled(false);
                     showDataSeriesSelectionJMenuItem.setVisible(false);
+                    showMaxMinJMenuItem.setVisible(false);
+                    showMaxMinJMenuItem.setEnabled(false);
                 }
             }
 
@@ -7441,6 +7505,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
     private javax.swing.JMenuItem showLeftPanelJMenuItem;
     private javax.swing.JMenuItem showLegendsJMenuItem;
     private javax.swing.JMenuItem showMarkersJMenuItem;
+    private javax.swing.JMenuItem showMaxMinJMenuItem;
     private javax.swing.JMenuItem showSpectrumToolBarJMenuItem;
     private javax.swing.JButton spectraJButton;
     private javax.swing.JComboBox spectraJComboBox;

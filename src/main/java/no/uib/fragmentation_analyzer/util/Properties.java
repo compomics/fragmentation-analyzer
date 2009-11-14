@@ -55,7 +55,7 @@ public class Properties {
     private ArrayList<SpectrumTableRow> currentlySelectedRowsInSpectraTable = new ArrayList<SpectrumTableRow>();
     private int currentLabelType = 0; // no type selected
     private String modificationPattern = "[<][^<]*[>]";
-    private boolean showLegend = true, showMarkers = false, showAverageMassError = false;
+    private boolean showLegend = true, showMarkers = false, showAverageMassError = false, showMaxMin = false;
         
     /**
      * Creates a new empty Properties object.
@@ -444,5 +444,19 @@ public class Properties {
      */
     public void setShowAverageMassError(boolean showAverageMassError) {
         this.showAverageMassError = showAverageMassError;
+    }
+
+    /**
+     * @return the showMaxMin
+     */
+    public boolean showMaxMin() {
+        return showMaxMin;
+    }
+
+    /**
+     * @param showMaxMin the showMaxMin to set
+     */
+    public void setShowMaxMin(boolean showMaxMin) {
+        this.showMaxMin = showMaxMin;
     }
 }
