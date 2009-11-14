@@ -68,6 +68,14 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="showAverageJMenuItemActionPerformed"/>
           </Events>
         </MenuItem>
+        <MenuItem class="javax.swing.JMenuItem" name="showMaxMinJMenuItem">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Show Max and Min Values"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="showMaxMinJMenuItemActionPerformed"/>
+          </Events>
+        </MenuItem>
         <Component class="javax.swing.JSeparator" name="jSeparator1">
         </Component>
         <MenuItem class="javax.swing.JMenuItem" name="removeAllInternalFramesJMenuItem">
