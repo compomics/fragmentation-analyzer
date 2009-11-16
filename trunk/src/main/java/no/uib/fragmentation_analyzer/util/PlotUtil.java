@@ -148,6 +148,20 @@ public class PlotUtil {
         // add the data to the plot
         YIntervalSeriesCollection dataset = new YIntervalSeriesCollection();
 
+        // set to true if correlation data is to be printed (to the ErrorLog)
+        boolean printOutCorrelationData = false;
+
+        if(printOutCorrelationData){
+            System.out.print("type, number, ");
+
+            for(int k = 0; k < data.get(sortedKeys.get(0))[0].length; k++){
+                System.out.print("S" + (k+1) + ", ");
+            }
+
+            System.out.println("Avg");
+        }
+
+
         for (int i = 0; i < sortedKeys.size(); i++) {
 
             String key = sortedKeys.get(i);
@@ -155,14 +169,38 @@ public class PlotUtil {
             double[][] tempArray = data.get(key);
            
             YIntervalSeries tempDataSeries = new YIntervalSeries(key);
- 
+
             for (int j = 1; j < tempArray.length; j++) {
+
+                if(printOutCorrelationData){
+                    if(key.equalsIgnoreCase("b") ||
+                                key.equalsIgnoreCase("y")){
+                        System.out.print(key + ", ");
+                    }
+                }
 
                 double averageValue = 0.0;
                 double max = Double.MIN_VALUE;
                 double min = Double.MAX_VALUE;
 
-                for(int k=0; k<tempArray[j].length; k++){
+                for(int k = 0; k < tempArray[j].length; k++){
+
+                    if(printOutCorrelationData){
+                        if(key.equalsIgnoreCase("b") ||
+                                key.equalsIgnoreCase("y")){
+
+                            if(k==0){
+                                if(key.equalsIgnoreCase("b")){
+                                    System.out.print(j + ", ");
+                                } else {
+                                    System.out.print(j + ", ");
+                                }
+                            }
+
+                            System.out.print(tempArray[j][k] + ", ");
+                        }
+                    }
+
                     if(!new Double(tempArray[j][k]).isNaN()){
 
                         if(tempArray[j][k] > max){
@@ -179,8 +217,15 @@ public class PlotUtil {
 
                 averageValue /= totalNumberOfSpectraOfGivenLength[j];
                 tempDataSeries.add(j, averageValue, min, max);
-            }
 
+                if(printOutCorrelationData){
+                    if(key.equalsIgnoreCase("b") ||
+                                key.equalsIgnoreCase("y")){
+                        System.out.println(averageValue);
+                    }
+                }
+            }
+         
             dataset.addSeries(tempDataSeries);
         }
 
@@ -216,17 +261,16 @@ public class PlotUtil {
         // set the range to only include valid percatage values (and leave some padding at the top)
         plot.getRangeAxis().setRange(0, 1.04);
 
-        // make sure that tooltip is generated
+        // set up the properties of the error bars
         XYErrorRenderer renderer = new XYErrorRenderer();
         renderer.setBaseLinesVisible(true);
         renderer.setBaseShapesVisible(false);
+        renderer.setErrorStroke(new BasicStroke(LINE_WIDTH/2));
 
-        if(properties.showMaxMin()) {
-            renderer.setErrorStroke(new BasicStroke(LINE_WIDTH/2));
-        } else {
-            renderer.setErrorStroke(new BasicStroke(0));
-        }
-        
+        renderer.setDrawYError(properties.showMaxMin());
+        renderer.setDrawXError(false);
+
+        // make sure that tooltip is generated
         renderer.setBaseToolTipGenerator(new StandardXYToolTipGenerator());
 
         // set the data series colors
@@ -246,7 +290,7 @@ public class PlotUtil {
                 renderer.setSeriesStroke(i, new BasicStroke(LINE_WIDTH, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
             }
         }
-
+ 
         plot.setRenderer(renderer);
 
         return chart;
