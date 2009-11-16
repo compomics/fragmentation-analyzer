@@ -2,4 +2,5 @@
 
 ----
 
-(currently no changes)
+ * BUG FIX: The error bars in the fragment ion probability plot is now correctly hidden.
+ * BUG FIX: Removed the data point markers in the combined fragment ion probability plots.
