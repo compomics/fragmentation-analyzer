@@ -6217,12 +6217,14 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
             if (tempPlotType.equalsIgnoreCase("FragmentIonProbabilityPlot")) {
                 if (((XYPlot) tempChart.getPlot()).getRenderer() != null) {
-                    if(properties.showMaxMin()){
-                        ((XYErrorRenderer) ((XYPlot) tempChart.getPlot()).getRenderer()).setErrorStroke(
-                                new BasicStroke(PlotUtil.LINE_WIDTH/2));
-                    } else {
-                        ((XYErrorRenderer) ((XYPlot) tempChart.getPlot()).getRenderer()).setErrorStroke(
-                                new BasicStroke(0));
+                    if(((XYPlot) tempChart.getPlot()).getRenderer() instanceof XYErrorRenderer){
+                        if(properties.showMaxMin()){
+                            ((XYErrorRenderer) ((XYPlot) tempChart.getPlot()).getRenderer()).setErrorStroke(
+                                    new BasicStroke(PlotUtil.LINE_WIDTH/2));
+                        } else {
+                            ((XYErrorRenderer) ((XYPlot) tempChart.getPlot()).getRenderer()).setErrorStroke(
+                                    new BasicStroke(0));
+                        }
                     }
                 }
             }
