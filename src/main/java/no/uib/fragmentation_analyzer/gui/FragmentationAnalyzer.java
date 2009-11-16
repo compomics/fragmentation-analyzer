@@ -14,7 +14,6 @@ import com.jgoodies.looks.plastic.PlasticLookAndFeel;
 import com.jgoodies.looks.plastic.PlasticXPLookAndFeel;
 import com.jgoodies.looks.plastic.theme.SkyKrupp;
 import com.mysql.jdbc.Driver;
-import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -6218,13 +6217,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
             if (tempPlotType.equalsIgnoreCase("FragmentIonProbabilityPlot")) {
                 if (((XYPlot) tempChart.getPlot()).getRenderer() != null) {
                     if(((XYPlot) tempChart.getPlot()).getRenderer() instanceof XYErrorRenderer){
-                        if(properties.showMaxMin()){
-                            ((XYErrorRenderer) ((XYPlot) tempChart.getPlot()).getRenderer()).setErrorStroke(
-                                    new BasicStroke(PlotUtil.LINE_WIDTH/2));
-                        } else {
-                            ((XYErrorRenderer) ((XYPlot) tempChart.getPlot()).getRenderer()).setErrorStroke(
-                                    new BasicStroke(0));
-                        }
+                        ((XYErrorRenderer) ((XYPlot) tempChart.getPlot()).getRenderer()).setDrawYError(properties.showMaxMin());
                     }
                 }
             }
