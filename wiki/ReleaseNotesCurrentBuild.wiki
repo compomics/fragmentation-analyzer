@@ -2,5 +2,8 @@
 
 ----
 
+ * NEW FEAURE: Implemented a box plot version of the combined fragment ion probability plot.
+ * NEW FEATURE: Peptide sequence length is now included in the tables. 
  * BUG FIX: The error bars in the fragment ion probability plot is now correctly hidden.
  * BUG FIX: Removed the data point markers in the combined fragment ion probability plots.
+ * BUG FIX: Fixed a bug in the Single/Combine drop down box for the spectra table.
