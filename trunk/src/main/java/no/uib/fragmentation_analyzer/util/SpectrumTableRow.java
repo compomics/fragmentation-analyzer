@@ -13,6 +13,7 @@ public class SpectrumTableRow {
     private Integer spectrumId;
     private String sequence;
     private String modifiedSequence;
+    private Integer peptideLength;
     private String instrument;
 
     /**
@@ -22,14 +23,17 @@ public class SpectrumTableRow {
      * @param spectrumId
      * @param sequence
      * @param modifiedSequence
+     * @param peptideLength
      * @param instrument
      */
-    public SpectrumTableRow(Integer identificationId, Integer spectrumId, String sequence, String modifiedSequence, String instrument) {
+    public SpectrumTableRow(Integer identificationId, Integer spectrumId, String sequence, String modifiedSequence,
+            Integer peptideLength, String instrument) {
 
         this.identificationId = identificationId;
         this.spectrumId = spectrumId;
         this.sequence = sequence;
         this.modifiedSequence = modifiedSequence;
+        this.peptideLength = peptideLength;
         this.instrument = instrument;
     }
 
@@ -118,5 +122,19 @@ public class SpectrumTableRow {
      */
     public void setInstrument(String instrument) {
         this.instrument = instrument;
+    }
+
+    /**
+     * @return the peptideLength
+     */
+    public Integer getPeptideLength() {
+        return peptideLength;
+    }
+
+    /**
+     * @param peptideLength the peptideLength to set
+     */
+    public void setPeptideLength(Integer peptideLength) {
+        this.peptideLength = peptideLength;
     }
 }

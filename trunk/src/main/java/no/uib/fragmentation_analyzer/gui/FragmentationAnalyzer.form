@@ -1030,10 +1030,11 @@
                             <Component class="org.jdesktop.swingx.JXTable" name="searchResultsJXTable">
                               <Properties>
                                 <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                                  <Table columnCount="6" rowCount="0">
+                                  <Table columnCount="7" rowCount="0">
                                     <Column editable="false" title=" " type="java.lang.Integer"/>
                                     <Column editable="false" title="Sequence" type="java.lang.String"/>
                                     <Column editable="false" title="Modified Sequence" type="java.lang.String"/>
+                                    <Column editable="false" title="Length" type="java.lang.Integer"/>
                                     <Column editable="false" title="#1" type="java.lang.Integer"/>
                                     <Column editable="false" title="#2" type="java.lang.Integer"/>
                                     <Column editable="true" title="  " type="java.lang.Boolean"/>
@@ -1173,12 +1174,13 @@
                             <Component class="org.jdesktop.swingx.JXTable" name="spectraJXTable">
                               <Properties>
                                 <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                                  <Table columnCount="7" rowCount="0">
+                                  <Table columnCount="8" rowCount="0">
                                     <Column editable="false" title=" " type="java.lang.Integer"/>
                                     <Column editable="false" title="ID" type="java.lang.Integer"/>
                                     <Column editable="false" title="SID" type="java.lang.Integer"/>
                                     <Column editable="false" title="Sequence" type="java.lang.String"/>
                                     <Column editable="false" title="Modified Sequence" type="java.lang.String"/>
+                                    <Column editable="false" title="Length" type="java.lang.Integer"/>
                                     <Column editable="false" title="Instrument" type="java.lang.String"/>
                                     <Column editable="true" title="  " type="java.lang.Boolean"/>
                                   </Table>

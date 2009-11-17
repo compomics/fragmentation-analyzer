@@ -11,6 +11,7 @@ public class IdentificationTableRow {
 
     private String sequence;
     private String modifiedSequence;
+    private Integer peptideLength;
     private Integer countA;
     private Integer countB;
 
@@ -19,13 +20,16 @@ public class IdentificationTableRow {
      *
      * @param sequence
      * @param modifiedSequence
+     * @param peptideLength
      * @param countA
      * @param countB
      */
-    public IdentificationTableRow(String sequence, String modifiedSequence, Integer countA, Integer countB) {
+    public IdentificationTableRow(String sequence, String modifiedSequence, Integer peptideLength,
+            Integer countA, Integer countB) {
 
         this.sequence = sequence;
         this.modifiedSequence = modifiedSequence;
+        this.peptideLength = peptideLength;
         this.countA = countA;
         this.countB = countB;
     }
@@ -102,5 +106,19 @@ public class IdentificationTableRow {
      */
     public void setCountB(Integer countB) {
         this.countB = countB;
+    }
+
+    /**
+     * @return the peptideLength
+     */
+    public Integer getPeptideLength() {
+        return peptideLength;
+    }
+
+    /**
+     * @param peptideLength the peptideLength to set
+     */
+    public void setPeptideLength(Integer peptideLength) {
+        this.peptideLength = peptideLength;
     }
 }
