@@ -3417,6 +3417,28 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                         // if combine plot is selected, create the plot now
                         if (combineSearchResultsJComboBox.getSelectedIndex() == Properties.COMBINE_PLOT) {
 
+                            // create the heat maps
+                            String[][] heatMapDataBIons =
+                                    PlotUtil.getHeatMapData(averageSequenceDependentFragmentIons, totalNumberOfSpectraOfGivenLength, "b");
+
+                            FragmentationAnalyzerJInternalFrame internalFrameHeatMapBIons = new FragmentationAnalyzerJInternalFrame(
+                                    "Heat Map - B Ions", true, true, true, null, "HeatMap", internalFrameUniqueIdCounter);
+                            internalFrameHeatMapBIons.add(new HeatMapJPanel(heatMapDataBIons));
+
+                            insertInternalFrame(internalFrameHeatMapBIons);
+                            internalFrameUniqueIdCounter++;
+
+                            String[][] heatMapDataYIons =
+                                    PlotUtil.getHeatMapData(averageSequenceDependentFragmentIons, totalNumberOfSpectraOfGivenLength, "y");
+
+                            FragmentationAnalyzerJInternalFrame internalFrameHeatMapYIons = new FragmentationAnalyzerJInternalFrame(
+                                    "Heat Map - Y Ions", true, true, true, null, "HeatMap", internalFrameUniqueIdCounter);
+                            internalFrameHeatMapYIons.add(new HeatMapJPanel(heatMapDataYIons));
+
+                            insertInternalFrame(internalFrameHeatMapYIons);
+                            internalFrameUniqueIdCounter++;
+
+
                             // create the line plot for the sequence dependent fragment ions
                             JFreeChart chart = PlotUtil.getAverageLinePlot(averageSequenceDependentFragmentIons,
                                     totalNumberOfSpectraOfGivenLength,
@@ -6475,6 +6497,9 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         } else if (internalFrame.getInternalFrameType().equalsIgnoreCase("BarPlot")) {
             internalFrame.setFrameIcon(new javax.swing.ImageIcon(getClass().getResource(
                     "/no/uib/fragmentation_analyzer/icons/bar_plot.GIF")));
+        } else if (internalFrame.getInternalFrameType().equalsIgnoreCase("HeatMap")) {
+            internalFrame.setFrameIcon(new javax.swing.ImageIcon(getClass().getResource(
+                    "/no/uib/fragmentation_analyzer/icons/heat_map.GIF")));
         } else {
             // use default icon
         }
