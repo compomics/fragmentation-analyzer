@@ -39,6 +39,7 @@ import org.jfree.ui.Layer;
 import org.jfree.ui.RectangleEdge;
 import org.jfree.ui.RectangleInsets;
 import org.jfree.ui.TextAnchor;
+import org.apache.commons.math.stat.correlation.SpearmansCorrelation;
 
 /**
  * Includes help methods that are used when plotting.
@@ -122,6 +123,131 @@ public class PlotUtil {
     }
 
     /**
+     * Calculates the heat map data for the given fragment ion type.
+     *
+     * @param data
+     * @param totalNumberOfSpectraOfGivenLength
+     * @param fragmentIonType
+     * @return the heat map data 
+     */
+    public static String[][] getHeatMapData(HashMap<String, double[][]> data, int[] totalNumberOfSpectraOfGivenLength,
+            String fragmentIonType){
+
+        String [][] heatMapData = new String[0][0];
+
+        if(data.get(fragmentIonType) != null){
+
+            double[][] currentData = data.get(fragmentIonType);
+
+            heatMapData = new String [currentData[0].length + 2][currentData[0].length + 2];
+
+            // insert the "column headers"
+            heatMapData[0][0] = " ";
+
+            for(int i=1; i<heatMapData[0].length; i++){
+                heatMapData[0][i] = "" + i;
+            }
+
+            heatMapData[0][heatMapData[0].length-1] = "A";
+
+
+            // insert the "row headers"
+            for(int i=1; i<heatMapData.length; i++){
+                heatMapData[i][0] = "" + i;
+            }
+
+            heatMapData[heatMapData.length-1][0] = "A";
+
+
+            // calculate the average values
+            double[] averageValues = new double[currentData.length-1];
+
+            for (int j = 1; j < currentData.length; j++) {
+
+                double averageValue = 0.0;
+
+                for(int k = 0; k < currentData[j].length; k++){
+
+                    if(!new Double(currentData[j][k]).isNaN()){
+                        averageValue += currentData[j][k];
+                    }
+                }
+
+                averageValue /= totalNumberOfSpectraOfGivenLength[j];
+
+                averageValues[j-1] = averageValue;
+            }
+
+
+//            System.out.println("\naverage values:");
+//
+//            // print out the contents of the data array
+//            for(int i=0; i<averageValues.length; i++){
+//                System.out.println(averageValues[i]);
+//            }
+
+            
+//            System.out.println("\ncurrent data:");
+//
+//            // print out the contents of the data array
+//            for(int i=1; i<currentData.length; i++){
+//                for(int j=0; j<currentData[0].length; j++){
+//                    System.out.print(currentData[i][j] + "\t");
+//                }
+//
+//                System.out.println();
+//            }
+
+
+            // calculate the heat map values
+            SpearmansCorrelation spearmansCorrelation = new SpearmansCorrelation();
+
+            for (int i = 0; i < currentData[0].length; i++) {
+
+                double[] dataSetA = new double[currentData.length-1];
+
+                for(int k=1; k<currentData.length; k++){
+                    dataSetA[k-1] = currentData[k][i];
+                }
+
+                for (int j = 0; j < currentData[0].length; j++) {
+
+                    double[] dataSetB = new double[currentData.length-1];
+
+                    for(int k=1; k<currentData.length; k++){
+                        dataSetB[k-1] = currentData[k][j];
+                    }
+
+                    heatMapData[i+1][j+1] = "" + spearmansCorrelation.correlation(dataSetA, dataSetB);
+                }
+
+                heatMapData[i+1][heatMapData[0].length-1] = "" + spearmansCorrelation.correlation(dataSetA, averageValues);
+                heatMapData[heatMapData[0].length-1][i+1] = "" + spearmansCorrelation.correlation(dataSetA, averageValues);
+            }
+
+            heatMapData[heatMapData[0].length-1][heatMapData[0].length-1] =
+                    "" + spearmansCorrelation.correlation(averageValues, averageValues);
+        }
+
+
+
+//        System.out.println("\nheat map:");
+//
+//        // print out the contents of the heat map
+//        for(int i=0; i<heatMapData.length; i++){
+//            for(int j=0; j<heatMapData[0].length; j++){
+//                System.out.print(heatMapData[i][j] + "\t");
+//            }
+//
+//            System.out.println();
+//        }
+
+
+        return heatMapData;
+    }
+
+
+    /**
      * Returns a line plot based on the provided data.
      *
      * @param dataSet
@@ -152,7 +278,7 @@ public class PlotUtil {
         boolean printOutCorrelationData = false;
 
         if(printOutCorrelationData){
-            System.out.print("type, number, ");
+            System.out.print("\ntype, number, ");
 
             for(int k = 0; k < data.get(sortedKeys.get(0))[0].length; k++){
                 System.out.print("S" + (k+1) + ", ");

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Form version="1.3" maxVersion="1.7" type="org.netbeans.modules.form.forminfo.JPanelFormInfo">
+  <NonVisualComponents>
+    <Container class="javax.swing.JPopupMenu" name="savePopupMenu">
+
+      <Layout class="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout">
+        <Property name="useNullLayout" type="boolean" value="true"/>
+      </Layout>
+      <SubComponents>
+        <MenuItem class="javax.swing.JMenuItem" name="saveJMenuItem">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Save"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="saveJMenuItemActionPerformed"/>
+          </Events>
+        </MenuItem>
+      </SubComponents>
+    </Container>
+  </NonVisualComponents>
+  <Properties>
+    <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+      <Color blue="ff" green="ff" red="ff" type="rgb"/>
+    </Property>
+  </Properties>
+  <Events>
+    <EventHandler event="componentResized" listener="java.awt.event.ComponentListener" parameters="java.awt.event.ComponentEvent" handler="formComponentResized"/>
+  </Events>
+  <AuxValues>
+    <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
+    <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_generateFQN" type="java.lang.Boolean" value="true"/>
+    <AuxValue name="FormSettings_generateMnemonicsCode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_i18nAutoMode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_layoutCodeTarget" type="java.lang.Integer" value="1"/>
+    <AuxValue name="FormSettings_listenerGenerationStyle" type="java.lang.Integer" value="0"/>
+    <AuxValue name="FormSettings_variablesLocal" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_variablesModifier" type="java.lang.Integer" value="2"/>
+    <AuxValue name="designerSize" type="java.awt.Dimension" value="-84,-19,0,5,115,114,0,18,106,97,118,97,46,97,119,116,46,68,105,109,101,110,115,105,111,110,65,-114,-39,-41,-84,95,68,20,2,0,2,73,0,6,104,101,105,103,104,116,73,0,5,119,105,100,116,104,120,112,0,0,0,-39,0,0,1,-108"/>
+  </AuxValues>
+
+  <Layout class="org.netbeans.modules.form.compat2.layouts.DesignFlowLayout"/>
+  <SubComponents>
+    <Component class="org.jdesktop.swingx.JXTable" name="heatMapJXTable">
+      <Properties>
+        <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
+          <Table columnCount="6" rowCount="6">
+            <Column editable="false" title=" " type="java.lang.String">
+              <Data value=""/>
+              <Data value="S1"/>
+              <Data value="S2"/>
+              <Data value="S3"/>
+              <Data value="S4"/>
+              <Data value="Avg"/>
+            </Column>
+            <Column editable="false" title="S1" type="java.lang.String">
+              <Data value="S1"/>
+              <Data value="0.14"/>
+              <Data value="0.26"/>
+              <Data value="0.333"/>
+              <Data value="0.10"/>
+              <Data value="0.42"/>
+            </Column>
+            <Column editable="false" title="S2" type="java.lang.String">
+              <Data value="S2"/>
+              <Data value="0.45"/>
+              <Data value="0.37"/>
+              <Data value="0.28"/>
+              <Data value="0.10"/>
+              <Data value="0.11"/>
+            </Column>
+            <Column editable="false" title="S3" type="java.lang.String">
+              <Data value="S3"/>
+              <Data value="0.13"/>
+              <Data value="0.24"/>
+              <Data value="0.16"/>
+              <Data value="0.17"/>
+              <Data value="0.28"/>
+            </Column>
+            <Column editable="false" title="S4" type="java.lang.String">
+              <Data value="S4"/>
+              <Data value="0.15"/>
+              <Data value="0.2"/>
+              <Data value="0.37"/>
+              <Data value="0.32"/>
+              <Data value="0.37"/>
+            </Column>
+            <Column editable="false" title="Avg" type="java.lang.String">
+              <Data value="Avg"/>
+              <Data value="0.32"/>
+              <Data value="0.44"/>
+              <Data value="0.34"/>
+              <Data value="0.33"/>
+              <Data value="0.31"/>
+            </Column>
+          </Table>
+        </Property>
+        <Property name="autoResizeMode" type="int" value="4"/>
+        <Property name="fillsViewportHeight" type="boolean" value="false"/>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.editors2.FontEditor">
+          <FontInfo relative="true">
+            <Font component="heatMapJXTable" property="font" relativeSize="true" size="-3"/>
+          </FontInfo>
+        </Property>
+        <Property name="gridColor" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+          <Color blue="ff" green="ff" red="ff" type="rgb"/>
+        </Property>
+        <Property name="showGrid" type="boolean" value="false"/>
+        <Property name="sortable" type="boolean" value="false"/>
+        <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection code="null" type="code"/>
+        </Property>
+      </Properties>
+      <Events>
+        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="heatMapJXTablejPanelMouseClicked"/>
+      </Events>
+    </Component>
+  </SubComponents>
+</Form>
