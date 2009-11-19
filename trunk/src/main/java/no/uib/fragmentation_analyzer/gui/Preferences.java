@@ -38,6 +38,14 @@ public class Preferences extends javax.swing.JDialog {
             unnormalizedJRadioButton.setSelected(true);
         }
 
+        if(fragmentationAnalyzer.getUserProperties().useSpearmansCorrelation()){
+            spearmanJRadioButton.setSelected(true);
+            pearsonJRadioButton.setSelected(false);
+        } else {
+            spearmanJRadioButton.setSelected(false);
+            pearsonJRadioButton.setSelected(true);
+        }
+
         plotsPerRowJSpinner.setValue(fragmentationAnalyzer.getUserProperties().getNumberOfPlotsPerRow());
         plotsPerColumnJSpinner.setValue(fragmentationAnalyzer.getUserProperties().getNumberOfPlotsPerColumn());
         
@@ -55,6 +63,7 @@ public class Preferences extends javax.swing.JDialog {
     private void initComponents() {
 
         normalizationButtonGroup = new javax.swing.ButtonGroup();
+        correlationButtonGroup = new javax.swing.ButtonGroup();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         defaultBubbleScalingJTextField = new javax.swing.JTextField();
@@ -74,6 +83,9 @@ public class Preferences extends javax.swing.JDialog {
         jPanel3 = new javax.swing.JPanel();
         totalIntensityNormalizationJRadioButton = new javax.swing.JRadioButton();
         unnormalizedJRadioButton = new javax.swing.JRadioButton();
+        jPanel4 = new javax.swing.JPanel();
+        spearmanJRadioButton = new javax.swing.JRadioButton();
+        pearsonJRadioButton = new javax.swing.JRadioButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Preferences");
@@ -228,6 +240,37 @@ public class Preferences extends javax.swing.JDialog {
                 .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Heat Map Correlation Type", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 11), new java.awt.Color(0, 0, 0))); // NOI18N
+
+        correlationButtonGroup.add(spearmanJRadioButton);
+        spearmanJRadioButton.setText("Spearman Correlation");
+        spearmanJRadioButton.setIconTextGap(15);
+
+        correlationButtonGroup.add(pearsonJRadioButton);
+        pearsonJRadioButton.setText("Pearson Correlation");
+        pearsonJRadioButton.setIconTextGap(15);
+
+        org.jdesktop.layout.GroupLayout jPanel4Layout = new org.jdesktop.layout.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .add(jPanel4Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(spearmanJRadioButton)
+                    .add(pearsonJRadioButton))
+                .addContainerGap(173, Short.MAX_VALUE))
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .add(spearmanJRadioButton)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(pearsonJRadioButton)
+                .addContainerGap(10, Short.MAX_VALUE))
+        );
+
         org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -238,6 +281,7 @@ public class Preferences extends javax.swing.JDialog {
                     .add(org.jdesktop.layout.GroupLayout.TRAILING, jPanel1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .add(org.jdesktop.layout.GroupLayout.TRAILING, jPanel3, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .add(jPanel2, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .add(jPanel4, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .add(jSeparator1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 336, Short.MAX_VALUE)
                     .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
                         .add(okJButton)
@@ -257,6 +301,8 @@ public class Preferences extends javax.swing.JDialog {
                 .add(jPanel2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(jPanel3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(jPanel4, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .add(18, 18, 18)
                 .add(jSeparator1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
@@ -355,6 +401,11 @@ public class Preferences extends javax.swing.JDialog {
             }
         }
 
+        if(!error){
+            fragmentationAnalyzer.getUserProperties().setUseSpearmansCorrelation(
+                    spearmanJRadioButton.isSelected());
+        }
+
         // update the order and size of the internal frames
         fragmentationAnalyzer.orderInternalFrames();
         
@@ -367,6 +418,7 @@ public class Preferences extends javax.swing.JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelJButton;
+    private javax.swing.ButtonGroup correlationButtonGroup;
     private javax.swing.JTextField defaultBubbleScalingJTextField;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -375,15 +427,18 @@ public class Preferences extends javax.swing.JDialog {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.ButtonGroup normalizationButtonGroup;
     private javax.swing.JCheckBox notSignificantNotUsedJCheckBox;
     private javax.swing.JButton okJButton;
+    private javax.swing.JRadioButton pearsonJRadioButton;
     private javax.swing.JSpinner plotsPerColumnJSpinner;
     private javax.swing.JSpinner plotsPerRowJSpinner;
     private javax.swing.JTextField ppmBubbleScalingJTextField;
     private javax.swing.JCheckBox significantAndUsedJCheckBox;
     private javax.swing.JCheckBox significantNotUsedJCheckBox;
+    private javax.swing.JRadioButton spearmanJRadioButton;
     private javax.swing.JRadioButton totalIntensityNormalizationJRadioButton;
     private javax.swing.JRadioButton unnormalizedJRadioButton;
     // End of variables declaration//GEN-END:variables

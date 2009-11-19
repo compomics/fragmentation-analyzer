@@ -3419,7 +3419,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
                             // create the heat maps
                             String[][] heatMapDataBIons =
-                                    PlotUtil.getHeatMapData(averageSequenceDependentFragmentIons, totalNumberOfSpectraOfGivenLength, "b");
+                                    PlotUtil.getHeatMapData(averageSequenceDependentFragmentIons, totalNumberOfSpectraOfGivenLength, "b", userProperties);
 
                             FragmentationAnalyzerJInternalFrame internalFrameHeatMapBIons = new FragmentationAnalyzerJInternalFrame(
                                     "Heat Map - B Ions", true, true, true, null, "HeatMap", internalFrameUniqueIdCounter);
@@ -3429,7 +3429,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                             internalFrameUniqueIdCounter++;
 
                             String[][] heatMapDataYIons =
-                                    PlotUtil.getHeatMapData(averageSequenceDependentFragmentIons, totalNumberOfSpectraOfGivenLength, "y");
+                                    PlotUtil.getHeatMapData(averageSequenceDependentFragmentIons, totalNumberOfSpectraOfGivenLength, "y", userProperties);
 
                             FragmentationAnalyzerJInternalFrame internalFrameHeatMapYIons = new FragmentationAnalyzerJInternalFrame(
                                     "Heat Map - Y Ions", true, true, true, null, "HeatMap", internalFrameUniqueIdCounter);

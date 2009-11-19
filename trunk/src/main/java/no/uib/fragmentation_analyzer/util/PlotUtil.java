@@ -40,6 +40,7 @@ import org.jfree.ui.RectangleEdge;
 import org.jfree.ui.RectangleInsets;
 import org.jfree.ui.TextAnchor;
 import org.apache.commons.math.stat.correlation.SpearmansCorrelation;
+import org.apache.commons.math.stat.correlation.PearsonsCorrelation;
 
 /**
  * Includes help methods that are used when plotting.
@@ -132,7 +133,7 @@ public class PlotUtil {
      * @return the heat map data 
      */
     public static String[][] getHeatMapData(HashMap<String, double[][]> data, int[] totalNumberOfSpectraOfGivenLength,
-            String fragmentIonType){
+            String fragmentIonType, UserProperties userProperties){
 
         String [][] heatMapData = new String[0][0];
 
@@ -202,6 +203,7 @@ public class PlotUtil {
 
             // calculate the heat map values
             SpearmansCorrelation spearmansCorrelation = new SpearmansCorrelation();
+            PearsonsCorrelation pearsonsCorrelation = new PearsonsCorrelation();
 
             for (int i = 0; i < currentData[0].length; i++) {
 
@@ -219,15 +221,29 @@ public class PlotUtil {
                         dataSetB[k-1] = currentData[k][j];
                     }
 
-                    heatMapData[i+1][j+1] = "" + spearmansCorrelation.correlation(dataSetA, dataSetB);
+                    if(userProperties.useSpearmansCorrelation()){
+                        heatMapData[i+1][j+1] = "" + spearmansCorrelation.correlation(dataSetA, dataSetB);
+                    } else {
+                        heatMapData[i+1][j+1] = "" + pearsonsCorrelation.correlation(dataSetA, dataSetB);
+                    }
                 }
 
-                heatMapData[i+1][heatMapData[0].length-1] = "" + spearmansCorrelation.correlation(dataSetA, averageValues);
-                heatMapData[heatMapData[0].length-1][i+1] = "" + spearmansCorrelation.correlation(dataSetA, averageValues);
+                if(userProperties.useSpearmansCorrelation()){
+                    heatMapData[i+1][heatMapData[0].length-1] = "" + spearmansCorrelation.correlation(dataSetA, averageValues);
+                    heatMapData[heatMapData[0].length-1][i+1] = "" + spearmansCorrelation.correlation(dataSetA, averageValues);
+                }  else {
+                    heatMapData[i+1][heatMapData[0].length-1] = "" + pearsonsCorrelation.correlation(dataSetA, averageValues);
+                    heatMapData[heatMapData[0].length-1][i+1] = "" + pearsonsCorrelation.correlation(dataSetA, averageValues);
+                }
             }
 
-            heatMapData[heatMapData[0].length-1][heatMapData[0].length-1] =
-                    "" + spearmansCorrelation.correlation(averageValues, averageValues);
+            if(userProperties.useSpearmansCorrelation()){
+                heatMapData[heatMapData[0].length-1][heatMapData[0].length-1] =
+                        "" + spearmansCorrelation.correlation(averageValues, averageValues);
+            } else {
+                heatMapData[heatMapData[0].length-1][heatMapData[0].length-1] =
+                        "" + pearsonsCorrelation.correlation(averageValues, averageValues);
+            }
         }
 
 
