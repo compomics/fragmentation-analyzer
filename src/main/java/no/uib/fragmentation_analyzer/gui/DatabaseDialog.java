@@ -58,7 +58,6 @@ public class DatabaseDialog extends javax.swing.JDialog {
      *
      * @param fragmentationAnalyzer
      * @param modal
-     * @param extractIdentifications if true the tool starts extracting the identifications after connecting
      */
     public DatabaseDialog(FragmentationAnalyzer fragmentationAnalyzer, boolean modal) {
         super(fragmentationAnalyzer, modal);

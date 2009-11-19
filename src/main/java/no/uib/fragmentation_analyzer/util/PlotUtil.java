@@ -53,10 +53,11 @@ public class PlotUtil {
     /**
      * Returns a line plot based on the provided data.
      *
-     * @param dataSet
+     * @param data
+     * @param numberOfSpectra 
      * @param xAxisLabel
      * @param yAxisLabel
-     * @return
+     * @return a JFreeChart containing the plot
      */
     public static JFreeChart getBarPlot(HashMap<String, Integer> data, int numberOfSpectra,
             String xAxisLabel, String yAxisLabel) {
@@ -250,10 +251,12 @@ public class PlotUtil {
     /**
      * Returns a line plot based on the provided data.
      *
-     * @param dataSet
+     * @param data
+     * @param totalNumberOfSpectraOfGivenLength
      * @param xAxisLabel
+     * @param properties
      * @param yAxisLabel
-     * @return
+     * @return a JFreeChart containing the plot
      */
     public static JFreeChart getAverageLinePlot(HashMap<String, double[][]> data, int[] totalNumberOfSpectraOfGivenLength,
             String xAxisLabel, String yAxisLabel, Properties properties) {
@@ -425,10 +428,11 @@ public class PlotUtil {
     /**
      * Returns a line plot based on the provided data.
      *
-     * @param dataSet
+     * @param data
+     * @param totalNumberOfSpectraOfGivenLength
      * @param xAxisLabel
      * @param yAxisLabel
-     * @return
+     * @return a JFreeChart of the data
      */
     public static JFreeChart getLinePlot(HashMap<String, int[]> data, int[] totalNumberOfSpectraOfGivenLength,
             String xAxisLabel, String yAxisLabel) {
@@ -702,7 +706,7 @@ public class PlotUtil {
      * @param dataSet
      * @param xAxisLabel
      * @param yAxisLabel
-     * @return
+     * @return a CategoryPlot of the data
      */
     public static CategoryPlot getCategoryPlot(CategoryDataset dataSet, String xAxisLabel,
             String yAxisLabel) {
@@ -785,7 +789,7 @@ public class PlotUtil {
      * @param values the values to add
      * @param categoryLabel the label used for the category
      * @param dataSeriesLabel the label used for the data series
-     * @return
+     * @return the added values
      */
     public static double[] addValuesToBoxPlot(DefaultBoxAndWhiskerCategoryDataset dataSet, ArrayList<Double> values,
             String categoryLabel, String dataSeriesLabel) {
@@ -1033,8 +1037,9 @@ public class PlotUtil {
     /**
      * Returns a bubble chart of the provided data set.
      *
-     * @param dataset the data set to plot
+     * @param dataSet
      * @param usePpm if true ppm is used when plotting, otherwise Dalton is used
+     * @param properties
      * @param addLegend if true the legend is visible
      * @return the created chart
      */

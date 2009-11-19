@@ -1,4 +1,3 @@
-
 package no.uib.fragmentation_analyzer.gui;
 
 import java.awt.Color;
@@ -20,6 +19,7 @@ import java.util.Enumeration;
 import java.util.regex.Pattern;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
@@ -31,19 +31,52 @@ import org.jdesktop.swingx.decorator.Highlighter;
 import org.jdesktop.swingx.JXTable;
 import org.jdesktop.swingx.decorator.ColorHighlighter;
 import org.jdesktop.swingx.decorator.SearchPredicate;
+import no.uib.fragmentation_analyzer.filefilters.GifFileFilter;
+import no.uib.fragmentation_analyzer.util.UserProperties;
 
 /**
+ * A panel that sets up a heat map from the provided data. 
+ * The data has to be in the [0-1] range. Any any headers
+ * should be included in the table itself.
+ *
+ * <br><br>
+ *
+ * Example:
+ * <table border="1">
+ * <tr><th> <td>1<td>2<td>3<td>A
+ * <tr><th>1<td>1.0<td>0.3<td>0.2<td>0.2
+ * <tr><th>2<td>0.3<td>1.0<td>0.1<td>0.2
+ * <tr><th>3<td>0.5<td>0.5<td>1.0<td>0.5
+ * <tr><th>A<td>0.2<td>0.2<td>0.5<td>1.0
+ * </table>
  *
  * @author Harald Barsnes
  */
 public class HeatMapJPanel extends javax.swing.JPanel {
 
-    String[][] heatMapData;
+    private String[][] heatMapData;
+    private UserProperties userProperties;
 
-    /** Creates new form HeatMapJPanel */
-    public HeatMapJPanel(String[][] heatMapData) {
+    /** 
+     * Creates a HeatMapJPanel and inserts the provided data.
+     * 
+     * <br><br>
+     *
+     * Example:
+     * <table border="1">
+     * <tr><th> <td>1<td>2<td>3<td>A
+     * <tr><th>1<td>1.0<td>0.3<td>0.2<td>0.2
+     * <tr><th>2<td>0.3<td>1.0<td>0.1<td>0.2
+     * <tr><th>3<td>0.5<td>0.5<td>1.0<td>0.5
+     * <tr><th>A<td>0.2<td>0.2<td>0.5<td>1.0
+     * </table>
+     *
+     * @param heatMapData the data to map
+     */
+    public HeatMapJPanel(UserProperties userProperties, String[][] heatMapData) {
         initComponents();
 
+        this.userProperties = userProperties;
         this.heatMapData = heatMapData;
 
         // set up the heat map color coding
@@ -57,8 +90,9 @@ public class HeatMapJPanel extends javax.swing.JPanel {
     }
 
     /**
+     * Builds the heat map based in the provided data.
      *
-     * @param heatMapData
+     * @param heatMapData the data to map
      */
     private void insertHeatMapData(String[][] heatMapData) {
 
@@ -87,7 +121,7 @@ public class HeatMapJPanel extends javax.swing.JPanel {
     }
 
     /**
-     *
+     * Sets up the properties of the heat map table to make it look like a heat map.
      */
     private void setTableProperties() {
 
@@ -118,7 +152,7 @@ public class HeatMapJPanel extends javax.swing.JPanel {
     }
 
     /**
-     *
+     * Sets up the color coding scheme used for the heat map.
      */
     private void setUpHeatMapColorCoding() {
 
@@ -187,7 +221,7 @@ public class HeatMapJPanel extends javax.swing.JPanel {
         saveJMenuItem = new javax.swing.JMenuItem();
         heatMapJXTable = new org.jdesktop.swingx.JXTable();
 
-        saveJMenuItem.setText("Save");
+        saveJMenuItem.setText("Save Heat Map As GIF");
         saveJMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 saveJMenuItemActionPerformed(evt);
@@ -246,17 +280,20 @@ public class HeatMapJPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     /**
+     * Right clicking on the heat map opens a popup menu whith the option of saving
+     * the heat map as a GIF file.
      *
      * @param evt
      */
     private void heatMapJXTablejPanelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_heatMapJXTablejPanelMouseClicked
-
         if (evt.getButton() == evt.BUTTON3) {
             savePopupMenu.show(evt.getComponent(), evt.getX(), evt.getY());
         }
     }//GEN-LAST:event_heatMapJXTablejPanelMouseClicked
 
     /**
+     * When the panel is resized the heat map is resized to make sure that it is always 
+     * completely visible and rectangular (unless the panel gets too small).
      *
      * @param evt
      */
@@ -293,25 +330,62 @@ public class HeatMapJPanel extends javax.swing.JPanel {
                 }
             }
         });
-
     }//GEN-LAST:event_formComponentResized
 
     /**
+     * Saves the heat map as a GIF file.
      *
      * @param evt
      */
     private void saveJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveJMenuItemActionPerformed
-        try {
-            File saveFile = new File("C:\\Harald\\" + "heat_map.gif");
-            Image img = createImage(getWidth(), getHeight());
-            //Image img = createImage(heatMapJXTable.getWidth(), heatMapJXTable.getHeight());
-            Graphics g = img.getGraphics();
-            paint(g);
-            ImageIO.write(toBufferedImage(img), "gif", saveFile);
-            JOptionPane.showMessageDialog(null, "Image saved to " + saveFile.toString());
-            g.dispose();
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
+
+        JFileChooser chooser = new JFileChooser(userProperties.getLastUsedFolder());
+        chooser.setFileFilter(new GifFileFilter());
+
+        int returnVal = chooser.showSaveDialog(this);
+
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+
+            String selectedFile = chooser.getSelectedFile().getPath();
+
+            userProperties.setLastUsedFolder(selectedFile);
+            userProperties.saveUserPropertiesToFile();
+
+            boolean saveFile = true;
+
+            if(chooser.getSelectedFile().exists()){
+                int option = JOptionPane.showConfirmDialog(this,
+                        "The file " + selectedFile + " already exists. Overwrite?",
+                        "Overwrite?", JOptionPane.YES_NO_CANCEL_OPTION);
+
+                if(option != JOptionPane.YES_OPTION){
+                    saveFile = false;
+                }
+            }
+
+            if(saveFile){
+            
+                if(!selectedFile.endsWith(".gif") && !selectedFile.endsWith(".GIF")){
+                    selectedFile = selectedFile + ".gif";
+                }
+
+                try {
+                    File fileName = new File(selectedFile);
+                    Image img = createImage(getWidth(), getHeight());
+                    Graphics g = img.getGraphics();
+                    paint(g);
+                    ImageIO.write(toBufferedImage(img), "gif", fileName);
+                    JOptionPane.showMessageDialog(this, "Heat map saved to " + fileName.toString(),
+                            "Heat Map Saved", JOptionPane.INFORMATION_MESSAGE);
+                    g.dispose();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
         }
 }//GEN-LAST:event_saveJMenuItemActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -321,9 +395,9 @@ public class HeatMapJPanel extends javax.swing.JPanel {
     // End of variables declaration//GEN-END:variables
 
     /**
-     * (the following is taken from: http://www.daniweb.com/forums/thread136630.html#)
+     * This method returns a buffered image with the contents of an image.
      *
-     * This method returns a buffered image with the contents of an image
+     * (taken from: http://www.daniweb.com/forums/thread136630.html#)
      *
      * @param image
      * @return
@@ -348,6 +422,7 @@ public class HeatMapJPanel extends javax.swing.JPanel {
         try {
             // Determine the type of transparency of the new buffered image
             int transparency = Transparency.OPAQUE;
+
             if (hasAlpha) {
                 transparency = Transparency.BITMASK;
             }
@@ -364,9 +439,11 @@ public class HeatMapJPanel extends javax.swing.JPanel {
         if (bimage == null) {
             // Create a buffered image using the default color model
             int type = BufferedImage.TYPE_INT_RGB;
+
             if (hasAlpha) {
                 type = BufferedImage.TYPE_INT_ARGB;
             }
+
             bimage = new BufferedImage(image.getWidth(null), image.getHeight(null), type);
         }
 
@@ -377,23 +454,26 @@ public class HeatMapJPanel extends javax.swing.JPanel {
         //g.drawImage(image, 0, 0, image.getWidth(null), image.getHeight(null), null);
         g.drawImage(image, heatMapJXTable.getX(), heatMapJXTable.getY(), 50, 50, null);
         g.dispose();
+
         return bimage;
     }
 
     /**
      * This method returns true if the specified image has transparent pixels
      *
+     * (taken from: http://www.daniweb.com/forums/thread136630.html#)
+     *
      * @param image
-     * @return
+     * @return true if the image has transparent pixels
      */
     public static boolean hasAlpha(Image image) {
 
         // If buffered image, the color model is readily available
         if (image instanceof BufferedImage) {
             BufferedImage bimage = (BufferedImage) image;
-
             return bimage.getColorModel().hasAlpha();
         }
+
         // Use a pixel grabber to retrieve the image's color model;
         // grabbing a single pixel is usually sufficient
         PixelGrabber pg = new PixelGrabber(image, 0, 0, 1, 1, false);
@@ -408,6 +488,9 @@ public class HeatMapJPanel extends javax.swing.JPanel {
         return cm.hasAlpha();
     }
 
+    /**
+     * A simple cell renderer that centers the text both vertically and horizontally.
+     */
     class MyCellRenderer extends DefaultTableCellRenderer {
 
         @Override

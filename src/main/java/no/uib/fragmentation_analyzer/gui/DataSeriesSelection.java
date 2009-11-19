@@ -36,7 +36,7 @@ public class DataSeriesSelection extends javax.swing.JDialog {
      * Creates a new DataSeriesSelection dialog and makes it visible
      *
      * @param fragmentationAnalyzer
-     * @param chartPanel
+     * @param currentFrame
      * @param modal
      */
     public DataSeriesSelection(FragmentationAnalyzer fragmentationAnalyzer, boolean modal, 

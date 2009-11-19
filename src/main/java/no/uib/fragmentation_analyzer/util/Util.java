@@ -227,10 +227,11 @@ public final class Util {
     /**
      * Returns true if the given identification contains the selected modifications.
      *
-     * @param reducedModIdentification
+     * @param reducedIdentification
      * @param modification1
      * @param modification2
      * @param modification3
+     * @param pattern
      * @param oneModificationOnly
      * @return true if the given identification contains the selected modifications, false otherwise
      */
