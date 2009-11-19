@@ -38,6 +38,7 @@ public class UserProperties implements ProgressDialogParent {
     private boolean normalizeIntensites = true;
     private int numberOfPlotsPerRow = 2;
     private int numberOfPlotsPerColumn = 2;
+    private boolean useSpearmansCorrelation = true;
 
     /**
      * Creates a new UserProperties object
@@ -153,6 +154,13 @@ public class UserProperties implements ProgressDialogParent {
 
             if (s != null) {
                 numberOfPlotsPerColumn = new Integer(s.substring(s.indexOf(": ") + 2));
+            }
+
+            // get the correlation type selection, requires v1.3.3 or newer
+            s = b.readLine();
+
+            if (s != null) {
+                useSpearmansCorrelation = new Boolean(s.substring(s.indexOf(": ") + 2));
             }
 
             b.close();
@@ -465,6 +473,7 @@ public class UserProperties implements ProgressDialogParent {
             f.write("NormalizeIntensites: " + normalizeIntensites + "\n");
             f.write("NumberOfPlotsPerRow: " + numberOfPlotsPerRow + "\n");
             f.write("NumberOfPlotsPerColumn: " + numberOfPlotsPerColumn + "\n");
+            f.write("UseSpearmansCorrelation: " + useSpearmansCorrelation);
 
             f.close();
 
@@ -688,5 +697,19 @@ public class UserProperties implements ProgressDialogParent {
      */
     public void setNumberOfPlotsPerColumn(int numberOfPlotsPerColumn) {
         this.numberOfPlotsPerColumn = numberOfPlotsPerColumn;
+    }
+
+    /**
+     * @return the userSpearmansCorrelation
+     */
+    public boolean useSpearmansCorrelation() {
+        return useSpearmansCorrelation;
+    }
+
+    /**
+     * @param userSpearmansCorrelation the userSpearmansCorrelation to set
+     */
+    public void setUseSpearmansCorrelation(boolean userSpearmansCorrelation) {
+        this.useSpearmansCorrelation = userSpearmansCorrelation;
     }
 }
