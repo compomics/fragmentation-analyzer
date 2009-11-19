@@ -3423,7 +3423,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
                             FragmentationAnalyzerJInternalFrame internalFrameHeatMapBIons = new FragmentationAnalyzerJInternalFrame(
                                     "Heat Map - B Ions", true, true, true, null, "HeatMap", internalFrameUniqueIdCounter);
-                            internalFrameHeatMapBIons.add(new HeatMapJPanel(heatMapDataBIons));
+                            internalFrameHeatMapBIons.add(new HeatMapJPanel(userProperties, heatMapDataBIons));
 
                             insertInternalFrame(internalFrameHeatMapBIons);
                             internalFrameUniqueIdCounter++;
@@ -3433,7 +3433,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
                             FragmentationAnalyzerJInternalFrame internalFrameHeatMapYIons = new FragmentationAnalyzerJInternalFrame(
                                     "Heat Map - Y Ions", true, true, true, null, "HeatMap", internalFrameUniqueIdCounter);
-                            internalFrameHeatMapYIons.add(new HeatMapJPanel(heatMapDataYIons));
+                            internalFrameHeatMapYIons.add(new HeatMapJPanel(userProperties, heatMapDataYIons));
 
                             insertInternalFrame(internalFrameHeatMapYIons);
                             internalFrameUniqueIdCounter++;
