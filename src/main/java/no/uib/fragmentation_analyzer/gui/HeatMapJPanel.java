@@ -16,7 +16,6 @@ import java.awt.image.PixelGrabber;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Enumeration;
-import java.util.regex.Pattern;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
@@ -30,9 +29,10 @@ import javax.swing.table.TableColumn;
 import org.jdesktop.swingx.decorator.Highlighter;
 import org.jdesktop.swingx.JXTable;
 import org.jdesktop.swingx.decorator.ColorHighlighter;
-import org.jdesktop.swingx.decorator.SearchPredicate;
 import no.uib.fragmentation_analyzer.filefilters.GifFileFilter;
 import no.uib.fragmentation_analyzer.util.UserProperties;
+import org.jdesktop.swingx.decorator.ComponentAdapter;
+import org.jdesktop.swingx.decorator.HighlightPredicate;
 
 /**
  * A panel that sets up a heat map from the provided data. 
@@ -158,54 +158,114 @@ public class HeatMapJPanel extends javax.swing.JPanel {
 
         boolean showNumbers = false;
 
-        // ToDo: increase the resolution, i.e., more color levels
+        int numberOfColorLevels = 50;
+        double distanceBetweenCorrelationLevels = 1 / (((double) numberOfColorLevels) / 2);
 
-        Color[] heatMapColors = {
-            new Color(50, 255, 0), // 0.0
-            new Color(50, 255, 0), // 0.0-0.1
-            new Color(40, 205, 0), // 0.1-0.2
-            new Color(30, 155, 0), // 0.2-0.3
-            new Color(20, 55, 0), // 0.3-0.4
-            new Color(0, 0, 0), // 0.4-0.5
-            new Color(55, 0, 0), // 0.5-0.6
-            new Color(105, 0, 0), // 0.7-0.8
-            new Color(155, 0, 0), // 0.8-0.9
-            new Color(205, 0, 0), // 0.9-1.0
-            new Color(255, 0, 0), // 1.0
-        };
+        for (int i = 0; i < (numberOfColorLevels / 2); i++) {
 
+            final Double lowerRange = new Double(-1.0 + (i * distanceBetweenCorrelationLevels));
+            final Double upperRange = new Double(-1.0 + ((i+1) * distanceBetweenCorrelationLevels));
 
-        // add the heat map colors
-        for (int i = 0; i < heatMapColors.length - 1; i++) {
+            final Color backGroundColor = new Color(50-(i*2), 255-(i*10), 0);
+
+            //System.out.println("lowerRange: " + lowerRange);
+            //System.out.println("upperRange: " + upperRange);
+            //System.out.println("backGroundColor: " + backGroundColor);
+
+            HighlightPredicate highlightPredicate = new HighlightPredicate() {
+
+                public boolean isHighlighted(Component component, ComponentAdapter adapter) {
+                    return setRange(adapter.getValue(), adapter.row, adapter.column);
+                }
+
+                private boolean setRange(Object value, int row, int column) {
+
+                    if (row > 0 && column > 0) {
+
+                        try {
+                            Double tempValue = new Double(value.toString());
+
+                            if (tempValue >= lowerRange && tempValue < upperRange) {
+                                return true;
+                            }
+
+                        } catch (NumberFormatException e) {
+                            return false;
+                        }
+                    } else {
+                        return false;
+                    }
+
+                    return false;
+                }
+            };
 
             Color numberColor = Color.BLACK;
 
             if (!showNumbers) {
-                numberColor = heatMapColors[i];
+                numberColor = backGroundColor;
             }
 
-            Pattern pattern = Pattern.compile("0\\." + i);
-            Highlighter highlighter = new ColorHighlighter(
-                    heatMapColors[i],
-                    numberColor,
-                    new SearchPredicate(pattern));
-            heatMapJXTable.addHighlighter(highlighter);
+            Highlighter hl = new ColorHighlighter(backGroundColor, numberColor, highlightPredicate);
+            heatMapJXTable.addHighlighter(hl);
         }
 
 
-        // add the last heat map color
-        Color numberColor = Color.BLACK;
+        //System.out.println();
 
-        if (!showNumbers) {
-            numberColor = heatMapColors[heatMapColors.length - 1];
+
+        for (int i = 0; i < (numberOfColorLevels/2); i++) {
+
+            final Double lowerRange = new Double(0.0 + distanceBetweenCorrelationLevels*i);
+            final Double upperRange = new Double(0.0 + distanceBetweenCorrelationLevels*(i+1));
+
+            final Color backGroundColor = new Color(15+10*i, 0, 0);
+
+            //System.out.println("lowerRange: " + lowerRange);
+            //System.out.println("upperRange: " + upperRange);
+            //System.out.println("backGroundColor: " + backGroundColor);
+
+            HighlightPredicate highlightPredicate = new HighlightPredicate() {
+
+                public boolean isHighlighted(Component component, ComponentAdapter adapter) {
+                    return setRange(adapter.getValue(), adapter.row, adapter.column);
+                }
+
+                private boolean setRange(Object value, int row, int column) {
+
+                    if (row > 0 && column > 0) {
+
+                        try {
+                            Double tempValue = new Double(value.toString());
+
+                            if (tempValue >= lowerRange && tempValue < upperRange) {
+                                return true;
+                            }
+
+                            if(upperRange.doubleValue() == 1.0 && tempValue.doubleValue() == upperRange.doubleValue()){
+                                return true;
+                            }
+
+                        } catch (NumberFormatException e) {
+                            return false;
+                        }
+                    } else {
+                        return false;
+                    }
+
+                    return false;
+                }
+            };
+
+            Color numberColor = Color.BLACK;
+
+            if (!showNumbers) {
+                numberColor = backGroundColor;
+            }
+
+            Highlighter hl = new ColorHighlighter(backGroundColor, numberColor, highlightPredicate);
+            heatMapJXTable.addHighlighter(hl);
         }
-
-        Pattern pattern = Pattern.compile("1\\.0");
-        Highlighter highlighter = new ColorHighlighter(
-                heatMapColors[heatMapColors.length - 1],
-                numberColor,
-                new SearchPredicate(pattern));
-        heatMapJXTable.addHighlighter(highlighter);
     }
 
     /** This method is called from within the constructor to
@@ -264,6 +324,7 @@ public class HeatMapJPanel extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
+        heatMapJXTable.setToolTipText("<html>\n<font color=\"red\">Red: Positive Linear Correlation</font><br>\n<font color=\"black\">Black: No Linear Correlation</font><br>\n<font color=\"green\">Green: Negative Linear Correlation</font>\n</html>");
         heatMapJXTable.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
         heatMapJXTable.setFillsViewportHeight(false);
         heatMapJXTable.setFont(heatMapJXTable.getFont().deriveFont(heatMapJXTable.getFont().getSize()-3f));
@@ -338,7 +399,7 @@ public class HeatMapJPanel extends javax.swing.JPanel {
      * @param evt
      */
     private void saveJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveJMenuItemActionPerformed
-        
+
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
 
         JFileChooser chooser = new JFileChooser(userProperties.getLastUsedFolder());
@@ -357,19 +418,19 @@ public class HeatMapJPanel extends javax.swing.JPanel {
 
             boolean saveFile = true;
 
-            if(chooser.getSelectedFile().exists()){
+            if (chooser.getSelectedFile().exists()) {
                 int option = JOptionPane.showConfirmDialog(this,
                         "The file " + selectedFile + " already exists. Overwrite?",
                         "Overwrite?", JOptionPane.YES_NO_CANCEL_OPTION);
 
-                if(option != JOptionPane.YES_OPTION){
+                if (option != JOptionPane.YES_OPTION) {
                     saveFile = false;
                 }
             }
 
-            if(saveFile){
-            
-                if(!selectedFile.endsWith(".gif") && !selectedFile.endsWith(".GIF")){
+            if (saveFile) {
+
+                if (!selectedFile.endsWith(".gif") && !selectedFile.endsWith(".GIF")) {
                     selectedFile = selectedFile + ".gif";
                 }
 

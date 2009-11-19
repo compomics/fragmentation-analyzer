@@ -96,6 +96,7 @@
             </Column>
           </Table>
         </Property>
+        <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;&lt;font color=&quot;red&quot;&gt;Red: Positive Linear Correlation&lt;/font&gt;&lt;br&gt;&#xa;&lt;font color=&quot;black&quot;&gt;Black: No Linear Correlation&lt;/font&gt;&lt;br&gt;&#xa;&lt;font color=&quot;green&quot;&gt;Green: Negative Linear Correlation&lt;/font&gt;&#xa;&lt;/html&gt;"/>
         <Property name="autoResizeMode" type="int" value="4"/>
         <Property name="fillsViewportHeight" type="boolean" value="false"/>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.editors2.FontEditor">

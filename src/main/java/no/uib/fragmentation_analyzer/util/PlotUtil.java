@@ -187,8 +187,8 @@ public class PlotUtil {
 //            for(int i=0; i<averageValues.length; i++){
 //                System.out.println(averageValues[i]);
 //            }
-
-            
+//
+//
 //            System.out.println("\ncurrent data:");
 //
 //            // print out the contents of the data array
