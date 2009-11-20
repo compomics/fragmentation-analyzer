@@ -3237,9 +3237,9 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                             }
                         }
 
-                        // if true all data will be used (see below)
-                        boolean useOnlyOverlappingData = false;
+                        int peptideLengthToUse = longestPeptideSequenceLength;
 
+                        // decide how much of the peptide sequence to compare
                         if(searchResultsJComboBox.getSelectedIndex() == Properties.SEARCH_RESULTS_ION_HEAT_MAP){
 
                             // check if all selected peptides have the same length
@@ -3249,11 +3249,41 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                         "Peptides with different lengths (" + shortestPeptideLength + "-"
                                         + longestPeptideSequenceLength + ") are selected.\n" +
                                         "Only data available for all peptides will be used.",
-                                        "Peptide Lengths", JOptionPane.YES_NO_OPTION);
+                                        "Peptide Lengths", JOptionPane.INFORMATION_MESSAGE);
 
-                                useOnlyOverlappingData = true;
+                                peptideLengthToUse = shortestPeptideLength;
+                            }
+                            
+                            boolean notAnInteger = true;
+                            
+                            while(notAnInteger){
+                                
+                                String value = JOptionPane.showInputDialog(
+                                        null,
+                                        "Use only fragment ions up to number (2-" + (peptideLengthToUse - 1) + "):",
+                                        "Peptide Lengths", JOptionPane.INFORMATION_MESSAGE);
+                                try{
+                                    int tempPeptideLength = new Integer(value).intValue();
+
+                                    if(tempPeptideLength > 1){
+                                        if(tempPeptideLength < peptideLengthToUse){
+                                            peptideLengthToUse = tempPeptideLength;
+                                            peptideLengthToUse++; // have to add one, cause the last ion is removed later on
+                                        }
+
+                                        notAnInteger = false;
+                                    } else {
+                                        // inserted value has to be at least 2
+                                        peptideLengthToUse = 3;
+                                    }
+   
+                                } catch (NumberFormatException e){
+                                    JOptionPane.showMessageDialog(null, "Inserted value has to be an integer.", 
+                                            "Not An Integer", JOptionPane.INFORMATION_MESSAGE);
+                                }  
                             }
                         }
+                        
 
                         plotsAnalysesJXTaskPane.setExpanded(true);
                         searchResultsJXTaskPane.setExpanded(false);
@@ -3454,12 +3484,6 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
                             if(searchResultsJComboBox.getSelectedIndex() == Properties.SEARCH_RESULTS_ION_HEAT_MAP){
 
-                                int peptideLengthToUse = longestPeptideSequenceLength;
-
-                                if(useOnlyOverlappingData){
-                                    peptideLengthToUse = shortestPeptideLength;
-                                }
-                                
                                 // create the heat maps
                                 // b ions
                                 String[][] heatMapDataBIons =
@@ -6435,6 +6459,22 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
             if(((Integer) searchResultsJXTable.getValueAt(i, 3)).intValue() == peptideLength){
                 searchResultsJXTable.setValueAt(new Boolean(true), i, searchResultsJXTable.getColumnCount() - 1);
                 numberOfRowsSelected++;
+
+                // update the selection
+                Integer countB = null;
+
+                if (searchResultsJXTable.getColumnCount(false) == 7) {
+                    countB = (Integer) searchResultsJXTable.getValueAt(i, 5);
+                }
+
+                IdentificationTableRow temp = new IdentificationTableRow(
+                        (String) searchResultsJXTable.getValueAt(i, 1),
+                        (String) searchResultsJXTable.getValueAt(i, 2),
+                        (Integer) searchResultsJXTable.getValueAt(i, 3),
+                        (Integer) searchResultsJXTable.getValueAt(i, 4),
+                        countB);
+
+                properties.getCurrentlySelectedRowsInSearchTable().add(temp);
             }
         }
 
@@ -6443,7 +6483,8 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                 "Selected " + numberOfRowsSelected + " peptides of length " + peptideLength + ".",
                 "Peptides Selected", JOptionPane.INFORMATION_MESSAGE);
 
-            searchResultsJButton.setEnabled(true);
+            // check if the search results button should be enabled
+            searchResultsJComboBoxActionPerformed(null);
 
             this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         } else {
