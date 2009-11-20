@@ -313,6 +313,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         highlightIdentificationsJMenu = new javax.swing.JMenu();
         selectHighlightedIdentificationsJMenuItem = new javax.swing.JMenuItem();
         deselectHighlightedIdentificationsJMenuItem = new javax.swing.JMenuItem();
+        peptideLengthJMenuItem = new javax.swing.JMenuItem();
         selectSpectraJPopupMenu = new javax.swing.JPopupMenu();
         selectAllSpectrtaJMenuItem = new javax.swing.JMenuItem();
         invertSelectionSpectraJMenuItem = new javax.swing.JMenuItem();
@@ -548,6 +549,14 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         highlightIdentificationsJMenu.add(deselectHighlightedIdentificationsJMenuItem);
 
         selectIdentificationsJPopupMenu.add(highlightIdentificationsJMenu);
+
+        peptideLengthJMenuItem.setText("Peptide Length Selection");
+        peptideLengthJMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                peptideLengthJMenuItemActionPerformed(evt);
+            }
+        });
+        selectIdentificationsJPopupMenu.add(peptideLengthJMenuItem);
 
         selectAllSpectrtaJMenuItem.setText("Select All");
         selectAllSpectrtaJMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -1053,7 +1062,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         });
 
         searchResultsJComboBox.setMaximumRowCount(12);
-        searchResultsJComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { " - Select Analysis Type - ", "List Individual Identifications", "Intensity Box Plot", "Mass Error Scatter Plot", "Mass Error Bubble Plot", "Mass Error Box Plot", "Fragment Ion Probability Plot" }));
+        searchResultsJComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { " - Select Analysis Type - ", "List Individual Identifications", "Intensity Box Plot", "Mass Error Scatter Plot", "Mass Error Bubble Plot", "Mass Error Box Plot", "Fragment Ion Probability Plot", "Fragment Ion Heat Map" }));
         searchResultsJComboBox.setPreferredSize(new java.awt.Dimension(190, 20));
         searchResultsJComboBox.addPopupMenuListener(new javax.swing.event.PopupMenuListener() {
             public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
@@ -2417,6 +2426,10 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         if (searchResultsJComboBox.getSelectedIndex() == Properties.SEARCH_RESULTS_INTENSITY_BOX_PLOT) {
             combineSearchResultsJComboBox.setSelectedItem("Single");
         }
+
+        if (searchResultsJComboBox.getSelectedIndex() == Properties.SEARCH_RESULTS_ION_HEAT_MAP) {
+            combineSearchResultsJComboBox.setSelectedItem("Combine");
+        }
     }//GEN-LAST:event_searchResultsJComboBoxActionPerformed
 
     /**
@@ -3202,11 +3215,14 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                             insertMassErrorBoxPlot(data, internalFrameTitle,
                                     daOrPpmSearchResultsJComboBox.getSelectedIndex() == Properties.ACCURACY_PPM);
                         }
-                    } else if (searchResultsJComboBox.getSelectedIndex() == Properties.SEARCH_RESULTS_ION_PROBABILITY_PLOT) {
+                    } else if (searchResultsJComboBox.getSelectedIndex() == Properties.SEARCH_RESULTS_ION_PROBABILITY_PLOT
+                            || searchResultsJComboBox.getSelectedIndex() == Properties.SEARCH_RESULTS_ION_HEAT_MAP) {
 
                         // if combine is selected we need to find the longest peptide sequence selected
                         int longestPeptideSequenceLength =
                                 properties.getCurrentlySelectedRowsInSearchTable().get(0).getSequence().length();
+
+                        int shortestPeptideLength = longestPeptideSequenceLength;
 
                         if (combineSearchResultsJComboBox.getSelectedIndex() == Properties.COMBINE_PLOT) {
                             for (int i = 1; i < properties.getCurrentlySelectedRowsInSearchTable().size() && !cancelProgress; i++) {
@@ -3215,10 +3231,29 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
                                 if (tempLength > longestPeptideSequenceLength) {
                                     longestPeptideSequenceLength = tempLength;
+                                } else {
+                                    shortestPeptideLength = tempLength;
                                 }
                             }
                         }
 
+                        // if true all data will be used (see below)
+                        boolean useOnlyOverlappingData = false;
+
+                        if(searchResultsJComboBox.getSelectedIndex() == Properties.SEARCH_RESULTS_ION_HEAT_MAP){
+
+                            // check if all selected peptides have the same length
+                            if(shortestPeptideLength != longestPeptideSequenceLength){
+                                JOptionPane.showMessageDialog(
+                                        null,
+                                        "Peptides with different lengths (" + shortestPeptideLength + "-"
+                                        + longestPeptideSequenceLength + ") are selected.\n" +
+                                        "Only data available for all peptides will be used.",
+                                        "Peptide Lengths", JOptionPane.YES_NO_OPTION);
+
+                                useOnlyOverlappingData = true;
+                            }
+                        }
 
                         plotsAnalysesJXTaskPane.setExpanded(true);
                         searchResultsJXTaskPane.setExpanded(false);
@@ -3417,85 +3452,99 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                         // if combine plot is selected, create the plot now
                         if (combineSearchResultsJComboBox.getSelectedIndex() == Properties.COMBINE_PLOT) {
 
-                            // create the heat maps
-                            String[][] heatMapDataBIons =
-                                    PlotUtil.getHeatMapData(averageSequenceDependentFragmentIons, totalNumberOfSpectraOfGivenLength, "b", userProperties);
+                            if(searchResultsJComboBox.getSelectedIndex() == Properties.SEARCH_RESULTS_ION_HEAT_MAP){
 
-                            FragmentationAnalyzerJInternalFrame internalFrameHeatMapBIons = new FragmentationAnalyzerJInternalFrame(
-                                    "Heat Map - B Ions", true, true, true, null, "HeatMap", internalFrameUniqueIdCounter);
-                            internalFrameHeatMapBIons.add(new HeatMapJPanel(userProperties, heatMapDataBIons));
+                                int peptideLengthToUse = longestPeptideSequenceLength;
 
-                            insertInternalFrame(internalFrameHeatMapBIons);
-                            internalFrameUniqueIdCounter++;
+                                if(useOnlyOverlappingData){
+                                    peptideLengthToUse = shortestPeptideLength;
+                                }
+                                
+                                // create the heat maps
+                                // b ions
+                                String[][] heatMapDataBIons =
+                                        PlotUtil.getHeatMapData(averageSequenceDependentFragmentIons, 
+                                        totalNumberOfSpectraOfGivenLength, "b", userProperties, peptideLengthToUse);
 
-                            String[][] heatMapDataYIons =
-                                    PlotUtil.getHeatMapData(averageSequenceDependentFragmentIons, totalNumberOfSpectraOfGivenLength, "y", userProperties);
+                                FragmentationAnalyzerJInternalFrame internalFrameHeatMapBIons = new FragmentationAnalyzerJInternalFrame(
+                                        "Heat Map - B Ions", true, true, true, null, "HeatMap", internalFrameUniqueIdCounter);
+                                internalFrameHeatMapBIons.add(new HeatMapJPanel(userProperties, heatMapDataBIons));
 
-                            FragmentationAnalyzerJInternalFrame internalFrameHeatMapYIons = new FragmentationAnalyzerJInternalFrame(
-                                    "Heat Map - Y Ions", true, true, true, null, "HeatMap", internalFrameUniqueIdCounter);
-                            internalFrameHeatMapYIons.add(new HeatMapJPanel(userProperties, heatMapDataYIons));
+                                insertInternalFrame(internalFrameHeatMapBIons);
+                                internalFrameUniqueIdCounter++;
 
-                            insertInternalFrame(internalFrameHeatMapYIons);
-                            internalFrameUniqueIdCounter++;
+                                // y ions
+                                String[][] heatMapDataYIons =
+                                        PlotUtil.getHeatMapData(averageSequenceDependentFragmentIons, 
+                                        totalNumberOfSpectraOfGivenLength, "y", userProperties, peptideLengthToUse);
+
+                                FragmentationAnalyzerJInternalFrame internalFrameHeatMapYIons = new FragmentationAnalyzerJInternalFrame(
+                                        "Heat Map - Y Ions", true, true, true, null, "HeatMap", internalFrameUniqueIdCounter);
+                                internalFrameHeatMapYIons.add(new HeatMapJPanel(userProperties, heatMapDataYIons));
+
+                                insertInternalFrame(internalFrameHeatMapYIons);
+                                internalFrameUniqueIdCounter++;
+
+                            } else {
+
+                                // create the line plot for the sequence dependent fragment ions
+                                JFreeChart chart = PlotUtil.getAverageLinePlot(averageSequenceDependentFragmentIons,
+                                        totalNumberOfSpectraOfGivenLength,
+                                        "Fragment Ion Number", "Occurence (%)", properties);
+
+                                if (!properties.showLegend()) {
+                                    chart.getLegend().setVisible(false);
+                                }
+
+                                ChartPanel chartPanel = new ChartPanel(chart);
+
+                                String internalFrameTitle = "Fragment Ion Probability"
+                                        + " (" + totalNumberOfSpectra + " spectra|"
+                                        + totalNumberOfFragmentIons + " fragment ions)";
+
+                                if (properties.getCurrentlySelectedRowsInSearchTable().size() == 1) {
+                                    internalFrameTitle = "" + properties.getCurrentlySelectedRowsInSearchTable().get(0).getModifiedSequence() +
+                                            " (" + totalNumberOfSpectra + " spectra)";
+                                }
+
+                                String plotType = "FragmentIonProbabilityPlot";
+
+                                FragmentationAnalyzerJInternalFrame internalFrame = new FragmentationAnalyzerJInternalFrame(
+                                        internalFrameTitle, true, true, true, chartPanel, plotType, internalFrameUniqueIdCounter);
+                                internalFrame.add(chartPanel);
+
+                                insertInternalFrame(internalFrame);
+                                properties.getAllChartFrames().put(internalFrameUniqueIdCounter, chart);
+                                internalFrameUniqueIdCounter++;
 
 
-                            // create the line plot for the sequence dependent fragment ions
-                            JFreeChart chart = PlotUtil.getAverageLinePlot(averageSequenceDependentFragmentIons,
-                                    totalNumberOfSpectraOfGivenLength,
-                                    "Fragment Ion Number", "Occurence (%)", properties);
+                                // create the box plot for the spread
+                                insertFragmentIonProbabilityBoxPlot(averageSequenceDependentFragmentIons,
+                                        "Fragment Ion Type", "Occurence (%)",
+                                        properties, internalFrameTitle);
 
-                            if (!properties.showLegend()) {
-                                chart.getLegend().setVisible(false);
+
+                                // create the bar plot for the precusor and immonium ions
+                                JFreeChart barChart = PlotUtil.getBarPlot(sequenceIndependentFragmentIons,
+                                        totalNumberOfSpectra,
+                                        "Ion Type", "Occurence (%)");
+
+
+                                if (!properties.showLegend()) {
+                                    barChart.getLegend().setVisible(false);
+                                }
+
+                                ChartPanel barChartPanel = new ChartPanel(barChart);
+                                plotType = "BarPlot";
+
+                                FragmentationAnalyzerJInternalFrame internalFrameBarChart = new FragmentationAnalyzerJInternalFrame(
+                                        internalFrameTitle, true, true, true, barChartPanel, plotType, internalFrameUniqueIdCounter);
+                                internalFrameBarChart.add(barChartPanel);
+
+                                insertInternalFrame(internalFrameBarChart);
+                                properties.getAllChartFrames().put(internalFrameUniqueIdCounter, barChart);
+                                internalFrameUniqueIdCounter++;
                             }
-
-                            ChartPanel chartPanel = new ChartPanel(chart);
-
-                            String internalFrameTitle = "Fragment Ion Probability"
-                                    + " (" + totalNumberOfSpectra + " spectra|"
-                                    + totalNumberOfFragmentIons + " fragment ions)";
-
-                            if (properties.getCurrentlySelectedRowsInSearchTable().size() == 1) {
-                                internalFrameTitle = "" + properties.getCurrentlySelectedRowsInSearchTable().get(0).getModifiedSequence() +
-                                        " (" + totalNumberOfSpectra + " spectra)";
-                            }
-
-                            String plotType = "FragmentIonProbabilityPlot";
-
-                            FragmentationAnalyzerJInternalFrame internalFrame = new FragmentationAnalyzerJInternalFrame(
-                                    internalFrameTitle, true, true, true, chartPanel, plotType, internalFrameUniqueIdCounter);
-                            internalFrame.add(chartPanel);
-
-                            insertInternalFrame(internalFrame);
-                            properties.getAllChartFrames().put(internalFrameUniqueIdCounter, chart);
-                            internalFrameUniqueIdCounter++;
-
-
-                            // create the box plot for the spread
-                            insertFragmentIonProbabilityBoxPlot(averageSequenceDependentFragmentIons,
-                                    "Fragment Ion Type", "Occurence (%)",
-                                    properties, internalFrameTitle);
-
-
-                            // create the bar plot for the precusor and immonium ions
-                            JFreeChart barChart = PlotUtil.getBarPlot(sequenceIndependentFragmentIons,
-                                    totalNumberOfSpectra,
-                                    "Ion Type", "Occurence (%)");
-
-
-                            if (!properties.showLegend()) {
-                                barChart.getLegend().setVisible(false);
-                            }
-
-                            ChartPanel barChartPanel = new ChartPanel(barChart);
-                            plotType = "BarPlot";
-
-                            FragmentationAnalyzerJInternalFrame internalFrameBarChart = new FragmentationAnalyzerJInternalFrame(
-                                    internalFrameTitle, true, true, true, barChartPanel, plotType, internalFrameUniqueIdCounter);
-                            internalFrameBarChart.add(barChartPanel);
-
-                            insertInternalFrame(internalFrameBarChart);
-                            properties.getAllChartFrames().put(internalFrameUniqueIdCounter, barChart);
-                            internalFrameUniqueIdCounter++;
                         }
                     }
 
@@ -6354,6 +6403,59 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
     }//GEN-LAST:event_showMaxMinJMenuItemActionPerformed
 
     /**
+     * Opens a dialog where its possible to select the top x peptides of a given length.
+     * 
+     * @param evt
+     */
+    private void peptideLengthJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_peptideLengthJMenuItemActionPerformed
+        new PeptideLength(this, true);
+    }//GEN-LAST:event_peptideLengthJMenuItemActionPerformed
+
+    /**
+     * Selects the given number of peptides of the given length.
+     *
+     * Note that if sorting is turned on for the given column the selection might
+     * take some time, especially if the table contains many elements.
+     *
+     * @param counter
+     * @param peptideLength
+     */
+    public void updateSearchResultsSelection(int counter, int peptideLength){
+
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
+
+        // deselect all rows
+        selectAllIdentifications = false;
+        selectAllIdentificationsJMenuItemActionPerformed(null);
+
+        int numberOfRowsSelected = 0;
+
+        // find all rows with the wanted peptide length and select all occurences up to the wanted number
+        for(int i=0; i < searchResultsJXTable.getRowCount() && numberOfRowsSelected < counter; i++){
+            if(((Integer) searchResultsJXTable.getValueAt(i, 3)).intValue() == peptideLength){
+                searchResultsJXTable.setValueAt(new Boolean(true), i, searchResultsJXTable.getColumnCount() - 1);
+                numberOfRowsSelected++;
+            }
+        }
+
+        if(numberOfRowsSelected > 0){
+            JOptionPane.showMessageDialog(this,
+                "Selected " + numberOfRowsSelected + " peptides of length " + peptideLength + ".",
+                "Peptides Selected", JOptionPane.INFORMATION_MESSAGE);
+
+            searchResultsJButton.setEnabled(true);
+
+            this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        } else {
+            JOptionPane.showMessageDialog(this,
+                "No peptides of length " + peptideLength + " were found.",
+                "No Peptides Found", JOptionPane.INFORMATION_MESSAGE);
+
+            this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        }
+    }
+
+    /**
      * Makes sure that the combox is always wide enough to 
      * display the longest element.
      */
@@ -7596,6 +7698,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
     private javax.swing.JComboBox nTermJComboBox;
     private javax.swing.JMenuItem opemJMenuItem;
     private javax.swing.JCheckBox otherIonsJCheckBox;
+    private javax.swing.JMenuItem peptideLengthJMenuItem;
     private org.jdesktop.swingx.JXTaskPane plotsAnalysesJXTaskPane;
     private javax.swing.JDesktopPane plotsAndAnalysesJDesktopPane;
     private javax.swing.JScrollPane plotsAndAnalysesJScrollPane;
