@@ -133,60 +133,55 @@ public class PlotUtil {
      * @return the heat map data 
      */
     public static String[][] getHeatMapData(HashMap<String, double[][]> data, int[] totalNumberOfSpectraOfGivenLength,
-            String fragmentIonType, UserProperties userProperties){
+            String fragmentIonType, UserProperties userProperties, int peptideLengthToUse) {
 
-        String [][] heatMapData = new String[0][0];
+        String[][] heatMapData = new String[0][0];
 
-        if(data.get(fragmentIonType) != null){
+        if (data.get(fragmentIonType) != null) {
 
             double[][] currentData = data.get(fragmentIonType);
 
-            heatMapData = new String [currentData[0].length + 2][currentData[0].length + 2];
+            heatMapData = new String[currentData[0].length + 2][currentData[0].length + 2];
 
             // insert the "column headers"
             heatMapData[0][0] = " ";
 
-            for(int i=1; i<heatMapData[0].length; i++){
+            for (int i = 1; i < heatMapData[0].length; i++) {
                 heatMapData[0][i] = "" + i;
             }
 
-            heatMapData[0][heatMapData[0].length-1] = "A";
+            heatMapData[0][heatMapData[0].length - 1] = "A";
 
 
             // insert the "row headers"
-            for(int i=1; i<heatMapData.length; i++){
+            for (int i = 1; i < heatMapData.length; i++) {
                 heatMapData[i][0] = "" + i;
             }
 
-            heatMapData[heatMapData.length-1][0] = "A";
+            heatMapData[heatMapData.length - 1][0] = "A";
 
 
             // calculate the average values
-            double[] averageValues = new double[currentData.length-1];
+            double[] averageValues = new double[peptideLengthToUse - 1];
 
-            for (int j = 1; j < currentData.length; j++) {
+            for (int j = 1; j < peptideLengthToUse; j++) {
 
                 double averageValue = 0.0;
 
-                for(int k = 0; k < currentData[j].length; k++){
+                for (int k = 0; k < currentData[j].length; k++) {
 
-                    if(!new Double(currentData[j][k]).isNaN()){
+                    if (!new Double(currentData[j][k]).isNaN()) {
                         averageValue += currentData[j][k];
                     }
                 }
 
                 averageValue /= totalNumberOfSpectraOfGivenLength[j];
 
-                averageValues[j-1] = averageValue;
+                averageValues[j - 1] = averageValue;
             }
 
 
 //            System.out.println("\naverage values:");
-//
-//            // print out the contents of the data array
-//            for(int i=0; i<averageValues.length; i++){
-//                System.out.println(averageValues[i]);
-//            }
 //
 //
 //            System.out.println("\ncurrent data:");
@@ -203,49 +198,53 @@ public class PlotUtil {
 
             // calculate the heat map values
             SpearmansCorrelation spearmansCorrelation = new SpearmansCorrelation();
+
+            // note: ranks are computed using NaturalRanking with default strategies for
+            //       handling NaNs and ties in the data (NaNs maximal, ties averaged).
+            //       see org.apache.commons.math.stat.ranking.NaturalRanking for details
+
             PearsonsCorrelation pearsonsCorrelation = new PearsonsCorrelation();
 
             for (int i = 0; i < currentData[0].length; i++) {
 
-                double[] dataSetA = new double[currentData.length-1];
+                double[] dataSetA = new double[peptideLengthToUse - 1];
 
-                for(int k=1; k<currentData.length; k++){
-                    dataSetA[k-1] = currentData[k][i];
+                for (int k = 1; k < peptideLengthToUse; k++) {
+                    dataSetA[k - 1] = currentData[k][i];
                 }
 
                 for (int j = 0; j < currentData[0].length; j++) {
 
-                    double[] dataSetB = new double[currentData.length-1];
+                    double[] dataSetB = new double[peptideLengthToUse - 1];
 
-                    for(int k=1; k<currentData.length; k++){
-                        dataSetB[k-1] = currentData[k][j];
+                    for (int k = 1; k < peptideLengthToUse; k++) {
+                        dataSetB[k - 1] = currentData[k][j];
                     }
 
-                    if(userProperties.useSpearmansCorrelation()){
-                        heatMapData[i+1][j+1] = "" + spearmansCorrelation.correlation(dataSetA, dataSetB);
+                    if (userProperties.useSpearmansCorrelation()) {
+                        heatMapData[i + 1][j + 1] = "" + spearmansCorrelation.correlation(dataSetA, dataSetB);
                     } else {
-                        heatMapData[i+1][j+1] = "" + pearsonsCorrelation.correlation(dataSetA, dataSetB);
+                        heatMapData[i + 1][j + 1] = "" + pearsonsCorrelation.correlation(dataSetA, dataSetB);
                     }
                 }
 
-                if(userProperties.useSpearmansCorrelation()){
-                    heatMapData[i+1][heatMapData[0].length-1] = "" + spearmansCorrelation.correlation(dataSetA, averageValues);
-                    heatMapData[heatMapData[0].length-1][i+1] = "" + spearmansCorrelation.correlation(dataSetA, averageValues);
-                }  else {
-                    heatMapData[i+1][heatMapData[0].length-1] = "" + pearsonsCorrelation.correlation(dataSetA, averageValues);
-                    heatMapData[heatMapData[0].length-1][i+1] = "" + pearsonsCorrelation.correlation(dataSetA, averageValues);
+                if (userProperties.useSpearmansCorrelation()) {
+                    heatMapData[i + 1][heatMapData[0].length - 1] = "" + spearmansCorrelation.correlation(dataSetA, averageValues);
+                    heatMapData[heatMapData[0].length - 1][i + 1] = "" + spearmansCorrelation.correlation(dataSetA, averageValues);
+                } else {
+                    heatMapData[i + 1][heatMapData[0].length - 1] = "" + pearsonsCorrelation.correlation(dataSetA, averageValues);
+                    heatMapData[heatMapData[0].length - 1][i + 1] = "" + pearsonsCorrelation.correlation(dataSetA, averageValues);
                 }
             }
 
-            if(userProperties.useSpearmansCorrelation()){
-                heatMapData[heatMapData[0].length-1][heatMapData[0].length-1] =
+            if (userProperties.useSpearmansCorrelation()) {
+                heatMapData[heatMapData[0].length - 1][heatMapData[0].length - 1] =
                         "" + spearmansCorrelation.correlation(averageValues, averageValues);
             } else {
-                heatMapData[heatMapData[0].length-1][heatMapData[0].length-1] =
+                heatMapData[heatMapData[0].length - 1][heatMapData[0].length - 1] =
                         "" + pearsonsCorrelation.correlation(averageValues, averageValues);
             }
         }
-
 
 
 //        System.out.println("\nheat map:");
@@ -259,10 +258,8 @@ public class PlotUtil {
 //            System.out.println();
 //        }
 
-
         return heatMapData;
     }
-
 
     /**
      * Returns a line plot based on the provided data.
@@ -276,7 +273,7 @@ public class PlotUtil {
      */
     public static JFreeChart getAverageLinePlot(HashMap<String, double[][]> data, int[] totalNumberOfSpectraOfGivenLength,
             String xAxisLabel, String yAxisLabel, Properties properties) {
-        
+
         // sort the keys
         ArrayList<String> sortedKeys = new ArrayList<String>();
 
@@ -296,11 +293,11 @@ public class PlotUtil {
         // set to true if correlation data is to be printed (to the ErrorLog)
         boolean printOutCorrelationData = false;
 
-        if(printOutCorrelationData){
+        if (printOutCorrelationData) {
             System.out.print("\ntype, number, ");
 
-            for(int k = 0; k < data.get(sortedKeys.get(0))[0].length; k++){
-                System.out.print("S" + (k+1) + ", ");
+            for (int k = 0; k < data.get(sortedKeys.get(0))[0].length; k++) {
+                System.out.print("S" + (k + 1) + ", ");
             }
 
             System.out.println("Avg");
@@ -312,14 +309,14 @@ public class PlotUtil {
             String key = sortedKeys.get(i);
 
             double[][] tempArray = data.get(key);
-           
+
             YIntervalSeries tempDataSeries = new YIntervalSeries(key);
 
             for (int j = 1; j < tempArray.length; j++) {
 
-                if(printOutCorrelationData){
-                    if(key.equalsIgnoreCase("b") ||
-                                key.equalsIgnoreCase("y")){
+                if (printOutCorrelationData) {
+                    if (key.equalsIgnoreCase("b") ||
+                            key.equalsIgnoreCase("y")) {
                         System.out.print(key + ", ");
                     }
                 }
@@ -328,14 +325,14 @@ public class PlotUtil {
                 double max = Double.MIN_VALUE;
                 double min = Double.MAX_VALUE;
 
-                for(int k = 0; k < tempArray[j].length; k++){
+                for (int k = 0; k < tempArray[j].length; k++) {
 
-                    if(printOutCorrelationData){
-                        if(key.equalsIgnoreCase("b") ||
-                                key.equalsIgnoreCase("y")){
+                    if (printOutCorrelationData) {
+                        if (key.equalsIgnoreCase("b") ||
+                                key.equalsIgnoreCase("y")) {
 
-                            if(k==0){
-                                if(key.equalsIgnoreCase("b")){
+                            if (k == 0) {
+                                if (key.equalsIgnoreCase("b")) {
                                     System.out.print(j + ", ");
                                 } else {
                                     System.out.print(j + ", ");
@@ -346,13 +343,13 @@ public class PlotUtil {
                         }
                     }
 
-                    if(!new Double(tempArray[j][k]).isNaN()){
+                    if (!new Double(tempArray[j][k]).isNaN()) {
 
-                        if(tempArray[j][k] > max){
+                        if (tempArray[j][k] > max) {
                             max = tempArray[j][k];
                         }
 
-                        if(tempArray[j][k] < min){
+                        if (tempArray[j][k] < min) {
                             min = tempArray[j][k];
                         }
 
@@ -363,14 +360,14 @@ public class PlotUtil {
                 averageValue /= totalNumberOfSpectraOfGivenLength[j];
                 tempDataSeries.add(j, averageValue, min, max);
 
-                if(printOutCorrelationData){
-                    if(key.equalsIgnoreCase("b") ||
-                                key.equalsIgnoreCase("y")){
+                if (printOutCorrelationData) {
+                    if (key.equalsIgnoreCase("b") ||
+                            key.equalsIgnoreCase("y")) {
                         System.out.println(averageValue);
                     }
                 }
             }
-         
+
             dataset.addSeries(tempDataSeries);
         }
 
@@ -410,7 +407,7 @@ public class PlotUtil {
         XYErrorRenderer renderer = new XYErrorRenderer();
         renderer.setBaseLinesVisible(true);
         renderer.setBaseShapesVisible(false);
-        renderer.setErrorStroke(new BasicStroke(LINE_WIDTH/2));
+        renderer.setErrorStroke(new BasicStroke(LINE_WIDTH / 2));
 
         renderer.setDrawYError(properties.showMaxMin());
         renderer.setDrawXError(false);
@@ -435,7 +432,7 @@ public class PlotUtil {
                 renderer.setSeriesStroke(i, new BasicStroke(LINE_WIDTH, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
             }
         }
- 
+
         plot.setRenderer(renderer);
 
         return chart;

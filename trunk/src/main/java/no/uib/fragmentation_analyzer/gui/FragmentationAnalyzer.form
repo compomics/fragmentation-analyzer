@@ -134,6 +134,14 @@
             </MenuItem>
           </SubComponents>
         </Menu>
+        <MenuItem class="javax.swing.JMenuItem" name="peptideLengthJMenuItem">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Peptide Length Selection"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="peptideLengthJMenuItemActionPerformed"/>
+          </Events>
+        </MenuItem>
       </SubComponents>
     </Container>
     <Container class="javax.swing.JPopupMenu" name="selectSpectraJPopupMenu">
@@ -1001,7 +1009,7 @@
                           <Properties>
                             <Property name="maximumRowCount" type="int" value="12"/>
                             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                              <StringArray count="7">
+                              <StringArray count="8">
                                 <StringItem index="0" value=" - Select Analysis Type - "/>
                                 <StringItem index="1" value="List Individual Identifications"/>
                                 <StringItem index="2" value="Intensity Box Plot"/>
@@ -1009,6 +1017,7 @@
                                 <StringItem index="4" value="Mass Error Bubble Plot"/>
                                 <StringItem index="5" value="Mass Error Box Plot"/>
                                 <StringItem index="6" value="Fragment Ion Probability Plot"/>
+                                <StringItem index="7" value="Fragment Ion Heat Map"/>
                               </StringArray>
                             </Property>
                             <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">

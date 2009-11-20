@@ -70,5 +70,6 @@ public class AlignedListCellRenderer extends DefaultListCellRenderer {
         iconMappings.put("Mass Error Box Plot", "box_plot_small.GIF");
         iconMappings.put("Fragment Ion Probability Plot", "line_plot.GIF");
         iconMappings.put("View Spectra", "spectrum.GIF");
+        iconMappings.put("Fragment Ion Heat Map", "heat_map.GIF");
     }
 }
