@@ -183,6 +183,10 @@ public class PlotUtil {
 
 //            System.out.println("\naverage values:");
 //
+//            for(int i=0; i<averageValues.length; i++){
+//                System.out.println(averageValues[i]);
+//            }
+//
 //
 //            System.out.println("\ncurrent data:");
 //
@@ -220,7 +224,7 @@ public class PlotUtil {
                     for (int k = 1; k < peptideLengthToUse; k++) {
                         dataSetB[k - 1] = currentData[k][j];
                     }
-
+                    
                     if (userProperties.useSpearmansCorrelation()) {
                         heatMapData[i + 1][j + 1] = "" + spearmansCorrelation.correlation(dataSetA, dataSetB);
                     } else {
