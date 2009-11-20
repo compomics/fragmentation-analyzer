@@ -132,8 +132,12 @@ public class PlotUtil {
      * @param fragmentIonType
      * @return the heat map data 
      */
-    public static String[][] getHeatMapData(HashMap<String, double[][]> data, int[] totalNumberOfSpectraOfGivenLength,
-            String fragmentIonType, UserProperties userProperties, int peptideLengthToUse) {
+    public static String[][] getHeatMapData(
+            HashMap<String, double[][]> data, int[] totalNumberOfSpectraOfGivenLength,
+            String fragmentIonType, UserProperties userProperties, 
+            int fragmentIonLowerThreshold, int fragmentIonUpperThreshold) {
+
+        boolean debug = false;
 
         String[][] heatMapData = new String[0][0];
 
@@ -160,16 +164,16 @@ public class PlotUtil {
 
             heatMapData[heatMapData.length - 1][0] = "A";
 
+            int numberOfFragmentIonsUsed = fragmentIonUpperThreshold - fragmentIonLowerThreshold + 1;
 
             // calculate the average values
-            double[] averageValues = new double[peptideLengthToUse - 1];
+            double[] averageValues = new double[numberOfFragmentIonsUsed];
 
-            for (int j = 1; j < peptideLengthToUse; j++) {
+            for (int j = fragmentIonLowerThreshold; j <= fragmentIonUpperThreshold; j++) {
 
                 double averageValue = 0.0;
 
                 for (int k = 0; k < currentData[j].length; k++) {
-
                     if (!new Double(currentData[j][k]).isNaN()) {
                         averageValue += currentData[j][k];
                     }
@@ -177,27 +181,31 @@ public class PlotUtil {
 
                 averageValue /= totalNumberOfSpectraOfGivenLength[j];
 
-                averageValues[j - 1] = averageValue;
+                averageValues[j - fragmentIonLowerThreshold] = averageValue;
             }
 
 
-//            System.out.println("\naverage values:");
-//
-//            for(int i=0; i<averageValues.length; i++){
-//                System.out.println(averageValues[i]);
-//            }
-//
-//
-//            System.out.println("\ncurrent data:");
-//
-//            // print out the contents of the data array
-//            for(int i=1; i<currentData.length; i++){
-//                for(int j=0; j<currentData[0].length; j++){
-//                    System.out.print(currentData[i][j] + "\t");
-//                }
-//
-//                System.out.println();
-//            }
+            if(debug){
+                System.out.println("\naverage values:");
+
+                for(int i=0; i<averageValues.length; i++){
+                    System.out.println(averageValues[i]);
+                }
+
+
+                System.out.println("\ncurrent data:");
+
+                // print out the contents of the data array
+                for(int i=1; i<currentData.length; i++){
+                    for(int j=0; j<currentData[0].length; j++){
+                        System.out.print(currentData[i][j] + "\t");
+                    }
+
+                    System.out.println();
+                }
+
+                System.out.println();
+            }
 
 
             // calculate the heat map values
@@ -211,18 +219,34 @@ public class PlotUtil {
 
             for (int i = 0; i < currentData[0].length; i++) {
 
-                double[] dataSetA = new double[peptideLengthToUse - 1];
+                double[] dataSetA = new double[numberOfFragmentIonsUsed];
 
-                for (int k = 1; k < peptideLengthToUse; k++) {
-                    dataSetA[k - 1] = currentData[k][i];
+                for (int k = fragmentIonLowerThreshold; k <= fragmentIonUpperThreshold; k++) {
+                    dataSetA[k - fragmentIonLowerThreshold] = currentData[k][i];
+
+                    if(debug){
+                        System.out.println("a: " + dataSetA[k - fragmentIonLowerThreshold]);
+                    }
+                }
+
+                if(debug){
+                    System.out.println();
                 }
 
                 for (int j = 0; j < currentData[0].length; j++) {
 
-                    double[] dataSetB = new double[peptideLengthToUse - 1];
+                    double[] dataSetB = new double[numberOfFragmentIonsUsed];
 
-                    for (int k = 1; k < peptideLengthToUse; k++) {
-                        dataSetB[k - 1] = currentData[k][j];
+                    for (int k = fragmentIonLowerThreshold; k <= fragmentIonUpperThreshold; k++) {
+                        dataSetB[k - fragmentIonLowerThreshold] = currentData[k][j];
+
+                        if(debug){
+                            System.out.println("b: " + dataSetB[k - fragmentIonLowerThreshold]);
+                        }
+                    }
+
+                    if(debug){
+                        System.out.println();
                     }
                     
                     if (userProperties.useSpearmansCorrelation()) {
@@ -251,16 +275,18 @@ public class PlotUtil {
         }
 
 
-//        System.out.println("\nheat map:");
-//
-//        // print out the contents of the heat map
-//        for(int i=0; i<heatMapData.length; i++){
-//            for(int j=0; j<heatMapData[0].length; j++){
-//                System.out.print(heatMapData[i][j] + "\t");
-//            }
-//
-//            System.out.println();
-//        }
+        if(debug){
+            System.out.println("\nheat map:");
+
+            // print out the contents of the heat map
+            for(int i=0; i<heatMapData.length; i++){
+                for(int j=0; j<heatMapData[0].length; j++){
+                    System.out.print(heatMapData[i][j] + "\t");
+                }
+
+                System.out.println();
+            }
+        }
 
         return heatMapData;
     }
