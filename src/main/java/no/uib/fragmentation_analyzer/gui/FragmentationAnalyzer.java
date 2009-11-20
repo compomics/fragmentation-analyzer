@@ -3529,11 +3529,11 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                             if(searchResultsJComboBox.getSelectedIndex() == Properties.SEARCH_RESULTS_ION_HEAT_MAP){
 
                                 // create the heat maps
-                                // b ions
+                                // b ions all values
                                 String[][] heatMapDataBIons =
                                         PlotUtil.getHeatMapData(averageSequenceDependentFragmentIons, 
                                         totalNumberOfSpectraOfGivenLength, "b", userProperties, 
-                                        fragmentIonLowerThreshold, fragmentIonUpperThreshold);
+                                        fragmentIonLowerThreshold, fragmentIonUpperThreshold, false);
 
                                 FragmentationAnalyzerJInternalFrame internalFrameHeatMapBIons = new FragmentationAnalyzerJInternalFrame(
                                         "Heat Map - B Ions", true, true, true, null, "HeatMap", internalFrameUniqueIdCounter);
@@ -3542,17 +3542,44 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                 insertInternalFrame(internalFrameHeatMapBIons);
                                 internalFrameUniqueIdCounter++;
 
-                                // y ions
+                                // y ions all values
                                 String[][] heatMapDataYIons =
                                         PlotUtil.getHeatMapData(averageSequenceDependentFragmentIons, 
                                         totalNumberOfSpectraOfGivenLength, "y", userProperties,
-                                        fragmentIonLowerThreshold, fragmentIonUpperThreshold);
+                                        fragmentIonLowerThreshold, fragmentIonUpperThreshold, false);
 
                                 FragmentationAnalyzerJInternalFrame internalFrameHeatMapYIons = new FragmentationAnalyzerJInternalFrame(
                                         "Heat Map - Y Ions", true, true, true, null, "HeatMap", internalFrameUniqueIdCounter);
                                 internalFrameHeatMapYIons.add(new HeatMapJPanel(userProperties, heatMapDataYIons));
 
                                 insertInternalFrame(internalFrameHeatMapYIons);
+                                internalFrameUniqueIdCounter++;
+
+
+                                // b ions only significant
+                                String[][] heatMapDataBIonsSignificant =
+                                        PlotUtil.getHeatMapData(averageSequenceDependentFragmentIons,
+                                        totalNumberOfSpectraOfGivenLength, "b", userProperties,
+                                        fragmentIonLowerThreshold, fragmentIonUpperThreshold, true);
+
+                                FragmentationAnalyzerJInternalFrame internalFrameHeatMapBIonsSignificant = new FragmentationAnalyzerJInternalFrame(
+                                        "Heat Map - B Ions Significant", true, true, true, null, "HeatMap", internalFrameUniqueIdCounter);
+                                internalFrameHeatMapBIonsSignificant.add(new HeatMapJPanel(userProperties, heatMapDataBIonsSignificant));
+
+                                insertInternalFrame(internalFrameHeatMapBIonsSignificant);
+                                internalFrameUniqueIdCounter++;
+
+                                // y ions only significant
+                                String[][] heatMapDataYIonsSignificant =
+                                        PlotUtil.getHeatMapData(averageSequenceDependentFragmentIons,
+                                        totalNumberOfSpectraOfGivenLength, "y", userProperties,
+                                        fragmentIonLowerThreshold, fragmentIonUpperThreshold, true);
+
+                                FragmentationAnalyzerJInternalFrame internalFrameHeatMapYIonsSignificant = new FragmentationAnalyzerJInternalFrame(
+                                        "Heat Map - Y Ions Significant", true, true, true, null, "HeatMap", internalFrameUniqueIdCounter);
+                                internalFrameHeatMapYIonsSignificant.add(new HeatMapJPanel(userProperties, heatMapDataYIonsSignificant));
+
+                                insertInternalFrame(internalFrameHeatMapYIonsSignificant);
                                 internalFrameUniqueIdCounter++;
 
                             } else {
