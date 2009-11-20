@@ -5,6 +5,7 @@
  * NEW FEATURE: Heat maps with correlation data from comparing fragmentation patterns has been added.
  * NEW FEATURE: Implemented a box plot version of the combined fragment ion probability plot.
  * NEW FEATURE: Peptide sequence length is now included in the tables. 
+ * NEW FEATURE: Implemented a simple way of selecting x peptides of length y in the search results table.
  * BUG FIX: The error bars in the fragment ion probability plot is now correctly hidden.
  * BUG FIX: Removed the data point markers in the combined fragment ion probability plots.
  * BUG FIX: Fixed a bug in the Single/Combine drop down box for the spectra table.
