@@ -6,6 +6,7 @@ import java.awt.Font;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Random;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.CategoryAxis;
@@ -135,7 +136,8 @@ public class PlotUtil {
     public static String[][] getHeatMapData(
             HashMap<String, double[][]> data, int[] totalNumberOfSpectraOfGivenLength,
             String fragmentIonType, UserProperties userProperties, 
-            int fragmentIonLowerThreshold, int fragmentIonUpperThreshold) {
+            int fragmentIonLowerThreshold, int fragmentIonUpperThreshold,
+            boolean significantColorCoding) {
 
         boolean debug = false;
 
@@ -144,6 +146,13 @@ public class PlotUtil {
         if (data.get(fragmentIonType) != null) {
 
             double[][] currentData = data.get(fragmentIonType);
+
+            // find the significance cut-off level
+            double significanceLevel = 0.0;
+
+            if(significantColorCoding){
+                significanceLevel = findSignificanceLevel(currentData, userProperties.useSpearmansCorrelation());
+            }
 
             heatMapData = new String[currentData[0].length + 2][currentData[0].length + 2];
 
@@ -250,27 +259,113 @@ public class PlotUtil {
                     }
                     
                     if (userProperties.useSpearmansCorrelation()) {
-                        heatMapData[i + 1][j + 1] = "" + spearmansCorrelation.correlation(dataSetA, dataSetB);
+
+                        double correlation = spearmansCorrelation.correlation(dataSetA, dataSetB);
+
+                        if(significantColorCoding){
+                            if(correlation > significanceLevel){
+                                heatMapData[i + 1][j + 1] = "" + 1.0;
+                            } else {
+                                heatMapData[i + 1][j + 1] = "" + -1.0;
+                            }
+                        } else {
+                            heatMapData[i + 1][j + 1] = "" + correlation;
+                        }
+
                     } else {
-                        heatMapData[i + 1][j + 1] = "" + pearsonsCorrelation.correlation(dataSetA, dataSetB);
+                        double correlation = pearsonsCorrelation.correlation(dataSetA, dataSetB);
+
+                        if(significantColorCoding){
+                            if(correlation > significanceLevel){
+                                heatMapData[i + 1][j + 1] = "" + 1.0;
+                            } else {
+                                heatMapData[i + 1][j + 1] = "" + -1.0;
+                            }
+                        } else {
+                            heatMapData[i + 1][j + 1] = "" + correlation;
+                        }
                     }
                 }
 
                 if (userProperties.useSpearmansCorrelation()) {
-                    heatMapData[i + 1][heatMapData[0].length - 1] = "" + spearmansCorrelation.correlation(dataSetA, averageValues);
-                    heatMapData[heatMapData[0].length - 1][i + 1] = "" + spearmansCorrelation.correlation(dataSetA, averageValues);
+
+                    double correlation = spearmansCorrelation.correlation(dataSetA, averageValues);
+
+                    if(significantColorCoding){
+                        if(correlation > significanceLevel){
+                            heatMapData[i + 1][heatMapData[0].length - 1] = "" + 1.0;
+                        } else {
+                            heatMapData[i + 1][heatMapData[0].length - 1] = "" + -1.0;
+                        }
+                    } else {
+                        heatMapData[i + 1][heatMapData[0].length - 1] = "" + correlation;
+                    }
+
+                    correlation = spearmansCorrelation.correlation(dataSetA, averageValues);
+
+                    if(significantColorCoding){
+                        if(correlation > significanceLevel){
+                            heatMapData[heatMapData[0].length - 1][i + 1] = "" + 1.0;
+                        } else {
+                            heatMapData[heatMapData[0].length - 1][i + 1] = "" + -1.0;
+                        }
+                    } else {
+                        heatMapData[heatMapData[0].length - 1][i + 1] = "" + correlation;
+                    }
+
                 } else {
-                    heatMapData[i + 1][heatMapData[0].length - 1] = "" + pearsonsCorrelation.correlation(dataSetA, averageValues);
-                    heatMapData[heatMapData[0].length - 1][i + 1] = "" + pearsonsCorrelation.correlation(dataSetA, averageValues);
+                    double correlation = pearsonsCorrelation.correlation(dataSetA, averageValues);
+
+                    if(significantColorCoding){
+                        if(correlation > significanceLevel){
+                            heatMapData[i + 1][heatMapData[0].length - 1] = "" + 1.0;
+                        } else {
+                            heatMapData[i + 1][heatMapData[0].length - 1] = "" + -1.0;
+                        }
+                    } else {
+                        heatMapData[i + 1][heatMapData[0].length - 1] = "" + correlation;
+                    }
+
+                    correlation = pearsonsCorrelation.correlation(dataSetA, averageValues);
+
+                    if(significantColorCoding){
+                        if(correlation > significanceLevel){
+                            heatMapData[heatMapData[0].length - 1][i + 1] = "" + 1.0;
+                        } else {
+                            heatMapData[heatMapData[0].length - 1][i + 1] = "" + -1.0;
+                        }
+                    } else {
+                        heatMapData[heatMapData[0].length - 1][i + 1] = "" + correlation;
+                    }
                 }
             }
 
             if (userProperties.useSpearmansCorrelation()) {
-                heatMapData[heatMapData[0].length - 1][heatMapData[0].length - 1] =
-                        "" + spearmansCorrelation.correlation(averageValues, averageValues);
+
+                double correlation = spearmansCorrelation.correlation(averageValues, averageValues);
+
+                if(significantColorCoding){
+                    if(correlation > significanceLevel){
+                        heatMapData[heatMapData[0].length - 1][heatMapData[0].length - 1] = "" + 1.0;
+                    } else {
+                        heatMapData[heatMapData[0].length - 1][heatMapData[0].length - 1] = "" + -1.0;
+                    }
+                } else {
+                    heatMapData[heatMapData[0].length - 1][heatMapData[0].length - 1] = "" + correlation;
+                }
+
             } else {
-                heatMapData[heatMapData[0].length - 1][heatMapData[0].length - 1] =
-                        "" + pearsonsCorrelation.correlation(averageValues, averageValues);
+                double correlation = pearsonsCorrelation.correlation(averageValues, averageValues);
+
+                if(significantColorCoding){
+                    if(correlation > significanceLevel){
+                        heatMapData[heatMapData[0].length - 1][heatMapData[0].length - 1] = "" + 1.0;
+                    } else {
+                        heatMapData[heatMapData[0].length - 1][heatMapData[0].length - 1] = "" + -1.0;
+                    }
+                } else {
+                    heatMapData[heatMapData[0].length - 1][heatMapData[0].length - 1] = "" + correlation;
+                }
             }
         }
 
@@ -289,6 +384,73 @@ public class PlotUtil {
         }
 
         return heatMapData;
+    }
+
+    /**
+     * Calculates the 99% significance level for the correlation in the given data set.
+     *
+     * @param currentData
+     * @param useSpearmanCorrelation
+     * @return the 99% significance level
+     */
+    private static double findSignificanceLevel(double[][] currentData, boolean useSpearmanCorrelation){
+
+        int numberOfPermutations = 10000;
+        ArrayList<Double> correlationsList = new ArrayList<Double>();
+
+        SpearmansCorrelation spearmansCorrelation = new SpearmansCorrelation();
+
+        // note: ranks are computed using NaturalRanking with default strategies for
+        //       handling NaNs and ties in the data (NaNs maximal, ties averaged).
+        //       see org.apache.commons.math.stat.ranking.NaturalRanking for details
+
+        PearsonsCorrelation pearsonsCorrelation = new PearsonsCorrelation();
+        
+
+        // add all fragment ion occurence values to a array list
+        ArrayList<Double> allValues = new ArrayList<Double>();
+
+        for(int i=1; i<currentData.length; i++){
+            for(int j=0; j<currentData[0].length; j++){
+                allValues.add(currentData[i][j]);
+            }
+        }
+
+        // randomly select and correlate samples of size equal to the length of the selected peptides
+        Random randomValues = new Random();
+
+        double[] selectedValuesSampleA = new double[currentData.length - 1];
+        double[] selectedValuesSampleB = new double[currentData.length - 1];
+
+        for(int i=0; i< numberOfPermutations; i++){
+
+            // randomly select the values for sample A
+            for(int j=0; j<selectedValuesSampleA.length; j++){
+                selectedValuesSampleA[j] = allValues.get(randomValues.nextInt(allValues.size()));
+            }
+
+            // randomly select the values for sample B
+            for(int j=0; j<selectedValuesSampleB.length; j++){
+                selectedValuesSampleB[j] = allValues.get(randomValues.nextInt(allValues.size()));
+            }
+
+            // correlate the two sample sets
+            if (useSpearmanCorrelation) {
+                correlationsList.add(spearmansCorrelation.correlation(selectedValuesSampleA, selectedValuesSampleB));
+            } else {
+                correlationsList.add(pearsonsCorrelation.correlation(selectedValuesSampleA, selectedValuesSampleB));
+            }
+        }
+
+        // sort the calculated correlations (in accending order)
+        java.util.Collections.sort(correlationsList);
+
+        // find the 99% significance cut-off value
+        int cutOffIndeex = new Double(correlationsList.size()*0.99).intValue();
+
+        // System.out.println(cutOffIndeex + ": " + correlationsList.get(cutOffIndeex));
+
+        return correlationsList.get(cutOffIndeex);
     }
 
     /**
