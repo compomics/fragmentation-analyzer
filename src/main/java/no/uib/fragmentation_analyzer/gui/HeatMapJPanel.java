@@ -268,6 +268,15 @@ public class HeatMapJPanel extends javax.swing.JPanel {
         }
     }
 
+    /**
+     * Set the tool tip to use for the heat map
+     *
+     * @param toolTip
+     */
+    public void setHeatMapToolTip(String toolTip){
+        heatMapJXTable.setToolTipText(toolTip);
+    }
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
