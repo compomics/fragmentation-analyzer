@@ -3237,7 +3237,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                             }
                         }
 
-                        int fragmentIonLowerThreshold = 0;
+                        int fragmentIonLowerThreshold = 1;
                         int fragmentIonUpperThreshold = longestPeptideSequenceLength - 1;
 
                         // decide how much of the peptide sequence to compare
@@ -3255,74 +3255,80 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                 fragmentIonUpperThreshold = shortestPeptideLength - 1;
                             }
 
+                            int option = JOptionPane.showConfirmDialog(null,
+                                    "Select a subset of the available fragment ions?",
+                                    "Fragment Ion Selection", JOptionPane.YES_NO_OPTION);
 
-                            // set the lower fragment ion boundary
-                            boolean notAnInteger = true;
-
-                            while(notAnInteger && !cancelProgress){
-
-                                String value = JOptionPane.showInputDialog(
-                                        null,
-                                        "Use fragment ions from fragment number (1-" + (fragmentIonUpperThreshold - 2) + "):",
-                                        "Fragment Ion Selection - Lower", JOptionPane.INFORMATION_MESSAGE);
-
-                                if(value != null){
-                                    try{
-                                        int tempLowerRange = new Integer(value).intValue();
-                                        notAnInteger = false;
-
-                                        if(tempLowerRange > 0 &&
-                                                tempLowerRange <= fragmentIonUpperThreshold - 2){
-                                            fragmentIonLowerThreshold = tempLowerRange;
-                                        } else {
-                                            // set the start value to the first fragment ion
-                                            fragmentIonLowerThreshold = 1;
-                                        }
-                                    } catch (NumberFormatException e){
-                                        JOptionPane.showMessageDialog(null, "Inserted value has to be an integer.",
-                                                "Not An Integer", JOptionPane.INFORMATION_MESSAGE);
-                                    }
-                                } else {
-                                    cancelProgress = true;
-                                }
-                            }
-
-
-                            notAnInteger = true;
-
-                            // set the upper fragment ion boundary
-                            while(notAnInteger && !cancelProgress){
+                            if(option == JOptionPane.YES_OPTION){
                                 
-                                String value = JOptionPane.showInputDialog(
-                                        null,
-                                        "Use fragment ions up to fragment number (" + (fragmentIonLowerThreshold + 2) + "-"
-                                            + fragmentIonUpperThreshold + "):",
-                                        "Fragment Ion Selection - Upper", JOptionPane.INFORMATION_MESSAGE);
-                                
-                                if(value != null){
-                                    try{
-                                        int tempUpperRange = new Integer(value).intValue();
-                                        notAnInteger = false;
+                                // set the lower fragment ion boundary
+                                boolean notAnInteger = true;
 
-                                        if(tempUpperRange >= fragmentIonLowerThreshold + 2 &&
-                                                tempUpperRange <= fragmentIonUpperThreshold){
-                                            fragmentIonUpperThreshold = tempUpperRange;
-                                        } else {
-                                            // use the end value to the last fragment ion
+                                while(notAnInteger && !cancelProgress){
+
+                                    String value = JOptionPane.showInputDialog(
+                                            null,
+                                            "Use fragment ions from fragment number (1-" + (fragmentIonUpperThreshold - 2) + "):",
+                                            "Fragment Ion Selection - Lower", JOptionPane.INFORMATION_MESSAGE);
+
+                                    if(value != null){
+                                        try{
+                                            int tempLowerRange = new Integer(value).intValue();
+                                            notAnInteger = false;
+
+                                            if(tempLowerRange > 0 &&
+                                                    tempLowerRange <= fragmentIonUpperThreshold - 2){
+                                                fragmentIonLowerThreshold = tempLowerRange;
+                                            } else {
+                                                // set the start value to the first fragment ion
+                                                fragmentIonLowerThreshold = 1;
+                                            }
+                                        } catch (NumberFormatException e){
+                                            JOptionPane.showMessageDialog(null, "Inserted value has to be an integer.",
+                                                    "Not An Integer", JOptionPane.INFORMATION_MESSAGE);
                                         }
-                                    } catch (NumberFormatException e){
-                                        JOptionPane.showMessageDialog(null, "Inserted value has to be an integer.",
-                                                "Not An Integer", JOptionPane.INFORMATION_MESSAGE);
+                                    } else {
+                                        cancelProgress = true;
                                     }
-                                } else {
-                                    cancelProgress = true;
                                 }
-                            }
 
-                            if(!cancelProgress){
-                                JOptionPane.showMessageDialog(null,
-                                        "Fragment Ion Range Selected: " + fragmentIonLowerThreshold + "-" +
-                                        fragmentIonUpperThreshold, "Fragment Ion Range", JOptionPane.INFORMATION_MESSAGE);
+
+                                notAnInteger = true;
+
+                                // set the upper fragment ion boundary
+                                while(notAnInteger && !cancelProgress){
+
+                                    String value = JOptionPane.showInputDialog(
+                                            null,
+                                            "Use fragment ions up to fragment number (" + (fragmentIonLowerThreshold + 2) + "-"
+                                                + fragmentIonUpperThreshold + "):",
+                                            "Fragment Ion Selection - Upper", JOptionPane.INFORMATION_MESSAGE);
+
+                                    if(value != null){
+                                        try{
+                                            int tempUpperRange = new Integer(value).intValue();
+                                            notAnInteger = false;
+
+                                            if(tempUpperRange >= fragmentIonLowerThreshold + 2 &&
+                                                    tempUpperRange <= fragmentIonUpperThreshold){
+                                                fragmentIonUpperThreshold = tempUpperRange;
+                                            } else {
+                                                // use the end value to the last fragment ion
+                                            }
+                                        } catch (NumberFormatException e){
+                                            JOptionPane.showMessageDialog(null, "Inserted value has to be an integer.",
+                                                    "Not An Integer", JOptionPane.INFORMATION_MESSAGE);
+                                        }
+                                    } else {
+                                        cancelProgress = true;
+                                    }
+                                }
+
+                                if(!cancelProgress){
+                                    JOptionPane.showMessageDialog(null,
+                                            "Fragment Ion Range Selected: " + fragmentIonLowerThreshold + "-" +
+                                            fragmentIonUpperThreshold, "Fragment Ion Range", JOptionPane.INFORMATION_MESSAGE);
+                                }
                             }
                         }
 
@@ -3529,58 +3535,26 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                             if(searchResultsJComboBox.getSelectedIndex() == Properties.SEARCH_RESULTS_ION_HEAT_MAP){
 
                                 // create the heat maps
+
                                 // b ions all values
-                                String[][] heatMapDataBIons =
-                                        PlotUtil.getHeatMapData(averageSequenceDependentFragmentIons, 
-                                        totalNumberOfSpectraOfGivenLength, "b", userProperties, 
-                                        fragmentIonLowerThreshold, fragmentIonUpperThreshold, false);
-
-                                FragmentationAnalyzerJInternalFrame internalFrameHeatMapBIons = new FragmentationAnalyzerJInternalFrame(
-                                        "Heat Map - B Ions", true, true, true, null, "HeatMap", internalFrameUniqueIdCounter);
-                                internalFrameHeatMapBIons.add(new HeatMapJPanel(userProperties, heatMapDataBIons));
-
-                                insertInternalFrame(internalFrameHeatMapBIons);
-                                internalFrameUniqueIdCounter++;
+                                insertHeatMap(averageSequenceDependentFragmentIons, totalNumberOfSpectraOfGivenLength,
+                                        fragmentIonLowerThreshold, fragmentIonUpperThreshold,
+                                        "b", false, "Heat Map - B Ions");
 
                                 // y ions all values
-                                String[][] heatMapDataYIons =
-                                        PlotUtil.getHeatMapData(averageSequenceDependentFragmentIons, 
-                                        totalNumberOfSpectraOfGivenLength, "y", userProperties,
-                                        fragmentIonLowerThreshold, fragmentIonUpperThreshold, false);
-
-                                FragmentationAnalyzerJInternalFrame internalFrameHeatMapYIons = new FragmentationAnalyzerJInternalFrame(
-                                        "Heat Map - Y Ions", true, true, true, null, "HeatMap", internalFrameUniqueIdCounter);
-                                internalFrameHeatMapYIons.add(new HeatMapJPanel(userProperties, heatMapDataYIons));
-
-                                insertInternalFrame(internalFrameHeatMapYIons);
-                                internalFrameUniqueIdCounter++;
-
+                                insertHeatMap(averageSequenceDependentFragmentIons, totalNumberOfSpectraOfGivenLength,
+                                        fragmentIonLowerThreshold, fragmentIonUpperThreshold,
+                                        "y", false, "Heat Map - Y Ions");
 
                                 // b ions only significant
-                                String[][] heatMapDataBIonsSignificant =
-                                        PlotUtil.getHeatMapData(averageSequenceDependentFragmentIons,
-                                        totalNumberOfSpectraOfGivenLength, "b", userProperties,
-                                        fragmentIonLowerThreshold, fragmentIonUpperThreshold, true);
-
-                                FragmentationAnalyzerJInternalFrame internalFrameHeatMapBIonsSignificant = new FragmentationAnalyzerJInternalFrame(
-                                        "Heat Map - B Ions Significant", true, true, true, null, "HeatMap", internalFrameUniqueIdCounter);
-                                internalFrameHeatMapBIonsSignificant.add(new HeatMapJPanel(userProperties, heatMapDataBIonsSignificant));
-
-                                insertInternalFrame(internalFrameHeatMapBIonsSignificant);
-                                internalFrameUniqueIdCounter++;
+                                insertHeatMap(averageSequenceDependentFragmentIons, totalNumberOfSpectraOfGivenLength,
+                                        fragmentIonLowerThreshold, fragmentIonUpperThreshold,
+                                        "b", true, "Heat Map - B Ions Significant");
 
                                 // y ions only significant
-                                String[][] heatMapDataYIonsSignificant =
-                                        PlotUtil.getHeatMapData(averageSequenceDependentFragmentIons,
-                                        totalNumberOfSpectraOfGivenLength, "y", userProperties,
-                                        fragmentIonLowerThreshold, fragmentIonUpperThreshold, true);
-
-                                FragmentationAnalyzerJInternalFrame internalFrameHeatMapYIonsSignificant = new FragmentationAnalyzerJInternalFrame(
-                                        "Heat Map - Y Ions Significant", true, true, true, null, "HeatMap", internalFrameUniqueIdCounter);
-                                internalFrameHeatMapYIonsSignificant.add(new HeatMapJPanel(userProperties, heatMapDataYIonsSignificant));
-
-                                insertInternalFrame(internalFrameHeatMapYIonsSignificant);
-                                internalFrameUniqueIdCounter++;
+                                insertHeatMap(averageSequenceDependentFragmentIons, totalNumberOfSpectraOfGivenLength,
+                                        fragmentIonLowerThreshold, fragmentIonUpperThreshold,
+                                        "y", true, "Heat Map - Y Ions Significant");
 
                             } else {
 
@@ -3651,6 +3625,49 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
             }.start();
         }
 }//GEN-LAST:event_searchResultsJButtonActionPerformed
+
+    /**
+     * Creates and inserts a heat map into the plot pane.
+     *
+     * @param averageSequenceDependentFragmentIons
+     * @param totalNumberOfSpectraOfGivenLength
+     * @param fragmentIonLowerThreshold
+     * @param fragmentIonUpperThreshold
+     * @param fragmentIonType
+     * @param significanceColorCoding
+     * @param title
+     */
+    private void insertHeatMap(
+            HashMap<String, double[][]> averageSequenceDependentFragmentIons,
+            int[] totalNumberOfSpectraOfGivenLength,
+            int fragmentIonLowerThreshold,
+            int fragmentIonUpperThreshold,
+            String fragmentIonType,
+            boolean significanceColorCoding,
+            String title){
+
+        String[][] heatMapData =
+                PlotUtil.getHeatMapData(averageSequenceDependentFragmentIons,
+                totalNumberOfSpectraOfGivenLength, fragmentIonType, userProperties,
+                fragmentIonLowerThreshold, fragmentIonUpperThreshold, significanceColorCoding);
+
+        FragmentationAnalyzerJInternalFrame internalFrameHeatMap = new FragmentationAnalyzerJInternalFrame(
+                title + "(" + fragmentIonLowerThreshold + "-" + fragmentIonUpperThreshold + ")",
+                true, true, true, null, "HeatMap", internalFrameUniqueIdCounter);
+
+        HeatMapJPanel heatMapJPanel = new HeatMapJPanel(userProperties, heatMapData);
+
+        if(significanceColorCoding){
+            heatMapJPanel.setHeatMapToolTip(
+                    "<html><font color=\"red\">Red: Significant Positive Linear Correlation</font><br>" +
+                    "<font color=\"green\">Green: No Significant Positive Linear Correlation</font></html>");
+        }
+
+        internalFrameHeatMap.add(heatMapJPanel);
+
+        insertInternalFrame(internalFrameHeatMap);
+        internalFrameUniqueIdCounter++;
+    }
 
     /**
      * Updates the average sequence depedent fragment ions counters.

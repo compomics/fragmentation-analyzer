@@ -137,7 +137,7 @@ public class PlotUtil {
             HashMap<String, double[][]> data, int[] totalNumberOfSpectraOfGivenLength,
             String fragmentIonType, UserProperties userProperties, 
             int fragmentIonLowerThreshold, int fragmentIonUpperThreshold,
-            boolean significantColorCoding) {
+            boolean significanceColorCoding) {
 
         boolean debug = false;
 
@@ -150,8 +150,9 @@ public class PlotUtil {
             // find the significance cut-off level
             double significanceLevel = 0.0;
 
-            if(significantColorCoding){
-                significanceLevel = findSignificanceLevel(currentData, userProperties.useSpearmansCorrelation());
+            if(significanceColorCoding){
+                significanceLevel = findSignificanceLevel(currentData, fragmentIonLowerThreshold,
+                        fragmentIonUpperThreshold, userProperties.useSpearmansCorrelation());
             }
 
             heatMapData = new String[currentData[0].length + 2][currentData[0].length + 2];
@@ -189,7 +190,6 @@ public class PlotUtil {
                 }
 
                 averageValue /= totalNumberOfSpectraOfGivenLength[j];
-
                 averageValues[j - fragmentIonLowerThreshold] = averageValue;
             }
 
@@ -209,7 +209,6 @@ public class PlotUtil {
                     for(int j=0; j<currentData[0].length; j++){
                         System.out.print(currentData[i][j] + "\t");
                     }
-
                     System.out.println();
                 }
 
@@ -257,116 +256,45 @@ public class PlotUtil {
                     if(debug){
                         System.out.println();
                     }
-                    
+
+                    double correlation;
+
                     if (userProperties.useSpearmansCorrelation()) {
-
-                        double correlation = spearmansCorrelation.correlation(dataSetA, dataSetB);
-
-                        if(significantColorCoding){
-                            if(correlation > significanceLevel){
-                                heatMapData[i + 1][j + 1] = "" + 1.0;
-                            } else {
-                                heatMapData[i + 1][j + 1] = "" + -1.0;
-                            }
-                        } else {
-                            heatMapData[i + 1][j + 1] = "" + correlation;
-                        }
-
+                        correlation = spearmansCorrelation.correlation(dataSetA, dataSetB);
                     } else {
-                        double correlation = pearsonsCorrelation.correlation(dataSetA, dataSetB);
-
-                        if(significantColorCoding){
-                            if(correlation > significanceLevel){
-                                heatMapData[i + 1][j + 1] = "" + 1.0;
-                            } else {
-                                heatMapData[i + 1][j + 1] = "" + -1.0;
-                            }
-                        } else {
-                            heatMapData[i + 1][j + 1] = "" + correlation;
-                        }
+                        correlation = pearsonsCorrelation.correlation(dataSetA, dataSetB);
                     }
+
+                    updateCorrelationMatrix(heatMapData, i + 1, j + 1, correlation, significanceLevel, significanceColorCoding);
                 }
+
+                double correlation;
+                double correlationReversed;
 
                 if (userProperties.useSpearmansCorrelation()) {
-
-                    double correlation = spearmansCorrelation.correlation(dataSetA, averageValues);
-
-                    if(significantColorCoding){
-                        if(correlation > significanceLevel){
-                            heatMapData[i + 1][heatMapData[0].length - 1] = "" + 1.0;
-                        } else {
-                            heatMapData[i + 1][heatMapData[0].length - 1] = "" + -1.0;
-                        }
-                    } else {
-                        heatMapData[i + 1][heatMapData[0].length - 1] = "" + correlation;
-                    }
-
                     correlation = spearmansCorrelation.correlation(dataSetA, averageValues);
-
-                    if(significantColorCoding){
-                        if(correlation > significanceLevel){
-                            heatMapData[heatMapData[0].length - 1][i + 1] = "" + 1.0;
-                        } else {
-                            heatMapData[heatMapData[0].length - 1][i + 1] = "" + -1.0;
-                        }
-                    } else {
-                        heatMapData[heatMapData[0].length - 1][i + 1] = "" + correlation;
-                    }
-
+                    correlationReversed = spearmansCorrelation.correlation(averageValues, dataSetA);
                 } else {
-                    double correlation = pearsonsCorrelation.correlation(dataSetA, averageValues);
-
-                    if(significantColorCoding){
-                        if(correlation > significanceLevel){
-                            heatMapData[i + 1][heatMapData[0].length - 1] = "" + 1.0;
-                        } else {
-                            heatMapData[i + 1][heatMapData[0].length - 1] = "" + -1.0;
-                        }
-                    } else {
-                        heatMapData[i + 1][heatMapData[0].length - 1] = "" + correlation;
-                    }
-
                     correlation = pearsonsCorrelation.correlation(dataSetA, averageValues);
-
-                    if(significantColorCoding){
-                        if(correlation > significanceLevel){
-                            heatMapData[heatMapData[0].length - 1][i + 1] = "" + 1.0;
-                        } else {
-                            heatMapData[heatMapData[0].length - 1][i + 1] = "" + -1.0;
-                        }
-                    } else {
-                        heatMapData[heatMapData[0].length - 1][i + 1] = "" + correlation;
-                    }
+                    correlationReversed = pearsonsCorrelation.correlation(averageValues, dataSetA);
                 }
+
+                updateCorrelationMatrix(heatMapData, i + 1, heatMapData[0].length - 1, correlation,
+                        significanceLevel, significanceColorCoding);
+                updateCorrelationMatrix(heatMapData, heatMapData[0].length - 1, i + 1, correlationReversed,
+                        significanceLevel, significanceColorCoding);
             }
+
+            double correlation;
 
             if (userProperties.useSpearmansCorrelation()) {
-
-                double correlation = spearmansCorrelation.correlation(averageValues, averageValues);
-
-                if(significantColorCoding){
-                    if(correlation > significanceLevel){
-                        heatMapData[heatMapData[0].length - 1][heatMapData[0].length - 1] = "" + 1.0;
-                    } else {
-                        heatMapData[heatMapData[0].length - 1][heatMapData[0].length - 1] = "" + -1.0;
-                    }
-                } else {
-                    heatMapData[heatMapData[0].length - 1][heatMapData[0].length - 1] = "" + correlation;
-                }
-
+                correlation = spearmansCorrelation.correlation(averageValues, averageValues);
             } else {
-                double correlation = pearsonsCorrelation.correlation(averageValues, averageValues);
-
-                if(significantColorCoding){
-                    if(correlation > significanceLevel){
-                        heatMapData[heatMapData[0].length - 1][heatMapData[0].length - 1] = "" + 1.0;
-                    } else {
-                        heatMapData[heatMapData[0].length - 1][heatMapData[0].length - 1] = "" + -1.0;
-                    }
-                } else {
-                    heatMapData[heatMapData[0].length - 1][heatMapData[0].length - 1] = "" + correlation;
-                }
+                correlation = pearsonsCorrelation.correlation(averageValues, averageValues);
             }
+
+            updateCorrelationMatrix(heatMapData, heatMapData[0].length - 1, heatMapData[0].length - 1, correlation,
+                    significanceLevel, significanceColorCoding);
         }
 
 
@@ -387,13 +315,40 @@ public class PlotUtil {
     }
 
     /**
+     * Inserts the correlation value into the correlation matrix. Either the correlation
+     * value directly or -1 or 1 if the value is significant or not and significance
+     * color coding is selected.
+     *
+     * @param heatMapData
+     * @param rowIndex
+     * @param columnIndex
+     * @param correlation
+     * @param significanceLevel
+     * @param significanceColorCoding
+     */
+    private static void updateCorrelationMatrix(String[][] heatMapData, int rowIndex, int columnIndex,
+            double correlation, double significanceLevel, boolean significanceColorCoding){
+
+        if(significanceColorCoding){
+            if(correlation > significanceLevel){
+                heatMapData[rowIndex][columnIndex] = "" + 1.0;
+            } else {
+                heatMapData[rowIndex][columnIndex] = "" + -1.0;
+            }
+        } else {
+            heatMapData[rowIndex][columnIndex] = "" + correlation;
+        }
+    }
+
+    /**
      * Calculates the 99% significance level for the correlation in the given data set.
      *
      * @param currentData
      * @param useSpearmanCorrelation
      * @return the 99% significance level
      */
-    private static double findSignificanceLevel(double[][] currentData, boolean useSpearmanCorrelation){
+    private static double findSignificanceLevel(double[][] currentData, int fragmentIonLowerThreshold,
+            int fragmentIonUpperThreshold, boolean useSpearmanCorrelation){
 
         int numberOfPermutations = 10000;
         ArrayList<Double> correlationsList = new ArrayList<Double>();
@@ -410,7 +365,7 @@ public class PlotUtil {
         // add all fragment ion occurence values to a array list
         ArrayList<Double> allValues = new ArrayList<Double>();
 
-        for(int i=1; i<currentData.length; i++){
+        for (int i = fragmentIonLowerThreshold; i <= fragmentIonUpperThreshold; i++) {
             for(int j=0; j<currentData[0].length; j++){
                 allValues.add(currentData[i][j]);
             }
@@ -419,8 +374,10 @@ public class PlotUtil {
         // randomly select and correlate samples of size equal to the length of the selected peptides
         Random randomValues = new Random();
 
-        double[] selectedValuesSampleA = new double[currentData.length - 1];
-        double[] selectedValuesSampleB = new double[currentData.length - 1];
+        int numberOfFragmentIonsUsed = fragmentIonUpperThreshold - fragmentIonLowerThreshold + 1;
+
+        double[] selectedValuesSampleA = new double[numberOfFragmentIonsUsed];
+        double[] selectedValuesSampleB = new double[numberOfFragmentIonsUsed];
 
         for(int i=0; i< numberOfPermutations; i++){
 
