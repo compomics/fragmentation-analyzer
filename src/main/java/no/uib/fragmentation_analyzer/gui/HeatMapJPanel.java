@@ -29,7 +29,7 @@ import javax.swing.table.TableColumn;
 import org.jdesktop.swingx.decorator.Highlighter;
 import org.jdesktop.swingx.JXTable;
 import org.jdesktop.swingx.decorator.ColorHighlighter;
-import no.uib.fragmentation_analyzer.filefilters.GifFileFilter;
+import no.uib.fragmentation_analyzer.filefilters.PngFileFilter;
 import no.uib.fragmentation_analyzer.util.UserProperties;
 import org.jdesktop.swingx.decorator.ComponentAdapter;
 import org.jdesktop.swingx.decorator.HighlightPredicate;
@@ -290,7 +290,7 @@ public class HeatMapJPanel extends javax.swing.JPanel {
         saveJMenuItem = new javax.swing.JMenuItem();
         heatMapJXTable = new org.jdesktop.swingx.JXTable();
 
-        saveJMenuItem.setText("Save Heat Map As GIF");
+        saveJMenuItem.setText("Save Heat Map As PNG");
         saveJMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 saveJMenuItemActionPerformed(evt);
@@ -403,7 +403,7 @@ public class HeatMapJPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_formComponentResized
 
     /**
-     * Saves the heat map as a GIF file.
+     * Saves the heat map as a PNG file.
      *
      * @param evt
      */
@@ -412,7 +412,7 @@ public class HeatMapJPanel extends javax.swing.JPanel {
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
 
         JFileChooser chooser = new JFileChooser(userProperties.getLastUsedFolder());
-        chooser.setFileFilter(new GifFileFilter());
+        chooser.setFileFilter(new PngFileFilter());
 
         int returnVal = chooser.showSaveDialog(this);
 
@@ -422,12 +422,13 @@ public class HeatMapJPanel extends javax.swing.JPanel {
 
             String selectedFile = chooser.getSelectedFile().getPath();
 
-            userProperties.setLastUsedFolder(selectedFile);
-            userProperties.saveUserPropertiesToFile();
+            if (!selectedFile.endsWith(".png") && !selectedFile.endsWith(".PNG")) {
+                selectedFile = selectedFile + ".png";
+            }
 
             boolean saveFile = true;
 
-            if (chooser.getSelectedFile().exists()) {
+            if (new File(selectedFile).exists()) {
                 int option = JOptionPane.showConfirmDialog(this,
                         "The file " + selectedFile + " already exists. Overwrite?",
                         "Overwrite?", JOptionPane.YES_NO_CANCEL_OPTION);
@@ -439,16 +440,15 @@ public class HeatMapJPanel extends javax.swing.JPanel {
 
             if (saveFile) {
 
-                if (!selectedFile.endsWith(".gif") && !selectedFile.endsWith(".GIF")) {
-                    selectedFile = selectedFile + ".gif";
-                }
+                userProperties.setLastUsedFolder(selectedFile);
+                userProperties.saveUserPropertiesToFile();
 
                 try {
                     File fileName = new File(selectedFile);
                     Image img = createImage(getWidth(), getHeight());
                     Graphics g = img.getGraphics();
                     paint(g);
-                    ImageIO.write(toBufferedImage(img), "gif", fileName);
+                    ImageIO.write(toBufferedImage(img), "png", fileName);
                     JOptionPane.showMessageDialog(this, "Heat map saved to " + fileName.toString(),
                             "Heat Map Saved", JOptionPane.INFORMATION_MESSAGE);
                     g.dispose();

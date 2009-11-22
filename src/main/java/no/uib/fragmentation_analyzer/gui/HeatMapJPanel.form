@@ -10,7 +10,7 @@
       <SubComponents>
         <MenuItem class="javax.swing.JMenuItem" name="saveJMenuItem">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Save Heat Map As GIF"/>
+            <Property name="text" type="java.lang.String" value="Save Heat Map As PNG"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="saveJMenuItemActionPerformed"/>

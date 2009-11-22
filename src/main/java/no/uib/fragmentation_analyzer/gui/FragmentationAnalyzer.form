@@ -42,6 +42,14 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="setTitleJMenuItemActionPerformed"/>
           </Events>
         </MenuItem>
+        <MenuItem class="javax.swing.JMenuItem" name="exportAsSvgJMenuItem">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Export As SVG"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="exportAsSvgJMenuItemActionPerformed"/>
+          </Events>
+        </MenuItem>
         <Component class="javax.swing.JSeparator" name="jSeparator2">
         </Component>
         <MenuItem class="javax.swing.JMenuItem" name="showLegendsJMenuItem">
@@ -78,13 +86,13 @@
         </MenuItem>
         <Component class="javax.swing.JSeparator" name="jSeparator1">
         </Component>
-        <MenuItem class="javax.swing.JMenuItem" name="removeAllInternalFramesJMenuItem">
+        <MenuItem class="javax.swing.JMenuItem" name="closeAllInternalFramesJMenuItem">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Remove All"/>
-            <Property name="toolTipText" type="java.lang.String" value="Remove All Plots/Analyes"/>
+            <Property name="text" type="java.lang.String" value="Close All"/>
+            <Property name="toolTipText" type="java.lang.String" value="Close All Plots/Analyes"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="removeAllInternalFramesJMenuItemActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="closeAllInternalFramesJMenuItemActionPerformed"/>
           </Events>
         </MenuItem>
       </SubComponents>

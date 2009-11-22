@@ -4,14 +4,14 @@ import java.io.File;
 import javax.swing.filechooser.*;
 
 /**
- * File filter for *.gif files.
+ * File filter for *.png files.
  *
  * @author  Harald Barsnes
  */
-public class GifFileFilter extends FileFilter {
+public class PngFileFilter extends FileFilter {
     
     /**
-     * Accept all directories, *.gif files.
+     * Accept all directories, *.png files.
      *
      * @param f
      * @return boolean
@@ -23,8 +23,8 @@ public class GifFileFilter extends FileFilter {
         
         String extension = FileFilterUtils.getExtension(f);
         if (extension != null) {
-            if (extension.equals(FileFilterUtils.gif)
-                    || extension.equals(FileFilterUtils.GIF)){
+            if (extension.equals(FileFilterUtils.png)
+                    || extension.equals(FileFilterUtils.PNG)){
                 return true;
             } 
             else {
@@ -40,6 +40,6 @@ public class GifFileFilter extends FileFilter {
      * @return String
      */
     public java.lang.String getDescription() {
-        return "*.gif";
+        return "*.png";
     }
 }
