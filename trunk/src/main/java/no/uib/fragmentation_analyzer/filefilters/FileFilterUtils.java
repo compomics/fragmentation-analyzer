@@ -34,6 +34,8 @@ public class FileFilterUtils {
     public final static String omx = "omx";
     public final static String ms2 = "ms2";
     public final static String gif = "gif";
+    public final static String png = "png";
+    public final static String svg = "svg";
     public final static String DAT = "DAT";
     public final static String XML = "XML";
     public final static String MGF = "MGF";
@@ -54,6 +56,8 @@ public class FileFilterUtils {
     public final static String PEPXML = "PEPXML";
     public final static String TXT = "TXT";
     public final static String GIF = "GIF";
+    public final static String PNG = "PNG";
+    public final static String SVG = "SVG";
 
     /**
      * Get the extension of a file.

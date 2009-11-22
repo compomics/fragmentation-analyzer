@@ -49,7 +49,9 @@ import java.util.Vector;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
@@ -300,13 +302,14 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         showBoxPlotToolBarJMenuItem = new javax.swing.JMenuItem();
         showDataSeriesSelectionJMenuItem = new javax.swing.JMenuItem();
         setTitleJMenuItem = new javax.swing.JMenuItem();
+        exportAsSvgJMenuItem = new javax.swing.JMenuItem();
         jSeparator2 = new javax.swing.JSeparator();
         showLegendsJMenuItem = new javax.swing.JMenuItem();
         showMarkersJMenuItem = new javax.swing.JMenuItem();
         showAverageJMenuItem = new javax.swing.JMenuItem();
         showMaxMinJMenuItem = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JSeparator();
-        removeAllInternalFramesJMenuItem = new javax.swing.JMenuItem();
+        closeAllInternalFramesJMenuItem = new javax.swing.JMenuItem();
         selectIdentificationsJPopupMenu = new javax.swing.JPopupMenu();
         selectAllIdentificationsJMenuItem = new javax.swing.JMenuItem();
         invertSelectionIdentificationsJMenuItem = new javax.swing.JMenuItem();
@@ -470,6 +473,14 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
             }
         });
         internalFramesJPopupMenu.add(setTitleJMenuItem);
+
+        exportAsSvgJMenuItem.setText("Export As SVG");
+        exportAsSvgJMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                exportAsSvgJMenuItemActionPerformed(evt);
+            }
+        });
+        internalFramesJPopupMenu.add(exportAsSvgJMenuItem);
         internalFramesJPopupMenu.add(jSeparator2);
 
         showLegendsJMenuItem.setText("Hide Legend");
@@ -505,14 +516,14 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         internalFramesJPopupMenu.add(showMaxMinJMenuItem);
         internalFramesJPopupMenu.add(jSeparator1);
 
-        removeAllInternalFramesJMenuItem.setText("Remove All");
-        removeAllInternalFramesJMenuItem.setToolTipText("Remove All Plots/Analyes");
-        removeAllInternalFramesJMenuItem.addActionListener(new java.awt.event.ActionListener() {
+        closeAllInternalFramesJMenuItem.setText("Close All");
+        closeAllInternalFramesJMenuItem.setToolTipText("Close All Plots/Analyes");
+        closeAllInternalFramesJMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                removeAllInternalFramesJMenuItemActionPerformed(evt);
+                closeAllInternalFramesJMenuItemActionPerformed(evt);
             }
         });
-        internalFramesJPopupMenu.add(removeAllInternalFramesJMenuItem);
+        internalFramesJPopupMenu.add(closeAllInternalFramesJMenuItem);
 
         selectAllIdentificationsJMenuItem.setText("Select All");
         selectAllIdentificationsJMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -3652,7 +3663,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                 fragmentIonLowerThreshold, fragmentIonUpperThreshold, significanceColorCoding);
 
         FragmentationAnalyzerJInternalFrame internalFrameHeatMap = new FragmentationAnalyzerJInternalFrame(
-                title + "(" + fragmentIonLowerThreshold + "-" + fragmentIonUpperThreshold + ")",
+                title + " (" + fragmentIonLowerThreshold + "-" + fragmentIonUpperThreshold + ")",
                 true, true, true, null, "HeatMap", internalFrameUniqueIdCounter);
 
         HeatMapJPanel heatMapJPanel = new HeatMapJPanel(userProperties, heatMapData);
@@ -5250,7 +5261,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
      *
      * @param evt
      */
-    private void removeAllInternalFramesJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeAllInternalFramesJMenuItemActionPerformed
+    private void closeAllInternalFramesJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closeAllInternalFramesJMenuItemActionPerformed
 
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
 
@@ -5283,7 +5294,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         internalFrameIsMaximized = false;
 
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-    }//GEN-LAST:event_removeAllInternalFramesJMenuItemActionPerformed
+    }//GEN-LAST:event_closeAllInternalFramesJMenuItemActionPerformed
 
     /**
      * Filters the annotations and returns the annotations matching the currently selected list.
@@ -6524,6 +6535,104 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
     private void peptideLengthJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_peptideLengthJMenuItemActionPerformed
         new PeptideLength(this, true);
     }//GEN-LAST:event_peptideLengthJMenuItemActionPerformed
+
+    /**
+     * Tries to save the plot to an SVG file.
+     *
+     * @param evt
+     */
+    private void exportAsSvgJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportAsSvgJMenuItemActionPerformed
+
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
+
+        Iterator<Integer> iterator = properties.getAllInternalFrames().keySet().iterator();
+
+        boolean selectedFrameFound = false;
+
+        FragmentationAnalyzerJInternalFrame currentFrame = null;
+
+        // find the currently selected internal frame
+        while (iterator.hasNext() && !selectedFrameFound) {
+            Integer key = iterator.next();
+
+            currentFrame = properties.getAllInternalFrames().get(key);
+
+            if (currentFrame.isSelected()) {
+                selectedFrameFound = true;
+            }
+        }
+
+        if(selectedFrameFound){
+
+            this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
+
+            JFileChooser chooser = new JFileChooser(userProperties.getLastUsedFolder());
+            chooser.setSelectedFile(new File(currentFrame.getTitle()));
+            //chooser.setFileFilter(new SvgFileFilter());
+
+            int returnVal = chooser.showSaveDialog(this);
+
+            this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+
+            if (returnVal == JFileChooser.APPROVE_OPTION) {
+
+                String selectedFile = chooser.getSelectedFile().getPath();
+
+                if (!selectedFile.endsWith(".svg") && !selectedFile.endsWith(".SVG")) {
+                    selectedFile = selectedFile + ".svg";
+                }
+
+                boolean saveFile = true;
+
+                if (new File(selectedFile).exists()) {
+                    int option = JOptionPane.showConfirmDialog(this,
+                            "The file " + selectedFile + " already exists. Overwrite?",
+                            "Overwrite?", JOptionPane.YES_NO_CANCEL_OPTION);
+
+                    if (option != JOptionPane.YES_OPTION) {
+                        saveFile = false;
+                    }
+                }
+
+                if (saveFile) {
+
+                    userProperties.setLastUsedFolder(selectedFile);
+                    userProperties.saveUserPropertiesToFile();
+                
+                    try {
+
+                        this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
+
+                        if(currentFrame.getChartPanel() != null){
+                            PlotUtil.exportChartAsSVG(currentFrame.getChartPanel().getChart(), currentFrame.getChartPanel().getBounds(),
+                                new File(selectedFile));
+                        } else {
+
+                            JPanel tempPanel = ((JPanel) currentFrame.getContentPane().getComponent(0));
+
+                            PlotUtil.exportJPanelAsSVG(tempPanel, tempPanel.getBounds(),
+                                new File(selectedFile));
+                        }
+
+                        this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+
+                        JOptionPane.showMessageDialog(this, "Plot saved to " + selectedFile,
+                                "Plot Saved", JOptionPane.INFORMATION_MESSAGE);
+
+                    } catch(IOException e){
+                        JOptionPane.showMessageDialog(null,
+                                "An error occured when exporting the plot. " +
+                                "See ../Properties/ErrorLog.txt for more details.",
+                                "Error Exporting Plot", JOptionPane.ERROR_MESSAGE);
+                        Util.writeToErrorLog("Error exporting to SVG: ");
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_exportAsSvgJMenuItemActionPerformed
 
     /**
      * Selects the given number of peptides of the given length.
@@ -7775,6 +7884,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
     private javax.swing.JCheckBox chargeOneJCheckBox;
     private javax.swing.JCheckBox chargeOverTwoJCheckBox;
     private javax.swing.JCheckBox chargeTwoJCheckBox;
+    private javax.swing.JMenuItem closeAllInternalFramesJMenuItem;
     private javax.swing.JComboBox combineSearchResultsJComboBox;
     private javax.swing.JComboBox combineSpectraJComboBox;
     private javax.swing.JComboBox daOrPpmSearchResultsJComboBox;
@@ -7783,6 +7893,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
     private javax.swing.JMenuItem deselectHighlightedSpectraJMenuItem;
     private javax.swing.JMenu editMenu;
     private javax.swing.JMenuItem exitJMenuItem;
+    private javax.swing.JMenuItem exportAsSvgJMenuItem;
     private javax.swing.JMenu fileJMenu;
     private javax.swing.JRadioButton generalSearchJRadioButton;
     private javax.swing.JMenu helpJMenu;
@@ -7834,7 +7945,6 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
     private javax.swing.JDesktopPane plotsAndAnalysesJDesktopPane;
     private javax.swing.JScrollPane plotsAndAnalysesJScrollPane;
     private javax.swing.JMenuItem preferencesJMenuItem;
-    private javax.swing.JMenuItem removeAllInternalFramesJMenuItem;
     private javax.swing.JScrollPane resultsJScrollPane;
     private org.jdesktop.swingx.JXTaskPaneContainer resultsJXTaskPaneContainer;
     private javax.swing.ButtonGroup searchButtonGroup;

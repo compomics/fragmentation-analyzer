@@ -3,10 +3,18 @@ package no.uib.fragmentation_analyzer.util;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Rectangle;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Random;
+import javax.swing.JPanel;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.CategoryAxis;
@@ -42,6 +50,10 @@ import org.jfree.ui.RectangleInsets;
 import org.jfree.ui.TextAnchor;
 import org.apache.commons.math.stat.correlation.SpearmansCorrelation;
 import org.apache.commons.math.stat.correlation.PearsonsCorrelation;
+import org.w3c.dom.DOMImplementation;
+import org.apache.batik.dom.GenericDOMImplementation;
+import org.w3c.dom.Document;
+import org.apache.batik.svggen.SVGGraphics2D;
 
 /**
  * Includes help methods that are used when plotting.
@@ -135,7 +147,7 @@ public class PlotUtil {
      */
     public static String[][] getHeatMapData(
             HashMap<String, double[][]> data, int[] totalNumberOfSpectraOfGivenLength,
-            String fragmentIonType, UserProperties userProperties, 
+            String fragmentIonType, UserProperties userProperties,
             int fragmentIonLowerThreshold, int fragmentIonUpperThreshold,
             boolean significanceColorCoding) {
 
@@ -150,7 +162,7 @@ public class PlotUtil {
             // find the significance cut-off level
             double significanceLevel = 0.0;
 
-            if(significanceColorCoding){
+            if (significanceColorCoding) {
                 significanceLevel = findSignificanceLevel(currentData, fragmentIonLowerThreshold,
                         fragmentIonUpperThreshold, userProperties.useSpearmansCorrelation());
             }
@@ -194,10 +206,10 @@ public class PlotUtil {
             }
 
 
-            if(debug){
+            if (debug) {
                 System.out.println("\naverage values:");
 
-                for(int i=0; i<averageValues.length; i++){
+                for (int i = 0; i < averageValues.length; i++) {
                     System.out.println(averageValues[i]);
                 }
 
@@ -205,8 +217,8 @@ public class PlotUtil {
                 System.out.println("\ncurrent data:");
 
                 // print out the contents of the data array
-                for(int i=1; i<currentData.length; i++){
-                    for(int j=0; j<currentData[0].length; j++){
+                for (int i = 1; i < currentData.length; i++) {
+                    for (int j = 0; j < currentData[0].length; j++) {
                         System.out.print(currentData[i][j] + "\t");
                     }
                     System.out.println();
@@ -232,12 +244,12 @@ public class PlotUtil {
                 for (int k = fragmentIonLowerThreshold; k <= fragmentIonUpperThreshold; k++) {
                     dataSetA[k - fragmentIonLowerThreshold] = currentData[k][i];
 
-                    if(debug){
+                    if (debug) {
                         System.out.println("a: " + dataSetA[k - fragmentIonLowerThreshold]);
                     }
                 }
 
-                if(debug){
+                if (debug) {
                     System.out.println();
                 }
 
@@ -248,12 +260,12 @@ public class PlotUtil {
                     for (int k = fragmentIonLowerThreshold; k <= fragmentIonUpperThreshold; k++) {
                         dataSetB[k - fragmentIonLowerThreshold] = currentData[k][j];
 
-                        if(debug){
+                        if (debug) {
                             System.out.println("b: " + dataSetB[k - fragmentIonLowerThreshold]);
                         }
                     }
 
-                    if(debug){
+                    if (debug) {
                         System.out.println();
                     }
 
@@ -298,12 +310,12 @@ public class PlotUtil {
         }
 
 
-        if(debug){
+        if (debug) {
             System.out.println("\nheat map:");
 
             // print out the contents of the heat map
-            for(int i=0; i<heatMapData.length; i++){
-                for(int j=0; j<heatMapData[0].length; j++){
+            for (int i = 0; i < heatMapData.length; i++) {
+                for (int j = 0; j < heatMapData[0].length; j++) {
                     System.out.print(heatMapData[i][j] + "\t");
                 }
 
@@ -327,10 +339,10 @@ public class PlotUtil {
      * @param significanceColorCoding
      */
     private static void updateCorrelationMatrix(String[][] heatMapData, int rowIndex, int columnIndex,
-            double correlation, double significanceLevel, boolean significanceColorCoding){
+            double correlation, double significanceLevel, boolean significanceColorCoding) {
 
-        if(significanceColorCoding){
-            if(correlation > significanceLevel){
+        if (significanceColorCoding) {
+            if (correlation > significanceLevel) {
                 heatMapData[rowIndex][columnIndex] = "" + 1.0;
             } else {
                 heatMapData[rowIndex][columnIndex] = "" + -1.0;
@@ -348,7 +360,7 @@ public class PlotUtil {
      * @return the 99% significance level
      */
     private static double findSignificanceLevel(double[][] currentData, int fragmentIonLowerThreshold,
-            int fragmentIonUpperThreshold, boolean useSpearmanCorrelation){
+            int fragmentIonUpperThreshold, boolean useSpearmanCorrelation) {
 
         int numberOfPermutations = 10000;
         ArrayList<Double> correlationsList = new ArrayList<Double>();
@@ -360,13 +372,13 @@ public class PlotUtil {
         //       see org.apache.commons.math.stat.ranking.NaturalRanking for details
 
         PearsonsCorrelation pearsonsCorrelation = new PearsonsCorrelation();
-        
+
 
         // add all fragment ion occurence values to a array list
         ArrayList<Double> allValues = new ArrayList<Double>();
 
         for (int i = fragmentIonLowerThreshold; i <= fragmentIonUpperThreshold; i++) {
-            for(int j=0; j<currentData[0].length; j++){
+            for (int j = 0; j < currentData[0].length; j++) {
                 allValues.add(currentData[i][j]);
             }
         }
@@ -379,15 +391,15 @@ public class PlotUtil {
         double[] selectedValuesSampleA = new double[numberOfFragmentIonsUsed];
         double[] selectedValuesSampleB = new double[numberOfFragmentIonsUsed];
 
-        for(int i=0; i< numberOfPermutations; i++){
+        for (int i = 0; i < numberOfPermutations; i++) {
 
             // randomly select the values for sample A
-            for(int j=0; j<selectedValuesSampleA.length; j++){
+            for (int j = 0; j < selectedValuesSampleA.length; j++) {
                 selectedValuesSampleA[j] = allValues.get(randomValues.nextInt(allValues.size()));
             }
 
             // randomly select the values for sample B
-            for(int j=0; j<selectedValuesSampleB.length; j++){
+            for (int j = 0; j < selectedValuesSampleB.length; j++) {
                 selectedValuesSampleB[j] = allValues.get(randomValues.nextInt(allValues.size()));
             }
 
@@ -403,7 +415,7 @@ public class PlotUtil {
         java.util.Collections.sort(correlationsList);
 
         // find the 99% significance cut-off value
-        int cutOffIndeex = new Double(correlationsList.size()*0.99).intValue();
+        int cutOffIndeex = new Double(correlationsList.size() * 0.99).intValue();
 
         // System.out.println(cutOffIndeex + ": " + correlationsList.get(cutOffIndeex));
 
@@ -1253,5 +1265,63 @@ public class PlotUtil {
         }
 
         return chart;
+    }
+
+    /**
+     * Exports a JFreeChart to an SVG file.
+     *
+     * @param chart JFreeChart to export
+     * @param bounds the dimensions of the viewport
+     * @param svgFile the output file.
+     * @throws IOException if writing the svgFile fails.
+     */
+    public static void exportChartAsSVG(JFreeChart chart, Rectangle bounds, File svgFile) throws IOException {
+
+        // Get a DOMImplementation and create an XML document
+        DOMImplementation domImpl =
+                 GenericDOMImplementation.getDOMImplementation();
+        Document document = domImpl.createDocument(null, "svg", null);
+
+        // Create an instance of the SVG Generator
+        SVGGraphics2D svgGenerator = new SVGGraphics2D(document);
+
+        // draw the chart in the SVG generator
+        chart.draw(svgGenerator, bounds);
+
+        // Write svg file
+        OutputStream outputStream = new FileOutputStream(svgFile);
+        Writer out = new OutputStreamWriter(outputStream, "UTF-8");
+        svgGenerator.stream(out, true /* use css */);
+        outputStream.flush();
+        outputStream.close();
+    }
+
+    /**
+     * Exports the contents of a JPanel to an SVG file.
+     *
+     * @param panel JPanel to export
+     * @param bounds the dimensions of the viewport
+     * @param svgFile the output file.
+     * @throws IOException if writing the svgFile fails.
+     */
+    public static void exportJPanelAsSVG(JPanel panel, Rectangle bounds, File svgFile) throws IOException {
+
+        // Get a DOMImplementation and create an XML document
+        DOMImplementation domImpl =
+                 GenericDOMImplementation.getDOMImplementation();
+        Document document = domImpl.createDocument(null, "svg", null);
+
+        // Create an instance of the SVG Generator
+        SVGGraphics2D svgGenerator = new SVGGraphics2D(document);
+
+        // draw the panel in the SVG generator
+        panel.paintAll(svgGenerator);
+
+        // Write svg file
+        OutputStream outputStream = new FileOutputStream(svgFile);
+        Writer out = new OutputStreamWriter(outputStream, "UTF-8");
+        svgGenerator.stream(out, true /* use css */);
+        outputStream.flush();
+        outputStream.close();
     }
 }
