@@ -259,11 +259,14 @@
             <artifactId>batik-all</artifactId>
             <version>1.6</version>
         </dependency>
+        
+        <!-- not yet used
         <dependency>
             <groupId>batik</groupId>
             <artifactId>pdf-transcoder</artifactId>
             <version>1.0</version>
         </dependency>
+        -->
     </dependencies>
 
 </project>
