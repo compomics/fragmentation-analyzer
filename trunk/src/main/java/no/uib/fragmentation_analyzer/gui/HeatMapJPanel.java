@@ -146,6 +146,7 @@ public class HeatMapJPanel extends javax.swing.JPanel {
 
         // set the column resize type
         heatMapJXTable.setAutoResizeMode(JXTable.AUTO_RESIZE_ALL_COLUMNS);
+        //heatMapJXTable.setHorizontalScrollEnabled(true);
 
         // hide the table grid
         heatMapJXTable.setShowGrid(false, false);
@@ -164,9 +165,9 @@ public class HeatMapJPanel extends javax.swing.JPanel {
         for (int i = 0; i < (numberOfColorLevels / 2); i++) {
 
             final Double lowerRange = new Double(-1.0 + (i * distanceBetweenCorrelationLevels));
-            final Double upperRange = new Double(-1.0 + ((i+1) * distanceBetweenCorrelationLevels));
+            final Double upperRange = new Double(-1.0 + ((i + 1) * distanceBetweenCorrelationLevels));
 
-            final Color backGroundColor = new Color(50-(i*2), 255-(i*10), 0);
+            final Color backGroundColor = new Color(50 - (i * 2), 255 - (i * 10), 0);
 
             //System.out.println("lowerRange: " + lowerRange);
             //System.out.println("upperRange: " + upperRange);
@@ -214,12 +215,12 @@ public class HeatMapJPanel extends javax.swing.JPanel {
         //System.out.println();
 
 
-        for (int i = 0; i < (numberOfColorLevels/2); i++) {
+        for (int i = 0; i < (numberOfColorLevels / 2); i++) {
 
-            final Double lowerRange = new Double(0.0 + distanceBetweenCorrelationLevels*i);
-            final Double upperRange = new Double(0.0 + distanceBetweenCorrelationLevels*(i+1));
+            final Double lowerRange = new Double(0.0 + distanceBetweenCorrelationLevels * i);
+            final Double upperRange = new Double(0.0 + distanceBetweenCorrelationLevels * (i + 1));
 
-            final Color backGroundColor = new Color(15+10*i, 0, 0);
+            final Color backGroundColor = new Color(15 + 10 * i, 0, 0);
 
             //System.out.println("lowerRange: " + lowerRange);
             //System.out.println("upperRange: " + upperRange);
@@ -242,7 +243,7 @@ public class HeatMapJPanel extends javax.swing.JPanel {
                                 return true;
                             }
 
-                            if(upperRange.doubleValue() == 1.0 && tempValue.doubleValue() == upperRange.doubleValue()){
+                            if (upperRange.doubleValue() == 1.0 && tempValue.doubleValue() == upperRange.doubleValue()) {
                                 return true;
                             }
 
@@ -273,7 +274,7 @@ public class HeatMapJPanel extends javax.swing.JPanel {
      *
      * @param toolTip
      */
-    public void setHeatMapToolTip(String toolTip){
+    public void setHeatMapToolTip(String toolTip) {
         heatMapJXTable.setToolTipText(toolTip);
     }
 
@@ -288,6 +289,8 @@ public class HeatMapJPanel extends javax.swing.JPanel {
 
         savePopupMenu = new javax.swing.JPopupMenu();
         saveJMenuItem = new javax.swing.JMenuItem();
+        heatMapJScrollPane = new javax.swing.JScrollPane();
+        scrollPaneJPanel = new javax.swing.JPanel();
         heatMapJXTable = new org.jdesktop.swingx.JXTable();
 
         saveJMenuItem.setText("Save Heat Map As PNG");
@@ -304,6 +307,13 @@ public class HeatMapJPanel extends javax.swing.JPanel {
                 formComponentResized(evt);
             }
         });
+
+        heatMapJScrollPane.setBackground(new java.awt.Color(255, 255, 255));
+        heatMapJScrollPane.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255), 0));
+        heatMapJScrollPane.setOpaque(false);
+        heatMapJScrollPane.setPreferredSize(new java.awt.Dimension(450, 108));
+
+        scrollPaneJPanel.setBackground(new java.awt.Color(255, 255, 255));
 
         heatMapJXTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -334,10 +344,13 @@ public class HeatMapJPanel extends javax.swing.JPanel {
             }
         });
         heatMapJXTable.setToolTipText("<html>\n<font color=\"red\">Red: Positive Linear Correlation</font><br>\n<font color=\"black\">Black: No Linear Correlation</font><br>\n<font color=\"green\">Green: Negative Linear Correlation</font>\n</html>");
-        heatMapJXTable.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
         heatMapJXTable.setFillsViewportHeight(false);
         heatMapJXTable.setFont(heatMapJXTable.getFont().deriveFont(heatMapJXTable.getFont().getSize()-3f));
         heatMapJXTable.setGridColor(new java.awt.Color(255, 255, 255));
+        heatMapJXTable.setHorizontalScrollEnabled(true);
+        heatMapJXTable.setMinimumSize(new java.awt.Dimension(11, 11));
+        heatMapJXTable.setPreferredScrollableViewportSize(new java.awt.Dimension(250, 360));
+        heatMapJXTable.setPreferredSize(new java.awt.Dimension(250, 108));
         heatMapJXTable.setShowGrid(false);
         heatMapJXTable.setSortable(false);
         heatMapJXTable.setTableHeader(null);
@@ -346,7 +359,11 @@ public class HeatMapJPanel extends javax.swing.JPanel {
                 heatMapJXTablejPanelMouseClicked(evt);
             }
         });
-        add(heatMapJXTable);
+        scrollPaneJPanel.add(heatMapJXTable);
+
+        heatMapJScrollPane.setViewportView(scrollPaneJPanel);
+
+        add(heatMapJScrollPane);
     }// </editor-fold>//GEN-END:initComponents
 
     /**
@@ -369,21 +386,44 @@ public class HeatMapJPanel extends javax.swing.JPanel {
      */
     private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
 
+        // update the size of the scroll pane and the heat map relative to the available space
+
         int width = this.getWidth();
         int height = this.getHeight();
 
         int padding = 15;
+        int minimumHeatMapColumnWidth = 18;
+
+        int newScrollPaneSize;
+
+        // this is the minimum size required by the heat map
+        int newHeatMapSize = (heatMapJXTable.getColumnCount() - 1) * minimumHeatMapColumnWidth
+                + heatMapJXTable.getColumn(0).getWidth();
 
         if (width < height) {
-            heatMapJXTable.setPreferredSize(new Dimension(width - padding, width - padding));
+            newScrollPaneSize = width - padding;
         } else {
-            heatMapJXTable.setPreferredSize(new Dimension(height - padding, height - padding));
+            newScrollPaneSize = height - padding;
         }
+
+        // if the minimum size required by the heat map is smaller than the size of the
+        // scroll pane, increase the size of the heat map to cover the whole scroll pane
+        if (newHeatMapSize < newScrollPaneSize) {
+            newHeatMapSize = newScrollPaneSize - 10; // some padding seems to be needed
+        }
+
+        // set the size of the scroll pane to the maximum square possible inside the panel
+        heatMapJScrollPane.setPreferredSize(new Dimension(newScrollPaneSize, newScrollPaneSize));
+
+        // set the size of the heat map so that scrollbars are shown if it is too big for the scrollpane
+        heatMapJXTable.setPreferredSize(new Dimension(newHeatMapSize, newHeatMapSize));
 
         this.revalidate();
         repaint();
 
 
+        // set the horizontal size of the rows
+        // (the columns will be automatically taken care of)
         for (int i = 1; i < heatMapJXTable.getRowCount(); i++) {
             heatMapJXTable.setRowHeight(i, heatMapJXTable.getColumn(1).getWidth());
         }
@@ -395,6 +435,7 @@ public class HeatMapJPanel extends javax.swing.JPanel {
             public void run() {
                 repaint();
 
+                // set the column size again (seems to be needed)
                 for (int i = 1; i < heatMapJXTable.getRowCount(); i++) {
                     heatMapJXTable.setRowHeight(i, heatMapJXTable.getColumn(1).getWidth());
                 }
@@ -459,10 +500,21 @@ public class HeatMapJPanel extends javax.swing.JPanel {
         }
 }//GEN-LAST:event_saveJMenuItemActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JScrollPane heatMapJScrollPane;
     private org.jdesktop.swingx.JXTable heatMapJXTable;
     private javax.swing.JMenuItem saveJMenuItem;
     private javax.swing.JPopupMenu savePopupMenu;
+    private javax.swing.JPanel scrollPaneJPanel;
     // End of variables declaration//GEN-END:variables
+
+    /**
+     * Returns the heat map table.
+     * 
+     * @return the heat map table
+     */
+    public JXTable getHeatMap() {
+        return heatMapJXTable;
+    }
 
     /**
      * This method returns a buffered image with the contents of an image.

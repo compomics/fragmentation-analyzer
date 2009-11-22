@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Random;
+import javax.swing.JComponent;
 import javax.swing.JPanel;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
@@ -54,6 +55,7 @@ import org.w3c.dom.DOMImplementation;
 import org.apache.batik.dom.GenericDOMImplementation;
 import org.w3c.dom.Document;
 import org.apache.batik.svggen.SVGGraphics2D;
+import org.jdesktop.swingx.JXTable;
 
 /**
  * Includes help methods that are used when plotting.
@@ -1345,12 +1347,12 @@ public class PlotUtil {
     /**
      * Exports the contents of a JPanel to an SVG file.
      *
-     * @param panel JPanel to export
+     * @param component JComponent to export
      * @param bounds the dimensions of the viewport
      * @param svgFile the output file.
      * @throws IOException if writing the svgFile fails.
      */
-    public static void exportJPanelAsSVG(JPanel panel, Rectangle bounds, File svgFile) throws IOException {
+    public static void exportJComponentAsSVG(JComponent component, Rectangle bounds, File svgFile) throws IOException {
 
         // Get a DOMImplementation and create an XML document
         DOMImplementation domImpl =
@@ -1361,7 +1363,7 @@ public class PlotUtil {
         SVGGraphics2D svgGenerator = new SVGGraphics2D(document);
 
         // draw the panel in the SVG generator
-        panel.paintAll(svgGenerator);
+        component.paintAll(svgGenerator);
 
         // Write svg file
         OutputStream outputStream = new FileOutputStream(svgFile);
