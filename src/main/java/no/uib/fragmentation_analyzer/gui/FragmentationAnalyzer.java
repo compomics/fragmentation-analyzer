@@ -61,6 +61,7 @@ import javax.swing.event.InternalFrameAdapter;
 import javax.swing.event.InternalFrameEvent;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 import javax.swing.table.DefaultTableModel;
+import no.uib.fragmentation_analyzer.filefilters.SvgFileFilter;
 import no.uib.fragmentation_analyzer.util.AlignedListCellRenderer;
 import no.uib.fragmentation_analyzer.util.BareBonesBrowserLaunch;
 import no.uib.fragmentation_analyzer.util.FragmentIon;
@@ -3242,7 +3243,9 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
                                 if (tempLength > longestPeptideSequenceLength) {
                                     longestPeptideSequenceLength = tempLength;
-                                } else {
+                                }
+
+                                if (tempLength < shortestPeptideLength) {
                                     shortestPeptideLength = tempLength;
                                 }
                             }
@@ -6565,14 +6568,24 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         if(selectedFrameFound){
 
             this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
+            currentFrame.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
 
             JFileChooser chooser = new JFileChooser(userProperties.getLastUsedFolder());
-            chooser.setSelectedFile(new File(currentFrame.getTitle()));
-            //chooser.setFileFilter(new SvgFileFilter());
+
+            // propse a title equal to the title of the internal frame
+            // (note that some characters needs to be replaced)
+            String tempTitle = currentFrame.getTitle();
+            tempTitle = tempTitle.replaceAll("\\|", ", ");
+            tempTitle = tempTitle.replaceAll(":", " ");
+            chooser.setSelectedFile(new File(tempTitle));
+
+            // set the svg file filter
+            chooser.setFileFilter(new SvgFileFilter());
 
             int returnVal = chooser.showSaveDialog(this);
 
             this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+            currentFrame.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
             if (returnVal == JFileChooser.APPROVE_OPTION) {
 
@@ -6602,19 +6615,29 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                     try {
 
                         this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
+                        currentFrame.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
 
                         if(currentFrame.getChartPanel() != null){
                             PlotUtil.exportChartAsSVG(currentFrame.getChartPanel().getChart(), currentFrame.getChartPanel().getBounds(),
                                 new File(selectedFile));
                         } else {
 
-                            JPanel tempPanel = ((JPanel) currentFrame.getContentPane().getComponent(0));
+                            if(currentFrame.getInternalFrameType().equalsIgnoreCase("HeatMap")){
+                                JXTable tempTable = ((HeatMapJPanel) currentFrame.getContentPane().getComponent(0)).getHeatMap();
 
-                            PlotUtil.exportJPanelAsSVG(tempPanel, tempPanel.getBounds(),
-                                new File(selectedFile));
+                                PlotUtil.exportJComponentAsSVG(tempTable, tempTable.getBounds(),
+                                    new File(selectedFile));
+
+                            } else {
+                                JPanel tempPanel = (JPanel) currentFrame.getContentPane().getComponent(0);
+
+                                PlotUtil.exportJComponentAsSVG(tempPanel, tempPanel.getBounds(),
+                                    new File(selectedFile));
+                            }
                         }
 
                         this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+                        currentFrame.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
                         JOptionPane.showMessageDialog(this, "Plot saved to " + selectedFile,
                                 "Plot Saved", JOptionPane.INFORMATION_MESSAGE);
@@ -6632,6 +6655,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         }
 
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        currentFrame.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_exportAsSvgJMenuItemActionPerformed
 
     /**

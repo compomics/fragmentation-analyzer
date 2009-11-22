@@ -42,80 +42,122 @@
 
   <Layout class="org.netbeans.modules.form.compat2.layouts.DesignFlowLayout"/>
   <SubComponents>
-    <Component class="org.jdesktop.swingx.JXTable" name="heatMapJXTable">
+    <Container class="javax.swing.JScrollPane" name="heatMapJScrollPane">
       <Properties>
-        <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-          <Table columnCount="6" rowCount="6">
-            <Column editable="false" title=" " type="java.lang.String">
-              <Data value=""/>
-              <Data value="S1"/>
-              <Data value="S2"/>
-              <Data value="S3"/>
-              <Data value="S4"/>
-              <Data value="Avg"/>
-            </Column>
-            <Column editable="false" title="S1" type="java.lang.String">
-              <Data value="S1"/>
-              <Data value="0.14"/>
-              <Data value="0.26"/>
-              <Data value="0.333"/>
-              <Data value="0.10"/>
-              <Data value="0.42"/>
-            </Column>
-            <Column editable="false" title="S2" type="java.lang.String">
-              <Data value="S2"/>
-              <Data value="0.45"/>
-              <Data value="0.37"/>
-              <Data value="0.28"/>
-              <Data value="0.10"/>
-              <Data value="0.11"/>
-            </Column>
-            <Column editable="false" title="S3" type="java.lang.String">
-              <Data value="S3"/>
-              <Data value="0.13"/>
-              <Data value="0.24"/>
-              <Data value="0.16"/>
-              <Data value="0.17"/>
-              <Data value="0.28"/>
-            </Column>
-            <Column editable="false" title="S4" type="java.lang.String">
-              <Data value="S4"/>
-              <Data value="0.15"/>
-              <Data value="0.2"/>
-              <Data value="0.37"/>
-              <Data value="0.32"/>
-              <Data value="0.37"/>
-            </Column>
-            <Column editable="false" title="Avg" type="java.lang.String">
-              <Data value="Avg"/>
-              <Data value="0.32"/>
-              <Data value="0.44"/>
-              <Data value="0.34"/>
-              <Data value="0.33"/>
-              <Data value="0.31"/>
-            </Column>
-          </Table>
-        </Property>
-        <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;&lt;font color=&quot;red&quot;&gt;Red: Positive Linear Correlation&lt;/font&gt;&lt;br&gt;&#xa;&lt;font color=&quot;black&quot;&gt;Black: No Linear Correlation&lt;/font&gt;&lt;br&gt;&#xa;&lt;font color=&quot;green&quot;&gt;Green: Negative Linear Correlation&lt;/font&gt;&#xa;&lt;/html&gt;"/>
-        <Property name="autoResizeMode" type="int" value="4"/>
-        <Property name="fillsViewportHeight" type="boolean" value="false"/>
-        <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.editors2.FontEditor">
-          <FontInfo relative="true">
-            <Font component="heatMapJXTable" property="font" relativeSize="true" size="-3"/>
-          </FontInfo>
-        </Property>
-        <Property name="gridColor" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+        <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="ff" green="ff" red="ff" type="rgb"/>
         </Property>
-        <Property name="showGrid" type="boolean" value="false"/>
-        <Property name="sortable" type="boolean" value="false"/>
-        <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-          <Connection code="null" type="code"/>
+        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+          <Border info="org.netbeans.modules.form.compat2.border.LineBorderInfo">
+            <LineBorder thickness="0">
+              <Color PropertyName="color" blue="ff" green="ff" red="ff" type="rgb"/>
+            </LineBorder>
+          </Border>
+        </Property>
+        <Property name="opaque" type="boolean" value="false"/>
+        <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+          <Dimension value="[450, 108]"/>
         </Property>
       </Properties>
-      <Events>
-        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="heatMapJXTablejPanelMouseClicked"/>
-      </Events>
-    </Component>
+
+      <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+      <SubComponents>
+        <Container class="javax.swing.JPanel" name="scrollPaneJPanel">
+          <Properties>
+            <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="ff" green="ff" red="ff" type="rgb"/>
+            </Property>
+          </Properties>
+
+          <Layout class="org.netbeans.modules.form.compat2.layouts.DesignFlowLayout"/>
+          <SubComponents>
+            <Component class="org.jdesktop.swingx.JXTable" name="heatMapJXTable">
+              <Properties>
+                <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
+                  <Table columnCount="6" rowCount="6">
+                    <Column editable="false" title=" " type="java.lang.String">
+                      <Data value=""/>
+                      <Data value="S1"/>
+                      <Data value="S2"/>
+                      <Data value="S3"/>
+                      <Data value="S4"/>
+                      <Data value="Avg"/>
+                    </Column>
+                    <Column editable="false" title="S1" type="java.lang.String">
+                      <Data value="S1"/>
+                      <Data value="0.14"/>
+                      <Data value="0.26"/>
+                      <Data value="0.333"/>
+                      <Data value="0.10"/>
+                      <Data value="0.42"/>
+                    </Column>
+                    <Column editable="false" title="S2" type="java.lang.String">
+                      <Data value="S2"/>
+                      <Data value="0.45"/>
+                      <Data value="0.37"/>
+                      <Data value="0.28"/>
+                      <Data value="0.10"/>
+                      <Data value="0.11"/>
+                    </Column>
+                    <Column editable="false" title="S3" type="java.lang.String">
+                      <Data value="S3"/>
+                      <Data value="0.13"/>
+                      <Data value="0.24"/>
+                      <Data value="0.16"/>
+                      <Data value="0.17"/>
+                      <Data value="0.28"/>
+                    </Column>
+                    <Column editable="false" title="S4" type="java.lang.String">
+                      <Data value="S4"/>
+                      <Data value="0.15"/>
+                      <Data value="0.2"/>
+                      <Data value="0.37"/>
+                      <Data value="0.32"/>
+                      <Data value="0.37"/>
+                    </Column>
+                    <Column editable="false" title="Avg" type="java.lang.String">
+                      <Data value="Avg"/>
+                      <Data value="0.32"/>
+                      <Data value="0.44"/>
+                      <Data value="0.34"/>
+                      <Data value="0.33"/>
+                      <Data value="0.31"/>
+                    </Column>
+                  </Table>
+                </Property>
+                <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;&lt;font color=&quot;red&quot;&gt;Red: Positive Linear Correlation&lt;/font&gt;&lt;br&gt;&#xa;&lt;font color=&quot;black&quot;&gt;Black: No Linear Correlation&lt;/font&gt;&lt;br&gt;&#xa;&lt;font color=&quot;green&quot;&gt;Green: Negative Linear Correlation&lt;/font&gt;&#xa;&lt;/html&gt;"/>
+                <Property name="fillsViewportHeight" type="boolean" value="false"/>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.editors2.FontEditor">
+                  <FontInfo relative="true">
+                    <Font component="heatMapJXTable" property="font" relativeSize="true" size="-3"/>
+                  </FontInfo>
+                </Property>
+                <Property name="gridColor" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                  <Color blue="ff" green="ff" red="ff" type="rgb"/>
+                </Property>
+                <Property name="horizontalScrollEnabled" type="boolean" value="true"/>
+                <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                  <Dimension value="[11, 11]"/>
+                </Property>
+                <Property name="preferredScrollableViewportSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                  <Dimension value="[250, 360]"/>
+                </Property>
+                <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                  <Dimension value="[250, 108]"/>
+                </Property>
+                <Property name="showGrid" type="boolean" value="false"/>
+                <Property name="sortable" type="boolean" value="false"/>
+                <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection code="null" type="code"/>
+                </Property>
+              </Properties>
+              <Events>
+                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="heatMapJXTablejPanelMouseClicked"/>
+              </Events>
+            </Component>
+          </SubComponents>
+        </Container>
+      </SubComponents>
+    </Container>
   </SubComponents>
 </Form>
