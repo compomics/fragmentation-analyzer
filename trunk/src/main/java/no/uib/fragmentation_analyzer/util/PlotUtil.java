@@ -391,17 +391,31 @@ public class PlotUtil {
         double[] selectedValuesSampleA = new double[numberOfFragmentIonsUsed];
         double[] selectedValuesSampleB = new double[numberOfFragmentIonsUsed];
 
+        ArrayList<Integer> selectedIndicesSampleA = new ArrayList<Integer>();
+        ArrayList<Integer> selectedIndicesSampleB = new ArrayList<Integer>();
+
         for (int i = 0; i < numberOfPermutations; i++) {
 
-            // randomly select the values for sample A
-            for (int j = 0; j < selectedValuesSampleA.length; j++) {
-                selectedValuesSampleA[j] = allValues.get(randomValues.nextInt(allValues.size()));
-            }
+            // old version
+            //// randomly select the values for sample A
+            //for (int j = 0; j < selectedValuesSampleA.length; j++) {
+            //    selectedValuesSampleA[j] = allValues.get(randomValues.nextInt(allValues.size()));
+            //}
+            //
+            //// randomly select the values for sample B
+            //for (int j = 0; j < selectedValuesSampleB.length; j++) {
+            //    selectedValuesSampleB[j] = allValues.get(randomValues.nextInt(allValues.size()));
+            //}
 
-            // randomly select the values for sample B
-            for (int j = 0; j < selectedValuesSampleB.length; j++) {
-                selectedValuesSampleB[j] = allValues.get(randomValues.nextInt(allValues.size()));
-            }
+            
+            // randomly select the values for sample A
+            // the sample will be added to the selectedValuesSampleA array
+            randomSample(selectedIndicesSampleA, selectedValuesSampleA, allValues, randomValues);
+
+            // randomly select the values list sample B
+            // the sample will be added to the selectedValuesSampleB array
+            randomSample(selectedIndicesSampleB, selectedValuesSampleB, allValues, randomValues);
+
 
             // correlate the two sample sets
             if (useSpearmanCorrelation) {
@@ -420,6 +434,38 @@ public class PlotUtil {
         // System.out.println(cutOffIndeex + ": " + correlationsList.get(cutOffIndeex));
 
         return correlationsList.get(cutOffIndeex);
+    }
+
+    /**
+     * Returns a random sample from the all values array list. The
+     * size of the sample will be equal to the length of the given
+     * sample array.
+     *
+     * @param selectedIndices
+     * @param selectedSample
+     * @param allValues
+     * @param randomValues
+     */
+    private static void randomSample(ArrayList<Integer> selectedIndices, double[] selectedSample,
+            ArrayList<Double> allValues, Random randomValues){
+
+        selectedIndices.clear();
+
+        while(selectedIndices.size() < selectedSample.length){
+
+            // draw a random index in the all values list
+            int tempIndex = randomValues.nextInt(allValues.size());
+
+            // check if the index has already been selected
+            if(!selectedIndices.contains(new Integer(tempIndex))) {
+                selectedIndices.add(tempIndex);
+            }
+        }
+
+        // create sample using the selected indicies
+        for (int j = 0; j < selectedIndices.size(); j++) {
+            selectedSample[j] = selectedIndices.get(j);
+        }
     }
 
     /**
