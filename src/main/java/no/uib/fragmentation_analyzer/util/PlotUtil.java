@@ -15,7 +15,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Random;
 import javax.swing.JComponent;
-import javax.swing.JPanel;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.CategoryAxis;
@@ -55,7 +54,6 @@ import org.w3c.dom.DOMImplementation;
 import org.apache.batik.dom.GenericDOMImplementation;
 import org.w3c.dom.Document;
 import org.apache.batik.svggen.SVGGraphics2D;
-import org.jdesktop.swingx.JXTable;
 
 /**
  * Includes help methods that are used when plotting.

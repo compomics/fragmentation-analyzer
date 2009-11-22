@@ -380,7 +380,8 @@ public class HeatMapJPanel extends javax.swing.JPanel {
 
     /**
      * When the panel is resized the heat map is resized to make sure that it is always 
-     * completely visible and rectangular (unless the panel gets too small).
+     * completely visible and rectangular. (Unless the panel gets too small, then scroll
+     * bars are shown).
      *
      * @param evt
      */
