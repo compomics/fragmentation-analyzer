@@ -5,8 +5,8 @@
 
 *Changes in FragmentationAnalyzer v1.4 - (Nov. 23. 2009):*
  * NEW FEATURE: All plots can now be exported as SVG files.
- * NEW FEATURE: Heat Maps with correlation data for comparing fragmentation patterns has been added.
- * NEW FEATURE: Implemented a box plot version of the combined fragment ion probability plot.
+ * NEW FEATURE: Heat Maps with correlation data for comparing fragmentation patterns have been added.
+ * NEW FEATURE: Box plots showing the spead for the combined fragment ion probability plots have been added.
  * NEW FEATURE: Peptide sequence length is now included in the tables. 
  * NEW FEATURE: Implemented a simple way of selecting x peptides of length y in the Search Results table.
  * BUG FIX: The error bars in the fragment ion probability plot is now correctly hidden.
