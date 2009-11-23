@@ -97,12 +97,18 @@ public class FragmentationAnalyzerWrapper {
 
         File tempFile = new File(path);
 
+        String quote = "";
+
+        if(System.getProperty("os.name").lastIndexOf("Windows") != -1){
+            quote = "\"";
+        }
+
         String javaHome = System.getProperty("java.home") + File.separator +
                 "bin" + File.separator;
 
-        cmdLine = javaHome + "java " + options + " -cp "
+        cmdLine = javaHome + "java " + options + " -cp " + quote
                 + new File(tempFile, jarFileName).getAbsolutePath()
-                + " no.uib.fragmentation_analyzer.gui.FragmentationAnalyzer";
+                + quote + " no.uib.fragmentation_analyzer.gui.FragmentationAnalyzer";
 
         if (debug) {
             System.out.println(cmdLine);

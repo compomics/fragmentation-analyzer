@@ -102,7 +102,7 @@ public class Properties {
         this.passwordDatabase = passWord;
     }
 
-        /**
+    /**
      * @return the pattern
      */
     public Pattern getPattern() {

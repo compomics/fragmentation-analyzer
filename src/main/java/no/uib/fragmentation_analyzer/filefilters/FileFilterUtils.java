@@ -36,6 +36,10 @@ public class FileFilterUtils {
     public final static String gif = "gif";
     public final static String png = "png";
     public final static String svg = "svg";
+    public final static String pdf = "pdf";
+    public final static String tiff = "tiff";
+    public final static String jpeg = "jpeg";
+    public final static String jpg = "jpg";
     public final static String DAT = "DAT";
     public final static String XML = "XML";
     public final static String MGF = "MGF";
@@ -58,6 +62,10 @@ public class FileFilterUtils {
     public final static String GIF = "GIF";
     public final static String PNG = "PNG";
     public final static String SVG = "SVG";
+    public final static String PDF = "PDF";
+    public final static String TIFF = "TIFF";
+    public final static String JPG = "JPG";
+    public final static String JPEG = "JPEG";
 
     /**
      * Get the extension of a file.
