@@ -61,11 +61,16 @@ import javax.swing.event.InternalFrameAdapter;
 import javax.swing.event.InternalFrameEvent;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 import javax.swing.table.DefaultTableModel;
+import no.uib.fragmentation_analyzer.filefilters.JpegFileFilter;
+import no.uib.fragmentation_analyzer.filefilters.PdfFileFilter;
+import no.uib.fragmentation_analyzer.filefilters.PngFileFilter;
 import no.uib.fragmentation_analyzer.filefilters.SvgFileFilter;
+import no.uib.fragmentation_analyzer.filefilters.TiffFileFilter;
 import no.uib.fragmentation_analyzer.util.AlignedListCellRenderer;
 import no.uib.fragmentation_analyzer.util.BareBonesBrowserLaunch;
 import no.uib.fragmentation_analyzer.util.FragmentIon;
 import no.uib.fragmentation_analyzer.util.IdentificationTableRow;
+import no.uib.fragmentation_analyzer.util.ImageType;
 import no.uib.fragmentation_analyzer.util.PKLFile;
 import no.uib.fragmentation_analyzer.util.PlotUtil;
 import no.uib.fragmentation_analyzer.util.Properties;
@@ -74,6 +79,7 @@ import no.uib.fragmentation_analyzer.util.SpectrumTableRow;
 import no.uib.fragmentation_analyzer.util.UserProperties;
 import no.uib.fragmentation_analyzer.util.Util;
 import no.uib.fragmentation_analyzer.util.XYZDataPoint;
+import org.apache.batik.transcoder.TranscoderException;
 import org.jdesktop.swingx.JXTable;
 import org.jdesktop.swingx.JXTableHeader;
 import org.jdesktop.swingx.decorator.SortOrder;
@@ -303,7 +309,12 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         showBoxPlotToolBarJMenuItem = new javax.swing.JMenuItem();
         showDataSeriesSelectionJMenuItem = new javax.swing.JMenuItem();
         setTitleJMenuItem = new javax.swing.JMenuItem();
+        exportJMenu = new javax.swing.JMenu();
         exportAsSvgJMenuItem = new javax.swing.JMenuItem();
+        exportAsPdfJMenuItem = new javax.swing.JMenuItem();
+        exportAsTiffJMenuItem = new javax.swing.JMenuItem();
+        exportAsJpgJMenuItem = new javax.swing.JMenuItem();
+        exportAsPngJMenuItem = new javax.swing.JMenuItem();
         jSeparator2 = new javax.swing.JSeparator();
         showLegendsJMenuItem = new javax.swing.JMenuItem();
         showMarkersJMenuItem = new javax.swing.JMenuItem();
@@ -475,13 +486,49 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         });
         internalFramesJPopupMenu.add(setTitleJMenuItem);
 
-        exportAsSvgJMenuItem.setText("Export As SVG");
+        exportJMenu.setText("Export Plot As ...");
+
+        exportAsSvgJMenuItem.setText("SVG");
         exportAsSvgJMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 exportAsSvgJMenuItemActionPerformed(evt);
             }
         });
-        internalFramesJPopupMenu.add(exportAsSvgJMenuItem);
+        exportJMenu.add(exportAsSvgJMenuItem);
+
+        exportAsPdfJMenuItem.setText("PDF");
+        exportAsPdfJMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                exportAsPdfJMenuItemActionPerformed(evt);
+            }
+        });
+        exportJMenu.add(exportAsPdfJMenuItem);
+
+        exportAsTiffJMenuItem.setText("TIFF");
+        exportAsTiffJMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                exportAsTiffJMenuItemActionPerformed(evt);
+            }
+        });
+        exportJMenu.add(exportAsTiffJMenuItem);
+
+        exportAsJpgJMenuItem.setText("JPG");
+        exportAsJpgJMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                exportAsJpgJMenuItemActionPerformed(evt);
+            }
+        });
+        exportJMenu.add(exportAsJpgJMenuItem);
+
+        exportAsPngJMenuItem.setText("PNG");
+        exportAsPngJMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                exportAsPngJMenuItemActionPerformed(evt);
+            }
+        });
+        exportJMenu.add(exportAsPngJMenuItem);
+
+        internalFramesJPopupMenu.add(exportJMenu);
         internalFramesJPopupMenu.add(jSeparator2);
 
         showLegendsJMenuItem.setText("Hide Legend");
@@ -6545,7 +6592,51 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
      * @param evt
      */
     private void exportAsSvgJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportAsSvgJMenuItemActionPerformed
+        exportPlot(ImageType.SVG);
+    }//GEN-LAST:event_exportAsSvgJMenuItemActionPerformed
 
+    /**
+     * Tries to save the plot to an PDF file.
+     *
+     * @param evt
+     */
+    private void exportAsPdfJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportAsPdfJMenuItemActionPerformed
+        exportPlot(ImageType.PDF);
+    }//GEN-LAST:event_exportAsPdfJMenuItemActionPerformed
+
+    /**
+     * Tries to save the plot to an TIFF file.
+     *
+     * @param evt
+     */
+    private void exportAsTiffJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportAsTiffJMenuItemActionPerformed
+        exportPlot(ImageType.TIFF);
+    }//GEN-LAST:event_exportAsTiffJMenuItemActionPerformed
+
+    /**
+     * Tries to save the plot to an JPG file.
+     *
+     * @param evt
+     */
+    private void exportAsJpgJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportAsJpgJMenuItemActionPerformed
+        exportPlot(ImageType.JPEG);
+    }//GEN-LAST:event_exportAsJpgJMenuItemActionPerformed
+
+    /**
+     * Tries to save the plot to an PNG file.
+     *
+     * @param evt
+     */
+    private void exportAsPngJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportAsPngJMenuItemActionPerformed
+        exportPlot(ImageType.PNG);
+    }//GEN-LAST:event_exportAsPngJMenuItemActionPerformed
+
+    /**
+     * Tries to export the plot to the selected format.
+     *
+     * @param imageType
+     */
+    private void exportPlot(ImageType imageType){
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
 
         Iterator<Integer> iterator = properties.getAllInternalFrames().keySet().iterator();
@@ -6577,10 +6668,12 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
             String tempTitle = currentFrame.getTitle();
             tempTitle = tempTitle.replaceAll("\\|", ", ");
             tempTitle = tempTitle.replaceAll(":", " ");
+            tempTitle = tempTitle.replaceAll("<", "(");
+            tempTitle = tempTitle.replaceAll(">", ")");
             chooser.setSelectedFile(new File(tempTitle));
 
-            // set the svg file filter
-            chooser.setFileFilter(new SvgFileFilter());
+            // set the file filter
+            setFileFilter(chooser, imageType);
 
             int returnVal = chooser.showSaveDialog(this);
 
@@ -6591,8 +6684,8 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
                 String selectedFile = chooser.getSelectedFile().getPath();
 
-                if (!selectedFile.endsWith(".svg") && !selectedFile.endsWith(".SVG")) {
-                    selectedFile = selectedFile + ".svg";
+                if (!selectedFile.toLowerCase().endsWith(imageType.getExtension())) {
+                    selectedFile = selectedFile + imageType.getExtension();
                 }
 
                 boolean saveFile = true;
@@ -6611,28 +6704,28 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
                     userProperties.setLastUsedFolder(selectedFile);
                     userProperties.saveUserPropertiesToFile();
-                
+
                     try {
 
                         this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
                         currentFrame.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
 
                         if(currentFrame.getChartPanel() != null){
-                            PlotUtil.exportChartAsSVG(currentFrame.getChartPanel().getChart(), currentFrame.getChartPanel().getBounds(),
-                                new File(selectedFile));
+                            PlotUtil.exportChart(currentFrame.getChartPanel().getChart(), currentFrame.getChartPanel().getBounds(),
+                                new File(selectedFile), imageType);
                         } else {
 
                             if(currentFrame.getInternalFrameType().equalsIgnoreCase("HeatMap")){
                                 JXTable tempTable = ((HeatMapJPanel) currentFrame.getContentPane().getComponent(0)).getHeatMap();
 
-                                PlotUtil.exportJComponentAsSVG(tempTable, tempTable.getBounds(),
-                                    new File(selectedFile));
+                                PlotUtil.exportJComponent(tempTable, tempTable.getBounds(),
+                                    new File(selectedFile), imageType);
 
                             } else {
                                 JPanel tempPanel = (JPanel) currentFrame.getContentPane().getComponent(0);
 
-                                PlotUtil.exportJComponentAsSVG(tempPanel, tempPanel.getBounds(),
-                                    new File(selectedFile));
+                                PlotUtil.exportJComponent(tempPanel, tempPanel.getBounds(),
+                                    new File(selectedFile), imageType);
                             }
                         }
 
@@ -6647,7 +6740,14 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                 "An error occured when exporting the plot. " +
                                 "See ../Properties/ErrorLog.txt for more details.",
                                 "Error Exporting Plot", JOptionPane.ERROR_MESSAGE);
-                        Util.writeToErrorLog("Error exporting to SVG: ");
+                        Util.writeToErrorLog("Error exporting plot: ");
+                        e.printStackTrace();
+                    } catch(TranscoderException e){
+                        JOptionPane.showMessageDialog(null,
+                                "An error occured when exporting the plot. " +
+                                "See ../Properties/ErrorLog.txt for more details.",
+                                "Error Exporting Plot", JOptionPane.ERROR_MESSAGE);
+                        Util.writeToErrorLog("Error exporting plot: ");
                         e.printStackTrace();
                     }
                 }
@@ -6656,7 +6756,27 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         currentFrame.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-    }//GEN-LAST:event_exportAsSvgJMenuItemActionPerformed
+    }
+
+    /**
+     * Sets the image type file filter when exporting plots.
+     *
+     * @param imageType
+     */
+    private void setFileFilter(JFileChooser chooser, ImageType imageType){
+
+        if(imageType == ImageType.SVG){
+            chooser.setFileFilter(new SvgFileFilter());
+        } else if(imageType == ImageType.PDF){
+            chooser.setFileFilter(new PdfFileFilter());
+        } else if(imageType == ImageType.JPEG){
+            chooser.setFileFilter(new JpegFileFilter());
+        } else if(imageType == ImageType.PNG){
+            chooser.setFileFilter(new PngFileFilter());
+        } else if(imageType == ImageType.TIFF){
+            chooser.setFileFilter(new TiffFileFilter());
+        }
+    }
 
     /**
      * Selects the given number of peptides of the given length.
@@ -7917,7 +8037,12 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
     private javax.swing.JMenuItem deselectHighlightedSpectraJMenuItem;
     private javax.swing.JMenu editMenu;
     private javax.swing.JMenuItem exitJMenuItem;
+    private javax.swing.JMenuItem exportAsJpgJMenuItem;
+    private javax.swing.JMenuItem exportAsPdfJMenuItem;
+    private javax.swing.JMenuItem exportAsPngJMenuItem;
     private javax.swing.JMenuItem exportAsSvgJMenuItem;
+    private javax.swing.JMenuItem exportAsTiffJMenuItem;
+    private javax.swing.JMenu exportJMenu;
     private javax.swing.JMenu fileJMenu;
     private javax.swing.JRadioButton generalSearchJRadioButton;
     private javax.swing.JMenu helpJMenu;
