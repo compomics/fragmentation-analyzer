@@ -14,4 +14,4 @@ SignificantScoringFragmentIon: true
 NormalizeIntensites: true
 NumberOfPlotsPerRow: 2
 NumberOfPlotsPerColumn: 2
-UseSpearmansCorrelation = true
+UseSpearmansCorrelation: true
