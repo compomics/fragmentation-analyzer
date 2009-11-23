@@ -3,6 +3,20 @@
 
 ----
 
+*Changes in FragmentationAnalyzer v1.4 - (Nov. 23. 2009):*
+ * NEW FEATURE: All plots can now be exported as SVG files.
+ * NEW FEATURE: Heat Maps with correlation data for comparing fragmentation patterns has been added.
+ * NEW FEATURE: Implemented a box plot version of the combined fragment ion probability plot.
+ * NEW FEATURE: Peptide sequence length is now included in the tables. 
+ * NEW FEATURE: Implemented a simple way of selecting x peptides of length y in the Search Results table.
+ * BUG FIX: The error bars in the fragment ion probability plot is now correctly hidden.
+ * BUG FIX: Removed the data point markers in the combined fragment ion probability plots.
+ * BUG FIX: Fixed a bug in the Single/Combine drop down box for the spectra table.
+ * LIBRARY UPDATE: Commons-Math updated to version 2.0.
+ * LIBRARY UPDATE: New library added: `batik` for SVG file creation.
+
+----
+
 *Changes in FragmentationAnalyzer v1.3.2 - (Nov. 16. 2009):*
  * NEW FEATURE: It is now possible to edit the title of the plots/analyses frames. 
  * FEATURE IMPROVEMENT: The numbers in the results dialog are now formatted, e.g., 12345 becomes 12,345. 
@@ -11,6 +25,8 @@
  * FEATURE IMPROVEMENT: The combined fragment ion probability plots now only use the average value for each peptide sequence to hinder that a more frequent peptide would influence the combined plot more than a less frequent peptide.
  * FEATURE IMPROVEMENT: In combined fragment ion probability plots the upper and lower boundaries can now be shown.
  * BUG FIX: Moved the Help menu to the far right in the menu bar.
+
+Download Count: 3
 
 ----
 
