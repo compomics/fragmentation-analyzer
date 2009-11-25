@@ -3,6 +3,15 @@
 
 ----
 
+*Changes in FragmentationAnalyzer v1.4.1 - (Nov. 25. 2009):*
+
+ * NEW FEATURE: All plots can now be exported as PDF, PNG, JPG and TIFF (in addition to the already supported SVG format).
+ * NEW FEATURE: On Windows platforms `FragmentationAnalyzer` can now be run from paths containing spaces.
+ * BUG FIX: Plot title names containing < or > (mainly for modifications) will now be altered before suggesting them as export plot title. (In order to make the suggested file names valid).
+ * LIBRARY UPDATES: `pdf-transcoder` and `xerces` added for SVG to PDF conversion.
+
+----
+
 *Changes in FragmentationAnalyzer v1.4 - (Nov. 23. 2009):*
  * NEW FEATURE: All plots can now be exported as SVG files.
  * NEW FEATURE: Heat Maps with correlation data for comparing fragmentation patterns have been added.
@@ -14,6 +23,8 @@
  * BUG FIX: Fixed a bug in the Single/Combine drop down box for the spectra table.
  * LIBRARY UPDATE: Commons-Math updated to version 2.0.
  * LIBRARY UPDATE: New library added: `batik` for SVG file creation.
+
+Download Count: 0
 
 ----
 
