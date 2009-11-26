@@ -1464,4 +1464,247 @@ public class PlotUtil {
 
         return svgGenerator;
     }
+
+    /**
+     * Creates and inserts a fragment ion probability box plot.
+     *
+     * @param data the data to plot
+     * @param xAxisLabel the x axis label
+     * @param yAxisLabel the y axis label
+     * @param properties
+     * @param title the title of the plot
+     * @return the created chart
+     */
+    public static JFreeChart createFragmentIonProbabilityBoxPlot(HashMap<String, double[][]> data,
+            String xAxisLabel, String yAxisLabel, Properties properties, String title){
+
+        DefaultBoxAndWhiskerCategoryDataset dataSet = new DefaultBoxAndWhiskerCategoryDataset();
+
+        // sort the keys
+        ArrayList<String> sortedKeys = new ArrayList<String>();
+
+        Iterator<String> iterator = data.keySet().iterator();
+
+        while (iterator.hasNext()) {
+            String key = iterator.next();
+            sortedKeys.add(key);
+        }
+
+        java.util.Collections.sort(sortedKeys);
+
+        for (int i = 0; i < sortedKeys.size(); i++) {
+
+            String key = sortedKeys.get(i);
+
+            double[][] tempArray = data.get(key);
+
+            for (int j = 1; j < tempArray.length; j++) {
+
+                ArrayList<Double> listValues = new ArrayList();
+
+                for(int k = 0; k < tempArray[j].length; k++){
+
+                    if(!new Double(tempArray[j][k]).isNaN()){
+                        listValues.add(new Double(tempArray[j][k]));
+                    }
+                }
+
+                dataSet.add(listValues, j, key);
+            }
+        }
+
+        CategoryPlot plot = PlotUtil.getCategoryPlot(dataSet, xAxisLabel, yAxisLabel);
+
+        // set the range to only include valid percatage values (and leave some padding at the top)
+        plot.getRangeAxis().setRange(0, 1.04);
+
+        JFreeChart chart = new JFreeChart(
+                null,
+                new Font("SansSerif", Font.BOLD, 10),
+                plot,
+                true);
+
+        // make sure the legend is not shown if 'hide legends' is currently selected
+        if (!properties.showLegend()) {
+            if (chart.getLegend() != null) {
+                chart.getLegend().setVisible(false);
+            }
+        }
+
+        return chart;
+    }
+
+    /**
+     * Create a mass error box plot.
+     *
+     * @param data the data to plot
+     * @param title the title of the plot
+     * @param usePpm true if ppm is used as the mass error, false otherwise
+     * @return the created chart
+     */
+    public static JFreeChart createMassErrorBoxPlot(HashMap<String, ArrayList<Double>> data, String title, boolean usePpm){
+
+        DefaultBoxAndWhiskerCategoryDataset dataSet = new DefaultBoxAndWhiskerCategoryDataset();
+
+        Iterator<String> iterator = data.keySet().iterator();
+
+        ArrayList<String> keys = new ArrayList<String>();
+
+        while (iterator.hasNext()) {
+            keys.add(iterator.next());
+        }
+
+        java.util.Collections.sort(keys);
+
+        for (int i = 0; i < keys.size(); i++) {
+            String currentKey = keys.get(i);
+            PlotUtil.addValuesToBoxPlot(dataSet, data.get(currentKey), "1", currentKey);
+        }
+
+        String rangeAxisLabel = "";
+
+        if (usePpm) {
+            rangeAxisLabel = "Mass Error (ppm)";
+        } else {
+            rangeAxisLabel = "Mass Error (Da)";
+        }
+
+        CategoryPlot plot = PlotUtil.getCategoryPlot(dataSet, "Fragment Ion Type", rangeAxisLabel);
+        plot.setOrientation(PlotOrientation.HORIZONTAL);
+
+        JFreeChart chart = new JFreeChart(
+                null,
+                new Font("SansSerif", Font.BOLD, 10),
+                plot,
+                true);
+
+        chart.removeLegend();
+
+        return chart;
+    }
+
+    /**
+     * Create a mass error plot
+     *
+     * @param isBubblePlot if true, a bubble plot is created, false returns a scatter plot.
+     * @param data the data to plot
+     * @param internalFrameTitle the title of the internal frame
+     * @param usePpm if true ppm is used for the mass error, otherwise Da is used
+     * @param properties
+     * @return the created chart
+     */
+    public static JFreeChart createMassErrorPlot(boolean isBubblePlot, HashMap<String, ArrayList<XYZDataPoint>> data,
+            String internalFrameTitle, boolean usePpm, Properties properties){
+
+        JFreeChart chart = null;
+
+        boolean addLegend = true;
+
+        // fragment ion type plots do not have a legend because it's too big
+        if (properties.getCurrentLabelType() == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE) {
+            addLegend = false;
+        }
+
+        // a hashmap to store the average fragment ion mass errors
+        HashMap<Double, Double> averageValues = new HashMap<Double, Double>();
+
+        // create the plot
+        if (isBubblePlot) {
+            DefaultXYZDataset dataset = PlotUtil.addXYZDataSeries(data, averageValues, properties);
+            chart = PlotUtil.getBubbleChart(dataset, usePpm, addLegend, properties);
+        } else {
+            DefaultXYDataset dataSet = PlotUtil.addXYDataSeries(data, averageValues, properties);
+            chart = PlotUtil.getScatterPlotChart(dataSet, usePpm, addLegend, properties);
+        }
+
+        // make sure the legend is not shown if 'hide legends' is currently selected
+        if (!properties.showLegend()) {
+            if (chart.getLegend() != null) {
+                chart.getLegend().setVisible(false);
+            }
+        }
+
+        // add average mass error line
+        PlotUtil.addAverageMassErrorLine(averageValues, chart, properties.showAverageMassError());
+
+        // add fragment ion type markers
+        if (properties.getCurrentLabelType() == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE) {
+            PlotUtil.addFragmentIonTypeMarkers(data, chart, properties.showMarkers(), properties);
+        }
+
+        return chart;
+    }
+
+    /**
+     * Updates the average sequence depedent fragment ions counters.
+     *
+     * @param averageSequenceDependentFragmentIons
+     * @param sequenceDependentFragmentIons
+     * @param numberOfSpectraOfGivenLength
+     * @param maxSequenceLength
+     * @param spectraCounter
+     * @param maxSpectra
+     */
+    public static void updateAverageSequenceDependentFragmentIons(
+            HashMap<String, double[][]> averageSequenceDependentFragmentIons,
+            HashMap<String, int[]> sequenceDependentFragmentIons,
+            int[] numberOfSpectraOfGivenLength,
+            int maxSequenceLength,
+            int spectraCounter,
+            int maxSpectra){
+
+        Iterator<String> iterator = sequenceDependentFragmentIons.keySet().iterator();
+
+        while(iterator.hasNext()){
+
+            String key = iterator.next();
+
+            int[] tempArray = sequenceDependentFragmentIons.get(key);
+
+            for (int j = 1; j < tempArray.length - 1; j++) {
+                if(averageSequenceDependentFragmentIons.containsKey(key)) {
+                    double[][] temp = averageSequenceDependentFragmentIons.get(key);
+                    temp[j][spectraCounter] = ((double) tempArray[j]) / numberOfSpectraOfGivenLength[j];
+                } else {
+                    double[][] temp = new double[maxSequenceLength][maxSpectra];
+                    temp[j][spectraCounter] = ((double) tempArray[j]) / numberOfSpectraOfGivenLength[j];
+                    averageSequenceDependentFragmentIons.put(key, temp);
+                }
+            }
+        }
+    }
+
+    /**
+     * Add an XYZ data point to the data series.
+     *
+     * @param data the data series to add the data to
+     * @param dataPointLabel the data point label
+     * @param switchYandZAxis if true the Y and Y values in the data set are switched
+     * @param mzValue the m/z value of the data point
+     * @param massError the mass error of the data point
+     * @param intensity the intensity if the data point
+     * @param bubbleScaling the bubble scaling value
+     */
+    public static void addXYZDataPoint(HashMap<String, ArrayList<XYZDataPoint>> data,
+            String dataPointLabel, boolean switchYandZAxis,
+            double mzValue, double massError, double intensity, int bubbleScaling) {
+
+        if (data.get(dataPointLabel) != null) {
+            if (switchYandZAxis) {
+                data.get(dataPointLabel).add(new XYZDataPoint(mzValue, massError, intensity * bubbleScaling));
+            } else {
+                data.get(dataPointLabel).add(new XYZDataPoint(mzValue, intensity, massError * bubbleScaling));
+            }
+        } else {
+            ArrayList<XYZDataPoint> temp = new ArrayList<XYZDataPoint>();
+
+            if (switchYandZAxis) {
+                temp.add(new XYZDataPoint(mzValue, massError, intensity * bubbleScaling));
+            } else {
+                temp.add(new XYZDataPoint(mzValue, intensity, massError * bubbleScaling));
+            }
+
+            data.put(dataPointLabel, temp);
+        }
+    }
 }

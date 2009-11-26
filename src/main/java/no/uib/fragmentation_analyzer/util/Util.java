@@ -8,12 +8,21 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import no.uib.fragmentation_analyzer.filefilters.JpegFileFilter;
+import no.uib.fragmentation_analyzer.filefilters.PdfFileFilter;
+import no.uib.fragmentation_analyzer.filefilters.PngFileFilter;
+import no.uib.fragmentation_analyzer.filefilters.SvgFileFilter;
+import no.uib.fragmentation_analyzer.filefilters.TiffFileFilter;
 
 /**
  * Includes help methods that are used by the other classes.
@@ -633,6 +642,126 @@ public final class Util {
         } else {
             properties.getExtractedInstruments().put(instrument,
                     properties.getExtractedInstruments().get(instrument).intValue() + 1);
+        }
+    }
+
+    /**
+     * Returns true if all selected rows in the spectra table have the same modified sequence, false otherwise.
+     *
+     * @return true if all selected rows in the spectra table have the same modified sequence, false otherwise
+     */
+    public static boolean verifyEqualModifiedSeqences(boolean displayMessage, Properties properties) {
+
+        // verify that all selected rows have the same modified sequence
+        String currentModifiedSequence = properties.getCurrentlySelectedRowsInSpectraTable().get(0).getModifiedSequence();
+
+        boolean sameSequence = true;
+
+        for (int i = 1; i < properties.getCurrentlySelectedRowsInSpectraTable().size() && sameSequence; i++) {
+            String tempModifiedSequence =
+                    properties.getCurrentlySelectedRowsInSpectraTable().get(i).getModifiedSequence();
+
+            if (!currentModifiedSequence.equalsIgnoreCase(tempModifiedSequence)) {
+                sameSequence = false;
+            }
+        }
+
+        if (!sameSequence) {
+            if (displayMessage) {
+                JOptionPane.showMessageDialog(null,
+                        "For this analysis type all selected sequences must be equal.",
+                        "Sequences Differ", JOptionPane.INFORMATION_MESSAGE);
+            }
+        }
+
+        return sameSequence;
+    }
+
+    /**
+     * Sets the image type file filter when exporting plots.
+     *
+     * @param imageType
+     */
+    public static void setFileFilter(JFileChooser chooser, ImageType imageType){
+
+        if(imageType == ImageType.SVG){
+            chooser.setFileFilter(new SvgFileFilter());
+        } else if(imageType == ImageType.PDF){
+            chooser.setFileFilter(new PdfFileFilter());
+        } else if(imageType == ImageType.JPEG){
+            chooser.setFileFilter(new JpegFileFilter());
+        } else if(imageType == ImageType.PNG){
+            chooser.setFileFilter(new PngFileFilter());
+        } else if(imageType == ImageType.TIFF){
+            chooser.setFileFilter(new TiffFileFilter());
+        }
+    }
+
+    /**
+     * Check if a newer version of FragmentationAnalyzer is available.
+     * @param properties
+     * @param debug 
+     */
+    public static void checkForNewVersion(Properties properties, boolean debug) {
+
+        try {
+            boolean deprecatedOrDeleted = false;
+
+            URL downloadPage = new URL(
+                    "http://code.google.com/p/fragmentation-analyzer/downloads/detail?name=FragmentationAnalyzer-" +
+                    properties.getVersion() + ".zip");
+            int respons = ((java.net.HttpURLConnection) downloadPage.openConnection()).getResponseCode();
+
+            // 404 means that the file no longer exists, which means that
+            // the running version is no longer available for download,
+            // which again means that a never version is available.
+            if (respons == 404) {
+                deprecatedOrDeleted = true;
+            } else {
+
+                // also need to check if the available running version has been
+                // deprecated (but not deleted)
+                BufferedReader in = new BufferedReader(
+                        new InputStreamReader(downloadPage.openStream()));
+
+                String inputLine;
+
+                while ((inputLine = in.readLine()) != null && !deprecatedOrDeleted) {
+                    if (inputLine.lastIndexOf("Deprecated") != -1 &&
+                            inputLine.lastIndexOf("Deprecated Downloads") == -1 &&
+                            inputLine.lastIndexOf("Deprecated downloads") == -1) {
+                        deprecatedOrDeleted = true;
+                    }
+                }
+
+                in.close();
+            }
+
+            // informs the user about an updated version of the converter, unless the user
+            // is running a beta version
+            if (deprecatedOrDeleted && properties.getVersion().lastIndexOf("beta") == -1) {
+                int option = JOptionPane.showConfirmDialog(null,
+                        "A newer version of FragmentationAnalyzer is available.\n" +
+                        "Do you want to upgrade?",
+                        "Upgrade Available",
+                        JOptionPane.YES_NO_CANCEL_OPTION);
+                if (option == JOptionPane.YES_OPTION) {
+                    BareBonesBrowserLaunch.openURL("http://fragmentation-analyzer.googlecode.com/");
+                    System.exit(0);
+                } else if (option == JOptionPane.CANCEL_OPTION) {
+                    System.exit(0);
+                }
+            }
+        } catch (MalformedURLException e) {
+            Util.writeToErrorLog("FragmentationAnalyzer: Error when trying to look for update: " + e.toString());
+            if (debug) {
+                e.printStackTrace();
+            }
+        } catch (IOException e) {
+            Util.writeToErrorLog("FragmentationAnalyzer: Error when trying to look for update: " + e.toString());
+            if (debug) {
+                e.printStackTrace();
+            }
         }
     }
 }

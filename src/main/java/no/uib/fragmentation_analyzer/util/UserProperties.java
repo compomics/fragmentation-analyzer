@@ -712,4 +712,25 @@ public class UserProperties implements ProgressDialogParent {
     public void setUseSpearmansCorrelation(boolean userSpearmansCorrelation) {
         this.useSpearmansCorrelation = userSpearmansCorrelation;
     }
+
+    /**
+     * Returns true if the given scoring type is currently selected, false otherwise.
+     *
+     * @param scoringType the scoring type (0, 1 or 2)
+     * @return true if the given scoring type is currently selected, false otherwise
+     */
+    public boolean isScoringTypeSelected(long scoringType) {
+
+        boolean scoringTypeIsSelected = false;
+
+        if (scoringType == 0) {
+            scoringTypeIsSelected = notSignificantNotScoringFragmentIon;
+        } else if (scoringType == 1) {
+            scoringTypeIsSelected = significantNotScoringFragmentIon;
+        } else if (scoringType == 2) {
+            scoringTypeIsSelected = significantScoringFragmentIon;
+        }
+
+        return scoringTypeIsSelected;
+    }
 }

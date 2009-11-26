@@ -57,6 +57,8 @@ public class Properties {
     private int currentLabelType = 0; // no type selected
     private String modificationPattern = "[<][^<]*[>]";
     private boolean showLegend = true, showMarkers = false, showAverageMassError = false, showMaxMin = false;
+    public final static int DEFAULT_MAIN_SPLITTER_LOCATION = 384; // the location of the splitter for the main frame
+    private boolean selectAllIdentifications = true, selectAllSpectra = true;
         
     /**
      * Creates a new empty Properties object.
@@ -459,5 +461,33 @@ public class Properties {
      */
     public void setShowMaxMin(boolean showMaxMin) {
         this.showMaxMin = showMaxMin;
+    }
+
+    /**
+     * @return the selectAllIdentifications
+     */
+    public boolean selectAllIdentifications() {
+        return selectAllIdentifications;
+    }
+
+    /**
+     * @param selectAllIdentifications the selectAllIdentifications to set
+     */
+    public void setSelectAllIdentifications(boolean selectAllIdentifications) {
+        this.selectAllIdentifications = selectAllIdentifications;
+    }
+
+    /**
+     * @return the selectAllSpectra
+     */
+    public boolean selectAllSpectra() {
+        return selectAllSpectra;
+    }
+
+    /**
+     * @param selectAllSpectra the selectAllSpectra to set
+     */
+    public void setSelectAllSpectra(boolean selectAllSpectra) {
+        this.selectAllSpectra = selectAllSpectra;
     }
 }
