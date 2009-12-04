@@ -849,28 +849,32 @@ public class PlotUtil {
 
             // set the horizontal location of the markers label
             // this is need so that not all labels appear on top of each other
-            if (fragmentIonType.lastIndexOf("H2O") != -1) {
+            if (fragmentIonType.startsWith("y")) {
                 intervalMarker.setLabelOffset(new RectangleInsets(horizontalFontPadding, 0, horizontalFontPadding, 0));
             }
 
-            if (fragmentIonType.lastIndexOf("NH3") != -1) {
+            if (fragmentIonType.lastIndexOf("H2O") != -1) {
                 intervalMarker.setLabelOffset(new RectangleInsets(horizontalFontPadding * 2, 0, horizontalFontPadding * 2, 0));
             }
 
-            if (fragmentIonType.lastIndexOf("Prec") != -1) {
+            if (fragmentIonType.lastIndexOf("NH3") != -1) {
                 intervalMarker.setLabelOffset(new RectangleInsets(horizontalFontPadding * 3, 0, horizontalFontPadding * 3, 0));
+            }
+
+            if (fragmentIonType.lastIndexOf("Prec") != -1) {
+                intervalMarker.setLabelOffset(new RectangleInsets(horizontalFontPadding * 4, 0, horizontalFontPadding * 4, 0));
 
                 if (fragmentIonType.lastIndexOf("H2O") != -1) {
-                    intervalMarker.setLabelOffset(new RectangleInsets(horizontalFontPadding * 4, 0, horizontalFontPadding * 4, 0));
+                    intervalMarker.setLabelOffset(new RectangleInsets(horizontalFontPadding * 5, 0, horizontalFontPadding * 5, 0));
                 }
 
                 if (fragmentIonType.lastIndexOf("NH3") != -1) {
-                    intervalMarker.setLabelOffset(new RectangleInsets(horizontalFontPadding * 5, 0, horizontalFontPadding * 5, 0));
+                    intervalMarker.setLabelOffset(new RectangleInsets(horizontalFontPadding * 6, 0, horizontalFontPadding * 6, 0));
                 }
             }
 
             if (fragmentIonType.startsWith("i")) {
-                intervalMarker.setLabelOffset(new RectangleInsets(horizontalFontPadding * 4, 0, horizontalFontPadding * 4, 0));
+                intervalMarker.setLabelOffset(new RectangleInsets(horizontalFontPadding * 5, 0, horizontalFontPadding * 5, 0));
             }
 
             if (fragmentIonType.lastIndexOf("++") != -1) {
@@ -1355,7 +1359,7 @@ public class PlotUtil {
             throws IOException, TranscoderException {
 
         // draw the component in the SVG graphics
-        SVGGraphics2D svgGenerator = drawSvgGraphics(component, null);
+        SVGGraphics2D svgGenerator = drawSvgGraphics(component, bounds);
 
         // export the plot
         exportPlot(exportFile, imageType, svgGenerator);

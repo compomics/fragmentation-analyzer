@@ -76,8 +76,11 @@ import org.jdesktop.swingx.JXTableHeader;
 import org.jdesktop.swingx.decorator.SortOrder;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.CategoryAxis;
+import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.Marker;
+import org.jfree.chart.plot.Plot;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYErrorRenderer;
 import org.jfree.chart.title.LegendTitle;
@@ -295,6 +298,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         showBoxPlotToolBarJMenuItem = new javax.swing.JMenuItem();
         showDataSeriesSelectionJMenuItem = new javax.swing.JMenuItem();
         setTitleJMenuItem = new javax.swing.JMenuItem();
+        duplicatePlotJMenuItem = new javax.swing.JMenuItem();
         exportJMenu = new javax.swing.JMenu();
         exportAsSvgJMenuItem = new javax.swing.JMenuItem();
         exportAsPdfJMenuItem = new javax.swing.JMenuItem();
@@ -471,6 +475,14 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
             }
         });
         internalFramesJPopupMenu.add(setTitleJMenuItem);
+
+        duplicatePlotJMenuItem.setText("Duplicate Plot");
+        duplicatePlotJMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                duplicatePlotJMenuItemActionPerformed(evt);
+            }
+        });
+        internalFramesJPopupMenu.add(duplicatePlotJMenuItem);
 
         exportJMenu.setText("Export Plot As ...");
 
@@ -3394,6 +3406,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                         HashMap<String, int[]> sequenceDependentFragmentIons = new HashMap<String, int[]>();
                         HashMap<String, Integer> sequenceIndependentFragmentIons = new HashMap<String, Integer>();
 
+                        //HashMap<String, double[]> averageSequenceIndependentFragmentIons = new HashMap<String, double[]>();
                         HashMap<String, double[][]> averageSequenceDependentFragmentIons = new HashMap<String, double[][]>();
 
                         int totalNumberOfSpectra = 0;
@@ -3525,11 +3538,6 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                             totalNumberOfSpectra,
                                             "Ion Type", "Occurence (%)");
 
-
-                                    if (!properties.showLegend()) {
-                                        barChart.getLegend().setVisible(false);
-                                    }
-
                                     ChartPanel barChartPanel = new ChartPanel(barChart);
                                     plotType = "BarPlot";
 
@@ -3555,6 +3563,9 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                             sequenceDependentFragmentIons, numberOfSpectraOfGivenLength,
                                             longestPeptideSequenceLength, i,
                                             properties.getCurrentlySelectedRowsInSearchTable().size());
+
+                                    // update the list of average sequence independent fragment ions
+                                    // ToDo: implement
                                 }
 
                                 sequenceDependentFragmentIons = new HashMap<String, int[]>();
@@ -3644,26 +3655,22 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                         "Fragment Ion Type", "Occurence (%)", internalFrameTitle);
 
 
+                                // ToDo: implement
                                 // create the bar plot for the precusor and immonium ions
-                                JFreeChart barChart = PlotUtil.getBarPlot(sequenceIndependentFragmentIons,
-                                        totalNumberOfSpectra,
-                                        "Ion Type", "Occurence (%)");
-
-
-                                if (!properties.showLegend()) {
-                                    barChart.getLegend().setVisible(false);
-                                }
-
-                                ChartPanel barChartPanel = new ChartPanel(barChart);
-                                plotType = "BarPlot";
-
-                                FragmentationAnalyzerJInternalFrame internalFrameBarChart = new FragmentationAnalyzerJInternalFrame(
-                                        internalFrameTitle, true, true, true, barChartPanel, plotType, internalFrameUniqueIdCounter);
-                                internalFrameBarChart.add(barChartPanel);
-
-                                insertInternalFrame(internalFrameBarChart);
-                                properties.getAllChartFrames().put(internalFrameUniqueIdCounter, barChart);
-                                internalFrameUniqueIdCounter++;
+//                                JFreeChart barChart = PlotUtil.getBarPlot(averageSequenceIndependentFragmentIons,
+//                                        totalNumberOfSpectra,
+//                                        "Ion Type", "Occurence (%)");
+//
+//                                ChartPanel barChartPanel = new ChartPanel(barChart);
+//                                plotType = "BarPlot";
+//
+//                                FragmentationAnalyzerJInternalFrame internalFrameBarChart = new FragmentationAnalyzerJInternalFrame(
+//                                        internalFrameTitle, true, true, true, barChartPanel, plotType, internalFrameUniqueIdCounter);
+//                                internalFrameBarChart.add(barChartPanel);
+//
+//                                insertInternalFrame(internalFrameBarChart);
+//                                properties.getAllChartFrames().put(internalFrameUniqueIdCounter, barChart);
+//                                internalFrameUniqueIdCounter++;
                             }
                         }
                     }
@@ -6394,6 +6401,111 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
     }//GEN-LAST:event_exportAsPngJMenuItemActionPerformed
 
     /**
+     * Creates a duplicate of the plot without having to remake the plot.
+     *
+     * @param evt
+     */
+    private void duplicatePlotJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_duplicatePlotJMenuItemActionPerformed
+
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
+
+        // first we need to locate the selected internal (plot) frame
+        Iterator<Integer> iterator = properties.getAllInternalFrames().keySet().iterator();
+
+        boolean selectedFrameFound = false;
+
+        FragmentationAnalyzerJInternalFrame currentFrame = null;
+
+        // find the currently selected internal frame
+        while (iterator.hasNext() && !selectedFrameFound) {
+            Integer key = iterator.next();
+
+            currentFrame = properties.getAllInternalFrames().get(key);
+
+            if (currentFrame.isSelected()) {
+                selectedFrameFound = true;
+            }
+        }
+
+        if(selectedFrameFound){
+
+            // ToDo: a lot of the code below could perhaps be simplified...
+
+            try{
+
+                ChartPanel tempChartPanel;
+
+                if (currentFrame.getChartPanel().getChart().getPlot() instanceof CategoryPlot) {
+                    DefaultBoxAndWhiskerCategoryDataset tempData = (DefaultBoxAndWhiskerCategoryDataset)
+                            ((DefaultBoxAndWhiskerCategoryDataset) ((CategoryPlot)
+                                currentFrame.getChartPanel().getChart().getPlot()).getDataset()).clone();
+
+                    CategoryPlot tempPlot = new CategoryPlot(tempData, 
+                            (CategoryAxis) ((CategoryPlot) currentFrame.getChartPanel().getChart().getPlot()).getDomainAxis().clone(),
+                            (ValueAxis) ((CategoryPlot)currentFrame.getChartPanel().getChart().getPlot()).getRangeAxis().clone(),
+                            ((CategoryPlot) currentFrame.getChartPanel().getChart().getPlot()).getRenderer());
+
+                    tempPlot.setOrientation(((CategoryPlot) currentFrame.getChartPanel().getChart().getPlot()).getOrientation());
+                    
+                    tempChartPanel = new ChartPanel(new JFreeChart(tempPlot));
+
+                    if(currentFrame.getChartPanel().getChart().getLegend() == null){
+                        tempChartPanel.getChart().removeLegend();
+                    }
+                    
+                } else {
+
+                    Plot tempPlot = (Plot) currentFrame.getChartPanel().getChart().getPlot().clone();
+
+                    tempChartPanel = new ChartPanel(new JFreeChart(tempPlot));
+
+                    // ToDo: duplicating the markers does not yet work...
+//                    if(currentFrame.getChartPanel().getChart().getPlot() instanceof XYPlot){
+//                        Collection domainMarkers = ((XYPlot) tempChartPanel.getChart().getPlot()).getDomainMarkers(Layer.BACKGROUND);
+//                        Iterator markerIterator = domainMarkers.iterator();
+//
+//                        // store in a list first to escape a ConcurrentModificationException
+//                        ArrayList<IntervalMarker> markers = new ArrayList<IntervalMarker>();
+//
+//                        while (markerIterator.hasNext()) {
+//                            markers.add((IntervalMarker) markerIterator.next());
+//                        }
+//
+//                        for(int i=0; i<markers.size(); i++){
+//                            ((XYPlot) tempChartPanel.getChart().getPlot()).addDomainMarker(markers.get(i), Layer.BACKGROUND);
+//                        }
+//                    }
+
+                    if(currentFrame.getChartPanel().getChart().getLegend() == null){
+                        tempChartPanel.getChart().removeLegend();
+                    }  
+                }
+                
+                if(currentFrame.getChartPanel().getChart().getLegend() != null){
+                    tempChartPanel.getChart().getLegend().setVisible(properties.showLegend());
+                    tempChartPanel.getChart().getLegend().setItemFont(new Font("SansSerif", Font.PLAIN, 10));
+                }
+
+
+                FragmentationAnalyzerJInternalFrame internalFrame = new FragmentationAnalyzerJInternalFrame(
+                                                currentFrame.getTitle(), true, true, true, tempChartPanel,
+                                                currentFrame.getInternalFrameType(), internalFrameUniqueIdCounter);
+                internalFrame.add(tempChartPanel);
+
+                insertInternalFrame(internalFrame);
+                properties.getAllChartFrames().put(internalFrameUniqueIdCounter, tempChartPanel.getChart());
+                internalFrameUniqueIdCounter++;
+                
+            } catch(CloneNotSupportedException e){
+                System.out.println("Duplication error:");
+                e.printStackTrace();
+            }
+        }
+
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_duplicatePlotJMenuItemActionPerformed
+
+    /**
      * Tries to export the plot to the selected format.
      *
      * @param imageType
@@ -6759,7 +6871,11 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                     showDataSeriesSelectionJMenuItem.setEnabled(false);
                     showDataSeriesSelectionJMenuItem.setVisible(false);
                     showMaxMinJMenuItem.setVisible(false);
-                        showMaxMinJMenuItem.setEnabled(false);
+                    showMaxMinJMenuItem.setEnabled(false);
+                    showAverageJMenuItem.setVisible(false);
+                    showAverageJMenuItem.setEnabled(false);
+                    duplicatePlotJMenuItem.setVisible(false);
+                    duplicatePlotJMenuItem.setEnabled(false);
                 } else if (temp.getInternalFrameType().equalsIgnoreCase("BoxPlot") ||
                         temp.getInternalFrameType().equalsIgnoreCase("BoxPlot_modification")) {
                     showSpectrumToolBarJMenuItem.setEnabled(false);
@@ -6770,6 +6886,10 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                     showDataSeriesSelectionJMenuItem.setVisible(false);
                     showMaxMinJMenuItem.setVisible(false);
                     showMaxMinJMenuItem.setEnabled(false);
+                    showAverageJMenuItem.setVisible(false);
+                    showAverageJMenuItem.setEnabled(false);
+                    duplicatePlotJMenuItem.setVisible(false);
+                    duplicatePlotJMenuItem.setEnabled(false);
                 } else if (temp.getInternalFrameType().equalsIgnoreCase("MassErrorScatterPlot") ||
                         temp.getInternalFrameType().equalsIgnoreCase("MassErrorBubblePlot") ||
                         temp.getInternalFrameType().equalsIgnoreCase("MassErrorBoxPlot") ||
@@ -6783,6 +6903,16 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                     showDataSeriesSelectionJMenuItem.setEnabled(true);
                     showDataSeriesSelectionJMenuItem.setVisible(true);
 
+                    if(temp.getInternalFrameType().equalsIgnoreCase("BarPlot") ||
+                            temp.getInternalFrameType().equalsIgnoreCase("MassErrorScatterPlot") ||
+                        temp.getInternalFrameType().equalsIgnoreCase("MassErrorBubblePlot")){
+                        duplicatePlotJMenuItem.setVisible(false);
+                        duplicatePlotJMenuItem.setEnabled(false);
+                    } else {
+                        duplicatePlotJMenuItem.setVisible(true);
+                        duplicatePlotJMenuItem.setEnabled(true);
+                    }
+
                     if(temp.getInternalFrameType().equalsIgnoreCase("FragmentIonProbabilityPlot")){
                         showMaxMinJMenuItem.setVisible(true);
                         showMaxMinJMenuItem.setEnabled(true);
@@ -6790,6 +6920,16 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                         showMaxMinJMenuItem.setVisible(false);
                         showMaxMinJMenuItem.setEnabled(false);
                     }
+
+                    if(temp.getInternalFrameType().equalsIgnoreCase("MassErrorScatterPlot") ||
+                        temp.getInternalFrameType().equalsIgnoreCase("MassErrorBubblePlot")){
+                        showAverageJMenuItem.setVisible(true);
+                        showAverageJMenuItem.setEnabled(true);
+                    } else {
+                        showAverageJMenuItem.setVisible(false);
+                        showAverageJMenuItem.setEnabled(false);
+                    }
+
                 } else {
                     showSpectrumToolBarJMenuItem.setEnabled(false);
                     showSpectrumToolBarJMenuItem.setVisible(false);
@@ -6799,6 +6939,10 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                     showDataSeriesSelectionJMenuItem.setVisible(false);
                     showMaxMinJMenuItem.setVisible(false);
                     showMaxMinJMenuItem.setEnabled(false);
+                    duplicatePlotJMenuItem.setVisible(false);
+                    duplicatePlotJMenuItem.setEnabled(false);
+                    showAverageJMenuItem.setVisible(false);
+                    showAverageJMenuItem.setEnabled(false);
                 }
             }
 
@@ -7543,6 +7687,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
     private javax.swing.JComboBox daOrPpmSpectraJComboBox;
     private javax.swing.JMenuItem deselectHighlightedIdentificationsJMenuItem;
     private javax.swing.JMenuItem deselectHighlightedSpectraJMenuItem;
+    private javax.swing.JMenuItem duplicatePlotJMenuItem;
     private javax.swing.JMenu editMenu;
     private javax.swing.JMenuItem exitJMenuItem;
     private javax.swing.JMenuItem exportAsJpgJMenuItem;
