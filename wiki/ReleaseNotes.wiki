@@ -3,12 +3,21 @@
 
 ----
 
-*Changes in FragmentationAnalyzer v1.4.1 - (Nov. 25. 2009):*
+*Changes in FragmentationAnalyzer v1.4.2 - (Dec. 04. 2009):*
+ * NEW FEATURE: It's now possible to duplicate some of the plot internal frames without having to redo the plotting. 
+ * FEATURE IMPROVEMENT: Moved the text for the fragment ion markers so that singly charged b and y ions no longer overlap.
+ * BUG FIX: A bug occurred if a bar chart was created when the legends were hidden.
+ * BUG FIX: Exporting heat maps to PNG by right clicking on the heat map now works even when the complete heat map is not visible.
 
+----
+
+*Changes in FragmentationAnalyzer v1.4.1 - (Nov. 25. 2009):*
  * NEW FEATURE: All plots can now be exported as PDF, PNG, JPG and TIFF (in addition to the already supported SVG format).
  * NEW FEATURE: On Windows platforms `FragmentationAnalyzer` can now be run from paths containing spaces.
  * BUG FIX: Plot title names containing < or > (mainly for modifications) will now be altered before suggesting them as export plot title. (In order to make the suggested file names valid).
  * LIBRARY UPDATES: `pdf-transcoder` and `xerces` added for SVG to PDF conversion.
+
+Download Count: 3
 
 ----
 
