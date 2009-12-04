@@ -387,6 +387,9 @@ public class DataSeriesSelection extends javax.swing.JDialog {
         }
 
         if(!cancel){
+
+            chartPanel.getChart().fireChartChanged();
+
             String oldTitle = currentFrame.getTitle();
 
             if(totalNumberOfFragmentIons > 0){

@@ -42,6 +42,14 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="setTitleJMenuItemActionPerformed"/>
           </Events>
         </MenuItem>
+        <MenuItem class="javax.swing.JMenuItem" name="duplicatePlotJMenuItem">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Duplicate Plot"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="duplicatePlotJMenuItemActionPerformed"/>
+          </Events>
+        </MenuItem>
         <Menu class="javax.swing.JMenu" name="exportJMenu">
           <Properties>
             <Property name="text" type="java.lang.String" value="Export Plot As ..."/>

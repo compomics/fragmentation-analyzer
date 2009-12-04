@@ -487,9 +487,9 @@ public class HeatMapJPanel extends javax.swing.JPanel {
 
                 try {
                     File fileName = new File(selectedFile);
-                    Image img = createImage(getWidth(), getHeight());
+                    Image img = createImage(heatMapJXTable.getSize().width, heatMapJXTable.getSize().height);
                     Graphics g = img.getGraphics();
-                    paint(g);
+                    heatMapJXTable.paint(g);
                     ImageIO.write(toBufferedImage(img), "png", fileName);
                     JOptionPane.showMessageDialog(this, "Heat map saved to " + fileName.toString(),
                             "Heat Map Saved", JOptionPane.INFORMATION_MESSAGE);
