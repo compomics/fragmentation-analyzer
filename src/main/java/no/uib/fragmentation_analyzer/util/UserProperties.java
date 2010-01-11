@@ -32,9 +32,9 @@ public class UserProperties implements ProgressDialogParent {
     private int defaultBubbleScaling = 1;
     private boolean cancelProgress = false;
     private ProgressDialog progressDialog;
-    private boolean notSignificantNotScoringFragmentIon = false;
-    private boolean significantNotScoringFragmentIon = true;
-    private boolean significantScoringFragmentIon = true;
+    private boolean aPosterioriDetected = false;
+    private boolean detectedNotScoring = true;
+    private boolean detectedAndScoring = true;
     private boolean normalizeIntensites = true;
     private int numberOfPlotsPerRow = 2;
     private int numberOfPlotsPerColumn = 2;
@@ -121,19 +121,19 @@ public class UserProperties implements ProgressDialogParent {
             s = b.readLine();
 
             if (s != null) {
-                notSignificantNotScoringFragmentIon = new Boolean(s.substring(s.indexOf(": ") + 2));
+                aPosterioriDetected = new Boolean(s.substring(s.indexOf(": ") + 2));
             }
 
             s = b.readLine();
 
             if (s != null) {
-                significantNotScoringFragmentIon = new Boolean(s.substring(s.indexOf(": ") + 2));
+                detectedNotScoring = new Boolean(s.substring(s.indexOf(": ") + 2));
             }
 
             s = b.readLine();
 
             if (s != null) {
-                significantScoringFragmentIon = new Boolean(s.substring(s.indexOf(": ") + 2));
+                detectedAndScoring = new Boolean(s.substring(s.indexOf(": ") + 2));
             }
 
             // get the normalize intensity, requires v1.3 or newer
@@ -467,9 +467,9 @@ public class UserProperties implements ProgressDialogParent {
             f.write("MascotConfidenceLevel: " + mascotConfidenceLevel + "\n");
             f.write("ppmBubbleScaling: " + ppmBubbleScaling + "\n");
             f.write("DefaultBubbleScaling: " + defaultBubbleScaling + "\n");
-            f.write("NotSignificantNotScoringFragmentIon: " + notSignificantNotScoringFragmentIon + "\n");
-            f.write("SignificantNotScoringFragmentIon: " + significantNotScoringFragmentIon + "\n");
-            f.write("SignificantScoringFragmentIon: " + significantScoringFragmentIon + "\n");
+            f.write("APosterioriDetected: " + aPosterioriDetected + "\n");
+            f.write("DetectedNotScoring: " + detectedNotScoring + "\n");
+            f.write("DectedAndScoring: " + detectedAndScoring + "\n");
             f.write("NormalizeIntensites: " + normalizeIntensites + "\n");
             f.write("NumberOfPlotsPerRow: " + numberOfPlotsPerRow + "\n");
             f.write("NumberOfPlotsPerColumn: " + numberOfPlotsPerColumn + "\n");
@@ -616,45 +616,45 @@ public class UserProperties implements ProgressDialogParent {
     }
 
     /**
-     * @return the notSignificantNotScoringFragmentIon
+     * @return true if a posteriori detected fragment ions are to be included in the analysis
      */
-    public boolean isNotSignificantNotScoringFragmentIon() {
-        return notSignificantNotScoringFragmentIon;
+    public boolean includeAPosterioriDetected() {
+        return aPosterioriDetected;
     }
 
     /**
-     * @param notSignificantNotScoringFragmentIon the notSignificantNotScoringFragmentIon to set
+     * @param aPosterioriDetected sets if the a posteriori fragment ions are to be included or not
      */
-    public void setNotSignificantNotScoringFragmentIon(boolean notSignificantNotScoringFragmentIon) {
-        this.notSignificantNotScoringFragmentIon = notSignificantNotScoringFragmentIon;
+    public void setIncludeAPosterioriDetected(boolean aPosterioriDetected) {
+        this.aPosterioriDetected = aPosterioriDetected;
     }
 
     /**
-     * @return the significantNotScoringFragmentIon
+     * @return the true if the detected yet not scoring fragment ions are to be included in the analysis
      */
-    public boolean isSignificantNotScoringFragmentIon() {
-        return significantNotScoringFragmentIon;
+    public boolean includeDetectedNotScoring() {
+        return detectedNotScoring;
     }
 
     /**
-     * @param significantNotScoringFragmentIon the significantNotScoringFragmentIon to set
+     * @param detectedNotScoring sets if the a detected yet not scoring fragment ions are to be included or not
      */
-    public void setSignificantNotScoringFragmentIon(boolean significantNotScoringFragmentIon) {
-        this.significantNotScoringFragmentIon = significantNotScoringFragmentIon;
+    public void setDetectedNotScoring(boolean detectedNotScoring) {
+        this.detectedNotScoring = detectedNotScoring;
     }
 
     /**
-     * @return the significantScoringFragmentIon
+     * @return true if the detected and scoring fragment ions are to be included in the analysis
      */
-    public boolean isSignificantScoringFragmentIon() {
-        return significantScoringFragmentIon;
+    public boolean includeDetectedAndScoring() {
+        return detectedAndScoring;
     }
 
     /**
-     * @param significantScoringFragmentIon the significantScoringFragmentIon to set
+     * @param detectedAndScoring sets if the a detected and scoring fragment ions are to be included or not
      */
-    public void setSignificantScoringFragmentIon(boolean significantScoringFragmentIon) {
-        this.significantScoringFragmentIon = significantScoringFragmentIon;
+    public void setDetectedAndScoring(boolean detectedAndScoring) {
+        this.detectedAndScoring = detectedAndScoring;
     }
 
     /**
@@ -724,11 +724,11 @@ public class UserProperties implements ProgressDialogParent {
         boolean scoringTypeIsSelected = false;
 
         if (scoringType == 0) {
-            scoringTypeIsSelected = notSignificantNotScoringFragmentIon;
+            scoringTypeIsSelected = aPosterioriDetected;
         } else if (scoringType == 1) {
-            scoringTypeIsSelected = significantNotScoringFragmentIon;
+            scoringTypeIsSelected = detectedNotScoring;
         } else if (scoringType == 2) {
-            scoringTypeIsSelected = significantScoringFragmentIon;
+            scoringTypeIsSelected = detectedAndScoring;
         }
 
         return scoringTypeIsSelected;

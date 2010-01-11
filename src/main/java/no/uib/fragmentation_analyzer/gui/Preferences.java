@@ -26,9 +26,9 @@ public class Preferences extends javax.swing.JDialog {
         defaultBubbleScalingJTextField.setText("" + fragmentationAnalyzer.getUserProperties().getDefaultBubbleScaling());
         ppmBubbleScalingJTextField.setText("" + fragmentationAnalyzer.getUserProperties().getPpmBubbleScaling());
 
-        notSignificantNotUsedJCheckBox.setSelected(fragmentationAnalyzer.getUserProperties().isNotSignificantNotScoringFragmentIon());
-        significantNotUsedJCheckBox.setSelected(fragmentationAnalyzer.getUserProperties().isSignificantNotScoringFragmentIon());
-        significantAndUsedJCheckBox.setSelected(fragmentationAnalyzer.getUserProperties().isSignificantScoringFragmentIon());
+        aPosterioriDetectedJCheckBox.setSelected(fragmentationAnalyzer.getUserProperties().includeAPosterioriDetected());
+        detectedNotScoredJCheckBox.setSelected(fragmentationAnalyzer.getUserProperties().includeDetectedNotScoring());
+        detectedAndScoredJCheckBox.setSelected(fragmentationAnalyzer.getUserProperties().includeDetectedAndScoring());
 
         if(fragmentationAnalyzer.getUserProperties().normalizeIntensites()){
             totalIntensityNormalizationJRadioButton.setSelected(true);
@@ -77,9 +77,9 @@ public class Preferences extends javax.swing.JDialog {
         cancelJButton = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JSeparator();
         jPanel2 = new javax.swing.JPanel();
-        notSignificantNotUsedJCheckBox = new javax.swing.JCheckBox();
-        significantNotUsedJCheckBox = new javax.swing.JCheckBox();
-        significantAndUsedJCheckBox = new javax.swing.JCheckBox();
+        aPosterioriDetectedJCheckBox = new javax.swing.JCheckBox();
+        detectedNotScoredJCheckBox = new javax.swing.JCheckBox();
+        detectedAndScoredJCheckBox = new javax.swing.JCheckBox();
         jPanel3 = new javax.swing.JPanel();
         totalIntensityNormalizationJRadioButton = new javax.swing.JRadioButton();
         unnormalizedJRadioButton = new javax.swing.JRadioButton();
@@ -174,14 +174,17 @@ public class Preferences extends javax.swing.JDialog {
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Fragment Ion Scoring Types - ms_lims", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 11), new java.awt.Color(0, 0, 0))); // NOI18N
 
-        notSignificantNotUsedJCheckBox.setText("Not Significant, Not Used For Scoring");
-        notSignificantNotUsedJCheckBox.setIconTextGap(15);
+        aPosterioriDetectedJCheckBox.setText("A Posteriori Detected");
+        aPosterioriDetectedJCheckBox.setToolTipText("<html>\nFragment ions that are only found after identification, when the spectra<br>\nare analyzed in detail to specifically retrieve all theoretical fragment ions<br> \ncalculated from the identified peptide.\n</html>");
+        aPosterioriDetectedJCheckBox.setIconTextGap(15);
 
-        significantNotUsedJCheckBox.setText("Significant, Not Used For Scoring");
-        significantNotUsedJCheckBox.setIconTextGap(15);
+        detectedNotScoredJCheckBox.setText("Detected yet Not Scored");
+        detectedNotScoredJCheckBox.setToolTipText("<html>\nFragment ions that are found by the search algorithm<br>\nduring identification, but do not contribute to the score.\n</html>");
+        detectedNotScoredJCheckBox.setIconTextGap(15);
 
-        significantAndUsedJCheckBox.setText("Significant, Used For Scoring");
-        significantAndUsedJCheckBox.setIconTextGap(15);
+        detectedAndScoredJCheckBox.setText("Detected and Scored");
+        detectedAndScoredJCheckBox.setToolTipText("<html>\nFragment ions that are found by the search algorithm<br>\nduring identification and contribute to the score.\n</html>");
+        detectedAndScoredJCheckBox.setIconTextGap(15);
 
         org.jdesktop.layout.GroupLayout jPanel2Layout = new org.jdesktop.layout.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -190,20 +193,19 @@ public class Preferences extends javax.swing.JDialog {
             .add(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(notSignificantNotUsedJCheckBox)
-                    .add(significantNotUsedJCheckBox)
-                    .add(significantAndUsedJCheckBox))
-                .addContainerGap(101, Short.MAX_VALUE))
+                    .add(detectedAndScoredJCheckBox)
+                    .add(detectedNotScoredJCheckBox)
+                    .add(aPosterioriDetectedJCheckBox))
+                .addContainerGap(159, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .add(notSignificantNotUsedJCheckBox)
+                .add(detectedAndScoredJCheckBox)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(significantNotUsedJCheckBox)
+                .add(detectedNotScoredJCheckBox)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(significantAndUsedJCheckBox)
+                .add(aPosterioriDetectedJCheckBox)
                 .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -278,9 +280,9 @@ public class Preferences extends javax.swing.JDialog {
             .add(layout.createSequentialGroup()
                 .addContainerGap()
                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(jPanel2, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .add(org.jdesktop.layout.GroupLayout.TRAILING, jPanel1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .add(org.jdesktop.layout.GroupLayout.TRAILING, jPanel3, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .add(jPanel2, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .add(jPanel4, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .add(jSeparator1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 336, Short.MAX_VALUE)
                     .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
@@ -357,17 +359,17 @@ public class Preferences extends javax.swing.JDialog {
         }
 
         if(!error){
-            if(!notSignificantNotUsedJCheckBox.isSelected() &&
-                    !significantNotUsedJCheckBox.isSelected() &&
-                    !significantAndUsedJCheckBox.isSelected()){
+            if(!aPosterioriDetectedJCheckBox.isSelected() &&
+                    !detectedNotScoredJCheckBox.isSelected() &&
+                    !detectedAndScoredJCheckBox.isSelected()){
                 JOptionPane.showMessageDialog(this,
                         "Please select at least one fragment ion scoring type.",
                         "Fragment Ion Scoring", JOptionPane.INFORMATION_MESSAGE);
                 error = true;
             } else{
-                fragmentationAnalyzer.getUserProperties().setNotSignificantNotScoringFragmentIon(notSignificantNotUsedJCheckBox.isSelected());
-                fragmentationAnalyzer.getUserProperties().setSignificantNotScoringFragmentIon(significantNotUsedJCheckBox.isSelected());
-                fragmentationAnalyzer.getUserProperties().setSignificantScoringFragmentIon(significantAndUsedJCheckBox.isSelected());
+                fragmentationAnalyzer.getUserProperties().setIncludeAPosterioriDetected(aPosterioriDetectedJCheckBox.isSelected());
+                fragmentationAnalyzer.getUserProperties().setDetectedNotScoring(detectedNotScoredJCheckBox.isSelected());
+                fragmentationAnalyzer.getUserProperties().setDetectedAndScoring(detectedAndScoredJCheckBox.isSelected());
             }
         }
         
@@ -417,9 +419,12 @@ public class Preferences extends javax.swing.JDialog {
     }//GEN-LAST:event_okJButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JCheckBox aPosterioriDetectedJCheckBox;
     private javax.swing.JButton cancelJButton;
     private javax.swing.ButtonGroup correlationButtonGroup;
     private javax.swing.JTextField defaultBubbleScalingJTextField;
+    private javax.swing.JCheckBox detectedAndScoredJCheckBox;
+    private javax.swing.JCheckBox detectedNotScoredJCheckBox;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -430,14 +435,11 @@ public class Preferences extends javax.swing.JDialog {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.ButtonGroup normalizationButtonGroup;
-    private javax.swing.JCheckBox notSignificantNotUsedJCheckBox;
     private javax.swing.JButton okJButton;
     private javax.swing.JRadioButton pearsonJRadioButton;
     private javax.swing.JSpinner plotsPerColumnJSpinner;
     private javax.swing.JSpinner plotsPerRowJSpinner;
     private javax.swing.JTextField ppmBubbleScalingJTextField;
-    private javax.swing.JCheckBox significantAndUsedJCheckBox;
-    private javax.swing.JCheckBox significantNotUsedJCheckBox;
     private javax.swing.JRadioButton spearmanJRadioButton;
     private javax.swing.JRadioButton totalIntensityNormalizationJRadioButton;
     private javax.swing.JRadioButton unnormalizedJRadioButton;

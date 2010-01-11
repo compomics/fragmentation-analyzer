@@ -33,9 +33,9 @@
           <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="jPanel2" alignment="0" max="32767" attributes="0"/>
                   <Component id="jPanel1" alignment="1" max="32767" attributes="0"/>
                   <Component id="jPanel3" alignment="1" max="32767" attributes="0"/>
-                  <Component id="jPanel2" alignment="0" max="32767" attributes="0"/>
                   <Component id="jPanel4" alignment="0" max="32767" attributes="0"/>
                   <Component id="jSeparator1" alignment="0" pref="336" max="32767" attributes="0"/>
                   <Group type="102" alignment="1" attributes="0">
@@ -220,47 +220,49 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" alignment="0" attributes="0">
+              <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="notSignificantNotUsedJCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
-                      <Component id="significantNotUsedJCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
-                      <Component id="significantAndUsedJCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="detectedAndScoredJCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="detectedNotScoredJCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="aPosterioriDetectedJCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace pref="101" max="32767" attributes="0"/>
+                  <EmptySpace pref="159" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
+                  <Component id="detectedAndScoredJCheckBox" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="notSignificantNotUsedJCheckBox" min="-2" max="-2" attributes="0"/>
+                  <Component id="detectedNotScoredJCheckBox" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="significantNotUsedJCheckBox" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="significantAndUsedJCheckBox" min="-2" max="-2" attributes="0"/>
+                  <Component id="aPosterioriDetectedJCheckBox" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
       </Layout>
       <SubComponents>
-        <Component class="javax.swing.JCheckBox" name="notSignificantNotUsedJCheckBox">
+        <Component class="javax.swing.JCheckBox" name="aPosterioriDetectedJCheckBox">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Not Significant, Not Used For Scoring"/>
+            <Property name="text" type="java.lang.String" value="A Posteriori Detected"/>
+            <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;Fragment ions that are only found after identification, when the spectra&lt;br&gt;&#xa;are analyzed in detail to specifically retrieve all theoretical fragment ions&lt;br&gt; &#xa;calculated from the identified peptide.&#xa;&lt;/html&gt;"/>
             <Property name="iconTextGap" type="int" value="15"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JCheckBox" name="significantNotUsedJCheckBox">
+        <Component class="javax.swing.JCheckBox" name="detectedNotScoredJCheckBox">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Significant, Not Used For Scoring"/>
+            <Property name="text" type="java.lang.String" value="Detected yet Not Scored"/>
+            <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;Fragment ions that are found by the search algorithm&lt;br&gt;&#xa;during identification, but do not contribute to the score.&#xa;&lt;/html&gt;"/>
             <Property name="iconTextGap" type="int" value="15"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JCheckBox" name="significantAndUsedJCheckBox">
+        <Component class="javax.swing.JCheckBox" name="detectedAndScoredJCheckBox">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Significant, Used For Scoring"/>
+            <Property name="text" type="java.lang.String" value="Detected and Scored"/>
+            <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;Fragment ions that are found by the search algorithm&lt;br&gt;&#xa;during identification and contribute to the score.&#xa;&lt;/html&gt;"/>
             <Property name="iconTextGap" type="int" value="15"/>
           </Properties>
         </Component>

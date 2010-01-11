@@ -8,9 +8,9 @@ LastUsedFolder: user.home
 MascotConfidenceLevel: 0.95
 ppmBubbleScaling: 1000
 DefaultBubbleScaling: 1
-NotSignificantNotScoringFragmentIon: false
-SignificantNotScoringFragmentIon: true
-SignificantScoringFragmentIon: true
+APosterioriDetected: false
+DetectedNotScoring: true
+DectedAndScoring: true
 NormalizeIntensites: true
 NumberOfPlotsPerRow: 2
 NumberOfPlotsPerColumn: 2
