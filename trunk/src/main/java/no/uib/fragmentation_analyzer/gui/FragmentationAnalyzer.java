@@ -4505,7 +4505,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                 progressDialog.setValue(i + 1);
 
                                 totalNumberOfFragmentIons += addFragmentIonsToMassErrorBoxPlot(data, currentIdentification,
-                                        daOrPpmSearchResultsJComboBox.getSelectedIndex() == Properties.ACCURACY_PPM);
+                                        daOrPpmSpectraJComboBox.getSelectedIndex() == Properties.ACCURACY_PPM);
 
 
                                 // if not combine create plot
@@ -4516,7 +4516,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                             + totalNumberOfFragmentIons + " fragment ions)";
 
                                     insertMassErrorBoxPlot(data, internalFrameTitle,
-                                            daOrPpmSearchResultsJComboBox.getSelectedIndex() == Properties.ACCURACY_PPM);
+                                            daOrPpmSpectraJComboBox.getSelectedIndex() == Properties.ACCURACY_PPM);
 
                                     data = new HashMap<String, ArrayList<Double>>();
                                     totalNumberOfFragmentIons = 0;
@@ -4560,7 +4560,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                     + totalNumberOfFragmentIons + " fragment ions)";
 
                             insertMassErrorBoxPlot(data, internalFrameTitle,
-                                    daOrPpmSearchResultsJComboBox.getSelectedIndex() == Properties.ACCURACY_PPM);
+                                    daOrPpmSpectraJComboBox.getSelectedIndex() == Properties.ACCURACY_PPM);
                         }
                     } else if (spectraJComboBox.getSelectedIndex() == Properties.SPECTRA_INTENSITY_BOX_PLOT) {
 
@@ -4770,8 +4770,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
                                     // create the bar plot for the precusor and immonium ions
                                     JFreeChart barChart = PlotUtil.getBarPlot(sequenceIndependentFragmentIons,
-                                            1,
-                                            "Ion Type", "Occurence (%)");
+                                            1, "Ion Type", "Occurence (%)");
 
 
                                     if (!properties.showLegend()) {
