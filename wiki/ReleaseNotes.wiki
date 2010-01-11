@@ -3,11 +3,20 @@
 
 ----
 
+*Changes in FragmentationAnalyzer v1.4.3 - (Jan. 11. 2010):*
+ * FEATURE IMPROVEMENT: Renamed and reordered the scoring types in the preference dialog.
+ * BUG FIX: The value selected in the accuracy drop down menu for the 'Individual Spectra' table was sometimes replaced by the current value from the 'Search Results' accuract drop down menu when doing the analysis. Has now been fixed.
+ * LIBRARY UPDATE: mascot_datfile updated from 2.2.2 to 2.2.3.
+
+----
+
 *Changes in FragmentationAnalyzer v1.4.2 - (Dec. 04. 2009):*
  * NEW FEATURE: It's now possible to duplicate some of the plot internal frames without having to redo the plotting. 
  * FEATURE IMPROVEMENT: Moved the text for the fragment ion markers so that singly charged b and y ions no longer overlap.
  * BUG FIX: A bug occurred if a bar chart was created when the legends were hidden.
  * BUG FIX: Exporting heat maps to PNG by right clicking on the heat map now works even when the complete heat map is not visible.
+
+Download Count: 8
 
 ----
 
