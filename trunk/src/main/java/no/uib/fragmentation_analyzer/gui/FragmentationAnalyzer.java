@@ -2505,7 +2505,9 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         // if more than 10 internal frames are to be opened, first ask if the user wants to continue or not
         if(properties.getCurrentlySelectedRowsInSearchTable().size() > 10 &&
                 combineSearchResultsJComboBox.getSelectedIndex() == Properties.SINGLE_PLOT &&
-                searchResultsJComboBox.getSelectedIndex() != Properties.SEARCH_RESULTS_SHOW_INDIVIDUAL_SPECTRA){
+                searchResultsJComboBox.getSelectedIndex() != Properties.SEARCH_RESULTS_SHOW_INDIVIDUAL_SPECTRA &&
+                searchResultsJComboBox.getSelectedIndex() != Properties.SEARCH_RESULTS_INTENSITY_CORRELATION &&
+                searchResultsJComboBox.getSelectedIndex() != Properties.SEARCH_RESULTS_META_INTENSITY_PLOTS){
             int option = JOptionPane.showConfirmDialog(this, "This will open " +
                     properties.getCurrentlySelectedRowsInSearchTable().size()
                     + " plots/analysis frames.\nAre you sure you want to continue?", "Continue?",
