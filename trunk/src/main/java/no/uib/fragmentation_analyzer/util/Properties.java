@@ -26,13 +26,14 @@ public class Properties {
     public static final int SEARCH_RESULTS_SHOW_INDIVIDUAL_SPECTRA = 1, SEARCH_RESULTS_INTENSITY_BOX_PLOT = 2,
             SEARCH_RESULTS_MASS_ERROR_SCATTER_PLOT = 3, SEARCH_RESULTS_MASS_ERROR_BUBBLE_PLOT = 4,
             SEARCH_RESULTS_MASS_ERROR_BOX_PLOT = 5, SEARCH_RESULTS_ION_PROBABILITY_PLOT = 6,
-            SEARCH_RESULTS_ION_HEAT_MAP = 7;
+            SEARCH_RESULTS_ION_HEAT_MAP = 7, SEARCH_RESULTS_META_INTENSITY_PLOTS = 8,
+            SEARCH_RESULTS_INTENSITY_CORRELATION = 9;
     public static final int SPECTRA_VIEW_SPECTRUM = 1, SPECTRA_INTENSITY_BOX_PLOT = 2, 
             SPECTRA_MASS_ERROR_SCATTER_PLOT = 3, SPECTRA_MASS_ERROR_BUBBLE_PLOT = 4,
             SPECTRA_MASS_ERROR_BOX_PLOT = 5, SPECTRA_ION_PROBABILITY_PLOT = 6;
     public static final int SINGLE_PLOT = 0, COMBINE_PLOT = 1;
     public static final int ACCURACY_DA = 0, ACCURACY_PPM = 1;
-    private Color defaultMarkerColor = new Color(0, 0, 255, 25); // light blue
+    private static Color defaultMarkerColor = new Color(0, 0, 255, 25); // light blue
     private Color bFragmentIonColor = new Color(0, 0, 255, 25); // light  blue
     private Color yFragmentIonColor = new Color(0, 255, 0, 25); // light green
     private Color otherFragmentIonColor = new Color(255, 0, 0, 25); // light red
@@ -303,7 +304,7 @@ public class Properties {
     /**
      * @return the defaultMarkerColor
      */
-    public Color getDefaultMarkerColor() {
+    public static Color getDefaultMarkerColor() {
         return defaultMarkerColor;
     }
 
