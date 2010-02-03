@@ -60,7 +60,17 @@ import org.apache.batik.transcoder.TranscoderOutput;
 import org.apache.batik.transcoder.image.JPEGTranscoder;
 import org.apache.batik.transcoder.image.PNGTranscoder;
 import org.apache.batik.transcoder.image.TIFFTranscoder;
+import org.apache.commons.math.stat.descriptive.DescriptiveStatistics;
 import org.apache.fop.svg.PDFTranscoder;
+import org.jfree.chart.axis.ValueAxis;
+import org.jfree.chart.renderer.xy.StandardXYItemRenderer;
+import org.jfree.chart.renderer.xy.XYBarRenderer;
+import org.jfree.data.function.Function2D;
+import org.jfree.data.function.NormalDistributionFunction2D;
+import org.jfree.data.general.DatasetUtilities;
+import org.jfree.data.statistics.HistogramDataset;
+import org.jfree.data.statistics.HistogramType;
+import org.jfree.data.xy.XYDataset;
 import org.w3c.dom.svg.SVGDocument;
 
 /**
@@ -530,8 +540,7 @@ public class PlotUtil {
             for (int j = 1; j < tempArray.length; j++) {
 
                 if (printOutCorrelationData) {
-                    if (key.equalsIgnoreCase("b") ||
-                            key.equalsIgnoreCase("y")) {
+                    if (key.equalsIgnoreCase("b") || key.equalsIgnoreCase("y")) {
                         System.out.print(key + ", ");
                     }
                 }
@@ -543,9 +552,7 @@ public class PlotUtil {
                 for (int k = 0; k < tempArray[j].length; k++) {
 
                     if (printOutCorrelationData) {
-                        if (key.equalsIgnoreCase("b") ||
-                                key.equalsIgnoreCase("y")) {
-
+                        if (key.equalsIgnoreCase("b") || key.equalsIgnoreCase("y")) {
                             if (k == 0) {
                                 if (key.equalsIgnoreCase("b")) {
                                     System.out.print(j + ", ");
@@ -576,8 +583,7 @@ public class PlotUtil {
                 tempDataSeries.add(j, averageValue, min, max);
 
                 if (printOutCorrelationData) {
-                    if (key.equalsIgnoreCase("b") ||
-                            key.equalsIgnoreCase("y")) {
+                    if (key.equalsIgnoreCase("b") || key.equalsIgnoreCase("y")) {
                         System.out.println(averageValue);
                     }
                 }
@@ -964,20 +970,14 @@ public class PlotUtil {
      * @param addLegend if true the legend is visible
      * @return the created chart
      */
-    public static JFreeChart getScatterPlotChart(DefaultXYDataset dataSet, boolean usePpm, boolean addLegend,
-            Properties properies) {
+    public static JFreeChart getScatterPlotChart(DefaultXYDataset dataSet, String xAxisLabel, 
+            String yAxisLabel, boolean addLegend, Properties properies) {
 
         NumberAxis xAxis = new NumberAxis();
         xAxis.setLabelFont(new Font("SansSerif", Font.PLAIN, 10));
         xAxis.setAutoRangeIncludesZero(true);
         xAxis.setTickLabelFont(new Font("SansSerif", Font.PLAIN, 10));
-        xAxis.setLabel("m/z-value");
-
-        String yAxisLabel = "Mass Error (Da)";
-
-        if (usePpm) {
-            yAxisLabel = "Mass Error (ppm)";
-        }
+        xAxis.setLabel(xAxisLabel);
 
         NumberAxis yAxis = new NumberAxis();
         yAxis.setLabelFont(new Font("SansSerif", Font.PLAIN, 10));
@@ -1275,18 +1275,12 @@ public class PlotUtil {
      * @param addLegend if true the legend is visible
      * @return the created chart
      */
-    public static JFreeChart getBubbleChart(DefaultXYZDataset dataSet, boolean usePpm, boolean addLegend,
+    public static JFreeChart getBubbleChart(DefaultXYZDataset dataSet, String xAxisLabel, String yAxisLabel, boolean addLegend,
             Properties properties) {
-
-        String yAxisLabel = "Mass Error (Da)";
-
-        if (usePpm) {
-            yAxisLabel = "Mass Error (ppm)";
-        }
 
         JFreeChart chart = ChartFactory.createBubbleChart(
                 null, // title
-                "m/z-value", // xAxisLabel
+                xAxisLabel, // xAxisLabel
                 yAxisLabel, // yAxisLabel
                 dataSet, // XYZDataset
                 PlotOrientation.VERTICAL, // orientation
@@ -1374,13 +1368,13 @@ public class PlotUtil {
      * @throws IOException
      * @throws TranscoderException
      */
-    private static void exportPlot(File exportFile, ImageType imageType, SVGGraphics2D svgGenerator) 
-            throws IOException, TranscoderException{
-        
+    private static void exportPlot(File exportFile, ImageType imageType, SVGGraphics2D svgGenerator)
+            throws IOException, TranscoderException {
+
         // write the svg file
         File svgFile = exportFile;
 
-        if(imageType != ImageType.SVG){
+        if (imageType != ImageType.SVG) {
             svgFile = new File(exportFile.getAbsolutePath() + ".temp");
         }
 
@@ -1391,7 +1385,7 @@ public class PlotUtil {
         outputStream.close();
 
         // if selected image format is not svg, convert the image
-        if(imageType != ImageType.SVG){
+        if (imageType != ImageType.SVG) {
 
             // set up the svg input
             String svgURI = svgFile.toURI().toString();
@@ -1400,21 +1394,22 @@ public class PlotUtil {
             OutputStream outstream = new FileOutputStream(exportFile);
             TranscoderOutput output = new TranscoderOutput(outstream);
 
-            if(imageType == ImageType.PDF){
+            if (imageType == ImageType.PDF) {
 
                 // write as pdf
                 Transcoder pdfTranscoder = new PDFTranscoder();
                 pdfTranscoder.addTranscodingHint(PDFTranscoder.KEY_PIXEL_UNIT_TO_MILLIMETER, new Float(0.084666f));
                 pdfTranscoder.transcode(svgInputFile, output);
 
-            } else if(imageType == ImageType.JPEG){
+            } else if (imageType == ImageType.JPEG) {
 
                 // write as jpeg
                 Transcoder jpegTranscoder = new JPEGTranscoder();
                 jpegTranscoder.addTranscodingHint(JPEGTranscoder.KEY_QUALITY, new Float(1.0));
                 jpegTranscoder.transcode(svgInputFile, output);
 
-            } if(imageType == ImageType.TIFF){
+            }
+            if (imageType == ImageType.TIFF) {
 
                 // write as tiff
                 Transcoder tiffTranscoder = new TIFFTranscoder();
@@ -1422,7 +1417,8 @@ public class PlotUtil {
                 tiffTranscoder.addTranscodingHint(TIFFTranscoder.KEY_FORCE_TRANSPARENT_WHITE, true);
                 tiffTranscoder.transcode(svgInputFile, output);
 
-            } if(imageType == ImageType.PNG){
+            }
+            if (imageType == ImageType.PNG) {
 
                 // write as png
                 Transcoder pngTranscoder = new PNGTranscoder();
@@ -1436,7 +1432,7 @@ public class PlotUtil {
             outstream.close();
 
             // delete the svg file given that the selected format is not svg
-            if(svgFile.exists()){
+            if (svgFile.exists()) {
                 svgFile.delete();
             }
         }
@@ -1449,7 +1445,7 @@ public class PlotUtil {
      * @param component
      * @param bounds
      */
-    private static SVGGraphics2D drawSvgGraphics(Object component, Rectangle bounds){
+    private static SVGGraphics2D drawSvgGraphics(Object component, Rectangle bounds) {
 
         // Get a SVGDOMImplementation and create an XML document
         DOMImplementation domImpl = SVGDOMImplementation.getDOMImplementation();
@@ -1460,9 +1456,9 @@ public class PlotUtil {
         SVGGraphics2D svgGenerator = new SVGGraphics2D(svgDocument);
 
         // draw the panel in the SVG generator
-        if(component instanceof JFreeChart){
+        if (component instanceof JFreeChart) {
             ((JFreeChart) component).draw(svgGenerator, bounds);
-        } else if(component instanceof JComponent){
+        } else if (component instanceof JComponent) {
             ((JComponent) component).paintAll(svgGenerator);
         }
 
@@ -1480,7 +1476,7 @@ public class PlotUtil {
      * @return the created chart
      */
     public static JFreeChart createFragmentIonProbabilityBoxPlot(HashMap<String, double[][]> data,
-            String xAxisLabel, String yAxisLabel, Properties properties, String title){
+            String xAxisLabel, String yAxisLabel, Properties properties, String title) {
 
         DefaultBoxAndWhiskerCategoryDataset dataSet = new DefaultBoxAndWhiskerCategoryDataset();
 
@@ -1506,9 +1502,9 @@ public class PlotUtil {
 
                 ArrayList<Double> listValues = new ArrayList();
 
-                for(int k = 0; k < tempArray[j].length; k++){
+                for (int k = 0; k < tempArray[j].length; k++) {
 
-                    if(!new Double(tempArray[j][k]).isNaN()){
+                    if (!new Double(tempArray[j][k]).isNaN()) {
                         listValues.add(new Double(tempArray[j][k]));
                     }
                 }
@@ -1546,7 +1542,7 @@ public class PlotUtil {
      * @param usePpm true if ppm is used as the mass error, false otherwise
      * @return the created chart
      */
-    public static JFreeChart createMassErrorBoxPlot(HashMap<String, ArrayList<Double>> data, String title, boolean usePpm){
+    public static JFreeChart createMassErrorBoxPlot(HashMap<String, ArrayList<Double>> data, String title, boolean usePpm) {
 
         DefaultBoxAndWhiskerCategoryDataset dataSet = new DefaultBoxAndWhiskerCategoryDataset();
 
@@ -1598,7 +1594,7 @@ public class PlotUtil {
      * @return the created chart
      */
     public static JFreeChart createMassErrorPlot(boolean isBubblePlot, HashMap<String, ArrayList<XYZDataPoint>> data,
-            String internalFrameTitle, boolean usePpm, Properties properties){
+            String internalFrameTitle, boolean usePpm, Properties properties) {
 
         JFreeChart chart = null;
 
@@ -1613,12 +1609,18 @@ public class PlotUtil {
         HashMap<Double, Double> averageValues = new HashMap<Double, Double>();
 
         // create the plot
+        String yAxisLabel = "Mass Error (Da)";
+
+        if (usePpm) {
+            yAxisLabel = "Mass Error (ppm)";
+        }
+
         if (isBubblePlot) {
             DefaultXYZDataset dataset = PlotUtil.addXYZDataSeries(data, averageValues, properties);
-            chart = PlotUtil.getBubbleChart(dataset, usePpm, addLegend, properties);
+            chart = PlotUtil.getBubbleChart(dataset, "m/z-value", yAxisLabel, addLegend, properties);
         } else {
             DefaultXYDataset dataSet = PlotUtil.addXYDataSeries(data, averageValues, properties);
-            chart = PlotUtil.getScatterPlotChart(dataSet, usePpm, addLegend, properties);
+            chart = PlotUtil.getScatterPlotChart(dataSet, "m/z-value", yAxisLabel, addLegend, properties);
         }
 
         // make sure the legend is not shown if 'hide legends' is currently selected
@@ -1655,18 +1657,18 @@ public class PlotUtil {
             int[] numberOfSpectraOfGivenLength,
             int maxSequenceLength,
             int spectraCounter,
-            int maxSpectra){
+            int maxSpectra) {
 
         Iterator<String> iterator = sequenceDependentFragmentIons.keySet().iterator();
 
-        while(iterator.hasNext()){
+        while (iterator.hasNext()) {
 
             String key = iterator.next();
 
             int[] tempArray = sequenceDependentFragmentIons.get(key);
 
             for (int j = 1; j < tempArray.length - 1; j++) {
-                if(averageSequenceDependentFragmentIons.containsKey(key)) {
+                if (averageSequenceDependentFragmentIons.containsKey(key)) {
                     double[][] temp = averageSequenceDependentFragmentIons.get(key);
                     temp[j][spectraCounter] = ((double) tempArray[j]) / numberOfSpectraOfGivenLength[j];
                 } else {
@@ -1710,5 +1712,80 @@ public class PlotUtil {
 
             data.put(dataPointLabel, temp);
         }
+    }
+
+    /**
+     * Returns a plot of the normal distribution based on the given data.
+     *
+     * @return a plot of the normal distribution based on the given data
+     */
+    public static XYPlot plotNormalDistribution(ArrayList<Double> values, double q1, double q3) {
+
+        // calculate and plot the normal distribution
+        DescriptiveStatistics stats = new DescriptiveStatistics();
+
+        for (int i = 0; i < values.size(); i++) {
+            stats.addValue(values.get(i));
+        }
+
+        double standardDeviation = stats.getStandardDeviation();
+        double mean = stats.getMean();
+        double lowerBound = stats.getMin();
+        double upperBound = stats.getMax();
+
+        Function2D normal = new NormalDistributionFunction2D(mean, standardDeviation);
+        XYDataset dataSet =
+                DatasetUtilities.sampleFunction2D(normal, lowerBound, upperBound, 100, "Normal");
+
+        ValueAxis domainAxis = new NumberAxis("Median");
+        ValueAxis rangeAxis = new NumberAxis("Frequency");
+
+        XYItemRenderer rendererNormalDistribution = new StandardXYItemRenderer();
+        rendererNormalDistribution.setBaseToolTipGenerator(new StandardXYToolTipGenerator());
+        rendererNormalDistribution.setBaseStroke(new BasicStroke(2.0f));
+
+        XYPlot plot =
+                new XYPlot(dataSet, domainAxis, rangeAxis, rendererNormalDistribution);
+
+        ValueAxis rangeAxisNormalizedFrequency = new NumberAxis("Normalized Frequency");
+        plot.setRangeAxis(1, rangeAxisNormalizedFrequency);
+
+
+        // create the histogram
+        double[] valuesAsArray = new double[values.size()];
+
+        for(int i=0; i < values.size(); i++){
+            valuesAsArray[i] = values.get(i);
+        }
+        
+        HistogramDataset histogramDataset = new HistogramDataset();
+        histogramDataset.setType(HistogramType.RELATIVE_FREQUENCY);
+        histogramDataset.addSeries("Histogram", valuesAsArray, 20);
+
+        XYItemRenderer rendererHistogram = new XYBarRenderer();
+        rendererHistogram.setBaseToolTipGenerator(new StandardXYToolTipGenerator());
+
+        plot.setDataset(1, histogramDataset);
+        plot.setRenderer(1, rendererHistogram);
+        plot.mapDatasetToRangeAxis(1, 1);
+
+        plot.setDatasetRenderingOrder(DatasetRenderingOrder.REVERSE);
+        plot.setOrientation(PlotOrientation.VERTICAL);
+
+        // add interval marker
+        IntervalMarker interquartileMarker = new IntervalMarker(q1, q3);
+        interquartileMarker.setAlpha(Properties.DEFAULT_VISIBLE_MARKER_ALPHA);
+        interquartileMarker.setPaint(Properties.getDefaultMarkerColor());
+        plot.addDomainMarker(interquartileMarker, Layer.BACKGROUND);
+
+        // set the font
+        plot.getDomainAxis().setLabelFont(new Font("SansSerif", Font.PLAIN, 10));
+        plot.getRangeAxis().setLabelFont(new Font("SansSerif", Font.PLAIN, 10));
+        plot.getDomainAxis().setTickLabelFont(new Font("SansSerif", Font.PLAIN, 10));
+        plot.getRangeAxis().setTickLabelFont(new Font("SansSerif", Font.PLAIN, 10));
+        plot.getRangeAxis(1).setLabelFont(new Font("SansSerif", Font.PLAIN, 10));
+        plot.getRangeAxis(1).setTickLabelFont(new Font("SansSerif", Font.PLAIN, 10));
+
+        return plot;
     }
 }

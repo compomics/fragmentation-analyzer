@@ -85,6 +85,7 @@ import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYErrorRenderer;
 import org.jfree.chart.title.LegendTitle;
 import org.jfree.data.statistics.DefaultBoxAndWhiskerCategoryDataset;
+import org.jfree.data.xy.DefaultXYDataset;
 import org.jfree.data.xy.XYDataset;
 import org.jfree.ui.Layer;
 import org.jfree.ui.RectangleEdge;
@@ -1119,7 +1120,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         });
 
         searchResultsJComboBox.setMaximumRowCount(12);
-        searchResultsJComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { " - Select Analysis Type - ", "List Individual Identifications", "Intensity Box Plot", "Mass Error Scatter Plot", "Mass Error Bubble Plot", "Mass Error Box Plot", "Fragment Ion Probability Plot", "Fragment Ion Heat Map" }));
+        searchResultsJComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { " - Select Analysis Type - ", "List Individual Identifications", "Intensity Box Plot", "Mass Error Scatter Plot", "Mass Error Bubble Plot", "Mass Error Box Plot", "Fragment Ion Probability Plot", "Fragment Ion Heat Map", "Intensity Meta Plots", "Intensity Correlation" }));
         searchResultsJComboBox.setPreferredSize(new java.awt.Dimension(190, 20));
         searchResultsJComboBox.addPopupMenuListener(new javax.swing.event.PopupMenuListener() {
             public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
@@ -1651,9 +1652,9 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                 .addContainerGap()
                 .add(jPanel6Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(yIonsModifiedJCheckBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(yIonsUnmodifiedJCheckBox)
+                    .add(yIonsUnmodifiedJCheckBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(bIonsModifiedJCheckBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(bIonsUnmodifiedJCheckBox)
+                    .add(bIonsUnmodifiedJCheckBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(yIonsBoxPlotJCheckBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(bIonsBoxPlotJCheckBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(jSeparator7, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 70, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
@@ -1673,13 +1674,13 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                 .add(0, 0, 0)
                 .add(jSeparator7, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .add(0, 0, 0)
-                .add(bIonsUnmodifiedJCheckBox)
+                .add(bIonsUnmodifiedJCheckBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .add(0, 0, 0)
                 .add(bIonsModifiedJCheckBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .add(0, 0, 0)
                 .add(jSeparator4, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .add(0, 0, 0)
-                .add(yIonsUnmodifiedJCheckBox)
+                .add(yIonsUnmodifiedJCheckBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .add(0, 0, 0)
                 .add(yIonsModifiedJCheckBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -2897,7 +2898,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                         //     y 2 becomes y (n-1), etc.
                                         double averageBValue = PlotUtil.getNonNullBFragments(nonNullBValues, bIntensities, k);
                                         double averageYValue = PlotUtil.getNonNullYFragments(nonNullYValues, yIntensities, k);
-
+                                        
                                         // add the b ions to the box plot data set
                                         double[] bValues = PlotUtil.addValuesToBoxPlot(dataSet, nonNullBValues, "b ions",
                                                 "" + currentSequence.charAt(k) + (k + 1));
@@ -2906,7 +2907,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                         double[] yValues = PlotUtil.addValuesToBoxPlot(dataSet, nonNullYValues, "y ions",
                                                 "" + currentSequence.charAt(k) + (k + 1));
                                     }
-                                }
+                                         }
 
                                 CategoryPlot plot = PlotUtil.getCategoryPlot(dataSet, "Sequence", "Intensity");
 
@@ -2972,6 +2973,489 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                     "Error Building Box Plot", JOptionPane.ERROR_MESSAGE);
                             Util.writeToErrorLog("Error when building box plot: ");
                             e.printStackTrace();
+                        }
+                    } else if(searchResultsJComboBox.getSelectedIndex() == Properties.SEARCH_RESULTS_INTENSITY_CORRELATION){
+
+                        if (!singleSearch) {
+                            JOptionPane.showMessageDialog(null, "This analysis type is only supported for a General Search.",
+                                    "Analysis Type Not Supported", JOptionPane.OK_OPTION);
+                        } else {
+
+                            plotsAnalysesJXTaskPane.setExpanded(true);
+                            searchResultsJXTaskPane.setExpanded(false);
+                            spectraJXTaskPane.setExpanded(false);
+
+                            try {
+
+                                DefaultXYDataset xyValues = new DefaultXYDataset();
+
+                                ArrayList<Double> q3_to_q1_distancesBIons = new ArrayList<Double>();
+                                ArrayList<Double> mediansBIons = new ArrayList<Double>();
+
+                                ArrayList<Double> q3_to_q1_distancesYIons = new ArrayList<Double>();
+                                ArrayList<Double> mediansYIons = new ArrayList<Double>();
+
+                                for (int i = 0; i < properties.getCurrentlySelectedRowsInSearchTable().size() && !cancelProgress; i++) {
+
+                                    progressDialog.setIntermidiate(false);
+                                    progressDialog.setTitle("Running Analysis. Please Wait...");
+                                    progressDialog.setValue(i + 1);
+                                    progressDialog.setString("(" + (i + 1) + "/" +
+                                            properties.getCurrentlySelectedRowsInSearchTable().size() + ")");
+
+                                    IdentificationTableRow currentlySelectedRow =
+                                            properties.getCurrentlySelectedRowsInSearchTable().get(i);
+                                    String currentSequence = currentlySelectedRow.getSequence();
+                                    String currentModifiedSequence = currentlySelectedRow.getModifiedSequence();
+
+                                    DefaultBoxAndWhiskerCategoryDataset dataSet = new DefaultBoxAndWhiskerCategoryDataset();
+
+                                    ArrayList<ReducedIdentification> currentIdentifications =
+                                            properties.getIdentificationMap().get(currentModifiedSequence);
+
+                                    double[][] bIntensities = new double[currentSequence.length()][currentIdentifications.size()];
+                                    double[][] yIntensities = new double[currentSequence.length()][currentIdentifications.size()];
+
+                                    progressDialog.setTitle("Extracting Fragment Ions. Please Wait...");
+                                    progressDialog.setMax(currentIdentifications.size());
+                                    progressDialog.setValue(0);
+
+
+                                    // get all b and y fragment ions and store them in
+                                    // the bIntensities and yIntensities tables, one row per identification
+                                    for (int j = 0; j < currentIdentifications.size() && !cancelProgress; j++) {
+
+                                        progressDialog.setValue(j);
+
+                                        if (currentDataSetIsFromMsLims) {
+                                            // get all b fragments
+                                            getAllFragmentsFromMsLims(currentIdentifications.get(j), bIntensities, j, Properties.B_ION);
+
+                                            // get all y fragments
+                                            getAllFragmentsFromMsLims(currentIdentifications.get(j), yIntensities, j, Properties.Y_ION);
+                                        } else {
+                                            // get all b fragments
+                                            getAllFragmentsFromFragmentIonsFile(currentIdentifications.get(j), bIntensities, j, "b");
+
+                                            // get all y fragments
+                                            getAllFragmentsFromFragmentIonsFile(currentIdentifications.get(j), yIntensities, j, "y");
+                                        }
+                                    }
+
+                                    progressDialog.setIntermidiate(true);
+                                    progressDialog.setString("(" + (i + 1) + "/" +
+                                            properties.getCurrentlySelectedRowsInSearchTable().size() + ")");
+                                    progressDialog.setTitle("Creating Box Plot. Please Wait...");
+
+                                    // lists of all non null B and Y values
+                                    ArrayList<Double> nonNullBValues = new ArrayList<Double>();
+                                    ArrayList<Double> nonNullYValues = new ArrayList<Double>();
+
+
+                                    for (int k = 0; k < yIntensities.length; k++) {
+
+                                        nonNullBValues = new ArrayList<Double>();
+                                        nonNullYValues = new ArrayList<Double>();
+
+                                        // get the list of non null b and y values, and get the average values
+                                        // NB: the y fragments are flipped in the returned lists to make it
+                                        //     easier to compare b and y ions in the same plot, i.e. y 1 becomes y n,
+                                        //     y 2 becomes y (n-1), etc.
+                                        double averageBValue = PlotUtil.getNonNullBFragments(nonNullBValues, bIntensities, k);
+                                        double averageYValue = PlotUtil.getNonNullYFragments(nonNullYValues, yIntensities, k);
+
+                                        // add the b ions to the box plot data set
+                                        double[] bValues = PlotUtil.addValuesToBoxPlot(dataSet, nonNullBValues, "b ions",
+                                                "" + currentSequence.charAt(k) + (k + 1));
+
+                                        // add the y ions to the box plot data set
+                                        double[] yValues = PlotUtil.addValuesToBoxPlot(dataSet, nonNullYValues, "y ions",
+                                                "" + currentSequence.charAt(k) + (k + 1));
+                                    }
+
+
+                                    // get the b-ions
+                                    Iterator<String> columnIterator = dataSet.getColumnKeys().iterator();
+
+                                    while(columnIterator.hasNext()){
+
+                                        String columnKey = columnIterator.next();
+
+                                        double q3_to_q1_distance = dataSet.getQ3Value("b ions", columnKey).doubleValue()
+                                                - dataSet.getQ1Value("b ions", columnKey).doubleValue();
+                                        double median = dataSet.getMedianValue("b ions", columnKey).doubleValue();
+
+                                        q3_to_q1_distancesBIons.add(q3_to_q1_distance);
+                                        mediansBIons.add(median);
+                                    }
+
+                                    // get the y-ions
+                                    Iterator<String> columnIterator2 = dataSet.getColumnKeys().iterator();
+
+                                    while(columnIterator2.hasNext()){
+
+                                        String columnKey = columnIterator2.next();
+
+                                        double q3_to_q1_distance = dataSet.getQ3Value("y ions", columnKey).doubleValue()
+                                                - dataSet.getQ1Value("y ions", columnKey).doubleValue();
+                                        double median = dataSet.getMedianValue("y ions", columnKey).doubleValue();
+
+                                        q3_to_q1_distancesYIons.add(q3_to_q1_distance);
+                                        mediansYIons.add(median);
+                                    }
+                                }
+
+                                if (!cancelProgress) {
+
+                                     // add the data to the plot
+
+                                     // b ions
+                                     double[][] tempXYData = new double[2][mediansBIons.size()];
+
+                                     for(int j=0; j < mediansBIons.size(); j++){
+                                         tempXYData[0][j] = mediansBIons.get(j);
+                                         tempXYData[1][j] = q3_to_q1_distancesBIons.get(j);
+                                     }
+
+                                     xyValues.addSeries("b ions", tempXYData);
+
+                                     // y ions
+                                     tempXYData = new double[2][mediansYIons.size()];
+
+                                     for(int j=0; j < mediansYIons.size(); j++){
+                                         tempXYData[0][j] = mediansYIons.get(j);
+                                         tempXYData[1][j] = q3_to_q1_distancesYIons.get(j);
+                                     }
+
+                                     xyValues.addSeries("y ions", tempXYData);
+
+
+                                     // create the chart
+                                    JFreeChart chart = PlotUtil.getScatterPlotChart(
+                                            xyValues, "Median Intensity", "Q3 - Q1", true, properties);
+
+                                    chart.getLegend().setItemFont(new Font("SansSerif", Font.PLAIN, 10));
+                                    chart.getLegend().setPosition(RectangleEdge.BOTTOM);
+
+                                    if (!properties.showLegend()) {
+                                        chart.getLegend().setVisible(false);
+                                    }
+
+                                    ChartPanel chartPanel = new ChartPanel(chart);
+
+                                    String internalFrameTitle = "Intensity Variability";
+                                    String plotType = "ScatterPlot";
+
+                                    FragmentationAnalyzerJInternalFrame internalFrame = new FragmentationAnalyzerJInternalFrame(
+                                            internalFrameTitle, true, true, true, chartPanel, plotType, internalFrameUniqueIdCounter);
+                                    internalFrame.add(chartPanel);
+
+                                    insertInternalFrame(internalFrame);
+                                    properties.getAllChartFrames().put(internalFrameUniqueIdCounter, chart);
+                                    internalFrameUniqueIdCounter++;
+
+                                    // update the visible box plot fragment ion selection
+                                    updateVisibleFragmentIonBoxPlotSelection();
+                                }
+                            } catch (SQLException e) {
+                                JOptionPane.showMessageDialog(null,
+                                        "An error occured when accessing the database.\n" +
+                                        "See ../Properties/ErrorLog.txt for more details.",
+                                        "Error Accessing Database", JOptionPane.ERROR_MESSAGE);
+                                Util.writeToErrorLog("Error when extracing fragment ions: ");
+                                e.printStackTrace();
+                            } catch (IOException e) {
+                                JOptionPane.showMessageDialog(null,
+                                        "An error occured when building a box plot.\n" +
+                                        "See ../Properties/ErrorLog.txt for more details.",
+                                        "Error Building Box Plot", JOptionPane.ERROR_MESSAGE);
+                                Util.writeToErrorLog("Error when building box plot: ");
+                                e.printStackTrace();
+                            }
+                        }
+                    } else if(searchResultsJComboBox.getSelectedIndex() == Properties.SEARCH_RESULTS_META_INTENSITY_PLOTS){
+
+                        if (!singleSearch) {
+                            JOptionPane.showMessageDialog(null, "This analysis type is only supported for a General Search.",
+                                    "Analysis Type Not Supported", JOptionPane.OK_OPTION);
+                        } else {
+
+                            plotsAnalysesJXTaskPane.setExpanded(true);
+                            searchResultsJXTaskPane.setExpanded(false);
+                            spectraJXTaskPane.setExpanded(false);
+
+                            try {
+
+                                DefaultBoxAndWhiskerCategoryDataset dataSetCombined = new DefaultBoxAndWhiskerCategoryDataset();
+
+                                DefaultBoxAndWhiskerCategoryDataset dataSetCombinedMedians = new DefaultBoxAndWhiskerCategoryDataset();
+                                DefaultBoxAndWhiskerCategoryDataset dataSetCombinedQuartileDistance = new DefaultBoxAndWhiskerCategoryDataset();
+
+                                ArrayList<Double> mediansB = new ArrayList();
+                                ArrayList<Double> mediansY = new ArrayList();
+                                ArrayList<Double> quartileDistancesB = new ArrayList();
+                                ArrayList<Double> quartileDistancesY = new ArrayList();
+
+                                for (int i = 0; i < properties.getCurrentlySelectedRowsInSearchTable().size() && !cancelProgress; i++) {
+
+                                    progressDialog.setIntermidiate(false);
+                                    progressDialog.setTitle("Running Analysis. Please Wait...");
+                                    progressDialog.setValue(i + 1);
+                                    progressDialog.setString("(" + (i + 1) + "/" +
+                                            properties.getCurrentlySelectedRowsInSearchTable().size() + ")");
+
+                                    IdentificationTableRow currentlySelectedRow =
+                                            properties.getCurrentlySelectedRowsInSearchTable().get(i);
+                                    String currentSequence = currentlySelectedRow.getSequence();
+                                    String currentModifiedSequence = currentlySelectedRow.getModifiedSequence();
+
+                                    DefaultBoxAndWhiskerCategoryDataset dataSet = new DefaultBoxAndWhiskerCategoryDataset();
+
+                                    ArrayList<ReducedIdentification> currentIdentifications =
+                                            properties.getIdentificationMap().get(currentModifiedSequence);
+
+                                    double[][] bIntensities = new double[currentSequence.length()][currentIdentifications.size()];
+                                    double[][] yIntensities = new double[currentSequence.length()][currentIdentifications.size()];
+
+                                    progressDialog.setTitle("Extracting Fragment Ions. Please Wait...");
+                                    progressDialog.setMax(currentIdentifications.size());
+                                    progressDialog.setValue(0);
+
+
+                                    // get all b and y fragment ions and store them in
+                                    // the bIntensities and yIntensities tables, one row per identification
+                                    for (int j = 0; j < currentIdentifications.size() && !cancelProgress; j++) {
+
+                                        progressDialog.setValue(j);
+
+                                        if (currentDataSetIsFromMsLims) {
+                                            // get all b fragments
+                                            getAllFragmentsFromMsLims(currentIdentifications.get(j), bIntensities, j, Properties.B_ION);
+
+                                            // get all y fragments
+                                            getAllFragmentsFromMsLims(currentIdentifications.get(j), yIntensities, j, Properties.Y_ION);
+                                        } else {
+                                            // get all b fragments
+                                            getAllFragmentsFromFragmentIonsFile(currentIdentifications.get(j), bIntensities, j, "b");
+
+                                            // get all y fragments
+                                            getAllFragmentsFromFragmentIonsFile(currentIdentifications.get(j), yIntensities, j, "y");
+                                        }
+                                    }
+
+                                    progressDialog.setIntermidiate(true);
+                                    progressDialog.setString("(" + (i + 1) + "/" +
+                                            properties.getCurrentlySelectedRowsInSearchTable().size() + ")");
+                                    progressDialog.setTitle("Creating Box Plot. Please Wait...");
+
+                                    // lists of all non null B and Y values
+                                    ArrayList<Double> nonNullBValues = new ArrayList<Double>();
+                                    ArrayList<Double> nonNullYValues = new ArrayList<Double>();
+
+
+                                    for (int k = 0; k < yIntensities.length; k++) {
+
+                                        nonNullBValues = new ArrayList<Double>();
+                                        nonNullYValues = new ArrayList<Double>();
+
+                                        // get the list of non null b and y values, and get the average values
+                                        // NB: the y fragments are flipped in the returned lists to make it
+                                        //     easier to compare b and y ions in the same plot, i.e. y 1 becomes y n,
+                                        //     y 2 becomes y (n-1), etc.
+                                        double averageBValue = PlotUtil.getNonNullBFragments(nonNullBValues, bIntensities, k);
+                                        double averageYValue = PlotUtil.getNonNullYFragments(nonNullYValues, yIntensities, k);
+
+                                        // add the b ions to the box plot data set
+                                        double[] bValues = PlotUtil.addValuesToBoxPlot(dataSet, nonNullBValues, "b ions",
+                                                "" + currentSequence.charAt(k) + (k + 1));
+
+                                        // add the y ions to the box plot data set
+                                        double[] yValues = PlotUtil.addValuesToBoxPlot(dataSet, nonNullYValues, "y ions",
+                                                "" + currentSequence.charAt(k) + (k + 1));
+                                    }
+
+                                     Iterator<String> rowIterator = dataSet.getRowKeys().iterator();
+
+                                     while(rowIterator.hasNext()){
+
+                                         String rowKey = rowIterator.next();
+
+                                         Iterator<String> columnIterator = dataSet.getColumnKeys().iterator();
+
+                                         ArrayList<Double> listValues = new ArrayList();
+
+                                         while(columnIterator.hasNext()){
+
+                                             String columnKey = columnIterator.next();
+
+                                             double q3_to_q1_distance_divided_by_mean = (dataSet.getQ3Value(rowKey, columnKey).doubleValue()
+                                                     - dataSet.getQ1Value(rowKey, columnKey).doubleValue())
+                                                     / dataSet.getMedianValue(rowKey, columnKey).doubleValue();
+                                             listValues.add(new Double(q3_to_q1_distance_divided_by_mean));
+                                         }
+
+                                         dataSetCombined.add(listValues, rowKey, new Integer(i+1).toString());
+
+                                         if(rowKey.equalsIgnoreCase("b ions")){
+                                            mediansB.add(dataSetCombined.getMeanValue(rowKey, new Integer(i+1).toString()).doubleValue());
+
+                                            quartileDistancesB.add(dataSetCombined.getQ3Value(rowKey, new Integer(i+1).toString()).doubleValue()
+                                                 - dataSetCombined.getQ1Value(rowKey, new Integer(i+1).toString()).doubleValue());
+                                         } else if(rowKey.equalsIgnoreCase("y ions")){
+                                             mediansY.add(dataSetCombined.getMeanValue(rowKey, new Integer(i+1).toString()).doubleValue());
+
+                                            quartileDistancesY.add(dataSetCombined.getQ3Value(rowKey, new Integer(i+1).toString()).doubleValue()
+                                                 - dataSetCombined.getQ1Value(rowKey, new Integer(i+1).toString()).doubleValue());
+                                         }
+                                     }
+                                }
+
+                                if (!cancelProgress) {
+
+                                    CategoryPlot plot = PlotUtil.getCategoryPlot(dataSetCombined, "Sequences", "Q3 - Q1 / median");
+
+                                    JFreeChart chart = new JFreeChart(
+                                            null,
+                                            new Font("SansSerif", Font.BOLD, 10),
+                                            plot,
+                                            true);
+
+                                    chart.getLegend().setItemFont(new Font("SansSerif", Font.PLAIN, 10));
+                                    chart.getLegend().setPosition(RectangleEdge.BOTTOM);
+
+                                    if (!properties.showLegend()) {
+                                        chart.getLegend().setVisible(false);
+                                    }
+
+                                    ChartPanel chartPanel = new ChartPanel(chart);
+
+                                    String internalFrameTitle = "Intensity Variability";
+                                    String plotType = "BoxPlot";
+
+                                    FragmentationAnalyzerJInternalFrame internalFrame = new FragmentationAnalyzerJInternalFrame(
+                                            internalFrameTitle, true, true, true, chartPanel, plotType, internalFrameUniqueIdCounter);
+                                    internalFrame.add(chartPanel);
+
+                                    insertInternalFrame(internalFrame);
+                                    properties.getAllChartFrames().put(internalFrameUniqueIdCounter, chart);
+                                    internalFrameUniqueIdCounter++;
+
+                                    // update the visible box plot fragment ion selection
+                                    updateVisibleFragmentIonBoxPlotSelection();
+
+
+                                    // box plot of the quartile distances
+                                    dataSetCombinedQuartileDistance.add(quartileDistancesB, "b ions", "0");
+                                    dataSetCombinedQuartileDistance.add(quartileDistancesY, "y ions", "0");
+
+                                    CategoryPlot plotQuartileDistances =
+                                            PlotUtil.getCategoryPlot(dataSetCombinedQuartileDistance, "Sequences", "Q3 - Q1");
+
+                                    JFreeChart chartQuartileDistances = new JFreeChart(
+                                            null,
+                                            new Font("SansSerif", Font.BOLD, 10),
+                                            plotQuartileDistances,
+                                            true);
+
+                                    chartQuartileDistances.getLegend().setItemFont(new Font("SansSerif", Font.PLAIN, 10));
+                                    chartQuartileDistances.getLegend().setPosition(RectangleEdge.BOTTOM);
+
+                                    if (!properties.showLegend()) {
+                                        chartQuartileDistances.getLegend().setVisible(false);
+                                    }
+
+                                    ChartPanel chartPanelQuartileDistances = new ChartPanel(chartQuartileDistances);
+
+                                    internalFrameTitle = "Intensity Variability - (Q3 - Q1)";
+                                    plotType = "BoxPlot";
+
+                                    FragmentationAnalyzerJInternalFrame internalFrameQuartileDistances = new FragmentationAnalyzerJInternalFrame(
+                                            internalFrameTitle, true, true, true, chartPanelQuartileDistances, plotType, internalFrameUniqueIdCounter);
+                                    internalFrameQuartileDistances.add(chartPanelQuartileDistances);
+
+                                    insertInternalFrame(internalFrameQuartileDistances);
+                                    properties.getAllChartFrames().put(internalFrameUniqueIdCounter, chartQuartileDistances);
+                                    internalFrameUniqueIdCounter++;
+
+
+                                    // box plot of the medians
+                                    dataSetCombinedMedians.add(mediansB, "b ions", "0");
+                                    dataSetCombinedMedians.add(mediansY, "y ions", "0");
+
+                                    CategoryPlot plotMedians = PlotUtil.getCategoryPlot(dataSetCombinedMedians, "Sequences", "median");
+
+                                    JFreeChart chartMedians = new JFreeChart(
+                                            null,
+                                            new Font("SansSerif", Font.BOLD, 10),
+                                            plotMedians,
+                                            true);
+
+                                    chartMedians.getLegend().setItemFont(new Font("SansSerif", Font.PLAIN, 10));
+                                    chartMedians.getLegend().setPosition(RectangleEdge.BOTTOM);
+
+                                    if (!properties.showLegend()) {
+                                        chartMedians.getLegend().setVisible(false);
+                                    }
+
+                                    ChartPanel chartPanelMedians = new ChartPanel(chartMedians);
+
+                                    internalFrameTitle = "Intensity Variability - median";
+                                    plotType = "BoxPlot";
+
+                                    FragmentationAnalyzerJInternalFrame internalFrameMedians = new FragmentationAnalyzerJInternalFrame(
+                                            internalFrameTitle, true, true, true, chartPanelMedians, plotType, internalFrameUniqueIdCounter);
+                                    internalFrameMedians.add(chartPanelMedians);
+
+                                    insertInternalFrame(internalFrameMedians);
+                                    properties.getAllChartFrames().put(internalFrameUniqueIdCounter, chartMedians);
+                                    internalFrameUniqueIdCounter++;
+
+                                    // update the visible box plot fragment ion selection
+                                    updateVisibleFragmentIonBoxPlotSelection();
+
+
+
+                                    // plot the normal distributions and the histogram
+
+                                    // b ion medians
+                                    insertNormalPlot(mediansB,
+                                            dataSetCombinedMedians.getQ3Value("b ions", "0").doubleValue(),
+                                            dataSetCombinedMedians.getQ1Value("b ions", "0").doubleValue(),
+                                            "Intensity Variability - normal - b ions median");
+
+                                    // b ion quartile distances
+                                    insertNormalPlot(quartileDistancesB,
+                                            dataSetCombinedQuartileDistance.getQ3Value("b ions", "0").doubleValue(),
+                                            dataSetCombinedQuartileDistance.getQ1Value("b ions", "0").doubleValue(),
+                                            "Intensity Variability - normal - b ions quartile distances");
+
+                                    // y ion medians
+                                    insertNormalPlot(mediansY,
+                                            dataSetCombinedMedians.getQ3Value("y ions", "0").doubleValue(),
+                                            dataSetCombinedMedians.getQ1Value("y ions", "0").doubleValue(),
+                                            "Intensity Variability - normal - y ions median");
+
+                                    // y ion quartile distances
+                                    insertNormalPlot(quartileDistancesY,
+                                            dataSetCombinedQuartileDistance.getQ3Value("y ions", "0").doubleValue(),
+                                            dataSetCombinedQuartileDistance.getQ1Value("y ions", "0").doubleValue(),
+                                            "Intensity Variability - normal - y ions quartile distances");
+                                }
+                            } catch (SQLException e) {
+                                JOptionPane.showMessageDialog(null,
+                                        "An error occured when accessing the database.\n" +
+                                        "See ../Properties/ErrorLog.txt for more details.",
+                                        "Error Accessing Database", JOptionPane.ERROR_MESSAGE);
+                                Util.writeToErrorLog("Error when extracing fragment ions: ");
+                                e.printStackTrace();
+                            } catch (IOException e) {
+                                JOptionPane.showMessageDialog(null,
+                                        "An error occured when building a box plot.\n" +
+                                        "See ../Properties/ErrorLog.txt for more details.",
+                                        "Error Building Box Plot", JOptionPane.ERROR_MESSAGE);
+                                Util.writeToErrorLog("Error when building box plot: ");
+                                e.printStackTrace();
+                            }
                         }
                     } else if (searchResultsJComboBox.getSelectedIndex() == Properties.SEARCH_RESULTS_MASS_ERROR_SCATTER_PLOT ||
                             searchResultsJComboBox.getSelectedIndex() == Properties.SEARCH_RESULTS_MASS_ERROR_BUBBLE_PLOT) {
@@ -3767,6 +4251,43 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         insertInternalFrame(internalFrame);
         properties.getAllChartFrames().put(internalFrameUniqueIdCounter, chart);
         internalFrameUniqueIdCounter++;
+    }
+
+    /**
+     * Inserts an internal frame with a histogram and a normal distribution based on the provided dataset.
+     *
+     * @param values the values to use as input for the plots
+     * @param q1 the first quartile of the dataset
+     * @param q3 the thirds quartile of the dataset
+     * @param internalFrameTitle the title of the inserted internal frame
+     */
+    private void insertNormalPlot(ArrayList<Double> values, double q1, double q3, String internalFrameTitle){
+
+        XYPlot plotNormalMediansBions = PlotUtil.plotNormalDistribution(values, q1, q3);
+
+        JFreeChart chartNormal = new JFreeChart(null, JFreeChart.DEFAULT_TITLE_FONT, plotNormalMediansBions, true);
+
+        chartNormal.getLegend().setItemFont(new Font("SansSerif", Font.PLAIN, 10));
+        chartNormal.getLegend().setPosition(RectangleEdge.BOTTOM);
+
+        if (!properties.showLegend()) {
+            chartNormal.getLegend().setVisible(false);
+        }
+
+        ChartPanel chartPanelNormals = new ChartPanel(chartNormal);
+
+        String plotType = "Normal";
+
+        FragmentationAnalyzerJInternalFrame internalFrameNormals = new FragmentationAnalyzerJInternalFrame(
+                internalFrameTitle, true, true, true, chartPanelNormals, plotType, internalFrameUniqueIdCounter);
+        internalFrameNormals.add(chartPanelNormals);
+
+        insertInternalFrame(internalFrameNormals);
+        properties.getAllChartFrames().put(internalFrameUniqueIdCounter, chartNormal);
+        internalFrameUniqueIdCounter++;
+
+        // update the visible box plot fragment ion selection
+        updateVisibleFragmentIonBoxPlotSelection();
     }
 
     /**
@@ -6829,7 +7350,8 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         } else if (internalFrame.getInternalFrameType().equalsIgnoreCase("MassErrorBubblePlot")) {
             internalFrame.setFrameIcon(new javax.swing.ImageIcon(getClass().getResource(
                     "/no/uib/fragmentation_analyzer/icons/bubble_plot.GIF")));
-        } else if (internalFrame.getInternalFrameType().equalsIgnoreCase("MassErrorScatterPlot")) {
+        } else if (internalFrame.getInternalFrameType().equalsIgnoreCase("MassErrorScatterPlot") ||
+                internalFrame.getInternalFrameType().equalsIgnoreCase("ScatterPlot")) {
             internalFrame.setFrameIcon(new javax.swing.ImageIcon(getClass().getResource(
                     "/no/uib/fragmentation_analyzer/icons/scatter_plot.GIF")));
         } else if (internalFrame.getInternalFrameType().equalsIgnoreCase("FragmentIonProbabilityPlot")) {
@@ -6841,6 +7363,9 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         } else if (internalFrame.getInternalFrameType().equalsIgnoreCase("HeatMap")) {
             internalFrame.setFrameIcon(new javax.swing.ImageIcon(getClass().getResource(
                     "/no/uib/fragmentation_analyzer/icons/heat_map.GIF")));
+        } else if (internalFrame.getInternalFrameType().equalsIgnoreCase("Normal")) {
+            internalFrame.setFrameIcon(new javax.swing.ImageIcon(getClass().getResource(
+                    "/no/uib/fragmentation_analyzer/icons/bar_plot.GIF")));
         } else {
             // use default icon
         }
