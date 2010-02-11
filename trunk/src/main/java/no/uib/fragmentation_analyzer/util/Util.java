@@ -332,65 +332,65 @@ public final class Util {
 
         if (peakLabel.startsWith("a")) {
 
-            //turquoise
+            // turquoise
             currentColor = new Color(153, 0, 0);
 
             if (peakLabel.lastIndexOf("H2O") != -1 || peakLabel.lastIndexOf("H20") != -1) {
-                //light purple-blue
+                // light purple-blue
                 currentColor = new Color(171, 161, 255);
             } else if (peakLabel.lastIndexOf("NH3") != -1) {
-                //ugly purple pink
+                // ugly purple pink
                 currentColor = new Color(248, 151, 202);
             }
 
         } else if (peakLabel.startsWith("b")) {
 
-            //dark blue
+            // dark blue
             currentColor = new Color(0, 0, 255);
 
             if (peakLabel.lastIndexOf("H2O") != -1 || peakLabel.lastIndexOf("H20") != -1) {
-                //nice blue
+                // nice blue
                 currentColor = new Color(0, 125, 200);
             } else if (peakLabel.lastIndexOf("NH3") != -1) {
-                //another purple
+                // another purple
                 currentColor = new Color(153, 0, 255);
             }
 
         } else if (peakLabel.startsWith("c")) {
 
-            //purple blue
+            // purple blue
             currentColor = new Color(188, 0, 255); // ToDo: no colors for H2O and NH3??
 
         } else if (peakLabel.startsWith("x")) {
 
-            //green
+            // green
             currentColor = new Color(78, 200, 0); // ToDo: no colors for H2O and NH3??
 
         } else if (peakLabel.startsWith("y")) {
 
-            //black
+            // black
             currentColor = new Color(0, 0, 0);
 
             if (peakLabel.lastIndexOf("H2O") != -1 || peakLabel.lastIndexOf("H20") != -1) {
-                //navy blue
+                // navy blue
                 currentColor = new Color(0, 70, 135);
             } else if (peakLabel.lastIndexOf("NH3") != -1) {
-                //another purple
+                // another purple
                 currentColor = new Color(155, 0, 155);
             }
 
         } else if (peakLabel.startsWith("z")) {
 
-            //dark green
+            // dark green
             currentColor = new Color(64, 179, 0); // ToDo: no colors for H2O and NH3??
 
         } else if (peakLabel.startsWith("Prec")) { // precursor
 
-            //red
+            // red
             currentColor = Color.gray; // Color.red is used in MascotDatFile
 
         } else if (peakLabel.startsWith("i")) { // immonimum ion
-            //grey
+            // grey
             currentColor = Color.gray;
         }
 
@@ -398,25 +398,25 @@ public final class Util {
     }
 
     /**
-     * Returns the peak color to be used for the given label.
+     * Returns the color to use for the given fragment ion label.
      *
-     * @param seriesLabel
-     * @return the peak color
+     * @param fragment ion label
+     * @return the fragment ion color
      */
-    public static Color determineColorOfLine(String seriesLabel) {
+    public static Color determineFragmentIonColor(String seriesLabel) {
 
         Color currentColor = Color.GRAY;
 
         if (seriesLabel.startsWith("a")) {
 
-            //turquoise
+            // turquoise
             currentColor = new Color(153, 0, 0);
 
             if (seriesLabel.lastIndexOf("H2O") != -1 || seriesLabel.lastIndexOf("H20") != -1) {
-                //light purple-blue
+                // light purple-blue
                 currentColor = new Color(171, 161, 255);
             } else if (seriesLabel.lastIndexOf("NH3") != -1) {
-                //ugly purple pink
+                // ugly purple pink
                 currentColor = new Color(248, 151, 202);
             }
 
@@ -427,13 +427,13 @@ public final class Util {
 
         } else if (seriesLabel.startsWith("b")) {
 
-            //dark blue
+            // dark blue
             currentColor = new Color(0, 0, 255);
 
             // change color slightly if a neutral loss is detected
             if (seriesLabel.lastIndexOf("H2O") != -1 || seriesLabel.lastIndexOf("H20") != -1) {
                 currentColor = new Color(0, 150, 255);
-            } else if (seriesLabel.lastIndexOf("NH3") != -1) {
+            } else if (seriesLabel.lastIndexOf("NH3") != -1 || seriesLabel.equalsIgnoreCase("b ions - mod.")) {
                 currentColor = new Color(150, 0, 255);
             }
 
@@ -444,7 +444,7 @@ public final class Util {
 
         } else if (seriesLabel.startsWith("c")) {
 
-            //purple blue
+            // purple blue
             currentColor = new Color(188, 0, 255);
 
             // change color slightly if a neutral loss is detected
@@ -461,7 +461,7 @@ public final class Util {
 
         } else if (seriesLabel.startsWith("x")) {
 
-            //green
+            // green
             currentColor = new Color(78, 200, 0);
 
             // change color slightly if a neutral loss is detected
@@ -478,13 +478,13 @@ public final class Util {
 
         } else if (seriesLabel.startsWith("y")) {
 
-            //red
+            // red
             currentColor = new Color(255, 0, 0);
 
              // change color slightly if a neutral loss is detected
             if (seriesLabel.lastIndexOf("H2O") != -1 || seriesLabel.lastIndexOf("H20") != -1) {
                 currentColor = new Color(255, 150, 0);
-            } else if (seriesLabel.lastIndexOf("NH3") != -1) {
+            } else if (seriesLabel.lastIndexOf("NH3") != -1 || seriesLabel.equalsIgnoreCase("y ions - mod.")) {
                 currentColor = new Color(255, 0, 150);
             }
 
@@ -495,7 +495,7 @@ public final class Util {
 
         } else if (seriesLabel.startsWith("z")) {
 
-            //dark green
+            // dark green
             currentColor = new Color(64, 179, 0);
 
              // change color slightly if a neutral loss is detected

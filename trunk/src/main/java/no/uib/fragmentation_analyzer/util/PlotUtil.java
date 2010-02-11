@@ -638,7 +638,7 @@ public class PlotUtil {
 
         // set the data series colors
         for (int i = 0; i < sortedKeys.size(); i++) {
-            renderer.setSeriesPaint(i, Util.determineColorOfLine(sortedKeys.get(i)));
+            renderer.setSeriesPaint(i, Util.determineFragmentIonColor(sortedKeys.get(i)));
         }
 
         // increase the width of all lines and use dotted lines for the neutral loss and doubly charged ions
@@ -742,7 +742,7 @@ public class PlotUtil {
 
         // set the data series colors
         for (int i = 0; i < sortedKeys.size(); i++) {
-            renderer.setSeriesPaint(i, Util.determineColorOfLine(sortedKeys.get(i)));
+            renderer.setSeriesPaint(i, Util.determineFragmentIonColor(sortedKeys.get(i)));
         }
 
         // increase the width of all lines and use dotted lines for the neutral loss and doubly charged ions
@@ -992,7 +992,7 @@ public class PlotUtil {
         // set the data series colors if fragment ion label type is currently used
         if (properies.getCurrentLabelType() == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE) {
             for (int i = 0; i < dataSet.getSeriesCount(); i++) {
-                renderer.setSeriesPaint(i, Util.determineColorOfLine(dataSet.getSeriesKey(i).toString()));
+                renderer.setSeriesPaint(i, Util.determineFragmentIonColor(dataSet.getSeriesKey(i).toString()));
             }
         }
 
@@ -1312,7 +1312,7 @@ public class PlotUtil {
         // set the data series colors if fragment ion label type is currently used
         if (properties.getCurrentLabelType() == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE) {
             for (int i = 0; i < dataSet.getSeriesCount(); i++) {
-                plot.getRenderer().setSeriesPaint(i, Util.determineColorOfLine(dataSet.getSeriesKey(i).toString()));
+                plot.getRenderer().setSeriesPaint(i, Util.determineFragmentIonColor(dataSet.getSeriesKey(i).toString()));
             }
         }
 

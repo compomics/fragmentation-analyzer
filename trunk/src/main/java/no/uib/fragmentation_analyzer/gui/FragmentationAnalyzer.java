@@ -2079,7 +2079,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                         progressDialog.setTitle("Updating Results Table. Please Wait...");
                                         progressDialog.setIntermidiate(true);
 
-                                        rowsInserted = insertGeneralSearchResults();
+                                        rowsInserted = insertGeneralSearchResults(progressDialog);
 
                                     } else if (searchType == Properties.MODIFICATION_SEARCH) {
 
@@ -2287,7 +2287,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
      *
      * @return true if at least one row was inserted, false otherwise
      */
-    private boolean insertGeneralSearchResults() {
+    private boolean insertGeneralSearchResults(ProgressDialog progressDialog) {
 
         int rowCounter = 0;
 
@@ -2909,9 +2909,15 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                         double[] yValues = PlotUtil.addValuesToBoxPlot(dataSet, nonNullYValues, "y ions",
                                                 "" + currentSequence.charAt(k) + (k + 1));
                                     }
-                                         }
+                                }
 
                                 CategoryPlot plot = PlotUtil.getCategoryPlot(dataSet, "Sequence", "Intensity");
+
+                                // set the data series colors
+                                for (int j = 0; j < plot.getDataset().getRowKeys().size(); j++) {
+                                    plot.getRenderer().setSeriesPaint(j, Util.determineFragmentIonColor(
+                                            plot.getDataset().getRowKey(j).toString()));
+                                }
 
                                 // add a category marker for the modified residue
                                 if (!singleSearch) {
@@ -3143,6 +3149,13 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                         chart.getLegend().setVisible(false);
                                     }
 
+                                    // set the data series colors
+                                    for (int i = 0; i < ((XYPlot) chart.getPlot()).getDataset().getSeriesCount(); i++) {
+                                        ((XYPlot) chart.getPlot()).getRenderer().setSeriesPaint(
+                                                i, Util.determineFragmentIonColor(
+                                                    ((XYPlot) chart.getPlot()).getDataset().getSeriesKey(i).toString()));
+                                    }
+
                                     ChartPanel chartPanel = new ChartPanel(chart);
 
                                     String internalFrameTitle = "Intensity Variability";
@@ -3316,6 +3329,12 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
                                     CategoryPlot plot = PlotUtil.getCategoryPlot(dataSetCombined, "Sequences", "Q3 - Q1 / median");
 
+                                    // set the data series colors
+                                    for (int j = 0; j < plot.getDataset().getRowKeys().size(); j++) {
+                                        plot.getRenderer().setSeriesPaint(j, Util.determineFragmentIonColor(
+                                                plot.getDataset().getRowKey(j).toString()));
+                                    }
+
                                     JFreeChart chart = new JFreeChart(
                                             null,
                                             new Font("SansSerif", Font.BOLD, 10),
@@ -3347,11 +3366,17 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
 
                                     // box plot of the quartile distances
-                                    dataSetCombinedQuartileDistance.add(quartileDistancesB, "b ions", "0");
-                                    dataSetCombinedQuartileDistance.add(quartileDistancesY, "y ions", "0");
+                                    dataSetCombinedQuartileDistance.add(quartileDistancesB, "b ions", "1");
+                                    dataSetCombinedQuartileDistance.add(quartileDistancesY, "y ions", "1");
 
                                     CategoryPlot plotQuartileDistances =
                                             PlotUtil.getCategoryPlot(dataSetCombinedQuartileDistance, "Sequences", "Q3 - Q1");
+
+                                    // set the data series colors
+                                    for (int j = 0; j < plotQuartileDistances.getDataset().getRowKeys().size(); j++) {
+                                        plotQuartileDistances.getRenderer().setSeriesPaint(j, Util.determineFragmentIonColor(
+                                                plotQuartileDistances.getDataset().getRowKey(j).toString()));
+                                    }
 
                                     JFreeChart chartQuartileDistances = new JFreeChart(
                                             null,
@@ -3381,10 +3406,16 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
 
                                     // box plot of the medians
-                                    dataSetCombinedMedians.add(mediansB, "b ions", "0");
-                                    dataSetCombinedMedians.add(mediansY, "y ions", "0");
+                                    dataSetCombinedMedians.add(mediansB, "b ions", "1");
+                                    dataSetCombinedMedians.add(mediansY, "y ions", "1");
 
-                                    CategoryPlot plotMedians = PlotUtil.getCategoryPlot(dataSetCombinedMedians, "Sequences", "median");
+                                    CategoryPlot plotMedians = PlotUtil.getCategoryPlot(dataSetCombinedMedians, "Sequences", "Median");
+
+                                    // set the data series colors
+                                    for (int j = 0; j < plotMedians.getDataset().getRowKeys().size(); j++) {
+                                        plotMedians.getRenderer().setSeriesPaint(j, Util.determineFragmentIonColor(
+                                                plotMedians.getDataset().getRowKey(j).toString()));
+                                    }
 
                                     JFreeChart chartMedians = new JFreeChart(
                                             null,
@@ -3401,7 +3432,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
                                     ChartPanel chartPanelMedians = new ChartPanel(chartMedians);
 
-                                    internalFrameTitle = "Intensity Variability - median";
+                                    internalFrameTitle = "Intensity Variability - Median";
                                     plotType = "BoxPlot";
 
                                     FragmentationAnalyzerJInternalFrame internalFrameMedians = new FragmentationAnalyzerJInternalFrame(
@@ -3421,26 +3452,26 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
                                     // b ion medians
                                     insertNormalPlot(mediansB,
-                                            dataSetCombinedMedians.getQ3Value("b ions", "0").doubleValue(),
-                                            dataSetCombinedMedians.getQ1Value("b ions", "0").doubleValue(),
+                                            dataSetCombinedMedians.getQ3Value("b ions", "1").doubleValue(),
+                                            dataSetCombinedMedians.getQ1Value("b ions", "1").doubleValue(),
                                             "Intensity Variability - normal - b ions median");
 
                                     // b ion quartile distances
                                     insertNormalPlot(quartileDistancesB,
-                                            dataSetCombinedQuartileDistance.getQ3Value("b ions", "0").doubleValue(),
-                                            dataSetCombinedQuartileDistance.getQ1Value("b ions", "0").doubleValue(),
+                                            dataSetCombinedQuartileDistance.getQ3Value("b ions", "1").doubleValue(),
+                                            dataSetCombinedQuartileDistance.getQ1Value("b ions", "1").doubleValue(),
                                             "Intensity Variability - normal - b ions quartile distances");
 
                                     // y ion medians
                                     insertNormalPlot(mediansY,
-                                            dataSetCombinedMedians.getQ3Value("y ions", "0").doubleValue(),
-                                            dataSetCombinedMedians.getQ1Value("y ions", "0").doubleValue(),
+                                            dataSetCombinedMedians.getQ3Value("y ions", "1").doubleValue(),
+                                            dataSetCombinedMedians.getQ1Value("y ions", "1").doubleValue(),
                                             "Intensity Variability - normal - y ions median");
 
                                     // y ion quartile distances
                                     insertNormalPlot(quartileDistancesY,
-                                            dataSetCombinedQuartileDistance.getQ3Value("y ions", "0").doubleValue(),
-                                            dataSetCombinedQuartileDistance.getQ1Value("y ions", "0").doubleValue(),
+                                            dataSetCombinedQuartileDistance.getQ3Value("y ions", "1").doubleValue(),
+                                            dataSetCombinedQuartileDistance.getQ1Value("y ions", "1").doubleValue(),
                                             "Intensity Variability - normal - y ions quartile distances");
                                 }
                             } catch (SQLException e) {
@@ -5176,6 +5207,12 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                         progressDialog.setTitle("Creating Box Plot. Please Wait...");
 
                         CategoryPlot plot = PlotUtil.getCategoryPlot(dataSet, "Sequence", "Intensity");
+
+                        // set the data series colors
+                        for (int j = 0; j < plot.getDataset().getRowKeys().size(); j++) {
+                            plot.getRenderer().setSeriesPaint(j, Util.determineFragmentIonColor(
+                                    plot.getDataset().getRowKey(j).toString()));
+                        }
 
                         if (!cancelProgress) {
                             JFreeChart chart = new JFreeChart(
