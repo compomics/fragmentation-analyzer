@@ -2,4 +2,6 @@
 
 ----
  
+ * NEW FEATURE: New plotting type: Intensity Meta Plots.
+ * NEW FEATURE: New plotting type: Intensity Correlation.
  * FEATURE IMPROVEMENT: Made sure that b ions are blue and y ions red in all plots.
