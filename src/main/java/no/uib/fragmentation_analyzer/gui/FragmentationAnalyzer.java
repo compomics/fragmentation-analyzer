@@ -98,6 +98,7 @@ import org.jfree.ui.RectangleEdge;
 public class FragmentationAnalyzer extends javax.swing.JFrame implements ProgressDialogParent {
 
     private static boolean debug = false;
+    //private static boolean writeToFile = false;
     private static boolean useErrorLog = true;
     private static Connection conn = null;
     private static String analyzerName = "FragmentationAnalyzer";
@@ -2289,27 +2290,249 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
      */
     private boolean insertGeneralSearchResults(ProgressDialog progressDialog) {
 
+//        ArrayList<String> codetectedIdentifications = new ArrayList<String>();
+//
+//        if(writeToFile){
+//            codetectedIdentifications = Temp.getSequences();
+//        }
+
         int rowCounter = 0;
 
         Iterator<String> iterator = properties.getIdentificationMap().keySet().iterator();
 
-        while (iterator.hasNext()) {
-            String key = iterator.next();
+//        progressDialog.setIntermidiate(false);
+//        progressDialog.setMax(properties.getIdentificationMap().keySet().size());
+//
+//
+//        try{
+//
+//            FileWriter fileBions = null, fileYions = null, fileBAndYions = null;
+//            BufferedWriter writerBions = null, writerYions = null, writerBAndYions = null;
+//
+//            if(writeToFile){
+//                // create the files to write the fragment ion data to
+//                fileBions = new FileWriter("C:\\Harald\\b_ions.txt");
+//                writerBions = new BufferedWriter(fileBions);
+//
+//                fileYions = new FileWriter("C:\\Harald\\y_ions.txt");
+//                writerYions = new BufferedWriter(fileYions);
+//
+//                fileBAndYions = new FileWriter("C:\\Harald\\b_and_y_ions_all.txt");
+//                writerBAndYions = new BufferedWriter(fileBAndYions);
+//
+//                // add headers to the files
+//                writerBions.write("Sequence FragmentIon Q_TOF_Median ORBI_Median Q_TOF_Quartile_Distance ORBI_Quartile_Distance\n");
+//                writerYions.write("Sequence FragmentIon Q_TOF_Median ORBI_Median Q_TOF_Quartile_Distance ORBI_Quartile_Distance\n");
+//                writerBAndYions.write("instrument sequence identificationID fragmentIonID fragmentIonType fragmentIonNumber m/z delta_m/z intensity\n");
+//            }
 
-            ArrayList<ReducedIdentification> tempList = properties.getIdentificationMap().get(key);
+            while (iterator.hasNext()) {
 
-            ReducedIdentification temp = tempList.get(0);
+//                progressDialog.setValue(rowCounter);
 
-            ((DefaultTableModel) searchResultsJXTable.getModel()).addRow(
-                    new Object[]{new Integer(++rowCounter),
-                        temp.getSequence(),
-                        temp.getModifiedSequence(),
-                        temp.getSequence().length(),
-                        tempList.size(),
-                        null,
-                        new Boolean(false)
-                    });
-        }
+                String key = iterator.next();
+
+                ArrayList<ReducedIdentification> tempList = properties.getIdentificationMap().get(key);
+
+                ReducedIdentification temp = tempList.get(0);
+
+                ((DefaultTableModel) searchResultsJXTable.getModel()).addRow(
+                        new Object[]{new Integer(++rowCounter),
+                            temp.getSequence(),
+                            temp.getModifiedSequence(),
+                            temp.getSequence().length(),
+                            tempList.size(),
+                            null,
+                            new Boolean(false)
+                        });
+
+
+
+//                if(codetectedIdentifications.contains(temp.getModifiedSequence()) && writeToFile){
+//
+//                    ArrayList<ReducedIdentification> qTofs = new ArrayList<ReducedIdentification>();
+//                    ArrayList<ReducedIdentification> orbi = new ArrayList<ReducedIdentification>();
+//
+//                    for(int i=0; i<tempList.size(); i++){
+//                        if(tempList.get(i).getInstrumentName().equalsIgnoreCase("Micromass Q-TOF") ||
+//                                tempList.get(i).getInstrumentName().equalsIgnoreCase("Waters Q-TOF Premier")){
+//                                qTofs.add(tempList.get(i));
+//                        } else if(tempList.get(i).getInstrumentName().equalsIgnoreCase("Thermo-Finnigan orbitrap")){
+//                            orbi.add(tempList.get(i));
+//                        }
+//                    }
+//
+//                    double[][] fragmentIonIntensitiesBIonsQTofs = new double[qTofs.size()][temp.getSequence().length() + 1];
+//                    double[][] fragmentIonIntensitiesYIonsQTofs = new double[qTofs.size()][temp.getSequence().length() + 1];
+//
+//                    // q-tof
+//                    for(int i=0; i<qTofs.size(); i++){
+//
+//                        ReducedIdentification currentIdentification = qTofs.get(i);
+//
+//                        if(currentIdentification != null){
+//
+//                            // get the fragment ions
+//                            try{
+//                                Vector<Fragmention> fragmentIons = (Vector<Fragmention>) Fragmention.getAllFragmentions(
+//                                        getConnection(), (long) currentIdentification.getIdentificationId());
+//
+//                                for (int j = 0; j < fragmentIons.size(); j++) {
+//
+//                                    Fragmention tempFragmentIon = fragmentIons.get(j);
+//
+//                                    String fragmentIonType = tempFragmentIon.getIonname();
+//
+//                                    if(fragmentIonType.equalsIgnoreCase("b") || fragmentIonType.equalsIgnoreCase("y")){
+//
+//                                        double intensity = tempFragmentIon.getIntensity();
+//
+//                                        // normalize the intensity
+//                                        intensity = intensity / currentIdentification.getTotalIntensity();
+//
+//                                        if(fragmentIonType.equalsIgnoreCase("b")){
+//                                            fragmentIonIntensitiesBIonsQTofs[i][(int) tempFragmentIon.getFragmentionnumber()] = intensity;
+//                                        } else { // has to be a y ion
+//                                            fragmentIonIntensitiesYIonsQTofs[i][(int) tempFragmentIon.getFragmentionnumber()] = intensity;
+//                                        }
+//
+//                                        // write to the combined file
+//                                        writerBAndYions.write("Q-TOF " + currentIdentification.getModifiedSequence() + " "
+//                                                + currentIdentification.getIdentificationId() + " " + tempFragmentIon.getFragmentionid() + " "
+//                                                + tempFragmentIon.getIonname() + " " + tempFragmentIon.getFragmentionnumber() + " "
+//                                                + tempFragmentIon.getMz() + " " + tempFragmentIon.getMassdelta() + " "
+//                                                + intensity + "\n");
+//                                    }
+//                                }
+//                            } catch (SQLException e) {
+//                                System.out.println(e.toString());
+//                                e.printStackTrace();
+//                            }
+//                        } else {
+//                            System.out.println(temp.getSequence() + ": null");
+//                        }
+//                    }
+//
+//
+//                    // same for the orbitrap
+//                    double[][] fragmentIonIntensitiesBIonsOrbi = new double[orbi.size()][temp.getSequence().length() + 1];
+//                    double[][] fragmentIonIntensitiesYIonsOrbi = new double[orbi.size()][temp.getSequence().length() + 1];
+//
+//                    for(int i=0; i<orbi.size(); i++){
+//
+//                        ReducedIdentification currentIdentification = orbi.get(i);
+//
+//                        if(currentIdentification != null){
+//
+//                            // get the fragment ions
+//                            try{
+//                                Vector<Fragmention> fragmentIons = (Vector<Fragmention>) Fragmention.getAllFragmentions(
+//                                        getConnection(), (long) currentIdentification.getIdentificationId());
+//
+//                                for (int j = 0; j < fragmentIons.size(); j++) {
+//
+//                                    Fragmention tempFragmentIon = fragmentIons.get(j);
+//
+//                                    String fragmentIonType = tempFragmentIon.getIonname();
+//
+//                                    if(fragmentIonType.equalsIgnoreCase("b") || fragmentIonType.equalsIgnoreCase("y")){
+//
+//                                        double intensity = tempFragmentIon.getIntensity();
+//
+//                                        // normalize the intensity
+//                                        intensity = intensity / currentIdentification.getTotalIntensity();
+//
+//                                        if(fragmentIonType.equalsIgnoreCase("b")){
+//                                            fragmentIonIntensitiesBIonsOrbi[i][(int) tempFragmentIon.getFragmentionnumber()] = intensity;
+//                                        } else{ // has to be a y ion
+//                                            fragmentIonIntensitiesYIonsOrbi[i][(int) tempFragmentIon.getFragmentionnumber()] = intensity;
+//                                        }
+//
+//                                        // write to the combined file
+//                                        writerBAndYions.write("ORBI " + currentIdentification.getModifiedSequence() + " "
+//                                                + currentIdentification.getIdentificationId() + " " + tempFragmentIon.getFragmentionid() + " "
+//                                                + tempFragmentIon.getIonname() + " " + tempFragmentIon.getFragmentionnumber() + " "
+//                                                + tempFragmentIon.getMz() + " " + tempFragmentIon.getMassdelta() + " "
+//                                                + intensity + "\n");
+//                                    }
+//                                }
+//                            } catch (SQLException e) {
+//                                System.out.println(e.toString());
+//                                e.printStackTrace();
+//                            }
+//                        } else {
+//                            System.out.println(temp.getSequence() + ": null");
+//                        }
+//                    }
+//
+//
+//                    // compare the set of values from the two instrument types
+//                    for(int i=1; i<=temp.getSequence().length(); i++){
+//
+//                        // b ions
+//                        double[] tempValues = new double[qTofs.size()];
+//
+//                        for(int j=0; j < qTofs.size(); j++){
+//                            tempValues[j] = fragmentIonIntensitiesBIonsQTofs[j][i];
+//                        }
+//
+//                        double medianQTof = StatUtils.percentile(tempValues, 50);
+//                        double ratioQuartileDistancesQTof = StatUtils.percentile(tempValues, 75) - StatUtils.percentile(tempValues, 25);
+//
+//                        tempValues = new double[orbi.size()];
+//
+//                        for(int j=0; j<orbi.size(); j++){
+//                            tempValues[j] = fragmentIonIntensitiesBIonsOrbi[j][i];
+//                        }
+//
+//                        double medianOrbi = StatUtils.percentile(tempValues, 50);
+//                        double ratioQuartileDistancesOrbi = StatUtils.percentile(tempValues, 75) - StatUtils.percentile(tempValues, 25);
+//
+//
+//                        // print to file
+//                        writerBions.write(temp.getModifiedSequence() + " b" + i + " "
+//                                + medianQTof + " " + medianOrbi + " " + ratioQuartileDistancesQTof + " " + ratioQuartileDistancesOrbi + "\n");
+//
+//
+//                        // y ions
+//                        tempValues = new double[qTofs.size()];
+//
+//                        for(int j=0; j < qTofs.size(); j++){
+//                            tempValues[j] = fragmentIonIntensitiesYIonsQTofs[j][i];
+//                        }
+//
+//                        medianQTof = StatUtils.percentile(tempValues, 50);
+//                        ratioQuartileDistancesQTof = StatUtils.percentile(tempValues, 75) - StatUtils.percentile(tempValues, 25);
+//
+//                        tempValues = new double[orbi.size()];
+//
+//                        for(int j=0; j<orbi.size(); j++){
+//                            tempValues[j] = fragmentIonIntensitiesYIonsOrbi[j][i];
+//                        }
+//
+//                        medianOrbi = StatUtils.percentile(tempValues, 50);
+//                        ratioQuartileDistancesOrbi = StatUtils.percentile(tempValues, 75) - StatUtils.percentile(tempValues, 25);
+//
+//
+//                        // print to file
+//                        writerYions.write(temp.getModifiedSequence() + " y" + i + " "
+//                                + medianQTof + " " + medianOrbi + " " + ratioQuartileDistancesQTof + " " + ratioQuartileDistancesOrbi + "\n");
+//                    }
+//                }
+            }
+//
+//            // close the file writers
+//            writerBions.close();
+//            fileBions.close();
+//            writerYions.close();
+//            fileYions.close();
+//            writerBAndYions.close();
+//            fileBAndYions.close();
+//
+//        } catch (Exception e){
+//            System.out.println("Error writing to file...");
+//            e.printStackTrace();
+//        }
 
         return rowCounter > 0;
     }
@@ -3327,7 +3550,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
                                 if (!cancelProgress) {
 
-                                    CategoryPlot plot = PlotUtil.getCategoryPlot(dataSetCombined, "Sequences", "Q3 - Q1 / median");
+                                    CategoryPlot plot = PlotUtil.getCategoryPlot(dataSetCombined, "Sequences", "Q3 - Q1 / Median");
 
                                     // set the data series colors
                                     for (int j = 0; j < plot.getDataset().getRowKeys().size(); j++) {
@@ -3370,7 +3593,9 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                     dataSetCombinedQuartileDistance.add(quartileDistancesY, "y ions", "1");
 
                                     CategoryPlot plotQuartileDistances =
-                                            PlotUtil.getCategoryPlot(dataSetCombinedQuartileDistance, "Sequences", "Q3 - Q1");
+                                            PlotUtil.getCategoryPlot(dataSetCombinedQuartileDistance, "", "Q3 - Q1");
+
+                                    plotQuartileDistances.getDomainAxis().setTickLabelsVisible(false);
 
                                     // set the data series colors
                                     for (int j = 0; j < plotQuartileDistances.getDataset().getRowKeys().size(); j++) {
@@ -3409,7 +3634,9 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                     dataSetCombinedMedians.add(mediansB, "b ions", "1");
                                     dataSetCombinedMedians.add(mediansY, "y ions", "1");
 
-                                    CategoryPlot plotMedians = PlotUtil.getCategoryPlot(dataSetCombinedMedians, "Sequences", "Median");
+                                    CategoryPlot plotMedians = PlotUtil.getCategoryPlot(dataSetCombinedMedians, "", "Median");
+
+                                    plotMedians.getDomainAxis().setTickLabelsVisible(false);
 
                                     // set the data series colors
                                     for (int j = 0; j < plotMedians.getDataset().getRowKeys().size(); j++) {
@@ -3448,31 +3675,33 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
 
 
-                                    // plot the normal distributions and the histogram
+                                    // plot the normal distributions and the histograms
+                                    if(mediansB.size() > 1){
 
-                                    // b ion medians
-                                    insertNormalPlot(mediansB,
-                                            dataSetCombinedMedians.getQ3Value("b ions", "1").doubleValue(),
-                                            dataSetCombinedMedians.getQ1Value("b ions", "1").doubleValue(),
-                                            "Intensity Variability - normal - b ions median");
+                                        // b ion medians
+                                        insertNormalPlot(mediansB,
+                                                dataSetCombinedMedians.getQ1Value("b ions", "1").doubleValue(),
+                                                dataSetCombinedMedians.getQ3Value("b ions", "1").doubleValue(),
+                                                "Intensity Variability - normal - b ions median");
 
-                                    // b ion quartile distances
-                                    insertNormalPlot(quartileDistancesB,
-                                            dataSetCombinedQuartileDistance.getQ3Value("b ions", "1").doubleValue(),
-                                            dataSetCombinedQuartileDistance.getQ1Value("b ions", "1").doubleValue(),
-                                            "Intensity Variability - normal - b ions quartile distances");
+                                        // b ion quartile distances
+                                        insertNormalPlot(quartileDistancesB,
+                                                dataSetCombinedQuartileDistance.getQ1Value("b ions", "1").doubleValue(),
+                                                dataSetCombinedQuartileDistance.getQ3Value("b ions", "1").doubleValue(),
+                                                "Intensity Variability - normal - b ions quartile distances");
 
-                                    // y ion medians
-                                    insertNormalPlot(mediansY,
-                                            dataSetCombinedMedians.getQ3Value("y ions", "1").doubleValue(),
-                                            dataSetCombinedMedians.getQ1Value("y ions", "1").doubleValue(),
-                                            "Intensity Variability - normal - y ions median");
+                                        // y ion medians
+                                        insertNormalPlot(mediansY,
+                                                dataSetCombinedMedians.getQ1Value("y ions", "1").doubleValue(),
+                                                dataSetCombinedMedians.getQ3Value("y ions", "1").doubleValue(),
+                                                "Intensity Variability - normal - y ions median");
 
-                                    // y ion quartile distances
-                                    insertNormalPlot(quartileDistancesY,
-                                            dataSetCombinedQuartileDistance.getQ3Value("y ions", "1").doubleValue(),
-                                            dataSetCombinedQuartileDistance.getQ1Value("y ions", "1").doubleValue(),
-                                            "Intensity Variability - normal - y ions quartile distances");
+                                        // y ion quartile distances
+                                        insertNormalPlot(quartileDistancesY,
+                                                dataSetCombinedQuartileDistance.getQ1Value("y ions", "1").doubleValue(),
+                                                dataSetCombinedQuartileDistance.getQ3Value("y ions", "1").doubleValue(),
+                                                "Intensity Variability - normal - y ions quartile distances");
+                                    }
                                 }
                             } catch (SQLException e) {
                                 JOptionPane.showMessageDialog(null,
@@ -4296,7 +4525,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
      */
     private void insertNormalPlot(ArrayList<Double> values, double q1, double q3, String internalFrameTitle){
 
-        XYPlot plotNormalMediansBions = PlotUtil.plotNormalDistribution(values, q1, q3);
+        XYPlot plotNormalMediansBions = PlotUtil.plotNormalDistribution(values, q1, q3, properties.showMarkers());
 
         JFreeChart chartNormal = new JFreeChart(null, JFreeChart.DEFAULT_TITLE_FONT, plotNormalMediansBions, true);
 
@@ -6597,7 +6826,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                 } else if (tempChartPanel.getChart().getPlot() instanceof CategoryPlot) {
                     markers = ((CategoryPlot) tempChartPanel.getChart().getPlot()).getDomainMarkers(Layer.BACKGROUND);
                 }
-
+            
                 if (markers != null) {
                     Iterator markerIterator = markers.iterator();
 
@@ -6618,11 +6847,15 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
                         if (properties.showMarkers()) {
                             if (tempChartPanel.getChart().getPlot() instanceof XYPlot) {
-                                if (((XYPlot) tempChartPanel.getChart().getPlot()).getRenderer(0).isSeriesVisible(
-                                        seriesKeyToSeriesNumber.get(tempMarker.getLabel()))) {
+                                if(tempMarker.getLabel() == null){
                                     tempMarker.setAlpha(Properties.DEFAULT_VISIBLE_MARKER_ALPHA);
                                 } else {
-                                    tempMarker.setAlpha(Properties.DEFAULT_NON_VISIBLE_MARKER_ALPHA);
+                                    if (((XYPlot) tempChartPanel.getChart().getPlot()).getRenderer(0).isSeriesVisible(
+                                            seriesKeyToSeriesNumber.get(tempMarker.getLabel()))) {
+                                        tempMarker.setAlpha(Properties.DEFAULT_VISIBLE_MARKER_ALPHA);
+                                    } else {
+                                        tempMarker.setAlpha(Properties.DEFAULT_NON_VISIBLE_MARKER_ALPHA);
+                                    }
                                 }
                             } else if (tempChartPanel.getChart().getPlot() instanceof CategoryPlot) {
                                 tempMarker.setAlpha(Properties.DEFAULT_VISIBLE_MARKER_ALPHA);

@@ -15,7 +15,7 @@
    =========
    
 
-   Copyright 2009-2010 Harald Barsnes and Lennart Martens
+   Copyright 2009-2011 Harald Barsnes and Lennart Martens
 
 
    Licensed under the Apache License, Version 2.0 (the "License");
