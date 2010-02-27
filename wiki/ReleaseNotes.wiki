@@ -3,10 +3,19 @@
 
 ----
 
+*Changes in FragmentationAnalyzer v1.5 - (Feb. 27. 2010):*
+ * NEW FEATURE: New plotting type: Intensity Correlation.
+ * NEW FEATURE: New plotting type: Intensity Meta Plots.
+ * FEATURE IMPROVEMENT: Made sure that b ions are blue and y ions red in all plots.
+
+----
+
 *Changes in FragmentationAnalyzer v1.4.3 - (Jan. 11. 2010):*
  * FEATURE IMPROVEMENT: Renamed and reordered the scoring types in the preference dialog.
  * BUG FIX: The value selected in the accuracy drop down menu for the 'Individual Spectra' table was sometimes replaced by the current value from the 'Search Results' accuract drop down menu when doing the analysis. Has now been fixed.
  * LIBRARY UPDATE: mascot_datfile updated from 2.2.2 to 2.2.3.
+
+Download Count: 21
 
 ----
 
