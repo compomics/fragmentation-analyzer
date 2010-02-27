@@ -1719,7 +1719,7 @@ public class PlotUtil {
      *
      * @return a plot of the normal distribution based on the given data
      */
-    public static XYPlot plotNormalDistribution(ArrayList<Double> values, double q1, double q3) {
+    public static XYPlot plotNormalDistribution(ArrayList<Double> values, double q1, double q3, boolean showMarkers) {
 
         // calculate and plot the normal distribution
         DescriptiveStatistics stats = new DescriptiveStatistics();
@@ -1774,7 +1774,14 @@ public class PlotUtil {
 
         // add interval marker
         IntervalMarker interquartileMarker = new IntervalMarker(q1, q3);
-        interquartileMarker.setAlpha(Properties.DEFAULT_VISIBLE_MARKER_ALPHA);
+
+        // make the marker visible or not
+        if (showMarkers) {
+            interquartileMarker.setAlpha(Properties.DEFAULT_VISIBLE_MARKER_ALPHA);
+        } else {
+            interquartileMarker.setAlpha(Properties.DEFAULT_NON_VISIBLE_MARKER_ALPHA);
+        }
+
         interquartileMarker.setPaint(Properties.getDefaultMarkerColor());
         plot.addDomainMarker(interquartileMarker, Layer.BACKGROUND);
 
