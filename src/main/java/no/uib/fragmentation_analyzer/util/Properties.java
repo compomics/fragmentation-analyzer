@@ -1,7 +1,7 @@
 package no.uib.fragmentation_analyzer.util;
 
-import be.proteomics.util.gui.spectrum.DefaultSpectrumAnnotation;
-import be.proteomics.util.gui.spectrum.SpectrumPanel;
+import com.compomics.util.gui.spectrum.DefaultSpectrumAnnotation;
+import com.compomics.util.gui.spectrum.SpectrumPanel;
 import java.awt.Color;
 import java.io.IOException;
 import java.io.InputStream;
