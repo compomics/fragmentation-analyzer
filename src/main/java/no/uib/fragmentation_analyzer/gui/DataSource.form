@@ -101,7 +101,7 @@
                     <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
                       <ComponentRef name="buttonGroup"/>
                     </Property>
-                    <Property name="text" type="java.lang.String" value="Extract Data From ms_lims 7"/>
+                    <Property name="text" type="java.lang.String" value="Extract Data From ms_lims 7.3"/>
                     <Property name="iconTextGap" type="int" value="30"/>
                   </Properties>
                   <Events>
