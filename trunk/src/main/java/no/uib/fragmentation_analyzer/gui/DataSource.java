@@ -323,7 +323,7 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
 
         ms_limsJRadioButton.setBackground(javax.swing.UIManager.getDefaults().getColor("tab_focus_fill_dark"));
         buttonGroup.add(ms_limsJRadioButton);
-        ms_limsJRadioButton.setText("Extract Data From ms_lims 7");
+        ms_limsJRadioButton.setText("Extract Data From ms_lims 7.3");
         ms_limsJRadioButton.setIconTextGap(30);
         ms_limsJRadioButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
