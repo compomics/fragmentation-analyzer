@@ -1,13 +1,13 @@
 package no.uib.fragmentation_analyzer.gui;
 
-import be.proteomics.lims.db.accessors.Fragmention;
-import be.proteomics.lims.db.accessors.Protocol;
-import be.proteomics.lims.db.accessors.Spectrumfile;
-import be.proteomics.lims.util.fileio.MascotGenericFile;
-import be.proteomics.util.gui.events.RescalingEvent;
-import be.proteomics.util.gui.interfaces.SpectrumPanelListener;
-import be.proteomics.util.gui.spectrum.DefaultSpectrumAnnotation;
-import be.proteomics.util.gui.spectrum.SpectrumPanel;
+import com.compomics.mslims.db.accessors.Fragmention;
+import com.compomics.mslims.db.accessors.Spectrum;
+import com.compomics.mslims.db.accessors.Spectrum_file;
+import com.compomics.mslims.util.fileio.MascotGenericFile;
+import com.compomics.util.gui.events.RescalingEvent;
+import com.compomics.util.gui.interfaces.SpectrumPanelListener;
+import com.compomics.util.gui.spectrum.DefaultSpectrumAnnotation;
+import com.compomics.util.gui.spectrum.SpectrumPanel;
 import com.jgoodies.looks.HeaderStyle;
 import com.jgoodies.looks.Options;
 import com.jgoodies.looks.plastic.PlasticLookAndFeel;
@@ -3592,6 +3592,33 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                     dataSetCombinedQuartileDistance.add(quartileDistancesB, "b ions", "1");
                                     dataSetCombinedQuartileDistance.add(quartileDistancesY, "y ions", "1");
 
+
+                                    // print out the median and quartile distances
+//                                    System.out.println("quartileDistancesB:");
+//
+//                                    for(int i=0; i<quartileDistancesB.size(); i++){
+//                                        System.out.println(quartileDistancesB.get(i));
+//                                    }
+//
+//                                    System.out.println("\nquartileDistancesY:");
+//
+//                                    for(int i=0; i<quartileDistancesY.size(); i++){
+//                                        System.out.println(quartileDistancesY.get(i));
+//                                    }
+//
+//
+//                                    System.out.println("medianB:");
+//
+//                                    for(int i=0; i<mediansB.size(); i++){
+//                                        System.out.println(mediansB.get(i));
+//                                    }
+//
+//                                    System.out.println("\nmedianY:");
+//
+//                                    for(int i=0; i<mediansY.size(); i++){
+//                                        System.out.println(mediansY.get(i));
+//                                    }
+
                                     CategoryPlot plotQuartileDistances =
                                             PlotUtil.getCategoryPlot(dataSetCombinedQuartileDistance, "", "Q3 - Q1");
 
@@ -3803,6 +3830,11 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                     ArrayList<ReducedIdentification> currentIdentifications =
                                             properties.getIdentificationMap().get(currentModifiedSequence);
 
+//                                    ReducedIdentification tempId = currentIdentifications.get(0);
+//
+//                                    System.out.println(tempId.getModifiedSequence());
+//                                    System.out.println(tempId.getSequence().length());
+
                                     for (int j = 0; j < currentIdentifications.size() && !cancelProgress; j++) {
                                         ReducedIdentification currentId = currentIdentifications.get(j);
                                         totalNumberOfFragmentIons += addFragmentIonsToXYZPlotDataSeries(
@@ -3811,6 +3843,8 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                         totalNumberOfSpectra++;
                                         progressDialog.setValue(++localCounter);
                                     }
+
+//                                    System.out.println("#");
                                 }
 
                                 // if single plot is selected create the plot now
@@ -4619,10 +4653,18 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
         int totalNumberOfFragmentIonsUsed = 0;
 
+//        int sequenceLength = currentIdentification.getSequence().length();
+//
+//        double[] bIons = new double[sequenceLength+1];
+//        double[] yIons = new double[sequenceLength+1];
+//        double[] allIons = new double[(sequenceLength+1)*2];
+
         if (currentDataSetIsFromMsLims) {
 
             Vector<Fragmention> fragmentIons = (Vector<Fragmention>) Fragmention.getAllFragmentions(
                     getConnection(), (long) currentIdentification.getIdentificationId());
+
+//            boolean wantedFragmentsFound = false;
 
             for (int j = 0; j < fragmentIons.size(); j++) {
 
@@ -4651,6 +4693,18 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                             fragmentIonType = fragmentIonType.substring(0, 1) + fragmentIonNumberAsString;
                         }
                     }
+
+
+//                    if(fragmentIonType.startsWith("b") && fragmentIonType.indexOf("[") == -1){
+//                        bIons[fragmentIonNumber] = intensity;
+//                        allIons[fragmentIonNumber] = intensity;
+//                        wantedFragmentsFound = true;
+//                    } else if(fragmentIonType.startsWith("y") && fragmentIonType.indexOf("[") == -1){
+//                        yIons[fragmentIonNumber] = intensity;
+//                        allIons[fragmentIonNumber + (sequenceLength + 1)] = intensity;
+//                        wantedFragmentsFound = true;
+//                    }
+
 
                     if (usePpmForMassError) {
                         massError = Util.getPpmError(mzValue, massError);
@@ -4699,9 +4753,102 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                     }
                 }
             }
+
+//            if(wantedFragmentsFound){
+//                double[] bIonsRanks = new double[bIons.length-1];
+//                double[] yIonsRanks = new double[yIons.length-1];
+//                double[] ranksAll = new double[allIons.length-1];
+//
+//    //            System.out.println("bIons:");
+//    //
+//    //            for(int i=1; i<bIons.length; i++){
+//    //                System.out.print(bIons[i] + " ");
+//    //            }
+//    //
+//    //
+//    //            int rank = 1;
+//    //            int index = 1;
+//    //
+//    //            while(index != -1){
+//    //
+//    //                index = findIndexOfLargestNumber(bIons);
+//    //
+//    //                if(index > 0){
+//    //                    bIonsRanks[index-1] = rank++;
+//    //                }
+//    //            }
+//    //
+//    //            //System.out.println("\nbRanks:");
+//    //
+//    //            for(int i=0; i<bIonsRanks.length; i++){
+//    //                System.out.print((int) bIonsRanks[i] + " ");
+//    //            }
+//    //
+//    //            System.out.println();
+//
+//
+//    //            System.out.println("\nyIons:");
+//    //
+//    //            for(int i=1; i<yIons.length; i++){
+//    //                System.out.print(yIons[i] + " ");
+//    //            }
+//
+//    //            int rank = 1;
+//    //            int index = 1;
+//    //
+//    //            while(index != -1){
+//    //
+//    //                index = findIndexOfLargestNumber(yIons);
+//    //
+//    //                if(index > 0){
+//    //                    yIonsRanks[index-1] = rank++;
+//    //                }
+//    //            }
+//    //
+//    //
+//    //            //System.out.println("\nyRanks:");
+//    //
+//    //            for(int i=0; i<yIonsRanks.length; i++){
+//    //                System.out.print((int) yIonsRanks[i] + " ");
+//    //            }
+//    //
+//    //            System.out.println();
+//
+//
+//
+//    //            System.out.println("\nallIons:");
+//    //
+//    //            for(int i=1; i<allIons.length; i++){
+//    //                System.out.print(allIons[i] + " ");
+//    //            }
+//    //
+//    //
+//                int rank = 1;
+//                int index = 1;
+//
+//                while(index != -1){
+//
+//                    index = findIndexOfLargestNumber(allIons);
+//
+//                    if(index > 0){
+//                        ranksAll[index-1] = rank++;
+//                    }
+//                }
+//
+//                //System.out.println("\nallRanks:");
+//
+//                for(int i=0; i<ranksAll.length; i++){
+//                    System.out.print((int) ranksAll[i] + " ");
+//                }
+//
+//                System.out.println();
+//            }
+
         } else {
             // get the fragment ions
             ArrayList<FragmentIon> fragmentIons = getFragmentIons(currentIdentification.getSpectrumFileId(), null);
+
+//            boolean wantedFragmentsFound = false;
 
             for (int k = 0; k < fragmentIons.size(); k++) {
 
@@ -4718,6 +4865,16 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                     fragmentIonType = fragmentIonType.replaceFirst("" + fragmentIons.get(k).getFragmentIonNumber(),
                             "0" + fragmentIons.get(k).getFragmentIonNumber());
                 }
+
+//                if(fragmentIonType.startsWith("b") && fragmentIonType.indexOf("[") == -1){
+//                    bIons[fragmentIons.get(k).getFragmentIonNumber()] = intensity;
+//                    allIons[fragmentIons.get(k).getFragmentIonNumber()] = intensity;
+//                    wantedFragmentsFound = true;
+//                } else if(fragmentIonType.startsWith("y") && fragmentIonType.indexOf("[") == -1){
+//                    yIons[fragmentIons.get(k).getFragmentIonNumber()] = intensity;
+//                    allIons[fragmentIons.get(k).getFragmentIonNumber() + (sequenceLength + 1)] = intensity;
+//                    wantedFragmentsFound = true;
+//                }
 
                 if (usePpmForMassError) {
                     massError = Util.getPpmError(mzValue, massError);
@@ -4738,10 +4895,130 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                             mzValue, massError, intensity, bubbleScaling);
                 }
             }
+
+
+//            // calculate the ranks
+//            if(wantedFragmentsFound){
+//
+//                double[] bIonsRanks = new double[bIons.length-1];
+//                double[] yIonsRanks = new double[yIons.length-1];
+//                double[] ranksAll = new double[allIons.length-1];
+//
+//    //            System.out.println("bIons:");
+//    //
+//    //            for(int i=1; i<bIons.length; i++){
+//    //                System.out.print(bIons[i] + " ");
+//    //            }
+//    //
+//    //
+//    //            int rank = 1;
+//    //            int index = 1;
+//    //
+//    //            while(index != -1){
+//    //
+//    //                index = findIndexOfLargestNumber(bIons);
+//    //
+//    //                if(index > 0){
+//    //                    bIonsRanks[index-1] = rank++;
+//    //                }
+//    //            }
+//    //
+//    //            System.out.println("\nbRanks:");
+//    //
+//    //            for(int i=0; i<bIonsRanks.length; i++){
+//    //                System.out.print((int) bIonsRanks[i] + " ");
+//    //            }
+//
+//
+//
+//    //            System.out.println("\nyIons:");
+//    //
+//    //            for(int i=1; i<yIons.length; i++){
+//    //                System.out.print(yIons[i] + " ");
+//    //            }
+//
+//    //            int rank = 1;
+//    //            int index = 1;
+//    //
+//    //            while(index != -1){
+//    //
+//    //                index = findIndexOfLargestNumber(yIons);
+//    //
+//    //                if(index > 0){
+//    //                    yIonsRanks[index-1] = rank++;
+//    //                }
+//    //            }
+//    //
+//    //
+//    //            //System.out.println("\nyRanks:");
+//    //
+//    //            for(int i=0; i<yIonsRanks.length; i++){
+//    //                System.out.print((int) yIonsRanks[i] + " ");
+//    //            }
+//    //
+//    //            System.out.println();
+//
+//
+//
+//    //            System.out.println("\nallIons:");
+//    //
+//    //            for(int i=1; i<allIons.length; i++){
+//    //                System.out.print(allIons[i] + " ");
+//    //            }
+//    //
+//    //
+//                int rank = 1;
+//                int index = 1;
+//
+//                while(index != -1){
+//
+//                    index = findIndexOfLargestNumber(allIons);
+//
+//                    if(index > 0){
+//                        ranksAll[index-1] = rank++;
+//                    }
+//                }
+//
+//                //System.out.println("\nallRanks:");
+//
+//                for(int i=0; i<ranksAll.length; i++){
+//                    System.out.print((int) ranksAll[i] + " ");
+//                }
+//
+//                System.out.println();
+//            }
         }
 
         return totalNumberOfFragmentIonsUsed;
     }
+
+
+    /**
+     * Returns the index of the largest value in an array. Also replaces the
+     * largest value with 0.0.
+     *
+     * @param values
+     * @return
+     */
+    private int findIndexOfLargestNumber(double[] values){
+
+        int index = -1;
+        double largestValue = Double.MIN_VALUE;
+
+        for(int i=1; i<values.length; i++){
+            if(values[i] > 0 && values[i] > largestValue){
+                largestValue = values[i];
+                index = i;
+            }
+        }
+
+        if(index != -1){
+            values[index] = 0.0;
+        }
+        
+        return index;
+    }
+
 
     /**
      * Add the fragment ions to an XYZ plot data series.
@@ -4956,8 +5233,8 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         Double totalIntensity = 0.0;
 
         try {
-            Spectrumfile spectrumFile = Spectrumfile.findFromID(spectrumFileId, getConnection());
-            String filename = spectrumFile.getFilename();
+            Spectrum_file spectrumFile = Spectrum_file.findFromID(spectrumFileId, getConnection());
+            String filename = Spectrum.findFromID(spectrumFileId, getConnection()).getFilename();
             String file = new String(spectrumFile.getUnzippedFile());
             MascotGenericFile lSpectrumFile = new MascotGenericFile(filename, file);
 
@@ -5120,7 +5397,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
                                 try {
                                     // TODO could be replaced by a select that only extracts the file
-                                    Spectrumfile spectrumFile = Spectrumfile.findFromID((long) currentSpectrumId, getConnection());
+                                    Spectrum_file spectrumFile = Spectrum_file.findFromID((long) currentSpectrumId, getConnection());
                                     Vector<Fragmention> fragmentIons = (Vector<Fragmention>) Fragmention.getAllFragmentions(getConnection(), (long) currentId);
 
                                     FragmentationAnalyzerJInternalFrame internalFrame = new FragmentationAnalyzerJInternalFrame(
@@ -7901,11 +8178,12 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
      * @return the created spectrum panel
      * @throws IOException
      */
-    private SpectrumPanel getSpectrumPanel(Spectrumfile spectrumFile, Vector<Fragmention> fragmentIons) throws IOException {
+    private SpectrumPanel getSpectrumPanel(Spectrum_file spectrumFile, Vector<Fragmention> fragmentIons) 
+            throws IOException, SQLException {
 
         // ToDo: This method ought to be moved into the PlotUtil class
 
-        String filename = spectrumFile.getFilename();
+        String filename = Spectrum.findFromID(spectrumFile.getL_spectrumid(), getConnection()).getFilename();
         String file = new String(spectrumFile.getUnzippedFile());
         MascotGenericFile lSpectrumFile = new MascotGenericFile(filename, file);
 
@@ -7931,7 +8209,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         SpectrumPanel spectrumPanel = new SpectrumPanel(
                 mzValues, intValues,
                 lSpectrumFile.getPrecursorMZ(), "" + lSpectrumFile.getCharge(),
-                "" + spectrumFile.getSpectrumfileid(),
+                "" + spectrumFile.getL_spectrumid(),
                 60, true, false);
 
         spectrumPanel.addSpectrumPanelListener(new SpectrumPanelListener() {
@@ -8358,7 +8636,8 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
             //test to check if the supported version of ms_lims is used
             try {
-                Protocol.getAllProtocols(conn); // test for ms_lims 7
+                Spectrum_file.findFromID(0, conn); // test for ms_lims 7.3
+                //Protocol.getAllProtocols(conn); // test for ms_lims 7
                 //Identification.getIdentification(conn, ""); // test for ms_lims 6
             } catch (SQLException e) {
                 JOptionPane.showMessageDialog(null,
@@ -8440,7 +8719,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                 // verify that the connection is still alive. if not, open a new connection
                 try {
                     Statement s = conn.createStatement();
-                    s.execute("show columns in spectrumfile");
+                    s.execute("show columns in spectrum_file");
 
                     // get out of the while loop
                     value = JOptionPane.CANCEL_OPTION;

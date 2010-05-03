@@ -1,15 +1,15 @@
 package no.uib.fragmentation_analyzer.gui;
 
-import be.proteomics.lims.db.accessors.Instrument;
-import be.proteomics.mascotdatfile.util.interfaces.MascotDatfileInf;
-import be.proteomics.mascotdatfile.util.interfaces.QueryToPeptideMapInf;
-import be.proteomics.mascotdatfile.util.mascot.Peak;
-import be.proteomics.mascotdatfile.util.mascot.PeptideHit;
-import be.proteomics.mascotdatfile.util.mascot.PeptideHitAnnotation;
-import be.proteomics.mascotdatfile.util.mascot.Query;
-import be.proteomics.mascotdatfile.util.mascot.enumeration.MascotDatfileType;
-import be.proteomics.mascotdatfile.util.mascot.factory.MascotDatfileFactory;
-import be.proteomics.mascotdatfile.util.mascot.iterator.QueryEnumerator;
+import com.compomics.mslims.db.accessors.Instrument;
+import com.compomics.mascotdatfile.util.interfaces.MascotDatfileInf;
+import com.compomics.mascotdatfile.util.interfaces.QueryToPeptideMapInf;
+import com.compomics.mascotdatfile.util.mascot.Peak;
+import com.compomics.mascotdatfile.util.mascot.PeptideHit;
+import com.compomics.mascotdatfile.util.mascot.PeptideHitAnnotation;
+import com.compomics.mascotdatfile.util.mascot.Query;
+import com.compomics.mascotdatfile.util.mascot.enumeration.MascotDatfileType;
+import com.compomics.mascotdatfile.util.mascot.factory.MascotDatfileFactory;
+import com.compomics.mascotdatfile.util.mascot.iterator.QueryEnumerator;
 import de.proteinms.omxparser.OmssaOmxFile;
 import de.proteinms.omxparser.util.MSHitSet;
 import de.proteinms.omxparser.util.MSHits;
@@ -68,7 +68,7 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
     private int progressCounter = 0;
     private static HashMap<Long, String> allInstruments;
     private static ArrayList<Long> allIdentificationIds;
-    private static ArrayList<Long> spectrumfileids;
+    private static ArrayList<Long> spectrumIds;
     private static HashMap<Long, String> spectraInstrumentMapping;
     private static HashMap<Long, Double> spectraTotalIntensityMapping;
     private final int NUMBER_OF_BYTES_PER_MEGABYTE = 1048576;
@@ -1380,8 +1380,8 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
                         for (Object currentFragmentIon1 : currentFragmentIons) {
 
                             // Note: 'FragmentIon' is included in several projetcs so the complete path is required
-                            be.proteomics.mascotdatfile.util.mascot.fragmentions.FragmentIonImpl currentFragmentIon =
-                                    (be.proteomics.mascotdatfile.util.mascot.fragmentions.FragmentIonImpl) currentFragmentIon1;
+                            com.compomics.mascotdatfile.util.mascot.fragmentions.FragmentIonImpl currentFragmentIon =
+                                    (com.compomics.mascotdatfile.util.mascot.fragmentions.FragmentIonImpl) currentFragmentIon1;
 
 
                             // remove # or & in front of label
@@ -1610,7 +1610,7 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
                     // get the identifications (count: 1 542 998 per 18.06.09)
                     if (!cancelProgress) {
                         allIdentificationIds = new ArrayList<Long>(getIdentificationCount());
-                        spectrumfileids = new ArrayList<Long>(getIdentificationCount());
+                        spectrumIds = new ArrayList<Long>(getIdentificationCount());
                     }
 
                     int incorrectModifiedSequenceCounter =
@@ -1623,7 +1623,7 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
                     //System.out.println("Identifications Extracted: Milliseconds: " + (temp2 - temp) + "\n");
 
                     // get the spectrum-instrument mappings and the total intensity (if available)
-                    spectraInstrumentMapping = new HashMap<Long, String>(spectrumfileids.size());
+                    spectraInstrumentMapping = new HashMap<Long, String>(spectrumIds.size());
                     spectraTotalIntensityMapping = new HashMap<Long, Double>();
 
                     if (!cancelProgress) {
@@ -1736,8 +1736,8 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
         rs = ps.executeQuery();
         rs.next();
 
-        int totalNumberOfIdentifications = rs.getInt(1);
-        //int totalNumberOfIdentifications = 10000;
+        //int totalNumberOfIdentifications = rs.getInt(1);
+        int totalNumberOfIdentifications = 10000;
 
         return totalNumberOfIdentifications;
     }
@@ -1751,7 +1751,7 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
     private int getSpectrumFileCount() throws SQLException {
 
         ps = fragmentationAnalyzer.getConnection().prepareStatement(
-                "select count(*) from spectrumfile");
+                "select count(*) from spectrum");
         rs = ps.executeQuery();
         rs.next();
 
@@ -1805,7 +1805,7 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
         int incorrectModifiedSequenceCounter = 0;
 
         ps = fragmentationAnalyzer.getConnection().prepareStatement(
-                "select identificationid, l_spectrumfileid, " +
+                "select identificationid, l_spectrumid, " +
                 "modified_sequence, " +
                 "charge, sequence from identification " +
                 "where (identificationid >= ? AND identificationid < ?)");
@@ -1836,7 +1836,7 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
                                 modifiedSequence + "\t" + rs.getInt(4) + "\t" + rs.getLong(2) + "\n");
 
                         allIdentificationIds.add(rs.getLong(1));
-                        spectrumfileids.add(rs.getLong(2));
+                        spectrumIds.add(rs.getLong(2));
                     } else {
                         incorrectModifiedSequenceCounter++;
                     }
@@ -1859,7 +1859,7 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
      */
     private void getSpectrumInstrumentMappingsAndTotalIntensity() throws SQLException {
 
-        progressDialog.setMax(spectrumfileids.size() * 2);
+        progressDialog.setMax(spectrumIds.size() * 2);
         progressDialog.setValue(0);
         progressDialog.setIntermidiate(false);
         progressDialog.setTitle("Retrieving Spectrum-Instrument Mappings. Please Wait...");
@@ -1872,7 +1872,7 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
         Statement s = fragmentationAnalyzer.getConnection().createStatement();
 
         // verify if the database contains the total_spectrum_intensity column
-        s.execute("show columns in spectrumfile where Field = 'total_spectrum_intensity'");
+        s.execute("show columns in spectrum where Field = 'total_spectrum_intensity'");
         rs = s.getResultSet();
 
         boolean totalIntensityColumnExists = false;
@@ -1883,26 +1883,26 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
 
         int querrySize = 10000;
 
-        for (int i = 0; i < spectrumfileids.size(); i++) {
+        for (int i = 0; i < spectrumIds.size(); i++) {
 
-            inClause = new StringBuffer(spectrumfileids.size() * 8); // leaves room for average ids of length 7
+            inClause = new StringBuffer(spectrumIds.size() * 8); // leaves room for average ids of length 7
 
             //progressDialog.setTitle("SI: Building in clause. Please Wait...");
 
-            inClause.append(spectrumfileids.get(i));
+            inClause.append(spectrumIds.get(i));
 
-            for (int j = (i + 1); j < (i + querrySize) && j < spectrumfileids.size(); j++) {
+            for (int j = (i + 1); j < (i + querrySize) && j < spectrumIds.size(); j++) {
                 progressDialog.setValue(progressCounter++);
-                inClause.append("," + spectrumfileids.get(j));
+                inClause.append("," + spectrumIds.get(j));
             }
 
             //progressDialog.setTitle("SI: Executing query. Please Wait...");
             if(totalIntensityColumnExists){
-                s.execute("select spectrumfileid, l_instrumentid, total_spectrum_intensity from spectrumfile where " +
-                    "spectrumfileid in (" + inClause + ")");
+                s.execute("select spectrumid, l_instrumentid, total_spectrum_intensity from spectrum where " +
+                    "spectrumid in (" + inClause + ")");
             } else{
-                s.execute("select spectrumfileid, l_instrumentid from spectrumfile where " +
-                    "spectrumfileid in (" + inClause + ")");
+                s.execute("select spectrumid, l_instrumentid from spectrumfile where " +
+                    "spectrumid in (" + inClause + ")");
             }
             
 
@@ -2011,7 +2011,7 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
 
         progressCounter = 0;
 
-        StringBuffer inClause = new StringBuffer(spectrumfileids.size() * 10);
+        StringBuffer inClause = new StringBuffer(spectrumIds.size() * 10);
         String inClauseAsString = "";
 
         FileWriter f = new FileWriter(
