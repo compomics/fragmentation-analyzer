@@ -2,7 +2,4 @@
 
 ----
  
- * NEW FEATURE: ms_lims version 7.3 is now supported.
- * LIBRARY UPDATE: ms_lims updated to 7.3
- * LIBRARY UPDATE: mascotdatfile updated to 3.0.2
- * LIBRARY UPDATE: utilities updated to 3.0.1
+(currently no changes)
