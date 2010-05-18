@@ -9,7 +9,7 @@
  * LIBRARY UPDATE: mascotdatfile updated to 3.0.2
  * LIBRARY UPDATE: utilities updated to 3.0.1
 
----
+----
 
 *Changes in FragmentationAnalyzer v1.5 - (Feb. 27. 2010):*
  * NEW FEATURE: New plotting type: Intensity Correlation.
