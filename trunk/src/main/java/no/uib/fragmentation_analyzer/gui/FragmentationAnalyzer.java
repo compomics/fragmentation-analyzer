@@ -17,6 +17,7 @@ import com.mysql.jdbc.Driver;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Frame;
 import java.awt.Toolkit;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
@@ -197,6 +198,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                 getResource("/no/uib/fragmentation_analyzer/icons/box_plot_small.GIF")));
 
         setLocationRelativeTo(null);
+        setExtendedState(Frame.MAXIMIZED_BOTH);
         setVisible(true);
 
         initialSizeHasBeenSet = true;
@@ -1073,14 +1075,14 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
             searchTypeJXPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(searchTypeJXPanelLayout.createSequentialGroup()
                 .add(28, 28, 28)
-                .add(searchJButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 284, Short.MAX_VALUE)
+                .add(searchJButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 280, Short.MAX_VALUE)
                 .add(35, 35, 35))
             .add(searchTypeJXPanelLayout.createSequentialGroup()
                 .add(38, 38, 38)
                 .add(searchTypeJXPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(generalSearchJRadioButton)
                     .add(modificationSearchJRadioButton))
-                .addContainerGap(164, Short.MAX_VALUE))
+                .addContainerGap(138, Short.MAX_VALUE))
         );
         searchTypeJXPanelLayout.setVerticalGroup(
             searchTypeJXPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -1091,7 +1093,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                 .add(modificationSearchJRadioButton)
                 .add(29, 29, 29)
                 .add(searchJButton)
-                .add(11, 11, 11))
+                .add(13, 13, 13))
         );
 
         searchSettingsJXTaskPaneContainer.add(searchTypeJXPanel);
@@ -1183,14 +1185,14 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         searchResultJXPanelLayout.setHorizontalGroup(
             searchResultJXPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(org.jdesktop.layout.GroupLayout.TRAILING, searchResultJXPanelLayout.createSequentialGroup()
-                .add(searchResultsJComboBox, 0, 297, Short.MAX_VALUE)
+                .add(searchResultsJComboBox, 0, 283, Short.MAX_VALUE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(daOrPpmSearchResultsJComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(combineSearchResultsJComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .add(46, 46, 46)
-                .add(searchResultsJButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE))
-            .add(org.jdesktop.layout.GroupLayout.TRAILING, searchResultsJScrollPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 787, Short.MAX_VALUE)
+                .add(searchResultsJButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 286, Short.MAX_VALUE))
+            .add(org.jdesktop.layout.GroupLayout.TRAILING, searchResultsJScrollPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 783, Short.MAX_VALUE)
         );
 
         searchResultJXPanelLayout.linkSize(new java.awt.Component[] {combineSearchResultsJComboBox, daOrPpmSearchResultsJComboBox}, org.jdesktop.layout.GroupLayout.HORIZONTAL);
@@ -1198,7 +1200,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         searchResultJXPanelLayout.setVerticalGroup(
             searchResultJXPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(org.jdesktop.layout.GroupLayout.TRAILING, searchResultJXPanelLayout.createSequentialGroup()
-                .add(searchResultsJScrollPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE)
+                .add(searchResultsJScrollPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 201, Short.MAX_VALUE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(searchResultJXPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(searchResultsJComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
@@ -1206,6 +1208,8 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                     .add(combineSearchResultsJComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(daOrPpmSearchResultsJComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
         );
+
+        searchResultJXPanelLayout.linkSize(new java.awt.Component[] {combineSearchResultsJComboBox, daOrPpmSearchResultsJComboBox, searchResultsJButton, searchResultsJComboBox}, org.jdesktop.layout.GroupLayout.VERTICAL);
 
         searchResultsJXTaskPane.getContentPane().add(searchResultJXPanel);
 
@@ -1290,19 +1294,19 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         spectraJXPanelLayout.setHorizontalGroup(
             spectraJXPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(spectraJXPanelLayout.createSequentialGroup()
-                .add(spectraJComboBox, 0, 295, Short.MAX_VALUE)
+                .add(spectraJComboBox, 0, 286, Short.MAX_VALUE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(daOrPpmSpectraJComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 65, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(combineSpectraJComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .add(50, 50, 50)
-                .add(spectraJButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 299, Short.MAX_VALUE))
-            .add(spectraJScrollPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 787, Short.MAX_VALUE)
+                .add(spectraJButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 291, Short.MAX_VALUE))
+            .add(spectraJScrollPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 783, Short.MAX_VALUE)
         );
         spectraJXPanelLayout.setVerticalGroup(
             spectraJXPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(org.jdesktop.layout.GroupLayout.TRAILING, spectraJXPanelLayout.createSequentialGroup()
-                .add(spectraJScrollPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE)
+                .add(spectraJScrollPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 201, Short.MAX_VALUE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(spectraJXPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(spectraJComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
@@ -1310,6 +1314,8 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                     .add(daOrPpmSpectraJComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(combineSpectraJComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
         );
+
+        spectraJXPanelLayout.linkSize(new java.awt.Component[] {combineSpectraJComboBox, daOrPpmSpectraJComboBox, spectraJButton, spectraJComboBox}, org.jdesktop.layout.GroupLayout.VERTICAL);
 
         spectraJXTaskPane.getContentPane().add(spectraJXPanel);
 
@@ -1490,7 +1496,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
             .add(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
                 .add(jPanel5Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(NH3IonsJCheckBox, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 56, Short.MAX_VALUE)
+                    .add(NH3IonsJCheckBox, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 54, Short.MAX_VALUE)
                     .add(jSeparator3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 34, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(yIonsJCheckBox, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .add(zIonsJCheckBox, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -1499,12 +1505,12 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                     .add(aIonsJCheckBox, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .add(bIonsJCheckBox, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .add(cIonsJCheckBox, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .add(otherIonsJCheckBox, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 56, Short.MAX_VALUE)
-                    .add(H2OIonsJCheckBox, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 56, Short.MAX_VALUE)
+                    .add(otherIonsJCheckBox, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 54, Short.MAX_VALUE)
+                    .add(H2OIonsJCheckBox, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 54, Short.MAX_VALUE)
                     .add(jSeparator6, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 34, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(chargeTwoJCheckBox, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 56, Short.MAX_VALUE)
-                    .add(chargeOverTwoJCheckBox, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 56, Short.MAX_VALUE)
-                    .add(chargeOneJCheckBox, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 56, Short.MAX_VALUE))
+                    .add(chargeTwoJCheckBox, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 54, Short.MAX_VALUE)
+                    .add(chargeOverTwoJCheckBox, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 54, Short.MAX_VALUE)
+                    .add(chargeOneJCheckBox, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 54, Short.MAX_VALUE))
                 .add(0, 0, 0))
         );
 
@@ -1563,7 +1569,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                 .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        spectrumPanelToolBarJInternalFrame.setBounds(700, 40, 70, 320);
+        spectrumPanelToolBarJInternalFrame.setBounds(690, 40, 80, 330);
         plotsAndAnalysesJDesktopPane.add(spectrumPanelToolBarJInternalFrame, javax.swing.JLayeredPane.POPUP_LAYER);
 
         boxPlotPanelToolBarJInternalFrame.setClosable(true);
@@ -1660,7 +1666,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                     .add(bIonsBoxPlotJCheckBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(jSeparator7, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 70, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(jSeparator4, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 70, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
+                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jPanel6Layout.linkSize(new java.awt.Component[] {bIonsBoxPlotJCheckBox, bIonsModifiedJCheckBox, bIonsUnmodifiedJCheckBox, yIonsBoxPlotJCheckBox, yIonsModifiedJCheckBox, yIonsUnmodifiedJCheckBox}, org.jdesktop.layout.GroupLayout.HORIZONTAL);
@@ -1684,7 +1690,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                 .add(yIonsUnmodifiedJCheckBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .add(0, 0, 0)
                 .add(yIonsModifiedJCheckBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(19, Short.MAX_VALUE))
         );
 
         jPanel6Layout.linkSize(new java.awt.Component[] {bIonsModifiedJCheckBox, bIonsUnmodifiedJCheckBox, yIonsModifiedJCheckBox, yIonsUnmodifiedJCheckBox}, org.jdesktop.layout.GroupLayout.VERTICAL);
@@ -1695,16 +1701,18 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         boxPlotPanelToolBarJInternalFrame.getContentPane().setLayout(boxPlotPanelToolBarJInternalFrameLayout);
         boxPlotPanelToolBarJInternalFrameLayout.setHorizontalGroup(
             boxPlotPanelToolBarJInternalFrameLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jPanel6, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE)
+            .add(boxPlotPanelToolBarJInternalFrameLayout.createSequentialGroup()
+                .add(jPanel6, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE)
+                .addContainerGap())
         );
         boxPlotPanelToolBarJInternalFrameLayout.setVerticalGroup(
             boxPlotPanelToolBarJInternalFrameLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(boxPlotPanelToolBarJInternalFrameLayout.createSequentialGroup()
-                .add(jPanel6, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 211, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .add(jPanel6, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 243, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
-        boxPlotPanelToolBarJInternalFrame.setBounds(660, 70, 100, 240);
+        boxPlotPanelToolBarJInternalFrame.setBounds(630, 80, 100, 290);
         plotsAndAnalysesJDesktopPane.add(boxPlotPanelToolBarJInternalFrame, javax.swing.JLayeredPane.POPUP_LAYER);
 
         internalFrameTipJLabel.setFont(new java.awt.Font("Tahoma", 2, 10));
@@ -1922,17 +1930,6 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                     progressDialog.setVisible(true);
                 }
             }, "ProgressDialog").start();
-
-            // Wait until progress dialog is visible.
-            //
-            // The following is not needed in Java 1.6, but seemed to be needed in 1.5.
-            //
-            // Not including the lines _used to_ result in a crash on Windows, but not anymore.
-            // Including the lines results in a crash on Linux and Mac.
-            if (System.getProperty("os.name").toLowerCase().lastIndexOf("windows") != -1) {
-                while (!progressDialog.isVisible()) {
-                }
-            }
 
             new Thread("SearchThread") {
 
@@ -2761,17 +2758,6 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                     progressDialog.setVisible(true);
                 }
             }, "ProgressDialog").start();
-
-            // Wait until progress dialog is visible.
-            //
-            // The following is not needed in Java 1.6, but seemed to be needed in 1.5.
-            //
-            // Not including the lines _used to_ result in a crash on Windows, but not anymore.
-            // Including the lines results in a crash on Linux and Mac.
-            if (System.getProperty("os.name").toLowerCase().lastIndexOf("windows") != -1) {
-                while (!progressDialog.isVisible()) {
-                }
-            }
 
             new Thread("IdentificationsThread") {
 
@@ -5361,17 +5347,6 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                 }
             }, "ProgressDialog").start();
 
-            // Wait until progress dialog is visible.
-            //
-            // The following is not needed in Java 1.6, but seemed to be needed in 1.5.
-            //
-            // Not including the lines _used to_ result in a crash on Windows, but not anymore.
-            // Including the lines results in a crash on Linux and Mac.
-            if (System.getProperty("os.name").toLowerCase().lastIndexOf("windows") != -1) {
-                while (!progressDialog.isVisible()) {
-                }
-            }
-
             new Thread("SpectraThread") {
 
                 @Override
@@ -7205,12 +7180,12 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
             }
 
             // set the size of the results and spectra table task panes
-            int newHeight = (resultsJScrollPane.getHeight() / 2) - 84; // ToDo: remove hardcoding
+            int newHeight = (resultsJScrollPane.getHeight() / 2) - 85; // ToDo: remove hardcoding
             searchResultJXPanel.setPreferredSize(new Dimension(0, newHeight));
             spectraJXPanel.setPreferredSize(new Dimension(0, newHeight));
 
             // set the size of the plot task panes
-            newHeight = resultsJScrollPane.getHeight() - 148; // ToDo: remove hardcoding
+            newHeight = resultsJScrollPane.getHeight() - 150; // ToDo: remove hardcoding
             plotsAndAnalysesJScrollPane.setPreferredSize(new Dimension(0, newHeight));
 
 
@@ -8436,17 +8411,6 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                 progressDialog.setVisible(true);
             }
         }, "ProgressDialog").start();
-
-        // Wait until progress dialog is visible.
-        //
-        // The following is not needed in Java 1.6, but seemed to be needed in 1.5.
-        //
-        // Not including the lines _used to_ result in a crash on Windows, but not anymore.
-        // Including the lines results in a crash on Linux and Mac.
-        if (System.getProperty("os.name").toLowerCase().lastIndexOf("windows") != -1) {
-            while (!progressDialog.isVisible()) {
-            }
-        }
 
         new Thread("LoadThread") {
 
