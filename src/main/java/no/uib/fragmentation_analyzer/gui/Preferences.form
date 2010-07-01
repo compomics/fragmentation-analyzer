@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.1" encoding="UTF-8" ?>
 
 <Form version="1.5" maxVersion="1.7" type="org.netbeans.modules.form.forminfo.JDialogFormInfo">
   <NonVisualComponents>
@@ -37,7 +37,7 @@
                   <Component id="jPanel1" alignment="1" max="32767" attributes="0"/>
                   <Component id="jPanel3" alignment="1" max="32767" attributes="0"/>
                   <Component id="jPanel4" alignment="0" max="32767" attributes="0"/>
-                  <Component id="jSeparator1" alignment="0" pref="336" max="32767" attributes="0"/>
+                  <Component id="jSeparator1" alignment="0" pref="365" max="32767" attributes="0"/>
                   <Group type="102" alignment="1" attributes="0">
                       <Component id="okJButton" linkSize="1" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" max="-2" attributes="0"/>
@@ -76,9 +76,7 @@
       <Properties>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
           <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-            <TitledBorder title="Plotting Properties">
-              <Color PropertyName="color" blue="0" green="0" red="0" type="rgb"/>
-            </TitledBorder>
+            <TitledBorder title="Plotting Properties"/>
           </Border>
         </Property>
       </Properties>
@@ -210,9 +208,7 @@
       <Properties>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
           <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-            <TitledBorder title="Fragment Ion Scoring Types - ms_lims">
-              <Color PropertyName="color" blue="0" green="0" red="0" type="rgb"/>
-            </TitledBorder>
+            <TitledBorder title="Fragment Ion Scoring Types - ms_lims"/>
           </Border>
         </Property>
       </Properties>
@@ -227,7 +223,7 @@
                       <Component id="detectedNotScoredJCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                       <Component id="aPosterioriDetectedJCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace pref="159" max="32767" attributes="0"/>
+                  <EmptySpace pref="168" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -272,9 +268,7 @@
       <Properties>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
           <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-            <TitledBorder title="Intensity Normalization">
-              <Color PropertyName="color" blue="0" green="0" red="0" type="rgb"/>
-            </TitledBorder>
+            <TitledBorder title="Intensity Normalization"/>
           </Border>
         </Property>
       </Properties>
@@ -288,7 +282,7 @@
                       <Component id="totalIntensityNormalizationJRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
                       <Component id="unnormalizedJRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace pref="141" max="32767" attributes="0"/>
+                  <EmptySpace pref="142" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -331,9 +325,7 @@
       <Properties>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
           <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-            <TitledBorder title="Heat Map Correlation Type">
-              <Color PropertyName="color" blue="0" green="0" red="0" type="rgb"/>
-            </TitledBorder>
+            <TitledBorder title="Heat Map Correlation Type"/>
           </Border>
         </Property>
       </Properties>
@@ -347,7 +339,7 @@
                       <Component id="spearmanJRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
                       <Component id="pearsonJRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace pref="173" max="32767" attributes="0"/>
+                  <EmptySpace pref="180" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>

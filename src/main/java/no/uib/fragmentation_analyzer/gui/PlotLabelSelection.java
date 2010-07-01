@@ -106,7 +106,7 @@ public class PlotLabelSelection extends javax.swing.JDialog {
             }
         });
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Options", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 11), new java.awt.Color(0, 0, 0))); // NOI18N
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Options"));
 
         buttonGroup.add(instrumentNameJRadioButton);
         instrumentNameJRadioButton.setText("Instrument Name");
@@ -158,18 +158,18 @@ public class PlotLabelSelection extends javax.swing.JDialog {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(jPanel1Layout.createSequentialGroup()
-                .add(18, 18, 18)
+                .add(27, 27, 27)
                 .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(spectrumIdJRadioButton)
-                    .add(fragmentIonTypeJRadioButton)
-                    .add(instrumentNameJRadioButton))
-                .addContainerGap(132, Short.MAX_VALUE))
-            .add(org.jdesktop.layout.GroupLayout.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(18, Short.MAX_VALUE)
-                .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(fragmentIonThresholdJRadioButton)
-                    .add(fragmentIonScoringTypeJRadioButton))
-                .addContainerGap())
+                    .add(jPanel1Layout.createSequentialGroup()
+                        .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                            .add(spectrumIdJRadioButton)
+                            .add(fragmentIonTypeJRadioButton)
+                            .add(instrumentNameJRadioButton))
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 158, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                        .add(fragmentIonThresholdJRadioButton)
+                        .add(fragmentIonScoringTypeJRadioButton)))
+                .addContainerGap(77, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
