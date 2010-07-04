@@ -1715,7 +1715,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         boxPlotPanelToolBarJInternalFrame.setBounds(630, 80, 100, 290);
         plotsAndAnalysesJDesktopPane.add(boxPlotPanelToolBarJInternalFrame, javax.swing.JLayeredPane.POPUP_LAYER);
 
-        internalFrameTipJLabel.setFont(new java.awt.Font("Tahoma", 2, 10));
+        internalFrameTipJLabel.setFont(internalFrameTipJLabel.getFont().deriveFont((internalFrameTipJLabel.getFont().getStyle() | java.awt.Font.ITALIC), internalFrameTipJLabel.getFont().getSize()-3));
         internalFrameTipJLabel.setText("Right click in the plot or on the plot title bar for plot options");
         internalFrameTipJLabel.setBounds(30, 0, 270, 20);
         plotsAndAnalysesJDesktopPane.add(internalFrameTipJLabel, javax.swing.JLayeredPane.DEFAULT_LAYER);
