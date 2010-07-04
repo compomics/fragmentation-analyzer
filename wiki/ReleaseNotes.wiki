@@ -3,11 +3,19 @@
 
 ----
 
+*Changes in FragmentationAnalyzer v1.5.2 - (July 4. 2010):*
+ * FEATURE IMPROVEMENT: Lots of minor changes to the GUI to make it look better on Windows 7.
+ * LIBRARY UPDATE: utilities updated to 3.0.9 
+
+----
+
 *Changes in FragmentationAnalyzer v1.5.1 - (May 18. 2010):*
  * NEW FEATURE: ms_lims version 7.3 is now supported.
  * LIBRARY UPDATE: ms_lims updated to 7.3
  * LIBRARY UPDATE: mascotdatfile updated to 3.0.2
  * LIBRARY UPDATE: utilities updated to 3.0.1
+
+Download Count: 32
 
 ----
 
