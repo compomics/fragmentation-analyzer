@@ -1717,7 +1717,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
         internalFrameTipJLabel.setFont(internalFrameTipJLabel.getFont().deriveFont((internalFrameTipJLabel.getFont().getStyle() | java.awt.Font.ITALIC), internalFrameTipJLabel.getFont().getSize()-3));
         internalFrameTipJLabel.setText("Right click in the plot or on the plot title bar for plot options");
-        internalFrameTipJLabel.setBounds(30, 0, 270, 20);
+        internalFrameTipJLabel.setBounds(30, 0, 470, 20);
         plotsAndAnalysesJDesktopPane.add(internalFrameTipJLabel, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         plotsAndAnalysesJScrollPane.setViewportView(plotsAndAnalysesJDesktopPane);
