@@ -25,7 +25,7 @@
 ----
 
 ===Loading Data Sets===
-This section contains a brief tutorial on how to use Fragmentation Analyzer.
+This section contains a brief tutorial on how to use *Fragmentation Analyzer*.
 After starting the tool the data selection dialog will be shown. (The
 dialog can also be opened from the File menu by selection 'Open'.) You
 can either import new data sets from one of the three supported formats,
