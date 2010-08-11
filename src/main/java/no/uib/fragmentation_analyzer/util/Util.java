@@ -400,7 +400,7 @@ public final class Util {
     /**
      * Returns the color to use for the given fragment ion label.
      *
-     * @param fragment ion label
+     * @param seriesLabel the series label
      * @return the fragment ion color
      */
     public static Color determineFragmentIonColor(String seriesLabel) {

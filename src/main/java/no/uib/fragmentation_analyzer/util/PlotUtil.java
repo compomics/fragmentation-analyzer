@@ -941,9 +941,9 @@ public class PlotUtil {
     /**
      * Returns a category plot based on the provided data.
      *
-     * @param dataSet
-     * @param xAxisLabel
-     * @param yAxisLabel
+     * @param dataSet the data set to plot
+     * @param xAxisLabel the x-axis label
+     * @param yAxisLabel the y-axis label
      * @return a CategoryPlot of the data
      */
     public static CategoryPlot getCategoryPlot(CategoryDataset dataSet, String xAxisLabel,
@@ -963,11 +963,13 @@ public class PlotUtil {
     }
 
     /**
-     * Returns a scatter plot if tbe provided data set.
+     * Returns a scatter plot of tbe provided data set.
      *
-     * @param dataSet
-     * @param usePpm if true ppm is used when plotting, otherwise Dalton is used
+     * @param dataSet the data set to plot
+     * @param xAxisLabel the x-axis label
+     * @param yAxisLabel the y-axis label
      * @param addLegend if true the legend is visible
+     * @param properies a reference to the Properties object
      * @return the created chart
      */
     public static JFreeChart getScatterPlotChart(DefaultXYDataset dataSet, String xAxisLabel, 
@@ -1269,10 +1271,11 @@ public class PlotUtil {
     /**
      * Returns a bubble chart of the provided data set.
      *
-     * @param dataSet
-     * @param usePpm if true ppm is used when plotting, otherwise Dalton is used
-     * @param properties
+     * @param dataSet the data set to plot
+     * @param xAxisLabel the x-axis label
+     * @param yAxisLabel the y-axis label
      * @param addLegend if true the legend is visible
+     * @param properties a reference to the Properties object
      * @return the created chart
      */
     public static JFreeChart getBubbleChart(DefaultXYZDataset dataSet, String xAxisLabel, String yAxisLabel, boolean addLegend,
