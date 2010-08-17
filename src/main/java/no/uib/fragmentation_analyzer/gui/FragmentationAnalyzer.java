@@ -1511,7 +1511,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                     .add(chargeTwoJCheckBox, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 54, Short.MAX_VALUE)
                     .add(chargeOverTwoJCheckBox, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 54, Short.MAX_VALUE)
                     .add(chargeOneJCheckBox, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 54, Short.MAX_VALUE))
-                .add(0, 0, 0))
+                .addContainerGap())
         );
 
         jPanel5Layout.linkSize(new java.awt.Component[] {aIonsJCheckBox, bIonsJCheckBox, cIonsJCheckBox, xIonsJCheckBox, yIonsJCheckBox, zIonsJCheckBox}, org.jdesktop.layout.GroupLayout.HORIZONTAL);
@@ -1549,7 +1549,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                 .add(chargeTwoJCheckBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .add(0, 0, 0)
                 .add(chargeOverTwoJCheckBox)
-                .add(0, 0, 0))
+                .addContainerGap())
         );
 
         jPanel5Layout.linkSize(new java.awt.Component[] {H2OIonsJCheckBox, NH3IonsJCheckBox, aIonsJCheckBox, bIonsJCheckBox, cIonsJCheckBox, chargeOneJCheckBox, chargeOverTwoJCheckBox, chargeTwoJCheckBox, otherIonsJCheckBox, xIonsJCheckBox, yIonsJCheckBox, zIonsJCheckBox}, org.jdesktop.layout.GroupLayout.VERTICAL);
@@ -1558,18 +1558,14 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         spectrumPanelToolBarJInternalFrame.getContentPane().setLayout(spectrumPanelToolBarJInternalFrameLayout);
         spectrumPanelToolBarJInternalFrameLayout.setHorizontalGroup(
             spectrumPanelToolBarJInternalFrameLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(spectrumPanelToolBarJInternalFrameLayout.createSequentialGroup()
-                .add(jPanel5, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 66, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .add(jPanel5, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 74, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
         );
         spectrumPanelToolBarJInternalFrameLayout.setVerticalGroup(
             spectrumPanelToolBarJInternalFrameLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(spectrumPanelToolBarJInternalFrameLayout.createSequentialGroup()
-                .add(jPanel5, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 289, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .add(jPanel5, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 325, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
         );
 
-        spectrumPanelToolBarJInternalFrame.setBounds(690, 40, 80, 330);
+        spectrumPanelToolBarJInternalFrame.setBounds(670, 30, 80, 370);
         plotsAndAnalysesJDesktopPane.add(spectrumPanelToolBarJInternalFrame, javax.swing.JLayeredPane.POPUP_LAYER);
 
         boxPlotPanelToolBarJInternalFrame.setClosable(true);
