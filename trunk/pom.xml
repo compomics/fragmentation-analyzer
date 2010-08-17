@@ -12,7 +12,7 @@
 
     <!-- Set the version number for the whole project -->
     <properties>
-        <version.number>1.5.2</version.number>
+        <version.number>1.5.3</version.number>
     </properties>
 
 
@@ -205,13 +205,13 @@
         </dependency>
         <dependency>
             <groupId>de.proteinms.omxparser</groupId>
-            <artifactId>omssaparser</artifactId>
-            <version>1.3.3</version>
+            <artifactId>omssa-parser</artifactId>
+            <version>1.4</version>
         </dependency>
         <dependency>
             <groupId>com.compomics</groupId>
             <artifactId>mascotdatfile</artifactId>
-            <version>3.0.2</version>
+            <version>3.2</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -226,7 +226,17 @@
         <dependency>
             <groupId>com.compomics</groupId>
             <artifactId>ms-lims</artifactId>
-            <version>7.3</version>
+            <version>7.4.1</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>peptizer</artifactId>
+                    <groupId>com.compomics</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>rover</artifactId>
+                    <groupId>com.compomics</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>mysql</groupId>
