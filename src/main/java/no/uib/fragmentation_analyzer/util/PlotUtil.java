@@ -1457,6 +1457,7 @@ public class PlotUtil {
 
         // Create an instance of the SVG Generator
         SVGGraphics2D svgGenerator = new SVGGraphics2D(svgDocument);
+        svgGenerator.setSVGCanvasSize(bounds.getSize());
 
         // draw the panel in the SVG generator
         if (component instanceof JFreeChart) {
