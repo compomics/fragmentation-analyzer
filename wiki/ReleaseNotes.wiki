@@ -3,10 +3,18 @@
 
 ----
 
+*Changes in FragmentationAnalyzer v1.5.4 - (September. 9. 2010):*
+ * BUG FIX: Fixed a bug in the export figure to file feature that resulted in only parts of the figure being exported.
+ * LIBRARY UPDATE: utilities updated to 3.0.21.
+
+----
+
 *Changes in FragmentationAnalyzer v1.5.3 - (Aug. 17. 2010):*
  * LIBRARY UPDATE: ms_lims updated to 7.4.1 
  * LIBRARY UPDATE: mascotdatfile updated to 3.2 
  * LIBRARY UPDATE: omssa-parser updated to 1.4 
+
+Download Count: 16
 
 ----
 
