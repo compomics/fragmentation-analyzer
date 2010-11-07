@@ -4273,7 +4273,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                     // create the line plot for the sequence dependent fragment ions
                                     JFreeChart chart = PlotUtil.getLinePlot(sequenceDependentFragmentIons,
                                             numberOfSpectraOfGivenLength,
-                                            "Fragment Ion Number", "Occurence (%)");
+                                            "Residue Number", "Occurence (%)");
 
                                     if (!properties.showLegend()) {
                                         chart.getLegend().setVisible(false);
@@ -5783,7 +5783,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                     // create the line plot for the sequence dependent fragment ions
                                     JFreeChart lineChart = PlotUtil.getLinePlot(sequenceDependentFragmentIons,
                                             numberOfSpectraOfGivenLength,
-                                            "Fragment Ion Number", "Occurence (%)");
+                                            "Residue Number", "Occurence (%)");
 
                                     if (!properties.showLegend()) {
                                         lineChart.getLegend().setVisible(false);
@@ -5994,6 +5994,11 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                     // get the fragment ion label. y3 -> y, y[4]++-H2O -> y++-H2O
                     String currentFragmentIonLabel = FragmentIon.getFragmentIonLabel(fragmentIonType, fragmentIonNumber);
 
+                    // invert the x, y and z ions
+                    if (fragmentIonType.startsWith("x") || fragmentIonType.startsWith("y") || fragmentIonType.startsWith("z")) {
+                        fragmentIonNumber = peptideSequenceLength - fragmentIonNumber;
+                    }
+
                     if (fragmentIonNumber != 0) {
                         if (sequenceDependentFragmentIons.get(currentFragmentIonLabel) != null) {
                             int[] tempArray = sequenceDependentFragmentIons.get(currentFragmentIonLabel);
@@ -6035,6 +6040,11 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
                 // get the fragment ion label. y3 -> y, y[4]++-H2O -> y++-H2O
                 String currentFragmentIonLabel = currentFragmentIon.getFragmentIonLabel();
+
+                // invert the x, y and z ions
+                if (fragmentIonType.startsWith("x") || fragmentIonType.startsWith("y") || fragmentIonType.startsWith("z")) {
+                    fragmentIonNumber = peptideSequenceLength - fragmentIonNumber;
+                }
 
                 if (fragmentIonNumber != 0) {
                     if (sequenceDependentFragmentIons.get(currentFragmentIonLabel) != null) {
