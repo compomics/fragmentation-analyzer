@@ -165,7 +165,7 @@
             <layout>default</layout>
         </repository>
 
-        <!-- JBoss Repository - beeded for JFreeChart -->
+        <!-- JBoss Repository - needed for JFreeChart -->
         <repository>
             <id>JBOSS</id>
             <name>JBoss Repository</name>
