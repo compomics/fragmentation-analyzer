@@ -2240,7 +2240,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                         reducedIdentifications.get(0).getSequence().length(),
                                         unmodifiedCounter,
                                         modifiedSequences.get(modifiedSequence),
-                                        new Boolean(false)
+                                        Boolean.valueOf(false)
                                     });
                         }
                     }
@@ -2336,7 +2336,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                             temp.getSequence().length(),
                             tempList.size(),
                             null,
-                            new Boolean(false)
+                            Boolean.valueOf(false)
                         });
 
 
@@ -2820,7 +2820,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                                     currentId.getModifiedSequence(),
                                                     currentId.getSequence().length(),
                                                     currentId.getInstrumentName(),
-                                                    new Boolean(false)
+                                                    Boolean.valueOf(false)
                                                 });
                                     }
                                 }
@@ -2842,7 +2842,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                                     currentId.getModifiedSequence(),
                                                     currentId.getSequence().length(),
                                                     currentId.getInstrumentName(),
-                                                    new Boolean(false)
+                                                    Boolean.valueOf(false)
                                                 });
                                     }
                                 }
@@ -2867,7 +2867,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                                 currentId.getModifiedSequence(),
                                                 currentId.getSequence().length(),
                                                 currentId.getInstrumentName(),
-                                                new Boolean(false)
+                                                Boolean.valueOf(false)
                                             });
                                 }
                             }
@@ -3140,6 +3140,8 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                     chart.getLegend().setItemFont(new Font("SansSerif", Font.PLAIN, 10));
                                     chart.getLegend().setPosition(RectangleEdge.BOTTOM);
 
+                                    chart.setBackgroundPaint(PlotUtil.chartBackgroundColor);
+
                                     if (!properties.showLegend()) {
                                         chart.getLegend().setVisible(false);
                                     }
@@ -3350,6 +3352,8 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                     chart.getLegend().setItemFont(new Font("SansSerif", Font.PLAIN, 10));
                                     chart.getLegend().setPosition(RectangleEdge.BOTTOM);
 
+                                    chart.setBackgroundPaint(PlotUtil.chartBackgroundColor);
+
                                     if (!properties.showLegend()) {
                                         chart.getLegend().setVisible(false);
                                     }
@@ -3549,6 +3553,8 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                     chart.getLegend().setItemFont(new Font("SansSerif", Font.PLAIN, 10));
                                     chart.getLegend().setPosition(RectangleEdge.BOTTOM);
 
+                                    chart.setBackgroundPaint(PlotUtil.chartBackgroundColor);
+
                                     if (!properties.showLegend()) {
                                         chart.getLegend().setVisible(false);
                                     }
@@ -3618,6 +3624,8 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                             plotQuartileDistances,
                                             true);
 
+                                    chartQuartileDistances.setBackgroundPaint(PlotUtil.chartBackgroundColor);
+
                                     chartQuartileDistances.getLegend().setItemFont(new Font("SansSerif", Font.PLAIN, 10));
                                     chartQuartileDistances.getLegend().setPosition(RectangleEdge.BOTTOM);
 
@@ -3658,6 +3666,8 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                             new Font("SansSerif", Font.BOLD, 10),
                                             plotMedians,
                                             true);
+
+                                    chartMedians.setBackgroundPaint(PlotUtil.chartBackgroundColor);
 
                                     chartMedians.getLegend().setItemFont(new Font("SansSerif", Font.PLAIN, 10));
                                     chartMedians.getLegend().setPosition(RectangleEdge.BOTTOM);
@@ -4214,7 +4224,8 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
                                         if (!currentId.isModified()) {
                                             totalNumberOfFragmentIons += addFragmentIonsToIonProbabilityPlot(currentId, sequenceDependentFragmentIons,
-                                                    sequenceIndependentFragmentIons, longestPeptideSequenceLength);
+                                                    sequenceIndependentFragmentIons, longestPeptideSequenceLength,
+                                                    combineSearchResultsJComboBox.getSelectedIndex() == Properties.SINGLE_PLOT);
                                             totalNumberOfSpectra++;
 
                                             // update the totalNumberOfSpectraOfGivenLength array
@@ -4233,7 +4244,8 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
                                         if (currentId.getModifiedSequence().equalsIgnoreCase(currentModifiedSequence)) {
                                             totalNumberOfFragmentIons += addFragmentIonsToIonProbabilityPlot(currentId, sequenceDependentFragmentIons,
-                                                    sequenceIndependentFragmentIons, longestPeptideSequenceLength);
+                                                    sequenceIndependentFragmentIons, longestPeptideSequenceLength,
+                                                    combineSearchResultsJComboBox.getSelectedIndex() == Properties.SINGLE_PLOT);
                                             totalNumberOfSpectra++;
 
                                             // update the totalNumberOfSpectraOfGivenLength array
@@ -4255,7 +4267,8 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                     for (int j = 0; j < currentIdentifications.size() && !cancelProgress; j++) {
                                         ReducedIdentification currentId = currentIdentifications.get(j);
                                         totalNumberOfFragmentIons += addFragmentIonsToIonProbabilityPlot(currentId, sequenceDependentFragmentIons,
-                                                sequenceIndependentFragmentIons, longestPeptideSequenceLength);
+                                                sequenceIndependentFragmentIons, longestPeptideSequenceLength, 
+                                                combineSearchResultsJComboBox.getSelectedIndex() == Properties.SINGLE_PLOT);
                                         totalNumberOfSpectra++;
 
                                         // update the totalNumberOfSpectraOfGivenLength array
@@ -4279,6 +4292,8 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                         chart.getLegend().setVisible(false);
                                     }
 
+                                    chart.setBackgroundPaint(PlotUtil.chartBackgroundColor);
+
                                     ChartPanel chartPanel = new ChartPanel(chart);
 
                                     String internalFrameTitle = "" + currentModifiedSequence
@@ -4299,6 +4314,8 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                     JFreeChart barChart = PlotUtil.getBarPlot(sequenceIndependentFragmentIons,
                                             totalNumberOfSpectra,
                                             "Ion Type", "Occurence (%)");
+
+                                    barChart.setBackgroundPaint(PlotUtil.chartBackgroundColor);
 
                                     ChartPanel barChartPanel = new ChartPanel(barChart);
                                     plotType = "BarPlot";
@@ -4386,6 +4403,8 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                         totalNumberOfSpectraOfGivenLength,
                                         "Fragment Ion Number", "Occurence (%)", properties);
 
+                                chart.setBackgroundPaint(PlotUtil.chartBackgroundColor);
+
                                 if (!properties.showLegend()) {
                                     chart.getLegend().setVisible(false);
                                 }
@@ -4422,6 +4441,8 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 //                                JFreeChart barChart = PlotUtil.getBarPlot(averageSequenceIndependentFragmentIons,
 //                                        totalNumberOfSpectra,
 //                                        "Ion Type", "Occurence (%)");
+//
+//                                chart.setBackgroundPaint(PlotUtil.chartBackgroundColor);
 //
 //                                ChartPanel barChartPanel = new ChartPanel(barChart);
 //                                plotType = "BarPlot";
@@ -4547,6 +4568,8 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
         chartNormal.getLegend().setItemFont(new Font("SansSerif", Font.PLAIN, 10));
         chartNormal.getLegend().setPosition(RectangleEdge.BOTTOM);
+
+        chartNormal.setBackgroundPaint(PlotUtil.chartBackgroundColor);
 
         if (!properties.showLegend()) {
             chartNormal.getLegend().setVisible(false);
@@ -5698,6 +5721,8 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                     plot,
                                     true);
 
+                            chart.setBackgroundPaint(PlotUtil.chartBackgroundColor);
+
                             chart.getLegend().setItemFont(new Font("SansSerif", Font.PLAIN, 10));
                             chart.getLegend().setPosition(RectangleEdge.BOTTOM);
 
@@ -5764,7 +5789,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
                                 totalNumberOfFragmentIons += addFragmentIonsToIonProbabilityPlot(currentIdentification, 
                                         sequenceDependentFragmentIons, sequenceIndependentFragmentIons,
-                                        longestPeptideSequenceLength);
+                                        longestPeptideSequenceLength, combineSpectraJComboBox.getSelectedIndex() == Properties.SINGLE_PLOT);
 
                                 // if the plots are not going to be combined, we can reset the peptide length
                                 if (combineSpectraJComboBox.getSelectedIndex() == Properties.SINGLE_PLOT) {
@@ -5952,7 +5977,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
             ReducedIdentification currentIdentification,
             HashMap<String, int[]> sequenceDependentFragmentIons,
             HashMap<String, Integer> sequenceIndependentFragmentIons,
-            int peptideSequenceLength)
+            int peptideSequenceLength, boolean invertXYZ)
             throws IOException, SQLException {
 
         // ToDo: This method ought to be moved into the PlotUtil class
@@ -5995,8 +6020,10 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                     String currentFragmentIonLabel = FragmentIon.getFragmentIonLabel(fragmentIonType, fragmentIonNumber);
 
                     // invert the x, y and z ions
-                    if (fragmentIonType.startsWith("x") || fragmentIonType.startsWith("y") || fragmentIonType.startsWith("z")) {
-                        fragmentIonNumber = peptideSequenceLength - fragmentIonNumber;
+                    if (invertXYZ) {
+                        if (fragmentIonType.startsWith("x") || fragmentIonType.startsWith("y") || fragmentIonType.startsWith("z")) {
+                            fragmentIonNumber = peptideSequenceLength - fragmentIonNumber;
+                        }
                     }
 
                     if (fragmentIonNumber != 0) {
@@ -6042,8 +6069,10 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                 String currentFragmentIonLabel = currentFragmentIon.getFragmentIonLabel();
 
                 // invert the x, y and z ions
-                if (fragmentIonType.startsWith("x") || fragmentIonType.startsWith("y") || fragmentIonType.startsWith("z")) {
-                    fragmentIonNumber = peptideSequenceLength - fragmentIonNumber;
+                if (invertXYZ) {
+                    if (fragmentIonType.startsWith("x") || fragmentIonType.startsWith("y") || fragmentIonType.startsWith("z")) {
+                        fragmentIonNumber = peptideSequenceLength - fragmentIonNumber;
+                    }
                 }
 
                 if (fragmentIonNumber != 0) {
@@ -6390,7 +6419,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
         if (properties.selectAllIdentifications()) {
             for (int i = 0; i < searchResultsJXTable.getRowCount(); i++) {
-                searchResultsJXTable.setValueAt(new Boolean(true), i, searchResultsJXTable.getColumnCount() - 1);
+                searchResultsJXTable.setValueAt(Boolean.valueOf(true), i, searchResultsJXTable.getColumnCount() - 1);
 
                 Integer countB = null;
 
@@ -6409,7 +6438,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         } else {
             for (int i = 0; i < searchResultsJXTable.getRowCount(); i++) {
                 if ((((Boolean) searchResultsJXTable.getValueAt(i, searchResultsJXTable.getColumnCount() - 1)).booleanValue())) {
-                    searchResultsJXTable.setValueAt(new Boolean(false), i, searchResultsJXTable.getColumnCount() - 1);
+                    searchResultsJXTable.setValueAt(Boolean.valueOf(false), i, searchResultsJXTable.getColumnCount() - 1);
                 }
             }
         }
@@ -6463,8 +6492,8 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
         for (int i = 0; i < searchResultsJXTable.getRowCount(); i++) {
             searchResultsJXTable.setValueAt(
-                    new Boolean(!((Boolean) searchResultsJXTable.getValueAt(
-                    i, searchResultsJXTable.getColumnCount() - 1)).booleanValue()),
+                    !((Boolean) searchResultsJXTable.getValueAt(
+                    i, searchResultsJXTable.getColumnCount() - 1)),
                     i, searchResultsJXTable.getColumnCount() - 1);
 
             if (((Boolean) searchResultsJXTable.getValueAt(i, searchResultsJXTable.getColumnCount() - 1)).booleanValue()) {
@@ -6523,7 +6552,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
         if (properties.selectAllSpectra()) {
             for (int i = 0; i < spectraJXTable.getRowCount(); i++) {
-                spectraJXTable.setValueAt(new Boolean(true), i, spectraJXTable.getColumnCount() - 1);
+                spectraJXTable.setValueAt(Boolean.valueOf(true), i, spectraJXTable.getColumnCount() - 1);
                 properties.getCurrentlySelectedRowsInSpectraTable().add(
                         new SpectrumTableRow(
                         (Integer) spectraJXTable.getValueAt(i, 1),
@@ -6590,8 +6619,8 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
         for (int i = 0; i < spectraJXTable.getRowCount(); i++) {
             spectraJXTable.setValueAt(
-                    new Boolean(!((Boolean) spectraJXTable.getValueAt(i,
-                    spectraJXTable.getColumnCount() - 1)).booleanValue()), i, spectraJXTable.getColumnCount() - 1);
+                    !((Boolean) spectraJXTable.getValueAt(i,
+                    spectraJXTable.getColumnCount() - 1)), i, spectraJXTable.getColumnCount() - 1);
 
             if (((Boolean) spectraJXTable.getValueAt(i, spectraJXTable.getColumnCount() - 1)).booleanValue()) {
                 properties.getCurrentlySelectedRowsInSpectraTable().add(
@@ -6891,7 +6920,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                     countB);
 
             // select the row
-            searchResultsJXTable.setValueAt(new Boolean(select), currentRow, column);
+            searchResultsJXTable.setValueAt(select, currentRow, column);
 
             // add the row to the list of selected rows
             if (((Boolean) searchResultsJXTable.getValueAt(currentRow, column)).booleanValue()) {
@@ -6966,7 +6995,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                     (String) spectraJXTable.getValueAt(currentRow, 6));
 
             // select the row
-            spectraJXTable.setValueAt(new Boolean(select), currentRow, column);
+            spectraJXTable.setValueAt(select, currentRow, column);
 
             // add the row to the list of selected rows
             if (((Boolean) spectraJXTable.getValueAt(currentRow, column)).booleanValue()) {
@@ -7706,7 +7735,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         // find all rows with the wanted peptide length and select all occurences up to the wanted number
         for(int i=0; i < searchResultsJXTable.getRowCount() && numberOfRowsSelected < counter; i++){
             if(((Integer) searchResultsJXTable.getValueAt(i, 3)).intValue() == peptideLength){
-                searchResultsJXTable.setValueAt(new Boolean(true), i, searchResultsJXTable.getColumnCount() - 1);
+                searchResultsJXTable.setValueAt(true, i, searchResultsJXTable.getColumnCount() - 1);
                 numberOfRowsSelected++;
 
                 // update the selection

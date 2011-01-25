@@ -908,7 +908,7 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace min="-2" pref="28" max="-2" attributes="0"/>
-                              <Component id="searchJButton" pref="280" max="32767" attributes="0"/>
+                              <Component id="searchJButton" pref="284" max="32767" attributes="0"/>
                               <EmptySpace min="-2" pref="35" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
@@ -917,7 +917,7 @@
                                   <Component id="generalSearchJRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="modificationSearchJRadioButton" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace pref="138" max="32767" attributes="0"/>
+                              <EmptySpace pref="164" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -1021,21 +1021,21 @@
                         <DimensionLayout dim="0">
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="1" attributes="0">
-                                  <Component id="searchResultsJComboBox" pref="283" max="32767" attributes="0"/>
+                                  <Component id="searchResultsJComboBox" pref="297" max="32767" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="daOrPpmSearchResultsJComboBox" linkSize="4" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="combineSearchResultsJComboBox" linkSize="4" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace min="-2" pref="46" max="-2" attributes="0"/>
-                                  <Component id="searchResultsJButton" pref="286" max="32767" attributes="0"/>
+                                  <Component id="searchResultsJButton" pref="300" max="32767" attributes="0"/>
                               </Group>
-                              <Component id="searchResultsJScrollPane" alignment="1" pref="783" max="32767" attributes="2"/>
+                              <Component id="searchResultsJScrollPane" alignment="1" pref="787" max="32767" attributes="2"/>
                           </Group>
                         </DimensionLayout>
                         <DimensionLayout dim="1">
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="1" attributes="0">
-                                  <Component id="searchResultsJScrollPane" pref="201" max="32767" attributes="0"/>
+                                  <Component id="searchResultsJScrollPane" pref="204" max="32767" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
                                       <Component id="searchResultsJComboBox" linkSize="13" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -1168,21 +1168,21 @@
                         <DimensionLayout dim="0">
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="0" attributes="0">
-                                  <Component id="spectraJComboBox" pref="286" max="32767" attributes="0"/>
+                                  <Component id="spectraJComboBox" pref="295" max="32767" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="daOrPpmSpectraJComboBox" min="-2" pref="65" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="combineSpectraJComboBox" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace min="-2" pref="50" max="-2" attributes="0"/>
-                                  <Component id="spectraJButton" pref="291" max="32767" attributes="0"/>
+                                  <Component id="spectraJButton" pref="299" max="32767" attributes="0"/>
                               </Group>
-                              <Component id="spectraJScrollPane" alignment="0" pref="783" max="32767" attributes="2"/>
+                              <Component id="spectraJScrollPane" alignment="0" pref="787" max="32767" attributes="2"/>
                           </Group>
                         </DimensionLayout>
                         <DimensionLayout dim="1">
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="1" attributes="0">
-                                  <Component id="spectraJScrollPane" pref="201" max="32767" attributes="0"/>
+                                  <Component id="spectraJScrollPane" pref="204" max="32767" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
                                       <Component id="spectraJComboBox" linkSize="14" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -1365,7 +1365,7 @@
                                           <Group type="102" attributes="0">
                                               <EmptySpace min="-2" max="-2" attributes="0"/>
                                               <Group type="103" groupAlignment="0" attributes="0">
-                                                  <Component id="NH3IonsJCheckBox" alignment="0" pref="54" max="32767" attributes="2"/>
+                                                  <Component id="NH3IonsJCheckBox" alignment="0" pref="58" max="32767" attributes="2"/>
                                                   <Component id="jSeparator3" alignment="0" min="-2" pref="34" max="-2" attributes="1"/>
                                                   <Component id="yIonsJCheckBox" linkSize="2" alignment="0" max="32767" attributes="3"/>
                                                   <Component id="zIonsJCheckBox" linkSize="2" alignment="0" max="32767" attributes="3"/>
@@ -1374,12 +1374,12 @@
                                                   <Component id="aIonsJCheckBox" linkSize="2" alignment="0" max="32767" attributes="3"/>
                                                   <Component id="bIonsJCheckBox" linkSize="2" alignment="0" max="32767" attributes="3"/>
                                                   <Component id="cIonsJCheckBox" linkSize="2" alignment="0" max="32767" attributes="3"/>
-                                                  <Component id="otherIonsJCheckBox" alignment="0" pref="54" max="32767" attributes="2"/>
-                                                  <Component id="H2OIonsJCheckBox" alignment="0" pref="54" max="32767" attributes="2"/>
+                                                  <Component id="otherIonsJCheckBox" alignment="0" pref="58" max="32767" attributes="2"/>
+                                                  <Component id="H2OIonsJCheckBox" alignment="0" pref="58" max="32767" attributes="2"/>
                                                   <Component id="jSeparator6" alignment="0" min="-2" pref="34" max="-2" attributes="1"/>
-                                                  <Component id="chargeTwoJCheckBox" alignment="0" pref="54" max="32767" attributes="2"/>
-                                                  <Component id="chargeOverTwoJCheckBox" alignment="0" pref="54" max="32767" attributes="2"/>
-                                                  <Component id="chargeOneJCheckBox" alignment="0" pref="54" max="32767" attributes="2"/>
+                                                  <Component id="chargeTwoJCheckBox" alignment="0" pref="58" max="32767" attributes="2"/>
+                                                  <Component id="chargeOverTwoJCheckBox" alignment="0" pref="58" max="32767" attributes="2"/>
+                                                  <Component id="chargeOneJCheckBox" alignment="0" pref="58" max="32767" attributes="2"/>
                                               </Group>
                                               <EmptySpace min="-2" max="-2" attributes="0"/>
                                           </Group>
@@ -1678,7 +1678,7 @@
                                 <DimensionLayout dim="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Group type="102" alignment="0" attributes="0">
-                                          <Component id="jPanel6" pref="103" max="32767" attributes="0"/>
+                                          <Component id="jPanel6" pref="90" max="32767" attributes="0"/>
                                           <EmptySpace max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
@@ -1686,7 +1686,7 @@
                                 <DimensionLayout dim="1">
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Group type="102" alignment="0" attributes="0">
-                                          <Component id="jPanel6" pref="243" max="32767" attributes="0"/>
+                                          <Component id="jPanel6" pref="250" max="32767" attributes="0"/>
                                           <EmptySpace max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
@@ -1739,7 +1739,7 @@
                                               <Component id="yIonsUnmodifiedJCheckBox" linkSize="7" min="-2" max="-2" attributes="0"/>
                                               <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
                                               <Component id="yIonsModifiedJCheckBox" linkSize="7" min="-2" max="-2" attributes="0"/>
-                                              <EmptySpace pref="19" max="32767" attributes="0"/>
+                                              <EmptySpace pref="42" max="32767" attributes="0"/>
                                           </Group>
                                       </Group>
                                     </DimensionLayout>

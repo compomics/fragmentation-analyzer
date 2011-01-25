@@ -80,6 +80,13 @@ import org.w3c.dom.svg.SVGDocument;
  */
 public class PlotUtil {
 
+    /**
+     * The background color for the chart panels.
+     */
+    public static final Color chartBackgroundColor = new Color(225, 225, 225); //Color.WHITE;
+    /**
+     * The default line width for the line plots.
+     */
     public static final float LINE_WIDTH = 4;
 
     /**
@@ -129,7 +136,7 @@ public class PlotUtil {
 
         chart.getLegend().setItemFont(new Font("SansSerif", Font.PLAIN, 10));
         chart.getLegend().setPosition(RectangleEdge.BOTTOM);
-        chart.setBackgroundPaint(new Color(225, 225, 225));
+        chart.setBackgroundPaint(chartBackgroundColor);
         chart.removeLegend();
 
         CategoryPlot plot = chart.getCategoryPlot();
@@ -606,7 +613,7 @@ public class PlotUtil {
 
         chart.getLegend().setItemFont(new Font("SansSerif", Font.PLAIN, 10));
         chart.getLegend().setPosition(RectangleEdge.BOTTOM);
-        chart.setBackgroundPaint(new Color(225, 225, 225));
+        chart.setBackgroundPaint(chartBackgroundColor);
 
         XYPlot plot = chart.getXYPlot();
         plot.setBackgroundPaint(Color.WHITE);
@@ -718,7 +725,7 @@ public class PlotUtil {
 
         chart.getLegend().setItemFont(new Font("SansSerif", Font.PLAIN, 10));
         chart.getLegend().setPosition(RectangleEdge.BOTTOM);
-        chart.setBackgroundPaint(new Color(225, 225, 225));
+        chart.setBackgroundPaint(chartBackgroundColor);
 
         XYPlot plot = chart.getXYPlot();
         plot.setBackgroundPaint(Color.WHITE);
@@ -1006,7 +1013,7 @@ public class PlotUtil {
 
         JFreeChart chart = new JFreeChart(plot);
 
-        chart.setBackgroundPaint(new Color(225, 225, 225));
+        chart.setBackgroundPaint(chartBackgroundColor);
         chart.getLegend().setItemFont(new Font("SansSerif", Font.PLAIN, 10));
 
         if (!addLegend) {
@@ -1305,13 +1312,13 @@ public class PlotUtil {
         yAxis.setLabelFont(new Font("SansSerif", Font.PLAIN, 10));
         yAxis.setTickLabelFont(new Font("SansSerif", Font.PLAIN, 10));
 
-        chart.setBackgroundPaint(new Color(225, 225, 225));
+        chart.setBackgroundPaint(chartBackgroundColor);
         chart.getLegend().setItemFont(new Font("SansSerif", Font.PLAIN, 10));
 
         if (!addLegend) {
             chart.removeLegend();
         }
-
+        
         // set the data series colors if fragment ion label type is currently used
         if (properties.getCurrentLabelType() == Properties.PLOT_LABEL_TYPE_FRAGMENT_ION_TYPE) {
             for (int i = 0; i < dataSet.getSeriesCount(); i++) {
@@ -1528,6 +1535,8 @@ public class PlotUtil {
                 plot,
                 true);
 
+        chart.setBackgroundPaint(chartBackgroundColor);
+
         // make sure the legend is not shown if 'hide legends' is currently selected
         if (!properties.showLegend()) {
             if (chart.getLegend() != null) {
@@ -1582,6 +1591,8 @@ public class PlotUtil {
                 plot,
                 true);
 
+        chart.setBackgroundPaint(chartBackgroundColor);
+
         chart.removeLegend();
 
         return chart;
@@ -1633,6 +1644,8 @@ public class PlotUtil {
                 chart.getLegend().setVisible(false);
             }
         }
+
+        chart.setBackgroundPaint(chartBackgroundColor);
 
         // add average mass error line
         PlotUtil.addAverageMassErrorLine(averageValues, chart, properties.showAverageMassError());
