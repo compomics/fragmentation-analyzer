@@ -3,8 +3,16 @@
 
 ----
 
+*Changes in FragmentationAnalyzer v1.5.7 - (February 27. 2011):*
+ * NEW FEATURE: Added JSparklines to the tables displaying some of the numbers as numbers and bar charts.
+ * LIBRARY UPDATE: utilities updated to 3.0.40.
+
+----
+
 *Changes in FragmentationAnalyzer v1.5.6 - (January 25. 2011):*
  * BUG FIX: Fixed a bug in the Fragment Ion Probability plots x-axis labelling.
+
+Download Count: 13
 
 ----
 
