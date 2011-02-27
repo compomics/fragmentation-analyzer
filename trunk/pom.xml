@@ -12,7 +12,7 @@
 
     <!-- Set the version number for the whole project -->
     <properties>
-        <version.number>1.5.6</version.number>
+        <version.number>1.5.7</version.number>
     </properties>
 
 
@@ -30,8 +30,8 @@
         <developer>
             <name>Harald Barsnes</name>
             <id>harald</id>
-            <email>harald.barsnes@ii.uib.no</email>
-            <organization>Department of Informatics, University of Bergen, Norway</organization>
+            <email>harald.barsnes@biomed.uib.no</email>
+            <organization>Department of Biomedicine University of Bergen, Norway</organization>
         </developer>
         <developer>
             <name>Lennart Martens</name>
@@ -236,7 +236,7 @@
         <dependency>
             <groupId>com.compomics</groupId>
             <artifactId>utilities</artifactId>
-            <version>3.0.30</version>
+            <version>3.0.40</version>
             <exclusions>
                 <exclusion>
                     <artifactId>xtandem-parser</artifactId>
@@ -265,6 +265,10 @@
                 <exclusion>
                     <artifactId>swing-layout</artifactId>
                     <groupId>org.swinglabs</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>jmzml</artifactId>
+                    <groupId>uk.ac.ebi.jmzml</groupId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -306,6 +310,11 @@
             <groupId>xerces</groupId>
             <artifactId>xercesImpl</artifactId>
             <version>2.9.1</version>
+        </dependency>
+        <dependency>
+            <groupId>no.uib</groupId>
+            <artifactId>jsparklines</artifactId>
+            <version>0.5</version>
         </dependency>
     </dependencies>
 

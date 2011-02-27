@@ -71,6 +71,7 @@ import no.uib.fragmentation_analyzer.util.SpectrumTableRow;
 import no.uib.fragmentation_analyzer.util.UserProperties;
 import no.uib.fragmentation_analyzer.util.Util;
 import no.uib.fragmentation_analyzer.util.XYZDataPoint;
+import no.uib.jsparklines.renderers.JSparklinesBarChartTableCellRenderer;
 import org.apache.batik.transcoder.TranscoderException;
 import org.jdesktop.swingx.JXTable;
 import org.jdesktop.swingx.JXTableHeader;
@@ -82,6 +83,7 @@ import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.Marker;
 import org.jfree.chart.plot.Plot;
+import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYErrorRenderer;
 import org.jfree.chart.title.LegendTitle;
@@ -243,12 +245,12 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
         searchResultsJXTable.getColumn(" ").setMaxWidth(60);
         searchResultsJXTable.getColumn(" ").setMinWidth(60);
-        searchResultsJXTable.getColumn("Length").setMaxWidth(60);
-        searchResultsJXTable.getColumn("Length").setMinWidth(60);
-        searchResultsJXTable.getColumn("#1").setMaxWidth(60);
-        searchResultsJXTable.getColumn("#1").setMinWidth(60);
-        searchResultsJXTable.getColumn("#2").setMaxWidth(60);
-        searchResultsJXTable.getColumn("#2").setMinWidth(40);
+        searchResultsJXTable.getColumn("Length").setMaxWidth(80);
+        searchResultsJXTable.getColumn("Length").setMinWidth(80);
+        searchResultsJXTable.getColumn("#1").setMaxWidth(80);
+        searchResultsJXTable.getColumn("#1").setMinWidth(80);
+        searchResultsJXTable.getColumn("#2").setMaxWidth(80);
+        searchResultsJXTable.getColumn("#2").setMinWidth(80);
         searchResultsJXTable.getColumn("  ").setMaxWidth(30);
         searchResultsJXTable.getColumn("  ").setMinWidth(30);
 
@@ -258,8 +260,8 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         spectraJXTable.getColumn("ID").setMinWidth(60);
         spectraJXTable.getColumn("SID").setMaxWidth(60);
         spectraJXTable.getColumn("SID").setMinWidth(60);
-        spectraJXTable.getColumn("Length").setMaxWidth(60);
-        spectraJXTable.getColumn("Length").setMinWidth(60);
+        spectraJXTable.getColumn("Length").setMaxWidth(80);
+        spectraJXTable.getColumn("Length").setMinWidth(80);
         spectraJXTable.getColumn("  ").setMaxWidth(30);
         spectraJXTable.getColumn("  ").setMinWidth(30);
 
@@ -281,6 +283,18 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         spectraColumnToolTips.add("Peptide Length");
         spectraColumnToolTips.add("Instrument Used");
         spectraColumnToolTips.add(null);
+
+        // cell renderers
+        searchResultsJXTable.getColumn("Length").setCellRenderer(new JSparklinesBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, 100d, Color.gray));
+        searchResultsJXTable.getColumn("#1").setCellRenderer(new JSparklinesBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, 100d, Color.gray));
+        searchResultsJXTable.getColumn("#2").setCellRenderer(new JSparklinesBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, 100d, Color.gray));
+
+        ((JSparklinesBarChartTableCellRenderer) searchResultsJXTable.getColumn("Length").getCellRenderer()).showNumberAndChart(true, 40);
+        ((JSparklinesBarChartTableCellRenderer) searchResultsJXTable.getColumn("#1").getCellRenderer()).showNumberAndChart(true, 40);
+        ((JSparklinesBarChartTableCellRenderer) searchResultsJXTable.getColumn("#2").getCellRenderer()).showNumberAndChart(true, 40);
+
+        spectraJXTable.getColumn("Length").setCellRenderer(new JSparklinesBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, 100d, Color.gray));
+        ((JSparklinesBarChartTableCellRenderer) spectraJXTable.getColumn("Length").getCellRenderer()).showNumberAndChart(true, 40);
     }
 
     public void cancelProgress() {
@@ -2183,6 +2197,9 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         progressDialog.setMax(properties.getIdentificationMap().keySet().size());
 
         int rowCounter = 0, progressCounter = 1;
+        int maxSequenceLength = 0;
+        int maxSequenceCount1 = 0;
+        int maxSequenceCount2 = 0;
 
         HashMap<String, Integer> modifiedSequences = new HashMap<String, Integer>();
 
@@ -2242,11 +2259,27 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                         modifiedSequences.get(modifiedSequence),
                                         Boolean.valueOf(false)
                                     });
+
+                            if (reducedIdentifications.get(0).getSequence().length() > maxSequenceLength) {
+                                maxSequenceLength = reducedIdentifications.get(0).getSequence().length();
+                            }
+
+                            if (unmodifiedCounter > maxSequenceCount1) {
+                                maxSequenceCount1 = unmodifiedCounter;
+                            }
+
+                            if (modifiedSequences.get(modifiedSequence) > maxSequenceCount2) {
+                                maxSequenceCount2 = modifiedSequences.get(modifiedSequence);
+                            }
                         }
                     }
                 }
             }
         }
+
+        ((JSparklinesBarChartTableCellRenderer) searchResultsJXTable.getColumn("Length").getCellRenderer()).setMaxValue(maxSequenceLength);
+        ((JSparklinesBarChartTableCellRenderer) searchResultsJXTable.getColumn("#1").getCellRenderer()).setMaxValue(maxSequenceCount1);
+        ((JSparklinesBarChartTableCellRenderer) searchResultsJXTable.getColumn("#2").getCellRenderer()).setMaxValue(maxSequenceCount2);
 
         return rowCounter > 0;
     }
@@ -2319,6 +2352,9 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 //                writerBAndYions.write("instrument sequence identificationID fragmentIonID fragmentIonType fragmentIonNumber m/z delta_m/z intensity\n");
 //            }
 
+            int maxSequenceLength = 0;
+            int maxSequenceCount1 = 0;
+
             while (iterator.hasNext()) {
 
 //                progressDialog.setValue(rowCounter);
@@ -2339,6 +2375,13 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                             Boolean.valueOf(false)
                         });
 
+                if (temp.getSequence().length() > maxSequenceLength) {
+                    maxSequenceLength = temp.getSequence().length();
+                }
+
+                if (tempList.size() > maxSequenceCount1) {
+                    maxSequenceCount1 = temp.getSequence().length();
+                }
 
 
 //                if(codetectedIdentifications.contains(temp.getModifiedSequence()) && writeToFile){
@@ -2513,6 +2556,9 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 //                    }
 //                }
             }
+
+            ((JSparklinesBarChartTableCellRenderer) searchResultsJXTable.getColumn("Length").getCellRenderer()).setMaxValue(maxSequenceLength);
+            ((JSparklinesBarChartTableCellRenderer) searchResultsJXTable.getColumn("#1").getCellRenderer()).setMaxValue(maxSequenceCount1);
 //
 //            // close the file writers
 //            writerBions.close();
@@ -2782,6 +2828,8 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                         selectAllSpectrtaJMenuItem.setText("Select All");
                         spectraJComboBoxActionPerformed(null);
 
+                        int maxSequenceLength = 0;
+
                         for (int i = 0; i < properties.getCurrentlySelectedRowsInSearchTable().size() && !cancelProgress; i++) {
 
                             IdentificationTableRow currentlySelectedRow =
@@ -2822,6 +2870,10 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                                     currentId.getInstrumentName(),
                                                     Boolean.valueOf(false)
                                                 });
+
+                                        if (currentId.getSequence().length() > maxSequenceLength) {
+                                            maxSequenceLength = currentId.getSequence().length();
+                                        }
                                     }
                                 }
 
@@ -2844,6 +2896,10 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                                     currentId.getInstrumentName(),
                                                     Boolean.valueOf(false)
                                                 });
+
+                                        if (currentId.getSequence().length() > maxSequenceLength) {
+                                            maxSequenceLength = currentId.getSequence().length();
+                                        }
                                     }
                                 }
                             } else {
@@ -2869,9 +2925,15 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                                 currentId.getInstrumentName(),
                                                 Boolean.valueOf(false)
                                             });
+
+                                    if (currentId.getSequence().length() > maxSequenceLength) {
+                                        maxSequenceLength = currentId.getSequence().length();
+                                    }
                                 }
                             }
                         }
+
+                        ((JSparklinesBarChartTableCellRenderer) spectraJXTable.getColumn("Length").getCellRenderer()).setMaxValue(maxSequenceLength);
 
                         if (!cancelProgress) {
                             spectraJXTable.setRowSelectionInterval(0, 0);
@@ -8220,7 +8282,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                 mzValues, intValues,
                 lSpectrumFile.getPrecursorMZ(), "" + lSpectrumFile.getCharge(),
                 "" + spectrumFile.getL_spectrumid(),
-                60, true, false);
+                60, false);
 
         spectrumPanel.addSpectrumPanelListener(new SpectrumPanelListener() {
 
@@ -8295,7 +8357,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                 pklFile.getMzValues(), pklFile.getIntensityValues(),
                 pklFile.getPrecursorMz(), "" + pklFile.getPrecurorCharge(),
                 "" + pklFile.getFileName(),
-                60, true, false);
+                60, false);
 
         spectrumPanel.addSpectrumPanelListener(new SpectrumPanelListener() {
 
