@@ -6293,10 +6293,6 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                 if (!zIonsJCheckBox.isSelected()) {
                     useAnnotation = false;
                 }
-            } else if (currentLabel.startsWith("z")) {
-                if (!zIonsJCheckBox.isSelected()) {
-                    useAnnotation = false;
-                }
             } else {
                 if (!otherIonsJCheckBox.isSelected()) {
                     useAnnotation = false;
