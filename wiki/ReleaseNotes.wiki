@@ -3,9 +3,16 @@
 
 ----
 
+*Changes in FragmentationAnalyzer v1.5.8 - (March 10. 2011):*
+ * LIBRARY UPDATE: utilities updated to 3.0.46.
+
+----
+
 *Changes in FragmentationAnalyzer v1.5.7 - (February 27. 2011):*
  * NEW FEATURE: Added JSparklines to the tables displaying some of the numbers as numbers and bar charts.
  * LIBRARY UPDATE: utilities updated to 3.0.40.
+
+Download Count: 9
 
 ----
 
