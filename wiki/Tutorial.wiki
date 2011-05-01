@@ -11,7 +11,7 @@
  * [#Search_ResultsSearch Results]
  * [#Individual_SpectraIndividual Spectra]
  * [#Analyze/Plot Analyze/Plot]
- * [#Resizing_PlotsResizing Plots]
+ * [#Resizing_Plots Resizing Plots]
  * [#Plot_Types Plot Types]
  * [#Plot_Options Plot Options]
  * [#Plot_Tool_Bars Plot Tool Bars]
