@@ -107,13 +107,16 @@ right corner (or double click on the title bar).
 [#Contents Go to top of page]
  
 ===Plot Types===
-Currently six different plot types are supported:
- * Spectra Plots - visualize the MS/MS spectra with fragment ion annotation, zooming and manual de-novo-sequencing.
+Currently nine different analysis types are supported:
+ * Spectra Visualization - visualize the MS/MS spectra with fragment ion annotation, zooming and manual de-novo-sequencing.
  * Intensity Box Plots - analyze intensity variation for a set of identification of the same peptide.
  * Mass Error Scatter Plots - visualize the mass error spread in a set of selected identifications/spectra.
- * Mass Error Bubble Plots - visualize the mass error spread in a set of selected identifications/spectra with the peak intensity adding to the presented information.
+ * Mass Error Bubble Plots - same as Mass Error Scatter Plots but with peak intensities added.
  * Mass Error Box Plot - analyze the variation in mass errors.
  * Fragment Ion Probability Plot - analyze the probability of observing specific fragment ions.
+ * Fragment Ion Heat Map - compare fragmentations using heat maps of correlation data.
+ * Intensity Correlation - detect how the intensity correlates with the spread in intensity.
+ * Intensity Meta Plots - further analyze the variations in intensity.
 
 [#Contents Go to top of page]
         
