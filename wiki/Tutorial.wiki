@@ -7,16 +7,17 @@
 
  * [#Loading_Data_Sets Loading Data Sets]
  * [#Selecting_Search_Parameters Selecting Search Parameters]
- * [#General_SearchGeneral Search]
- * [#Search_ResultsSearch Results]
- * [#Individual_SpectraIndividual Spectra]
+ * [#General_Search General Search]
+ * [#Search_Results Search Results]
+ * [#Individual_Spectra Individual Spectra]
  * [#Analyze/Plot Analyze/Plot]
  * [#Resizing_Plots Resizing Plots]
  * [#Plot_Types Plot Types]
+  * [#Heat_Maps Heat Maps]
  * [#Plot_Options Plot Options]
  * [#Plot_Tool_Bars Plot Tool Bars]
  * [#Spectrum_Plot_Options Spectrum Plot Options]
- * [#Remove_All_PlotsRemove All Plots]
+ * [#Remove_All_Plots Remove All Plots]
  * [#Modification_Search Modification Search]
  * [#Identification/Sequence_Pairs Identification/Sequence Pairs]
  * [#Intensity_Box_Plots Intensity Box Plots]
@@ -117,6 +118,18 @@ Currently nine different analysis types are supported:
  * Fragment Ion Heat Map - compare fragmentations using heat maps of correlation data.
  * Intensity Correlation - detect how the intensity correlates with the spread in intensity.
  * Intensity Meta Plots - further analyze the variations in intensity.
+
+====Heat Maps====
+
+The fragment ion heat maps compare fragmentation patterns across different peptide sequences. The input is the fragmentation patterns of a list of peptides and the output is a heat map comparing these against each other (one-by-one) using either Spearman or Pearson correlation (selected in the Preferences dialog, on the Edit menu).
+
+Note that only the sequence range common to all sequences (starting from the N-term) is used. This is why one gets the "Peptides with different lengths ..." dialog. It is also possible to select a subset of this range as well. When this is done four heat maps are created.
+
+Two plots for the b-ions and two for the y-ions are created. The only difference between the two types is that the one labeled "Significant" only uses two colors for a simpler view. A 99% significance level is used to decide if the comparison of two peptides is "equal enough" (colored red), or not "equal enough" (colored green).
+
+While in the two other plots this cut-off is not used and the color simply represents the correlation between the two (from light green - low correlation, to light red - high correlation).
+
+The last column and row in the table represents the average.
 
 [#Contents Go to top of page]
         
