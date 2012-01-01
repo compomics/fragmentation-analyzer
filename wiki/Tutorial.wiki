@@ -56,7 +56,7 @@ selections. Leave the modification selection empty for now.
 [#Contents Go to top of page]
  
 ===General Search====
-There are two search ptions available: general search or modification
+There are two search options available: general search or modification
 search. We will first look at general search which basically returns
 all identifications matching all the selected parameters. Click on
 the 'Search' button in the lower left corner to start the search.
@@ -191,7 +191,7 @@ While the general search simply finds all identifications matching
 the selected parameters, the modification search is a little more
 advanced. Use the same parameters as for the general search example
 (instrument as ESI-QUAD-TOF, N-term as NH2, C-term as COOH and charge
-as 2) but this time select '&lt;Mox&gt;' in the Alt 1 modification
+as 2) but this time select `<Mox>` in the Alt 1 modification
 parameters drop down menu, select 'Modification Search' and click
 the 'Search Button'.
 
