@@ -13,10 +13,10 @@ import no.uib.fragmentation_analyzer.gui.ProgressDialog;
 import no.uib.fragmentation_analyzer.gui.ProgressDialogParent;
 
 /**
- * Takes care of saving and retrieving the user properites, i.e, the information stored between
- * each run of the tool.
+ * Takes care of saving and retrieving the user properites, i.e, the information
+ * stored between each run of the tool.
  *
- * @author  Harald Barsnes
+ * @author Harald Barsnes
  */
 public class UserProperties implements ProgressDialogParent {
 
@@ -42,7 +42,7 @@ public class UserProperties implements ProgressDialogParent {
 
     /**
      * Creates a new UserProperties object
-     * 
+     *
      * @param versionNumber
      */
     public UserProperties(String versionNumber) {
@@ -69,6 +69,10 @@ public class UserProperties implements ProgressDialogParent {
                 file = new File(path);
             } else {
                 file = settingsFile;
+            }
+
+            if (!file.exists()) {
+                file = new File("./src/main/resources/PropertiesAndDataSets/Properties/UserProperties.prop");
             }
 
             FileReader f = new FileReader(file);
@@ -173,31 +177,31 @@ public class UserProperties implements ProgressDialogParent {
 
             if (settingsFile != null) {
                 JOptionPane.showMessageDialog(null,
-                        "The old settings has been successfully imported.\n" +
-                        "(Changes to the memory settings requires a restart.)\n\n" +
-                        "To import your old data sets simply copy the contents\n" +
-                        "of the old DataSets folder.",
+                        "The old settings has been successfully imported.\n"
+                        + "(Changes to the memory settings requires a restart.)\n\n"
+                        + "To import your old data sets simply copy the contents\n"
+                        + "of the old DataSets folder.",
                         "Settings Imported", JOptionPane.INFORMATION_MESSAGE);
             }
 
         } catch (FileNotFoundException ex) {
             JOptionPane.showMessageDialog(null,
-                    "Error when reading the user properties. " +
-                    "See ../Properties/ErrorLog.txt for more details.",
+                    "Error when reading the user properties. "
+                    + "See ../Properties/ErrorLog.txt for more details.",
                     "File Not Found", JOptionPane.ERROR_MESSAGE);
             Util.writeToErrorLog("Error when reading the UserProperties: ");
             ex.printStackTrace();
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(null,
-                    "Error when reading the user properties. " +
-                    "See ../Properties/ErrorLog.txt for more details.",
+                    "Error when reading the user properties. "
+                    + "See ../Properties/ErrorLog.txt for more details.",
                     "File Error", JOptionPane.ERROR_MESSAGE);
             Util.writeToErrorLog("Error when reading the UserProperties: ");
             ex.printStackTrace();
         } catch (NullPointerException ex) {
             JOptionPane.showMessageDialog(null,
-                    "Error when reading the user properties. " +
-                    "See ../Properties/ErrorLog.txt for more details.",
+                    "Error when reading the user properties. "
+                    + "See ../Properties/ErrorLog.txt for more details.",
                     "File Error", JOptionPane.ERROR_MESSAGE);
             Util.writeToErrorLog("Error when reading the UserProperties: ");
             ex.printStackTrace();
@@ -218,15 +222,15 @@ public class UserProperties implements ProgressDialogParent {
         oldUserPropertiesLocation =
                 oldUserPropertiesLocation.substring(5, oldUserPropertiesLocation.lastIndexOf("/"));
         oldUserPropertiesLocation =
-                oldUserPropertiesLocation.substring(0, oldUserPropertiesLocation.lastIndexOf("/") +
-                1) + "Properties/UserProperties.prop";
+                oldUserPropertiesLocation.substring(0, oldUserPropertiesLocation.lastIndexOf("/")
+                + 1) + "Properties/UserProperties.prop";
         oldUserPropertiesLocation = oldUserPropertiesLocation.replace("%20", " ");
 
         JFileChooser chooser = new JFileChooser();
 
         int option = JOptionPane.showConfirmDialog(null,
-                "Please locate the old settings file 'UserProperties.prop'.\n" +
-                "(It is in the Properties folder of the previous installation.)",
+                "Please locate the old settings file 'UserProperties.prop'.\n"
+                + "(It is in the Properties folder of the previous installation.)",
                 "Locate Old Settings File", JOptionPane.OK_CANCEL_OPTION);
 
         if (option == JOptionPane.OK_OPTION) {
@@ -246,28 +250,28 @@ public class UserProperties implements ProgressDialogParent {
 
                 boolean cancel = false;
 
-                while ((!selectedFile.getName().equalsIgnoreCase("UserProperties.prop") ||
-                        (new File(oldUserPropertiesLocation).equals(selectedFile)) ||
-                        !firstLine.equalsIgnoreCase("FragmentationAnalyzer")) &&
-                        !cancel) {
+                while ((!selectedFile.getName().equalsIgnoreCase("UserProperties.prop")
+                        || (new File(oldUserPropertiesLocation).equals(selectedFile))
+                        || !firstLine.equalsIgnoreCase("FragmentationAnalyzer"))
+                        && !cancel) {
 
                     if (!selectedFile.getName().equalsIgnoreCase("UserProperties.prop")) {
                         option = JOptionPane.showConfirmDialog(null,
-                                "The selected file is not 'UserProperties.prop'.\n" +
-                                "Please select the file named 'UserProperties.prop' in the Properties folder.",
+                                "The selected file is not 'UserProperties.prop'.\n"
+                                + "Please select the file named 'UserProperties.prop' in the Properties folder.",
                                 "Locate Old Settings File", JOptionPane.OK_CANCEL_OPTION);
                     } else if (new File(oldUserPropertiesLocation).equals(selectedFile)) {
                         //trying to upgrade from downloaded UserProperties file
                         option = JOptionPane.showConfirmDialog(null,
-                                "It seems like you are trying to upgrade from the wrong UserProperties file.\n" +
-                                "Please select the file named 'UserProperties.prop' in the Properties folder \n" +
-                                "of the previous installation of FragmentationAnalyzer.",
+                                "It seems like you are trying to upgrade from the wrong UserProperties file.\n"
+                                + "Please select the file named 'UserProperties.prop' in the Properties folder \n"
+                                + "of the previous installation of FragmentationAnalyzer.",
                                 "Wrong UserProperties File", JOptionPane.OK_CANCEL_OPTION);
                     } else {
                         option = JOptionPane.showConfirmDialog(null,
-                                "The selected file is not a FragmentationAnalyzer 'UserProperties.prop' file.\n" +
-                                "Please select the file named 'UserProperties.prop' in the FragmentationAnalyzer\n" +
-                                "Properties folder.",
+                                "The selected file is not a FragmentationAnalyzer 'UserProperties.prop' file.\n"
+                                + "Please select the file named 'UserProperties.prop' in the FragmentationAnalyzer\n"
+                                + "Properties folder.",
                                 "Locate Old Settings File", JOptionPane.OK_CANCEL_OPTION);
                     }
 
@@ -383,7 +387,7 @@ public class UserProperties implements ProgressDialogParent {
                     File currentDataSet = dataSets[i];
                     String dataSetName = currentDataSet.getName();
 
-                    if(currentDataSet.isDirectory()){
+                    if (currentDataSet.isDirectory()) {
 
                         File[] files = currentDataSet.listFiles();
                         new File(path + "/DataSets/" + dataSetName + "/").mkdir();
@@ -452,8 +456,13 @@ public class UserProperties implements ProgressDialogParent {
             path = path.substring(5, path.lastIndexOf("/"));
             path = path + "/Properties/UserProperties.prop";
             path = path.replace("%20", " ");
-
             File file = new File(path);
+
+            // fix for when run from inside netbeans
+            if (!file.exists()) {
+                file = new File("./src/main/resources/PropertiesAndDataSets/Properties/UserProperties.prop");
+            }
+
             file.getAbsolutePath();
             FileWriter f = new FileWriter(file);
 
@@ -479,8 +488,8 @@ public class UserProperties implements ProgressDialogParent {
 
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(null,
-                    "Error saving the user properties.\n" +
-                    "See the ErrorLog for more details.",
+                    "Error saving the user properties.\n"
+                    + "See the ErrorLog for more details.",
                     "File Error", JOptionPane.ERROR_MESSAGE);
             Util.writeToErrorLog("UserProperties: ");
             ex.printStackTrace();
@@ -489,7 +498,7 @@ public class UserProperties implements ProgressDialogParent {
 
     /**
      * Set the user name
-     * 
+     *
      * @param userName
      */
     public void setUserName(String userName) {
@@ -497,8 +506,8 @@ public class UserProperties implements ProgressDialogParent {
     }
 
     /**
-     * Returns the user name 
-     * 
+     * Returns the user name
+     *
      * @return the user name
      */
     public String getUserName() {
@@ -507,7 +516,7 @@ public class UserProperties implements ProgressDialogParent {
 
     /**
      * Set the server host
-     * 
+     *
      * @param serverHost
      */
     public void setServerHost(String serverHost) {
@@ -516,7 +525,7 @@ public class UserProperties implements ProgressDialogParent {
 
     /**
      * Returns the name of server host
-     * 
+     *
      * @return the name of server host
      */
     public String getServerHost() {
@@ -525,7 +534,7 @@ public class UserProperties implements ProgressDialogParent {
 
     /**
      * Set the schema
-     * 
+     *
      * @param schema
      */
     public void setSchema(String schema) {
@@ -534,7 +543,7 @@ public class UserProperties implements ProgressDialogParent {
 
     /**
      * Returns the name of the schema
-     * 
+     *
      * @return the name of the schema
      */
     public String getSchema() {
@@ -616,42 +625,48 @@ public class UserProperties implements ProgressDialogParent {
     }
 
     /**
-     * @return true if a posteriori detected fragment ions are to be included in the analysis
+     * @return true if a posteriori detected fragment ions are to be included in
+     * the analysis
      */
     public boolean includeAPosterioriDetected() {
         return aPosterioriDetected;
     }
 
     /**
-     * @param aPosterioriDetected sets if the a posteriori fragment ions are to be included or not
+     * @param aPosterioriDetected sets if the a posteriori fragment ions are to
+     * be included or not
      */
     public void setIncludeAPosterioriDetected(boolean aPosterioriDetected) {
         this.aPosterioriDetected = aPosterioriDetected;
     }
 
     /**
-     * @return the true if the detected yet not scoring fragment ions are to be included in the analysis
+     * @return the true if the detected yet not scoring fragment ions are to be
+     * included in the analysis
      */
     public boolean includeDetectedNotScoring() {
         return detectedNotScoring;
     }
 
     /**
-     * @param detectedNotScoring sets if the a detected yet not scoring fragment ions are to be included or not
+     * @param detectedNotScoring sets if the a detected yet not scoring fragment
+     * ions are to be included or not
      */
     public void setDetectedNotScoring(boolean detectedNotScoring) {
         this.detectedNotScoring = detectedNotScoring;
     }
 
     /**
-     * @return true if the detected and scoring fragment ions are to be included in the analysis
+     * @return true if the detected and scoring fragment ions are to be included
+     * in the analysis
      */
     public boolean includeDetectedAndScoring() {
         return detectedAndScoring;
     }
 
     /**
-     * @param detectedAndScoring sets if the a detected and scoring fragment ions are to be included or not
+     * @param detectedAndScoring sets if the a detected and scoring fragment
+     * ions are to be included or not
      */
     public void setDetectedAndScoring(boolean detectedAndScoring) {
         this.detectedAndScoring = detectedAndScoring;
@@ -714,10 +729,12 @@ public class UserProperties implements ProgressDialogParent {
     }
 
     /**
-     * Returns true if the given scoring type is currently selected, false otherwise.
+     * Returns true if the given scoring type is currently selected, false
+     * otherwise.
      *
      * @param scoringType the scoring type (0, 1 or 2)
-     * @return true if the given scoring type is currently selected, false otherwise
+     * @return true if the given scoring type is currently selected, false
+     * otherwise
      */
     public boolean isScoringTypeSelected(long scoringType) {
 

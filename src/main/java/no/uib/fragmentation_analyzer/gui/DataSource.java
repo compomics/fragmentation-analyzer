@@ -181,6 +181,12 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
         path = path.replace("%20", " ");
 
         File dataFolder = new File(path);
+        
+        // fix for when run from inside netbeans
+        if (!dataFolder.exists()) {
+            dataFolder = new File(path.substring(0, path.lastIndexOf("fragmentation-analyzer") + "fragmentation-analyzer".length()) 
+                    + "/src/main/resources/PropertiesAndDataSets/DataSets");
+        }
 
         if (!dataFolder.exists()) {
             dataFolder.mkdir();
@@ -621,10 +627,10 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
                                 //
                                 // Not including the lines _used to_ result in a crash on Windows, but not anymore.
                                 // Including the lines results in a crash on Linux and Mac.
-                                if (System.getProperty("os.name").toLowerCase().lastIndexOf("windows") != -1) {
-                                    while (!progressDialog.isVisible()) {
-                                    }
-                                }
+//                                if (System.getProperty("os.name").toLowerCase().lastIndexOf("windows") != -1) {
+//                                    while (!progressDialog.isVisible()) {
+//                                    }
+//                                }
 
                                 new Thread("ImportThread") {
 
@@ -1439,6 +1445,12 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
         path = path.replace("%20", " ");
 
         String currentDatasetFolder = path + "/" + currentDatasetName;
+
+        // fix for when run from inside netbeans
+        if (!new File(currentDatasetFolder).exists()) {
+            currentDatasetFolder = path.substring(0, path.lastIndexOf("fragmentation-analyzer") + "fragmentation-analyzer".length()) 
+                    + "/src/main/resources/PropertiesAndDataSets/DataSets/" + currentDatasetName;
+        }
 
         fragmentationAnalyzer.getProperties().setCurrentDataSetFolder(currentDatasetFolder);
 
