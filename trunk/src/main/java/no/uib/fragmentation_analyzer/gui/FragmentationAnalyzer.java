@@ -4,6 +4,7 @@ import com.compomics.mslims.db.accessors.Fragmention;
 import com.compomics.mslims.db.accessors.Spectrum;
 import com.compomics.mslims.db.accessors.Spectrum_file;
 import com.compomics.mslims.util.fileio.MascotGenericFile;
+import com.compomics.software.CompomicsWrapper;
 import com.compomics.util.gui.events.RescalingEvent;
 import com.compomics.util.gui.interfaces.SpectrumPanelListener;
 import com.compomics.util.gui.spectrum.DefaultSpectrumAnnotation;
@@ -8279,6 +8280,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                 lSpectrumFile.getPrecursorMZ(), "" + lSpectrumFile.getCharge(),
                 "" + spectrumFile.getL_spectrumid(),
                 60, false);
+        spectrumPanel.showAnnotatedPeaksOnly(true);
 
         spectrumPanel.addSpectrumPanelListener(new SpectrumPanelListener() {
 
@@ -8354,6 +8356,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                 pklFile.getPrecursorMz(), "" + pklFile.getPrecurorCharge(),
                 "" + pklFile.getFileName(),
                 60, false);
+        spectrumPanel.showAnnotatedPeaksOnly(true);
 
         spectrumPanel.addSpectrumPanelListener(new SpectrumPanelListener() {
 
@@ -8428,13 +8431,11 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
                 // check if a newer version of FragmentationAnalyzer is available
                 Util.checkForNewVersion(properties, debug);
+                String path = CompomicsWrapper.getJarFilePath(this.getClass().getResource("FragmentationAnalyzer.class").getPath(), "FragmentationAnalyzer");
 
-                if (useErrorLog) {
+                if (useErrorLog && !path.equalsIgnoreCase(".")) {
                     try {
-                        String path = "" + this.getClass().getProtectionDomain().getCodeSource().getLocation();
-                        path = path.substring(5, path.lastIndexOf("/"));
                         path = path + "/Properties/ErrorLog.txt";
-                        path = path.replace("%20", " ");
 
                         File file = new File(path);
                         System.setOut(new java.io.PrintStream(new FileOutputStream(file, true)));

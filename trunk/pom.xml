@@ -4,16 +4,10 @@
     <groupId>no.uib</groupId>
     <artifactId>FragmentationAnalyzer</artifactId>
     <packaging>jar</packaging>
-    <version>${version.number}</version> <!-- version number is set below -->
+    <version>1.5.9</version>
     <name>FragmentationAnalyzer</name>
     <description>FragmentationAnalyzer is a tool for analyzing and visualizing MS/MS fragmentation data.</description>
     <url>http://fragmentation-analyzer.googlecode.com</url>
-
-
-    <!-- Set the version number for the whole project -->
-    <properties>
-        <version.number>1.5.8</version.number>
-    </properties>
 
 
     <!-- License -->
@@ -48,29 +42,45 @@
         <!-- Copy the resources required during building -->
         <resources>
             <resource>
-                <directory>./</directory>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
                 <includes>
                     <include>fragmentation-analyzer.properties</include>
                 </includes>
-                <filtering>true</filtering>
+                <!--<excludes>
+                    <directory>src/main/resources/PropertiesAndDataSets</directory>
+                </excludes>-->
             </resource>
             <resource>
-                <directory>src/main/resources/</directory>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
                 <excludes>
-                    <directory>src/main/resources/PropertiesAndDataSets</directory>
+                    <exclude>fragmentation-analyzer.properties</exclude>
+                    <!--<directory>src/main/resources/PropertiesAndDataSets</directory>-->
                 </excludes>
             </resource>
         </resources>
-
+        
+        
+        <!-- Extensions -->
+        <extensions>
+            <extension>
+                <groupId>org.apache.maven.wagon</groupId>
+                <artifactId>wagon-ssh</artifactId>
+                <version>1.0-beta-2</version>
+            </extension>
+        </extensions>
+        
 
         <plugins>
 
             <!-- Compiler plugin -->
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.5</version>
                 <configuration>
-                    <source>1.5</source>
-                    <target>1.5</target>
+                    <source>1.6</source>
+                    <target>1.6</target>
                     <showDeprecation>true</showDeprecation>
                     <debug>true</debug>
                 </configuration>
@@ -80,6 +90,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
+                <version>2.4</version>
                 <configuration>
                     <archive>
                         <manifest>
@@ -145,17 +156,6 @@
 
     <!-- Repositores -->
     <repositories>
-        <!-- UGent Genesis Maven 1 repository -->
-        <repository>
-            <id>genesis-maven-repository</id>
-            <name>Genesis repository</name>
-            <url>http://genesis.UGent.be/maven</url>
-            <layout>legacy</layout>
-            <releases>
-            </releases>
-            <snapshots>
-            </snapshots>
-        </repository>
 
         <!-- UGent Genesis Maven 2 repository -->
         <repository>
@@ -165,22 +165,29 @@
             <layout>default</layout>
         </repository>
 
-        <!-- JBoss Repository - needed for JFreeChart -->
-        <repository>
-            <id>JBOSS</id>
-            <name>JBoss Repository</name>
-            <url>http://repository.jboss.org/maven2/</url>
-        </repository>
-
-        <!-- EBI repository - needed for ommsa-parser -->
+        <!-- EBI repository -->
         <repository>
             <id>ebi-repo</id>
-            <name>The EBI Maven2 repository</name>
+            <name>The EBI internal repository</name>
             <url>http://www.ebi.ac.uk/~maven/m2repo</url>
             <releases>
+                <enabled>true</enabled>
             </releases>
             <snapshots>
                 <enabled>false</enabled>
+            </snapshots>
+        </repository>
+
+        <!-- EBI snapshot repository -->
+        <repository>
+            <id>ebi-snapshot-repo</id>
+            <name>The EBI internal snapshot repository</name>
+            <url>http://www.ebi.ac.uk/~maven/m2repo_snapshots</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
             </snapshots>
         </repository>
     </repositories>
@@ -188,95 +195,101 @@
 
     <!-- Dependencies -->
     <dependencies>
+        
         <dependency>
             <groupId>jfree</groupId>
             <artifactId>jfreechart</artifactId>
             <version>1.0.13</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>gnujaxp</artifactId>
-                    <groupId>gnujaxp</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>junit</artifactId>
-                    <groupId>junit</groupId>
-                </exclusion>
-            </exclusions>
         </dependency>
+        
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-math</artifactId>
             <version>2.0</version>
         </dependency>
+        
         <dependency>
             <groupId>com.jgoodies</groupId>
             <artifactId>looks</artifactId>
             <version>2.2.2</version>
         </dependency>
+        
         <dependency>
             <groupId>com.compomics</groupId>
             <artifactId>ms-lims</artifactId>
-            <version>7.4.1</version>
+            <version>7.7.7</version>
             <exclusions>
                 <exclusion>
-                    <artifactId>peptizer</artifactId>
                     <groupId>com.compomics</groupId>
+                    <artifactId>rover</artifactId>
                 </exclusion>
                 <exclusion>
-                    <artifactId>rover</artifactId>
                     <groupId>com.compomics</groupId>
+                    <artifactId>peptizer</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.compomics</groupId>
+                    <artifactId>thermo_msf_parser</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>niklaas</groupId>
+                    <artifactId>jmol</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
+        
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>5.1.5</version>
         </dependency>
+        
         <dependency>
             <groupId>com.compomics</groupId>
             <artifactId>utilities</artifactId>
-            <version>3.0.46</version>
+            <version>3.10.43</version>
             <exclusions>
-                <exclusion>
-                    <artifactId>xtandem-parser</artifactId>
-                    <groupId>de.proteinms.xtandemparser</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>commons-math</artifactId>
-                    <groupId>commons-math</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>lmjunit</artifactId>
-                    <groupId>lennart</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>log4j</artifactId>
-                    <groupId>log4j</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>servlet-api</artifactId>
-                    <groupId>javax.servlet</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>swingx</artifactId>
-                    <groupId>org.swinglabs</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>swing-layout</artifactId>
-                    <groupId>org.swinglabs</groupId>
-                </exclusion>
                 <exclusion>
                     <artifactId>jmzml</artifactId>
                     <groupId>uk.ac.ebi.jmzml</groupId>
                 </exclusion>
+                <exclusion>
+                    <artifactId>ols-dialog</artifactId>
+                    <groupId>no.uib</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>derby</artifactId>
+                    <groupId>org.apache.derby</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>braf</artifactId>
+                    <groupId>uk.ac.ebi.pride.tools</groupId>
+                </exclusion>
+                <exclusion>
+                    <groupId>umontreal.iro.lecuyer.gof</groupId>
+                    <artifactId>ssj</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
+        
         <dependency>
-            <groupId>org.swinglabs</groupId>
-            <artifactId>swing-layout</artifactId>
-            <version>1.0.3</version>
+            <groupId>de.proteinms.omxparser</groupId>
+            <artifactId>omssa-parser</artifactId>
+            <version>1.5.8</version>
         </dependency>
+        
+        <dependency>
+            <groupId>com.compomics</groupId>
+            <artifactId>mascotdatfile</artifactId>
+            <version>3.4.7</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.lowagie</groupId>
+                    <artifactId>itext</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        
         <dependency>
             <groupId>org.swinglabs</groupId>
             <artifactId>swingx</artifactId>
@@ -296,26 +309,33 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        
+        <!-- Used for exporting to svg, png, gif etc.-->
         <dependency>
             <groupId>batik</groupId>
             <artifactId>batik-all</artifactId>
             <version>1.6</version>
+            <type>jar</type>
         </dependency>
         <dependency>
             <groupId>batik</groupId>
             <artifactId>pdf-transcoder</artifactId>
             <version>1.0</version>
+            <type>jar</type>
         </dependency>
+        
         <dependency>
             <groupId>xerces</groupId>
             <artifactId>xercesImpl</artifactId>
             <version>2.9.1</version>
         </dependency>
+        
         <dependency>
             <groupId>no.uib</groupId>
             <artifactId>jsparklines</artifactId>
-            <version>0.5.5</version>
+            <version>0.5.45</version>
         </dependency>
+        
     </dependencies>
 
 </project>
