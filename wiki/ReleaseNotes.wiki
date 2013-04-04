@@ -3,8 +3,25 @@
 
 ----
 
+*Changes in FragmentationAnalyzer v1.5.9 - (April 2. 2013):*
+ * FEATURE IMPROVEMENT: Improved the look and feel of the spectra.
+ * FEATURE IMPROVEMENT: The project now supports Maven 3.
+
+ * BUG FIX: Fixed an issue with the pom file that could results in issues on NetBeans 7.2.
+ * BUG FIX: Made it possible to run the tool from inside NetBeans.
+
+ * LIBRARY UPDATE: Updated ms-lims to version 7.7.7.
+ * LIBRARY UPDATE: Updated utilities to version 3.11.29.
+ * LIBRARY UPDATE: Updated ommsa parser to version 1.5.9.
+ * LIBRARY UPDATE: Updated mascotdatfile to version 3.4.10.
+ * LIBRARY UPDATE: Updated jsparklines to version 0.5.45.
+
+----
+
 *Changes in FragmentationAnalyzer v1.5.8 - (March 10. 2011):*
  * LIBRARY UPDATE: utilities updated to 3.0.46.
+
+Download Count: 671
 
 ----
 
