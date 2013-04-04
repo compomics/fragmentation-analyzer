@@ -1,4 +1,4 @@
-<?xml version="1.1" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 
 <Form version="1.5" maxVersion="1.7" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
   <NonVisualComponents>
@@ -1111,7 +1111,7 @@
                                 <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="searchResultsJXTableMouseReleased"/>
                               </Events>
                               <AuxValues>
-                                <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new JXTable() {&#xa;            protected JXTableHeader createDefaultTableHeader() {&#xa;                return new JXTableHeader(columnModel) {&#xa;                    public String getToolTipText(MouseEvent e) {&#xa;                        String tip = null;&#xa;                        java.awt.Point p = e.getPoint();&#xa;                        int index = columnModel.getColumnIndexAtX(p.x);&#xa;                        int realIndex = columnModel.getColumn(index).getModelIndex();&#xa;                        tip = (String) resultsColumnToolTips.get(realIndex);&#xa;                        return tip;&#xa;                    }&#xa;                };&#xa;            }&#xa;        };"/>
+                                <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new JXTable() {&#xa;            protected JXTableHeader createDefaultTableHeader() {&#xa;                return new JXTableHeader(columnModel) {&#xa;                    public String getToolTipText(MouseEvent e) {&#xa;                        java.awt.Point p = e.getPoint();&#xa;                        int index = columnModel.getColumnIndexAtX(p.x);&#xa;                        int realIndex = columnModel.getColumn(index).getModelIndex();&#xa;                        return (String) resultsColumnToolTips.get(realIndex);&#xa;                    }&#xa;                };&#xa;            }&#xa;        };"/>
                               </AuxValues>
                             </Component>
                           </SubComponents>
@@ -1256,7 +1256,7 @@
                                 <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="spectraJXTableMouseReleased"/>
                               </Events>
                               <AuxValues>
-                                <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new JXTable() {&#xa;            protected JXTableHeader createDefaultTableHeader() {&#xa;                return new JXTableHeader(columnModel) {&#xa;                    public String getToolTipText(MouseEvent e) {&#xa;                        String tip = null;&#xa;                        java.awt.Point p = e.getPoint();&#xa;                        int index = columnModel.getColumnIndexAtX(p.x);&#xa;                        int realIndex = columnModel.getColumn(index).getModelIndex();&#xa;                        tip = (String) spectraColumnToolTips.get(realIndex);&#xa;                        return tip;&#xa;                    }&#xa;                };&#xa;            }&#xa;        };"/>
+                                <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new JXTable() {&#xa;            protected JXTableHeader createDefaultTableHeader() {&#xa;                return new JXTableHeader(columnModel) {&#xa;                    public String getToolTipText(MouseEvent e) {&#xa;                        java.awt.Point p = e.getPoint();&#xa;                        int index = columnModel.getColumnIndexAtX(p.x);&#xa;                        int realIndex = columnModel.getColumn(index).getModelIndex();&#xa;                        return (String) spectraColumnToolTips.get(realIndex);&#xa;                    }&#xa;                };&#xa;            }&#xa;        };"/>
                               </AuxValues>
                             </Component>
                           </SubComponents>
