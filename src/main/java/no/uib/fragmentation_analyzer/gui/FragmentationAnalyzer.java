@@ -2145,14 +2145,14 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                         } catch (FileNotFoundException e) {
                             JOptionPane.showMessageDialog(null,
                                     "An error occured when trying to open the identifications.txt file.\n" +
-                                    "See /Properties/ErrorLog.txt for more details.",
+                                    "See /resources/conf/ErrorLog.txt for more details.",
                                     "Error Opening Identifications File", JOptionPane.ERROR_MESSAGE);
                             Util.writeToErrorLog("Error opening identifications file: ");
                             e.printStackTrace();
                         } catch (IOException e) {
                             JOptionPane.showMessageDialog(null,
                                     "An error occured when trying to open the identifications.txt file.\n" +
-                                    "See /Properties/ErrorLog.txt for more details.",
+                                    "See /resources/conf/ErrorLog.txt for more details.",
                                     "Error Opening Identifications File", JOptionPane.ERROR_MESSAGE);
                             Util.writeToErrorLog("Error opening identifications file: ");
                             e.printStackTrace();
@@ -2160,7 +2160,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                     } else {
                         JOptionPane.showMessageDialog(null,
                                 "An error occured when trying to open the data set.\n" +
-                                "See /Properties/ErrorLog.txt for more details.",
+                                "See /resources/conf/ErrorLog.txt for more details.",
                                 "Error Opening Data Set", JOptionPane.ERROR_MESSAGE);
                         Util.writeToErrorLog("Error Opening Data Set: the identifications file "
                                 + properties.getCurrentDataSetFolder() +
@@ -3236,14 +3236,14 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                         } catch (SQLException e) {
                             JOptionPane.showMessageDialog(null,
                                     "An error occured when accessing the database.\n" +
-                                    "See ../Properties/ErrorLog.txt for more details.",
+                                    "See ../resources/conf/ErrorLog.txt for more details.",
                                     "Error Accessing Database", JOptionPane.ERROR_MESSAGE);
                             Util.writeToErrorLog("Error when extracing fragment ions: ");
                             e.printStackTrace();
                         } catch (IOException e) {
                             JOptionPane.showMessageDialog(null,
                                     "An error occured when building a box plot.\n" +
-                                    "See ../Properties/ErrorLog.txt for more details.",
+                                    "See ../resources/conf/ErrorLog.txt for more details.",
                                     "Error Building Box Plot", JOptionPane.ERROR_MESSAGE);
                             Util.writeToErrorLog("Error when building box plot: ");
                             e.printStackTrace();
@@ -3443,14 +3443,14 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                             } catch (SQLException e) {
                                 JOptionPane.showMessageDialog(null,
                                         "An error occured when accessing the database.\n" +
-                                        "See ../Properties/ErrorLog.txt for more details.",
+                                        "See ../resources/conf/ErrorLog.txt for more details.",
                                         "Error Accessing Database", JOptionPane.ERROR_MESSAGE);
                                 Util.writeToErrorLog("Error when extracing fragment ions: ");
                                 e.printStackTrace();
                             } catch (IOException e) {
                                 JOptionPane.showMessageDialog(null,
                                         "An error occured when building a box plot.\n" +
-                                        "See ../Properties/ErrorLog.txt for more details.",
+                                        "See ../resources/conf/ErrorLog.txt for more details.",
                                         "Error Building Box Plot", JOptionPane.ERROR_MESSAGE);
                                 Util.writeToErrorLog("Error when building box plot: ");
                                 e.printStackTrace();
@@ -3784,14 +3784,14 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                             } catch (SQLException e) {
                                 JOptionPane.showMessageDialog(null,
                                         "An error occured when accessing the database.\n" +
-                                        "See ../Properties/ErrorLog.txt for more details.",
+                                        "See ../resources/conf/ErrorLog.txt for more details.",
                                         "Error Accessing Database", JOptionPane.ERROR_MESSAGE);
                                 Util.writeToErrorLog("Error when extracing fragment ions: ");
                                 e.printStackTrace();
                             } catch (IOException e) {
                                 JOptionPane.showMessageDialog(null,
                                         "An error occured when building a box plot.\n" +
-                                        "See ../Properties/ErrorLog.txt for more details.",
+                                        "See ../resources/conf/ErrorLog.txt for more details.",
                                         "Error Building Box Plot", JOptionPane.ERROR_MESSAGE);
                                 Util.writeToErrorLog("Error when building box plot: ");
                                 e.printStackTrace();
@@ -3926,14 +3926,14 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                             } catch (IOException e) {
                                 JOptionPane.showMessageDialog(null,
                                         "An error occured when trying to create a plot.\n" +
-                                        "See ../Properties/ErrorLog.txt for more details.",
+                                        "See ../resources/conf/ErrorLog.txt for more details.",
                                         "Error Creating Plot", JOptionPane.ERROR_MESSAGE);
                                 Util.writeToErrorLog("Error when creating plot: ");
                                 e.printStackTrace();
                             } catch (SQLException e) {
                                 JOptionPane.showMessageDialog(null,
                                         "An error occured when accessing the database.\n" +
-                                        "See ../Properties/ErrorLog.txt for more details.",
+                                        "See ../resources/conf/ErrorLog.txt for more details.",
                                         "Error Accessing Database", JOptionPane.ERROR_MESSAGE);
                                 Util.writeToErrorLog("Error when accessing database: ");
                                 e.printStackTrace();
@@ -4077,14 +4077,14 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                             } catch (IOException e) {
                                 JOptionPane.showMessageDialog(null,
                                         "An error occured when trying to create a plot.\n" +
-                                        "See ../Properties/ErrorLog.txt for more details.",
+                                        "See ../resources/conf/ErrorLog.txt for more details.",
                                         "Error Creating Plot", JOptionPane.ERROR_MESSAGE);
                                 Util.writeToErrorLog("Error when creating plot: ");
                                 e.printStackTrace();
                             } catch (SQLException e) {
                                 JOptionPane.showMessageDialog(null,
                                         "An error occured when accessing the database.\n" +
-                                        "See ../Properties/ErrorLog.txt for more details.",
+                                        "See ../resources/conf/ErrorLog.txt for more details.",
                                         "Error Accessing Database", JOptionPane.ERROR_MESSAGE);
                                 Util.writeToErrorLog("Error when accessing database: ");
                                 e.printStackTrace();
@@ -4413,14 +4413,14 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                             } catch (IOException e) {
                                 JOptionPane.showMessageDialog(null,
                                         "An error occured when trying to create a plot.\n" +
-                                        "See ../Properties/ErrorLog.txt for more details.",
+                                        "See ../resources/conf/ErrorLog.txt for more details.",
                                         "Error Creating Plot", JOptionPane.ERROR_MESSAGE);
                                 Util.writeToErrorLog("Error when creating plot: ");
                                 e.printStackTrace();
                             } catch (SQLException e) {
                                 JOptionPane.showMessageDialog(null,
                                         "An error occured when accessing the database.\n" +
-                                        "See ../Properties/ErrorLog.txt for more details.",
+                                        "See ../resources/conf/ErrorLog.txt for more details.",
                                         "Error Accessing Database", JOptionPane.ERROR_MESSAGE);
                                 Util.writeToErrorLog("Error when accessing database: ");
                                 e.printStackTrace();
@@ -5466,14 +5466,14 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                 } catch (SQLException e) {
                                     JOptionPane.showMessageDialog(
                                             null, "An error occured when accesing the database." +
-                                            "See ../Properties/ErrorLog.txt for more details.",
+                                            "See ../resources/conf/ErrorLog.txt for more details.",
                                             "Error Accessing Database", JOptionPane.ERROR_MESSAGE);
                                     Util.writeToErrorLog("Error when accessing database: ");
                                     e.printStackTrace();
                                 } catch (IOException e) {
                                     JOptionPane.showMessageDialog(
                                             null, "An error occured when trying to view a spectrum." +
-                                            "See ../Properties/ErrorLog.txt for more details.",
+                                            "See ../resources/conf/ErrorLog.txt for more details.",
                                             "Error Viewing Spectrum", JOptionPane.ERROR_MESSAGE);
                                     Util.writeToErrorLog("Error when trying to view a spectrum: ");
                                     e.printStackTrace();
@@ -5500,7 +5500,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                                 } catch (IOException e) {
                                     JOptionPane.showMessageDialog(
                                             null, "An error occured when trying to view a spectrum." +
-                                            "See ../Properties/ErrorLog.txt for more details.",
+                                            "See ../resources/conf/ErrorLog.txt for more details.",
                                             "Error Viewing Spectrum", JOptionPane.ERROR_MESSAGE);
                                     Util.writeToErrorLog("Error when trying to view a spectrum: ");
                                     e.printStackTrace();
@@ -5564,14 +5564,14 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                             } catch (SQLException e) {
                                 JOptionPane.showMessageDialog(
                                         null, "An error occured when accessing the database." +
-                                        "See ../Properties/ErrorLog.txt for more details.",
+                                        "See ../resources/conf/ErrorLog.txt for more details.",
                                         "Error Accessing Database", JOptionPane.ERROR_MESSAGE);
                                 Util.writeToErrorLog("Error when accessing the database: ");
                                 e.printStackTrace();
                             } catch (IOException e) {
                                 JOptionPane.showMessageDialog(
                                         null, "An error occured when trying to create a mass error plot." +
-                                        "See ../Properties/ErrorLog.txt for more details.",
+                                        "See ../resources/conf/ErrorLog.txt for more details.",
                                         "Error Creating Mass Error Plot", JOptionPane.ERROR_MESSAGE);
                                 Util.writeToErrorLog("Error when creating mass error plot: ");
                                 e.printStackTrace();
@@ -5637,14 +5637,14 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                             } catch (SQLException e) {
                                 JOptionPane.showMessageDialog(
                                         null, "An error occured when accessing the database." +
-                                        "See ../Properties/ErrorLog.txt for more details.",
+                                        "See ../resources/conf/ErrorLog.txt for more details.",
                                         "Error Accessing Database", JOptionPane.ERROR_MESSAGE);
                                 Util.writeToErrorLog("Error when accessing the database: ");
                                 e.printStackTrace();
                             } catch (IOException e) {
                                 JOptionPane.showMessageDialog(
                                         null, "An error occured when trying to create a mass error plot." +
-                                        "See ../Properties/ErrorLog.txt for more details.",
+                                        "See ../resources/conf/ErrorLog.txt for more details.",
                                         "Error Creating Mass Error Plot", JOptionPane.ERROR_MESSAGE);
                                 Util.writeToErrorLog("Error when creating mass error plot: ");
                                 e.printStackTrace();
@@ -5748,14 +5748,14 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                             } catch (SQLException e) {
                                 JOptionPane.showMessageDialog(
                                         null, "An error occured when accessing the database." +
-                                        "See ../Properties/ErrorLog.txt for more details.",
+                                        "See ../resources/conf/ErrorLog.txt for more details.",
                                         "Error Accessing Database", JOptionPane.ERROR_MESSAGE);
                                 Util.writeToErrorLog("Error when accessing the database: ");
                                 e.printStackTrace();
                             } catch (IOException e) {
                                 JOptionPane.showMessageDialog(
                                         null, "An error occured when trying to create an intensity box plot." +
-                                        "See ../Properties/ErrorLog.txt for more details.",
+                                        "See ../resources/conf/ErrorLog.txt for more details.",
                                         "Error Creating Mass Error Plot", JOptionPane.ERROR_MESSAGE);
                                 Util.writeToErrorLog("Error when creating intensity box plot: ");
                                 e.printStackTrace();
@@ -5931,14 +5931,14 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                             } catch (SQLException e) {
                                 JOptionPane.showMessageDialog(
                                         null, "An error occured when accessing the database." +
-                                        "See ../Properties/ErrorLog.txt for more details.",
+                                        "See ../resources/conf/ErrorLog.txt for more details.",
                                         "Error Accessing Database", JOptionPane.ERROR_MESSAGE);
                                 Util.writeToErrorLog("Error when accessing the database: ");
                                 e.printStackTrace();
                             } catch (IOException e) {
                                 JOptionPane.showMessageDialog(
                                         null, "An error occured when trying to create an ion probability plot." +
-                                        "See ../Properties/ErrorLog.txt for more details.",
+                                        "See ../resources/conf/ErrorLog.txt for more details.",
                                         "Error Creating Mass Error Plot", JOptionPane.ERROR_MESSAGE);
                                 Util.writeToErrorLog("Error when creating ion probability plot: ");
                                 e.printStackTrace();
@@ -7749,14 +7749,14 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                     } catch (IOException e) {
                         JOptionPane.showMessageDialog(null,
                                 "An error occured when exporting the plot. "
-                                + "See ../Properties/ErrorLog.txt for more details.",
+                                + "See ../resources/conf/ErrorLog.txt for more details.",
                                 "Error Exporting Plot", JOptionPane.ERROR_MESSAGE);
                         Util.writeToErrorLog("Error exporting plot: ");
                         e.printStackTrace();
                     } catch (TranscoderException e) {
                         JOptionPane.showMessageDialog(null,
                                 "An error occured when exporting the plot. "
-                                + "See ../Properties/ErrorLog.txt for more details.",
+                                + "See ../resources/conf/ErrorLog.txt for more details.",
                                 "Error Exporting Plot", JOptionPane.ERROR_MESSAGE);
                         Util.writeToErrorLog("Error exporting plot: ");
                         e.printStackTrace();
@@ -8427,7 +8427,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
 
                 if (useErrorLog && !path.equalsIgnoreCase(".")) {
                     try {
-                        path = path + "/Properties/ErrorLog.txt";
+                        path = path + "/resources/conf/ErrorLog.txt";
 
                         File file = new File(path);
                         System.setOut(new java.io.PrintStream(new FileOutputStream(file, true)));
@@ -8446,7 +8446,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                     } catch (Exception e) {
                         JOptionPane.showMessageDialog(
                                 null, "An error occured when trying to create the ErrorLog."
-                                + "See ../Properties/ErrorLog.txt for more details.",
+                                + "See ../resources/conf/ErrorLog.txt for more details.",
                                 "Error Creating ErrorLog", JOptionPane.ERROR_MESSAGE);
                         Util.writeToErrorLog("Error when creating ErrorLog: ");
                         e.printStackTrace();
@@ -8593,7 +8593,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                     } catch (FileNotFoundException e) {
                         JOptionPane.showMessageDialog(null,
                                 "An error occured when trying to open the identifications.txt file.\n"
-                                + "See /Properties/ErrorLog.txt for more details.",
+                                + "See /resources/conf/ErrorLog.txt for more details.",
                                 "Error Opening Identifications File", JOptionPane.ERROR_MESSAGE);
                         Util.writeToErrorLog("Error opening identifications file:");
                         e.printStackTrace();
@@ -8601,7 +8601,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                     } catch (IOException e) {
                         JOptionPane.showMessageDialog(null,
                                 "An error occured when trying to open the identifications.txt file.\n"
-                                + "See /Properties/ErrorLog.txt for more details.",
+                                + "See /resources/conf/ErrorLog.txt for more details.",
                                 "Error Opening Identifications File", JOptionPane.ERROR_MESSAGE);
                         Util.writeToErrorLog("Error opening identifications file:");
                         e.printStackTrace();
@@ -8610,7 +8610,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                 } else {
                     JOptionPane.showMessageDialog(null,
                             "An error occured when trying to open the data set.\n"
-                            + "See /Properties/ErrorLog.txt for more details.",
+                            + "See /resources/conf/ErrorLog.txt for more details.",
                             "Error Opening Data Set", JOptionPane.ERROR_MESSAGE);
                     Util.writeToErrorLog("Error Opening Data Set: the identifications file "
                             + properties.getCurrentDataSetFolder() + "/identifications.txt" + " does not exist!");
@@ -8727,7 +8727,7 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                 // Nothing to be done.
                 JOptionPane.showMessageDialog(
                         null, "An error occured when attempting to close the DB connection."
-                        + "See ../Properties/ErrorLog.txt for more details.",
+                        + "See ../resources/conf/ErrorLog.txt for more details.",
                         "DB Connection Error", JOptionPane.ERROR_MESSAGE);
                 sqle.printStackTrace();
             }

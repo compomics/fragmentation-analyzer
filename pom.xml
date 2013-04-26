@@ -4,7 +4,7 @@
     <groupId>no.uib</groupId>
     <artifactId>FragmentationAnalyzer</artifactId>
     <packaging>jar</packaging>
-    <version>1.5.9</version>
+    <version>1.5.10</version>
     <name>FragmentationAnalyzer</name>
     <description>FragmentationAnalyzer is a tool for analyzing and visualizing MS/MS fragmentation data.</description>
     <url>http://fragmentation-analyzer.googlecode.com</url>
@@ -144,6 +144,12 @@
                                 <resource>
                                     <directory>src/main/resources/PropertiesAndDataSets</directory>
                                     <filtering>true</filtering>
+                                </resource>
+                                <resource>
+                                    <directory>./</directory>
+                                    <includes>
+                                        <include>resources/</include>
+                                    </includes>
                                 </resource>
                             </resources>
                         </configuration>
@@ -288,7 +294,7 @@
         <dependency>
             <groupId>com.compomics</groupId>
             <artifactId>utilities</artifactId>
-            <version>3.11.29</version>
+            <version>3.13.1</version>
             <exclusions>
                 <exclusion>
                     <artifactId>jmzml</artifactId>
