@@ -3,6 +3,11 @@
 
 ----
 
+*Changes in FragmentationAnalyzer v1.5.10 - (April 26. 2013):*
+ * BUG FIX: Fixed a problem with starting the tool on the latest Java release. 
+
+----
+
 *Changes in FragmentationAnalyzer v1.5.9 - (April 2. 2013):*
  * FEATURE IMPROVEMENT: Improved the look and feel of the spectra.
  * FEATURE IMPROVEMENT: The project now supports Maven 3.
@@ -15,6 +20,8 @@
  * LIBRARY UPDATE: Updated ommsa parser to version 1.5.9.
  * LIBRARY UPDATE: Updated mascotdatfile to version 3.4.10.
  * LIBRARY UPDATE: Updated jsparklines to version 0.5.45.
+
+Download Count: 17
 
 ----
 
