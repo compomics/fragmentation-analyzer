@@ -6,7 +6,7 @@
     <packaging>jar</packaging>
     <version>1.5.11</version>
     <name>FragmentationAnalyzer</name>
-    <description>FragmentationAnalyzer is a tool for analyzing and visualizing MS/MS fragmentation data.</description>
+    <description>Standalone Java tool for analyzing MS/MS fragmentation data</description>
     <url>http://fragmentation-analyzer.googlecode.com</url>
 
 
@@ -344,7 +344,7 @@
         <dependency>
             <groupId>com.compomics</groupId>
             <artifactId>mascotdatfile</artifactId>
-            <version>3.4.11</version>
+            <version>3.4.19</version>
             <exclusions>
                 <exclusion>
                     <groupId>com.lowagie</groupId>
