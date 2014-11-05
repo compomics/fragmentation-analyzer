@@ -41,7 +41,7 @@ import org.jdesktop.swingx.decorator.HighlightPredicate;
  *
  * <br><br>
  *
- * Example: <table border="1"> <tr><th> <td>1<td>2<td>3<td>A
+ * Example: <table border="1" summary=""> <tr><th> <td>1<td>2<td>3<td>A
  * <tr><th>1<td>1.0<td>0.3<td>0.2<td>0.2 <tr><th>2<td>0.3<td>1.0<td>0.1<td>0.2
  * <tr><th>3<td>0.5<td>0.5<td>1.0<td>0.5 <tr><th>A<td>0.2<td>0.2<td>0.5<td>1.0
  * </table>
@@ -58,7 +58,7 @@ public class HeatMapJPanel extends javax.swing.JPanel {
      *
      * <br><br>
      *
-     * Example: <table border="1"> <tr><th> <td>1<td>2<td>3<td>A
+     * Example: <table border="1" summary=""> <tr><th> <td>1<td>2<td>3<td>A
      * <tr><th>1<td>1.0<td>0.3<td>0.2<td>0.2
      * <tr><th>2<td>0.3<td>1.0<td>0.1<td>0.2
      * <tr><th>3<td>0.5<td>0.5<td>1.0<td>0.5
