@@ -129,10 +129,10 @@ public final class Util {
     }
 
     /**
-     * Removes the occurence count from an item in the combobox, e.g., <Mox> (12234) becomes <Mox>.
+     * Removes the occurrence count from an item in the combobox, e.g., &lt;Mox&gt; (12234) becomes &lt;Mox&gt;.
      *
      * @param item the item to remove the count from
-     * @return the item without the occurence count
+     * @return the item without the occurrence count
      */
     public static String removeOccurenceCount(String item) {
 
@@ -516,11 +516,12 @@ public final class Util {
     }
 
     /**
-     * Extract the unmodified sequence from the modified sequence. E.g. 'ARMR' from 'NH2-ARTM<Mox>R-COOH'.
+     * Extract the unmodified sequence from the modified sequence. E.g. 'ARMR' from 'NH2-ARTM&lt;Mox&gt;R-COOH'.
      *
      * @param modifiedSequence the modified sequence
      * @param extractSequenceProperties if true the terminals and modifications are stored
      * @param combineFixedAndVariableMods if true the fixed and variable modifications are combined into one modification
+     * @param properties the properties
      * @return the extracted unmodified sequence
      */
     public static String extractUnmodifiedSequenceAndModifications(

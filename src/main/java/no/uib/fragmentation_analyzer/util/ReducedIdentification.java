@@ -53,7 +53,7 @@ public class ReducedIdentification implements Comparable<ReducedIdentification> 
      *
      * @param aIdentificationid id of the identification
      * @param aSequence identified peptide sequence
-     * @param aModifiedSequene identified peptide sequence with terminals and modifications, e.g., NH2-ARTM<Mox>HHR-COOH
+     * @param aModifiedSequene identified peptide sequence with terminals and modifications, e.g., NH2-ARTM&lt;Mox&gt;HHR-COOH
      * @param aCharge charge of the identified peptide
      * @param aInstrumentName instrument used to identify the peptide
      * @param aSpectrumFileName file name of the spectrum used to identify the peptide
@@ -80,7 +80,7 @@ public class ReducedIdentification implements Comparable<ReducedIdentification> 
      * Creates a new ReducedIdentification object from a line in a text file.
      *
      * @param lineFromIdentificationsFile the line to parse
-     * @param combineFixedAndVariableMods if true variable and fixed modifications, e.g., <Mox> and <Mox*> are
+     * @param combineFixedAndVariableMods if true variable and fixed modifications, e.g., &lt;Mox&gt; and &lt;Mox*&gt; are
      *                                    combined into one modification type.
      */
     public ReducedIdentification(String lineFromIdentificationsFile, boolean combineFixedAndVariableMods) {
