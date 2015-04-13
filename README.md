@@ -18,12 +18,12 @@
 ----
 
 *Fragmentation Analyzer Publications:*
- * [http://www.ncbi.nlm.nih.gov/pubmed/20049869 Barsnes et al: Proteomics 2010 Mar;10(5):1087-90].
+ * [Barsnes et al: Proteomics 2010 Mar;10(5):1087-90](http://www.ncbi.nlm.nih.gov/pubmed/20049869).
  * If you use *Fragmentation Analyzer* as part of a paper, please include the reference above.
 
 ----
 
-*NEW!* For further analysis of proteomics data we also recommend checking out [http://searchgui.googlecode.com SearchGUI] and [http://peptide-shaker.googlecode.com PeptideShaker].
+*NEW!* For further analysis of proteomics data we also recommend checking out [SearchGUI](http://searchgui.googlecode.com) and [PeptideShaker](http://peptide-shaker.googlecode.com).
 
 ----
 
