@@ -88,7 +88,7 @@ In addition any files that can be converted to the [supported text file format](
 
 ### Requirements
 
- * *Fragmentation Analyzer* requires Java 1.5 (or newer), which you can download for free [http://java.sun.com/javase/downloads/index.jsp here]. Most modern computers will have Java installed already, so first try to follow the instructions below to download and run *Fragmentation Analyzer* before downloading Java. You only need the JRE version (and not the JDK version) to run *Fragmentation Analyzer*.
+ * *Fragmentation Analyzer* requires Java 1.5 (or newer), which you can download for free [here](https://java.com/en/). Most modern computers will have Java installed already, so first try to follow the instructions below to download and run *Fragmentation Analyzer* before downloading Java. You only need the JRE version (and not the JDK version) to run *Fragmentation Analyzer*.
  * Unless your data is stored in, or can be converted to, one of the supported data formats, the software will unfortunately not be of much help.
  * The current version has been tested on Windows XP, Windows Vista, Mac and Linux, but should also work on other platforms, as long as Java 1.5 (or newer) is installed. If you come across problems on your platform please let us know.
 
