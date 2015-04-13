@@ -97,14 +97,14 @@ In addition any files that can be converted to the [supported text file format](
 ### Downloading
 
 Follow the download [http://code.google.com/p/fragmentation-analyzer/downloads/list link], and download the latest version of `FragmentationAnalyzer_X.Y.zip` (where X and Y represent the version of the software). Unzipping the file, creates the following directory structure:
-{{{
+```
   FragmentationAnalyzer_X.Y
      FragmentationAnalyzer-X.Y.jar
      README.txt
      Properties (folder)
      DataSets (folder)
      lib (folder)
-}}}
+```
 
 To start the software, simply double-click the file named `FragmentationAnalyzer-X.Y.jar`.
 If this fails, try to download and install Java 1.5 or above, as explained in the previous section. (The program can also be started from the command line using the following command: `java -jar FragmentationAnalyzer-X.Y.jar`.) A *Fragmentation Analyzer* icon that can be used for shortcuts etc linking to the program is included in the zip file.
@@ -188,9 +188,9 @@ therefore also has to be provided.
 
 When a data set is imported into *Fragmentation Analyzer* it is divided
 into three parts:
- * [#identifications.txt identifications.txt] - details about the peptide identifications
- * [#fragmentIons.txt fragmentIons.txt] - details about the fragment ions
- * [#Spectra_Folder a folder of pkl files] - details about the spectra
+ * [identifications.txt](#identifications.txt) - details about the peptide identifications
+ * [fragmentIons.txt](#fragmentions.txt) - details about the fragment ions
+ * [a folder of pkl files](#spectra-folder) - details about the spectra
         
 ### identifications.txt
 For ms_lims data only the identifications.txt file is created. The
