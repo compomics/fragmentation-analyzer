@@ -2,7 +2,7 @@
 ![logo](http://genesis.ugent.be/uvpublicdata/fragmentation-analyzer/fragmentation-analyzer_logo.jpg) 
 
  * [News](#news)
- * [What is Fragmentation Analyzer?](#what-is-fragmentation-analyzer?)
+ * [What is Fragmentation Analyzer?](#what-is-fragmentation-analyzer)
  * [Supported Input Data](#supported-input-data)
  * [Downloading and Installing](#downloading-and-installing)
    * [Requirements](#requirements)
