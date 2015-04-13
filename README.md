@@ -264,7 +264,7 @@ For questions or additional help, feel free to contact the authors. If appropria
 
 (Click on the screenshot to see the full size version)
 
-[![](http://genesis.ugent.be/uvpublicdata/fragmentation-analyzer/fragmentationAnalyzer_heatMap_small.PNG)](http://genesis.ugent.be/uvpublicdata/fragmentation-analyzer/fragmentationAnalyzer_main.PNG)
+[![](https://github.com/compomics/fragmentation-analyzer/wiki/images/fragmentationAnalyzer_heatMap_small.PNG)](https://github.com/compomics/fragmentation-analyzer/wiki/images/fragmentationAnalyzer_main.PNG)
 
 Screenshot 1: Main interface of *Fragmentation Analyzer*.
 
@@ -274,7 +274,7 @@ Screenshot 1: Main interface of *Fragmentation Analyzer*.
 
 (Click on the screenshot to see the full size version)
 
-[![](http://genesis.ugent.be/uvpublicdata/fragmentation-analyzer/fragmentationAnalyzer_multiplot_small.PNG)](http://genesis.ugent.be/uvpublicdata/fragmentation-analyzer/fragmentationAnalyzer_multiplot.PNG)
+[![](https://github.com/compomics/fragmentation-analyzer/wiki/images/fragmentationAnalyzer_multiplot_small.PNG)](https://github.com/compomics/fragmentation-analyzer/wiki/images/fragmentationAnalyzer_multiplot.PNG)
 
 Screenshot 2: Main interface of *Fragmentation Analyzer* with plots.
 
