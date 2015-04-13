@@ -188,8 +188,8 @@ therefore also has to be provided.
 
 When a data set is imported into *Fragmentation Analyzer* it is divided
 into three parts:
- * [identifications.txt](#identifications.txt) - details about the peptide identifications
- * [fragmentIons.txt](#fragmentions.txt) - details about the fragment ions
+ * [identifications.txt](#identificationstxt) - details about the peptide identifications
+ * [fragmentIons.txt](#fragmentionstxt) - details about the fragment ions
  * [a folder of pkl files](#spectra-folder) - details about the spectra
         
 ### identifications.txt
