@@ -45,7 +45,7 @@
  * The project now supports Maven 3. 
  * See [http://code.google.com/p/fragmentation-analyzer/wiki/ReleaseNotes ReleaseNotes] for complete list of changes.
 
-[#Fragmentation_Analyzer Go to top of page]
+[Go to top of page](#fragmentation-analyzer)
 
 ----
 
@@ -64,7 +64,7 @@
 
 See the [screenshots](#screenshots) for examples of the tool in action.
 
-*Fragmentation Analyzer* has been developed by Harald Barsnes ([http://iieng.iportal.uib.no/ University of Bergen, Norway]) under the guidance of [http://www.vib.be/Research/EN/Research+Departments/Department+of+Medical+Protein+Research/Lennart+Martens/ Prof. Dr. Lennart Martens].
+*Fragmentation Analyzer* has been developed by Harald Barsnes ([University of Bergen, Norway](http://iieng.iportal.uib.no/)) under the guidance of [Prof. Dr. Lennart Martens](http://www.vib.be/en/research/scientists/Pages/Lennart-Martens%20Lab.aspx).
 
 [Go to top of page](#fragmentation-analyzer)
 
@@ -75,10 +75,10 @@ See the [screenshots](#screenshots) for examples of the tool in action.
 *Fragmentation Analyzer* currently supports three input formats:
 
  * [http://genesis.UGent.be/ms_lims ms_lims 7.3]
- * [http://www.matrixscience.com/ Mascot Dat Files]
- * [http://pubchem.ncbi.nlm.nih.gov/omssa/ OMSSA OMX Files]
+ * [Mascot Dat Files](http://www.matrixscience.com/)
+ * [OMSSA OMX Files](http://pubchem.ncbi.nlm.nih.gov/omssa/)
 
-In addition any files that can be converted to the [#Supported_Text_File_Format supported text file format] supported text file format can be used. (See the [#Importing_Data importing data] section for details on how to import data.)
+In addition any files that can be converted to the [supported text file format](#supported-text-file-format) supported text file format can be used. (See the [importing data](#importing-data) section for details on how to import data.)
 
 [Go to top of page](#fragmentation-analyzer)
 
@@ -146,12 +146,12 @@ See [http://code.google.com/p/fragmentation-analyzer/wiki/Tutorial Tutorial].
 ## Importing Data
 
 Data can be imported from three different sources:
- * [#ms_lims ms_lims]
- * [#Mascot_Dat_Files Mascot Dat Files]
- * [#OMSSA_OMX_Files OMSSA OMX Files]
+ * [ms_lims](#ms_lims)
+ * [Mascot Dat Files](#mascot-dat-files)
+ * [OMSSA OMX Files](#omssa-omx-files)
 
 ### ms_lims
-For [http://genesis.ugent.be/ms_lims/ ms_lims] one
+For [ms_lims](https://code.google.com/p/ms-lims/) one
 logs on to the ms_lims database via a dialog
 in the tool using ones normal login details. When connected all the
 required details about the identifications will be downloaded, while
@@ -163,14 +163,14 @@ ms_lims might take a while. However, the progress of the import
 will be monitored closely and presented to the user.
  
 ### Mascot Dat Files
-When importing [http://www.matrixscience.com/ Mascot dat files]
+When importing [Mascot dat files](http://www.matrixscience.com/)
 one simply selects the set of dat
 files to import and select the Mascot confidence level to use
 for the identifications. Only identifications above the selected
 confidence will be imported.
  
 ### OMSSA OMX Files
-Importing [http://pubchem.ncbi.nlm.nih.gov/omssa/ OMSSA]
+Importing [OMSSA](http://pubchem.ncbi.nlm.nih.gov/omssa/)
 omx files is done in the same way as for Mascot dat
 files (except for the setting of the Mascot confidence level of course).
 However, the instrument name is not included in the omx file and has
