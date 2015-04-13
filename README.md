@@ -74,7 +74,7 @@ See the [screenshots](#screenshots) for examples of the tool in action.
 
 *Fragmentation Analyzer* currently supports three input formats:
 
- * [http://genesis.UGent.be/ms_lims ms_lims 7.3]
+ * [ms_lims](https://code.google.com/p/ms-lims/)
  * [Mascot Dat Files](http://www.matrixscience.com/)
  * [OMSSA OMX Files](http://pubchem.ncbi.nlm.nih.gov/omssa/)
 
