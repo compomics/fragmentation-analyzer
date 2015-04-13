@@ -1,5 +1,5 @@
 # Fragmentation Analyzer
-![logo](http://genesis.ugent.be/uvpublicdata/fragmentation-analyzer/fragmentation-analyzer_log.png) 
+![logo](http://genesis.ugent.be/uvpublicdata/fragmentation-analyzer/fragmentation-analyzer_log.jpg) 
 
  * [News](#news)
  * [What is Fragmentation Analyzer?](#what-is-fragmentation-analyzer?)
@@ -69,7 +69,7 @@ See the [screenshots](#screenshots) for examples of the tool in action.
 
 ----
 
-==Supported Input Data==
+## Supported Input Data
 
 *Fragmentation Analyzer* currently supports three input formats:
 
@@ -83,9 +83,9 @@ In addition any files that can be converted to the [#Supported_Text_File_Format 
 
 ----
 
-==Downloading and Installing==
+## Downloading and Installing
 
-===Requirements===
+### Requirements
 
  * *Fragmentation Analyzer* requires Java 1.5 (or newer), which you can download for free [http://java.sun.com/javase/downloads/index.jsp here]. Most modern computers will have Java installed already, so first try to follow the instructions below to download and run *Fragmentation Analyzer* before downloading Java. You only need the JRE version (and not the JDK version) to run *Fragmentation Analyzer*.
  * Unless your data is stored in, or can be converted to, one of the supported data formats, the software will unfortunately not be of much help.
@@ -93,7 +93,7 @@ In addition any files that can be converted to the [#Supported_Text_File_Format 
 
 [Go to top of page](#fragmentation-analyzer)
 
-===Downloading===
+### Downloading
 
 Follow the download [http://code.google.com/p/fragmentation-analyzer/downloads/list link], and download the latest version of `FragmentationAnalyzer_X.Y.zip` (where X and Y represent the version of the software). Unzipping the file, creates the following directory structure:
 {{{
@@ -114,7 +114,7 @@ An example data set is included in the DataSet folder.
 
 ----
 
-===Troubleshooting===
+### Troubleshooting
 
  * *Does Not Start* - If nothing happens when double clicking the *Fragmentation Analyzer* jar file, the most likely cause is that you don't have Java installed. Download the latest version of Java  [http://java.sun.com/javase/downloads/index.jsp here] and try again. (You only need the JRE version (and not the JDK version) to run *Fragmentation Analyzer*.)
 
@@ -134,7 +134,7 @@ An example data set is included in the DataSet folder.
 
 ----
 
-==Tutorial==
+## Tutorial
 
 See [http://code.google.com/p/fragmentation-analyzer/wiki/Tutorial Tutorial].
 
@@ -142,14 +142,14 @@ See [http://code.google.com/p/fragmentation-analyzer/wiki/Tutorial Tutorial].
 
 ----
 
-==Importing Data==
+## Importing Data
 
 Data can be imported from three different sources:
  * [#ms_lims ms_lims]
  * [#Mascot_Dat_Files Mascot Dat Files]
  * [#OMSSA_OMX_Files OMSSA OMX Files]
 
-===ms_lims===
+### ms_lims
 For [http://genesis.ugent.be/ms_lims/ ms_lims] one
 logs on to the ms_lims database via a dialog
 in the tool using ones normal login details. When connected all the
@@ -161,14 +161,14 @@ on the size of the database the process of importing data from
 ms_lims might take a while. However, the progress of the import
 will be monitored closely and presented to the user.
  
-===Mascot Dat Files===
+### Mascot Dat Files
 When importing [http://www.matrixscience.com/ Mascot dat files]
 one simply selects the set of dat
 files to import and select the Mascot confidence level to use
 for the identifications. Only identifications above the selected
 confidence will be imported.
  
-===OMSSA OMX Files===
+### OMSSA OMX Files
 Importing [http://pubchem.ncbi.nlm.nih.gov/omssa/ OMSSA]
 omx files is done in the same way as for Mascot dat
 files (except for the setting of the Mascot confidence level of course).
@@ -183,7 +183,7 @@ therefore also has to be provided.
 
 ----
 
-==Supported Text File Format==
+##Supported Text File Format
 
 When a data set is imported into *Fragmentation Analyzer* it is divided
 into three parts:
@@ -191,7 +191,7 @@ into three parts:
  * [#fragmentIons.txt fragmentIons.txt] - details about the fragment ions
  * [#Spectra_Folder a folder of pkl files] - details about the spectra
         
-===identifications.txt===
+### identifications.txt
 For ms_lims data only the identifications.txt file is created. The
 remaining information is extracted from the database when needed.
 However, a file called 'ms_lims.prop' is also created containing 
@@ -217,7 +217,7 @@ with the following elements:
 Either spectrum file name or spectrum id has to be provided, but the
 other can be set to "null".
   
-===fragmentIons.txt===
+### fragmentIons.txt
 fragmentIons.txt is also a tab separated consisting of one row per
 fragment ion with the following elements:
 
@@ -238,7 +238,7 @@ result in the best integration with the tool:
  * Precursor ions: Prec, Prec-H2O 2+, etc.
  * Immonium ions: iA, iC, etc. 
 
-===Spectra Folder===
+### Spectra Folder
 For non-ms_lims data sets the spectra are stored as
 [http://www.matrixscience.com/help/data_file_help.html#QTOF" pkl files] in a folder
 called 'spectra'. One file per spectrum. The first line in each file contains
@@ -251,7 +251,7 @@ For more details see the example data set or the source code.
 
 ----
 
-==Support==
+## Support
 
 For questions or additional help, feel free to contact the authors. If appropriate please include a (preferably zipped) copy of the `ErrorLog.txt` file from the `Properties` folder.
 
@@ -259,7 +259,7 @@ For questions or additional help, feel free to contact the authors. If appropria
 
 ----
 
-==Screenshots==
+## Screenshots
 
 (Click on the screenshot to see the full size version)
 
