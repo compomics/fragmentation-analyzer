@@ -3,7 +3,7 @@
 
  * [News](#news)
  * [What is Fragmentation Analyzer?](#what-is-fragmentation-analyzer?)
- * [Supported_Input_Data Supported Input Data](#supported-input-data-supported-input-data)
+ * [Supported Input Data](#supported-input-data)
  * [Downloading and Installing](#downloading-and-installing)
    * [Requirements](#requirements)
    * [Downloading](#downloading)
