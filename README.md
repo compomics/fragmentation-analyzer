@@ -1,5 +1,5 @@
 # Fragmentation Analyzer
-![logo](http://genesis.ugent.be/uvpublicdata/fragmentation-analyzer/fragmentation-analyzer_log.jpg) 
+![logo](http://genesis.ugent.be/uvpublicdata/fragmentation-analyzer/fragmentation-analyzer_logo.jpg) 
 
  * [News](#news)
  * [What is Fragmentation Analyzer?](#what-is-fragmentation-analyzer?)
@@ -13,6 +13,7 @@
  * [Supported Text File Format](#supported-text-file-format)
  * [Support](#support)
  * [Screenshots](#screenshots)
+ * [Project Support](#project-support)
 
 ----
 
