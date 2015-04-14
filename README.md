@@ -37,7 +37,7 @@
  * Fixed a problem with starting the tool on the latest Java release.
  * See [ReleaseNotes](https://github.com/compomics/fragmentation-analyzer/wiki/ReleaseNotes) for complete list of changes.
 
-*_April 4. 2013: Fragmentation Analyzer v1.5.9 is now available:*
+*_April 4. 2013:_ Fragmentation Analyzer v1.5.9 is now available:*
  * Improved the look and feel of the spectra.
  * Updated ms-lims to version 7.7.7.
  * Updated ommsa parser to version 1.5.9.
