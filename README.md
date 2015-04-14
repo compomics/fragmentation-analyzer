@@ -264,7 +264,7 @@ For questions or additional help, feel free to contact the authors. If appropria
 
 (Click on the screenshot to see the full size version)
 
-[![](https://github.com/compomics/fragmentation-analyzer/wiki/images/fragmentationAnalyzer_main.PNG)](https://github.com/compomics/fragmentation-analyzer/wiki/images/fragmentationAnalyzer_main.PNG)
+[![](https://github.com/compomics/fragmentation-analyzer/wiki/images/fragmentationAnalyzer_main_small.PNG)](https://github.com/compomics/fragmentation-analyzer/wiki/images/fragmentationAnalyzer_main.PNG)
 
 Screenshot 1: Main interface of *Fragmentation Analyzer*.
 
