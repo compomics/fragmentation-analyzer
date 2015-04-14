@@ -29,21 +29,21 @@
 
 ## News
 
-*_May 21. 2013:_ [http://code.google.com/p/fragmentation-analyzer/downloads/list Fragmentation Analyzer v1.5.11] is now available:*
+*_May 21. 2013:_ [Fragmentation Analyzer v1.5.11](http://genesis.ugent.be/uvpublicdata/fragmentation-analyzer/FragmentationAnalyzer-1.5.11.zip) is now available:*
  * Updated the Mascot dat file parser version.
- * See [http://code.google.com/p/fragmentation-analyzer/wiki/ReleaseNotes ReleaseNotes] for complete list of changes.
+ * See [ReleaseNotes](https://github.com/compomics/fragmentation-analyzer/wiki/ReleaseNotes) for complete list of changes.
 
-*_April 26. 2013:_ [http://code.google.com/p/fragmentation-analyzer/downloads/list Fragmentation Analyzer v1.5.10] is now available:*
+*_April 26. 2013:_ Fragmentation Analyzer v1.5.10 is now available:*
  * Fixed a problem with starting the tool on the latest Java release.
- * See [http://code.google.com/p/fragmentation-analyzer/wiki/ReleaseNotes ReleaseNotes] for complete list of changes.
+ * See [ReleaseNotes](https://github.com/compomics/fragmentation-analyzer/wiki/ReleaseNotes) for complete list of changes.
 
-*_April 4. 2013:_ [http://code.google.com/p/fragmentation-analyzer/downloads/list Fragmentation Analyzer v1.5.9] is now available:*
+*_April 4. 2013: Fragmentation Analyzer v1.5.9 is now available:*
  * Improved the look and feel of the spectra.
  * Updated ms-lims to version 7.7.7.
  * Updated ommsa parser to version 1.5.9.
  * Updated mascotdatfile to version 3.4.10.
  * The project now supports Maven 3. 
- * See [http://code.google.com/p/fragmentation-analyzer/wiki/ReleaseNotes ReleaseNotes] for complete list of changes.
+ * See [ReleaseNotes](https://github.com/compomics/fragmentation-analyzer/wiki/ReleaseNotes) for complete list of changes.
 
 [Go to top of page](#fragmentation-analyzer)
 
@@ -96,7 +96,7 @@ In addition any files that can be converted to the [supported text file format](
 
 ### Downloading
 
-Follow the download [http://code.google.com/p/fragmentation-analyzer/downloads/list link], and download the latest version of `FragmentationAnalyzer_X.Y.zip` (where X and Y represent the version of the software). Unzipping the file, creates the following directory structure:
+Download the latest version of `FragmentationAnalyzer_X.Y.zip` (where X and Y represent the version of the software) [here](http://genesis.ugent.be/uvpublicdata/fragmentation-analyzer/FragmentationAnalyzer-1.5.11.zip). Unzipping the file, creates the following directory structure:
 ```
   FragmentationAnalyzer_X.Y
      FragmentationAnalyzer-X.Y.jar
@@ -117,7 +117,7 @@ An example data set is included in the DataSet folder.
 
 ### Troubleshooting
 
- * *Does Not Start* - If nothing happens when double clicking the *Fragmentation Analyzer* jar file, the most likely cause is that you don't have Java installed. Download the latest version of Java  [http://java.sun.com/javase/downloads/index.jsp here] and try again. (You only need the JRE version (and not the JDK version) to run *Fragmentation Analyzer*.)
+ * *Does Not Start* - If nothing happens when double clicking the *Fragmentation Analyzer* jar file, the most likely cause is that you don't have Java installed. Download the latest version of Java [here](https://java.com/en/) and try again. (You only need the JRE version (and not the JDK version) to run *Fragmentation Analyzer*.)
 
  * *Does Not Start II* - If *Fragmentation Analyzer* fails during start-up and you get the "Fragmentation Analyzer - Startup Failed" message, a file called `fragmentation_analyzer.log` will be created in your home directory. In this file you will find detailed information about why the program was not able to start.
 
@@ -129,7 +129,7 @@ An example data set is included in the DataSet folder.
 
  * *Memory Issues* - Big datasets can require a lot of memory. If the software unexpectedly fails on a big data set, and the software mentions that it ran out of memory, you should try to give the program more memory. This can be done by editing the `JavaOptions.txt` file in the `Properties` folder (see section above for the folder structure). In this file, change the `-Xmx768M` option to a higher number (e.g., `-Xmx1500M` for a maximum of appr. 1.5GB of memory). Please note that on a 32-bit operating system you can not increase this value beyond 2000M.
 
- * *Problem Not Solved? Or Problem Not In List Above?* - See [#Support Support].
+ * *Problem Not Solved? Or Problem Not In List Above?* - See [Support][#support].
 
 [Go to top of page](#fragmentation-analyzer)
 
@@ -137,7 +137,7 @@ An example data set is included in the DataSet folder.
 
 ## Tutorial
 
-See [http://code.google.com/p/fragmentation-analyzer/wiki/Tutorial Tutorial].
+See [Tutorial](https://github.com/compomics/fragmentation-analyzer/wiki/Tutorial) page in the [wiki](https://github.com/compomics/fragmentation-analyzer/wiki) section.
 
 [Go to top of page](#fragmentation-analyzer)
 
@@ -241,7 +241,7 @@ result in the best integration with the tool:
 
 ### Spectra Folder
 For non-ms_lims data sets the spectra are stored as
-[http://www.matrixscience.com/help/data_file_help.html#QTOF" pkl files] in a folder
+[pkl files](http://www.matrixscience.com/help/data_file_help.html#QTOF") in a folder
 called 'spectra'. One file per spectrum. The first line in each file contains
 the precursor m/z, intensity and charge. Next follows one line per peak
 in the spectrum with the m/z and intensity values.
