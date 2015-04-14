@@ -264,7 +264,7 @@ For questions or additional help, feel free to contact the authors. If appropria
 
 (Click on the screenshot to see the full size version)
 
-[![](https://github.com/compomics/fragmentation-analyzer/wiki/images/fragmentationAnalyzer_heatMap_small.PNG)](https://github.com/compomics/fragmentation-analyzer/wiki/images/fragmentationAnalyzer_main.PNG)
+[![](https://github.com/compomics/fragmentation-analyzer/wiki/images/fragmentationAnalyzer_main.PNG)](https://github.com/compomics/fragmentation-analyzer/wiki/images/fragmentationAnalyzer_main.PNG)
 
 Screenshot 1: Main interface of *Fragmentation Analyzer*.
 
@@ -284,9 +284,7 @@ Screenshot 2: Main interface of *Fragmentation Analyzer* with plots.
 
 (Click on the screenshot to see the full size version)
 
-[![](http://genesis.ugent.be/uvpublicdata/fragmentation-analyzer/fragmentationAnalyzer_multiplot_small.PNG)](http://genesis.ugent.be/uvpublicdata/fragmentation-analyzer/fragmentationAnalyzer_multiplot.PNG)
-
-[http://fragmentation-analyzer.googlecode.com/svn/wiki/images/screenshots/fragmentationAnalyzer_modificationBoxPlot.PNG http://fragmentation-analyzer.googlecode.com/svn/wiki/images/screenshots/fragmentationAnalyzer_modificationBoxPlot_small.PNG]
+[![](https://github.com/compomics/fragmentation-analyzer/wiki/images/fragmentationAnalyzer_modificationBoxPlot_small.PNG)](https://github.com/compomics/fragmentation-analyzer/wiki/images/fragmentationAnalyzer_modificationBoxPlot.PNG)
 
 Screenshot 3: Boxplot of fragment ions for modified vs unmodified peptides.
 
@@ -296,7 +294,7 @@ Screenshot 3: Boxplot of fragment ions for modified vs unmodified peptides.
 
 (Click on the screenshot to see the full size version)
 
-[http://fragmentation-analyzer.googlecode.com/svn/wiki/images/screenshots/fragmentationAnalyzer_spectrumpanel.PNG http://fragmentation-analyzer.googlecode.com/svn/wiki/images/screenshots/fragmentationAnalyzer_spectrumpanel_small.PNG]
+[![](https://github.com/compomics/fragmentation-analyzer/wiki/images/fragmentationAnalyzer_spectrumpanel_small.PNG)](https://github.com/compomics/fragmentation-analyzer/wiki/images/fragmentationAnalyzer_spectrumpanel.PNG)
 
 Screenshot 4: MS/MS spectra with fragment ion annotation.
 
@@ -306,7 +304,7 @@ Screenshot 4: MS/MS spectra with fragment ion annotation.
 
 (Click on the screenshot to see the full size version)
 
-[http://fragmentation-analyzer.googlecode.com/svn/wiki/images/screenshots/fragmentationAnalyzer_bubblePlot.PNG http://fragmentation-analyzer.googlecode.com/svn/wiki/images/screenshots/fragmentationAnalyzer_bubblePlot_small.PNG]
+[![](https://github.com/compomics/fragmentation-analyzer/wiki/images/fragmentationAnalyzer_bubblePlot_small.PNG)](https://github.com/compomics/fragmentation-analyzer/wiki/images/fragmentationAnalyzer_bubblePlot.PNG)
 
 Screenshot 5: Mass Error Bubble Plot. Size of bubble relative to intensity. Color coding: instrument type.
 
@@ -316,7 +314,7 @@ Screenshot 5: Mass Error Bubble Plot. Size of bubble relative to intensity. Colo
 
 (Click on the screenshot to see the full size version)
 
-[http://fragmentation-analyzer.googlecode.com/svn/wiki/images/screenshots/fragmentationAnalyzer_bubblePlot_fragment_ion_type.PNG http://fragmentation-analyzer.googlecode.com/svn/wiki/images/screenshots/fragmentationAnalyzer_bubblePlot_fragment_ion_type_small.PNG]
+[![](https://github.com/compomics/fragmentation-analyzer/wiki/images/fragmentationAnalyzer_bubblePlot_fragment_ion_type_small.PNG)](https://github.com/compomics/fragmentation-analyzer/wiki/images/fragmentationAnalyzer_bubblePlot_fragment_ion_type.PNG)
 
 Screenshot 6: Mass Error Bubble Plot. Size of bubble relative to intensity. Color coding fragment ion type.
 
@@ -326,7 +324,7 @@ Screenshot 6: Mass Error Bubble Plot. Size of bubble relative to intensity. Colo
 
 (Click on the screenshot to see the full size version)
 
-[http://fragmentation-analyzer.googlecode.com/svn/wiki/images/screenshots/fragmentationAnalyzer_fragmentIonProbabilityPlot.PNG http://fragmentation-analyzer.googlecode.com/svn/wiki/images/screenshots/fragmentationAnalyzer_fragmentIonProbabilityPlot_small.PNG]
+[![](https://github.com/compomics/fragmentation-analyzer/wiki/images/fragmentationAnalyzer_fragmentIonProbabilityPlot_small.PNG)](https://github.com/compomics/fragmentation-analyzer/wiki/images/fragmentationAnalyzer_fragmentIonProbabilityPlot.PNG)
 
 Screenshot 7: Fragment Ion Probability Plot.
 
@@ -336,7 +334,7 @@ Screenshot 7: Fragment Ion Probability Plot.
 
 (Click on the screenshot to see the full size version)
 
-[http://fragmentation-analyzer.googlecode.com/svn/wiki/images/screenshots/fragmentationAnalyzer_heatMap.PNG http://fragmentation-analyzer.googlecode.com/svn/wiki/images/screenshots/fragmentationAnalyzer_heatMap_small.PNG]
+[![](https://github.com/compomics/fragmentation-analyzer/wiki/images/fragmentationAnalyzer_heatMap_small.PNG)](https://github.com/compomics/fragmentation-analyzer/wiki/images/fragmentationAnalyzer_heatMap.PNG)
 
 Screenshot 8: Fragment Ion Heat Map - analyze the correlation of different fragmentation patterns.
 
