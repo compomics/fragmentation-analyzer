@@ -18,6 +18,7 @@
 ----
 
 *Fragmentation Analyzer Publications:*
+
  * [Barsnes et al: Proteomics 2010 Mar;10(5):1087-90](http://www.ncbi.nlm.nih.gov/pubmed/20049869).
  * If you use *Fragmentation Analyzer* as part of a paper, please include the reference above.
 
@@ -30,14 +31,17 @@
 ## News
 
 *_May 21. 2013:_ [Fragmentation Analyzer v1.5.11](http://genesis.ugent.be/uvpublicdata/fragmentation-analyzer/FragmentationAnalyzer-1.5.11.zip) is now available:*
+
  * Updated the Mascot dat file parser version.
  * See [ReleaseNotes](https://github.com/compomics/fragmentation-analyzer/wiki/ReleaseNotes) for complete list of changes.
 
 *_April 26. 2013:_ Fragmentation Analyzer v1.5.10 is now available:*
+
  * Fixed a problem with starting the tool on the latest Java release.
  * See [ReleaseNotes](https://github.com/compomics/fragmentation-analyzer/wiki/ReleaseNotes) for complete list of changes.
 
 *_April 4. 2013:_ Fragmentation Analyzer v1.5.9 is now available:*
+
  * Improved the look and feel of the spectra.
  * Updated ms-lims to version 7.7.7.
  * Updated ommsa parser to version 1.5.9.
@@ -52,6 +56,7 @@
 ## What is Fragmentation Analyzer?
 
 *Fragmentation Analyzer* is a tool for analyzing MS/MS fragmentation data. Currently nine different analysis types are supported:
+
  * Spectra Visualization - visualize the MS/MS spectra with fragment ion annotation, zooming and manual de-novo-sequencing.
  * Intensity Box Plots - analyze intensity variation for a set of identification of the same peptide.
  * Mass Error Scatter Plots - visualize the mass error spread in a set of selected identifications/spectra.
@@ -97,6 +102,7 @@ In addition any files that can be converted to the [supported text file format](
 ### Downloading
 
 Download the latest version of `FragmentationAnalyzer_X.Y.zip` (where X and Y represent the version of the software) [here](http://genesis.ugent.be/uvpublicdata/fragmentation-analyzer/FragmentationAnalyzer-1.5.11.zip). Unzipping the file, creates the following directory structure:
+
 ```
   FragmentationAnalyzer_X.Y
      FragmentationAnalyzer-X.Y.jar
@@ -129,7 +135,7 @@ An example data set is included in the DataSet folder.
 
  * *Memory Issues* - Big datasets can require a lot of memory. If the software unexpectedly fails on a big data set, and the software mentions that it ran out of memory, you should try to give the program more memory. This can be done by editing the `JavaOptions.txt` file in the `Properties` folder (see section above for the folder structure). In this file, change the `-Xmx768M` option to a higher number (e.g., `-Xmx1500M` for a maximum of appr. 1.5GB of memory). Please note that on a 32-bit operating system you can not increase this value beyond 2000M.
 
- * *Problem Not Solved? Or Problem Not In List Above?* - See [Support][#support].
+ * *Problem Not Solved? Or Problem Not In List Above?* - See [Support](#support).
 
 [Go to top of page](#fragmentation-analyzer)
 
@@ -146,62 +152,36 @@ See [Tutorial](https://github.com/compomics/fragmentation-analyzer/wiki/Tutorial
 ## Importing Data
 
 Data can be imported from three different sources:
+
  * [ms_lims](#ms_lims)
  * [Mascot Dat Files](#mascot-dat-files)
  * [OMSSA OMX Files](#omssa-omx-files)
 
 ### ms_lims
-For [ms_lims](https://code.google.com/p/ms-lims/) one
-logs on to the ms_lims database via a dialog
-in the tool using ones normal login details. When connected all the
-required details about the identifications will be downloaded, while
-some details, e.g., the fragment ion information, is not downloaded
-but extracted when needed. The database connection will therefore
-be required during the use of the tool. Please note that depending
-on the size of the database the process of importing data from
-ms_lims might take a while. However, the progress of the import
-will be monitored closely and presented to the user.
+For [ms_lims](https://github.com/compomics/ms-lims/) one logs on to the ms_lims database via a dialog in the tool using ones normal login details. When connected all the required details about the identifications will be downloaded, while some details, e.g., the fragment ion information, is not downloaded but extracted when needed. The database connection will therefore be required during the use of the tool. Please note that depending on the size of the database the process of importing data from ms_lims might take a while. However, the progress of the import will be monitored closely and presented to the user.
  
 ### Mascot Dat Files
-When importing [Mascot dat files](http://www.matrixscience.com/)
-one simply selects the set of dat
-files to import and select the Mascot confidence level to use
-for the identifications. Only identifications above the selected
-confidence will be imported.
+When importing [Mascot dat files](http://www.matrixscience.com/) one simply selects the set of dat files to import and select the Mascot confidence level to use for the identifications. Only identifications above the selected confidence will be imported.
  
 ### OMSSA OMX Files
-Importing [OMSSA](http://pubchem.ncbi.nlm.nih.gov/omssa/)
-omx files is done in the same way as for Mascot dat
-files (except for the setting of the Mascot confidence level of course).
-However, the instrument name is not included in the omx file and has
-to be provided manually by the user for each imported file. Also note
-that the omx file includes very little details about the amino acid
-modifications, only a number `<1>`, `<2>` etc. The OMMSA
-installation folder (containing the mods.xml and usermods.xml files)
-therefore also has to be provided.
+Importing [OMSSA](http://pubchem.ncbi.nlm.nih.gov/omssa/) omx files is done in the same way as for Mascot dat files (except for the setting of the Mascot confidence level of course). However, the instrument name is not included in the omx file and has to be provided manually by the user for each imported file. Also note that the omx file includes very little details about the amino acid modifications, only a number `<1>`, `<2>` etc. The OMMSA installation folder (containing the mods.xml and usermods.xml files) therefore also has to be provided.
 
 [Go to top of page](#fragmentation-analyzer)
 
 ----
 
-##Supported Text File Format
+## Supported Text File Format
 
-When a data set is imported into *Fragmentation Analyzer* it is divided
-into three parts:
+When a data set is imported into *Fragmentation Analyzer* it is divided into three parts:
+
  * [identifications.txt](#identificationstxt) - details about the peptide identifications
  * [fragmentIons.txt](#fragmentionstxt) - details about the fragment ions
  * [a folder of pkl files](#spectra-folder) - details about the spectra
-        
+
 ### identifications.txt
-For ms_lims data only the identifications.txt file is created. The
-remaining information is extracted from the database when needed.
-However, a file called 'ms_lims.prop' is also created containing 
-information about the database used.
+For ms_lims data only the identifications.txt file is created. The remaining information is extracted from the database when needed. However, a file called 'ms_lims.prop' is also created containing information about the database used.
   
-identifications.txt is a tab separated text file where the first
-line includes the number of lines in the file, i.e., the number of 
-identifications. The rest of the file consists of one row per identification
-with the following elements:
+identifications.txt is a tab separated text file where the first line includes the number of lines in the file, i.e., the number of identifications. The rest of the file consists of one row per identification with the following elements:
 
  * a unique identification index - [Integer]
  * the identified peptide sequence (without terminals and modifications) - [String]
@@ -215,12 +195,10 @@ with the following elements:
  * the total intensity of all the peaks in the spectrum - [Double]
  * original file name (a reference to the original spectrum file) - [String]
         
-Either spectrum file name or spectrum id has to be provided, but the
-other can be set to "null".
+Either spectrum file name or spectrum id has to be provided, but the other can be set to "null".
   
 ### fragmentIons.txt
-fragmentIons.txt is also a tab separated consisting of one row per
-fragment ion with the following elements:
+fragmentIons.txt is also a tab separated consisting of one row per fragment ion with the following elements:
 
  * a unique fragment ion index - [Integer]
  * identification index (a reference to the identification the fragment comes from - [Integer]
@@ -230,8 +208,7 @@ fragment ion with the following elements:
  * fragment ion number, e.g., y2 has the fragment ion number 2 - [Double]
  * fragment ion mass error (the (absolute) distance between the theoretical and the experimental mass of the fragment ion (experimental mass - theoretical mass)) - [Double]
         
-The following fragment ion type names are recommended and will
-result in the best integration with the tool:
+The following fragment ion type names are recommended and will result in the best integration with the tool:
 
  * Standard fragment ions, singly charged: b1, b2, y1, y2, etc.
  * Neutral loss ions: y[5]-H2O, y[4]-NH3, etc.
@@ -240,11 +217,7 @@ result in the best integration with the tool:
  * Immonium ions: iA, iC, etc. 
 
 ### Spectra Folder
-For non-ms_lims data sets the spectra are stored as
-[pkl files](http://www.matrixscience.com/help/data_file_help.html#QTOF") in a folder
-called 'spectra'. One file per spectrum. The first line in each file contains
-the precursor m/z, intensity and charge. Next follows one line per peak
-in the spectrum with the m/z and intensity values.
+For non-ms_lims data sets the spectra are stored as [pkl files](http://www.matrixscience.com/help/data_file_help.html#QTOF") in a folder called 'spectra'. One file per spectrum. The first line in each file contains the precursor m/z, intensity and charge. Next follows one line per peak in the spectrum with the m/z and intensity values.
   
 For more details see the example data set or the source code.
 
