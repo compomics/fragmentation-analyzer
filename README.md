@@ -30,17 +30,17 @@
 
 ## News
 
-*_May 21. 2013:_ [Fragmentation Analyzer v1.5.11](http://genesis.ugent.be/uvpublicdata/fragmentation-analyzer/FragmentationAnalyzer-1.5.11.zip) is now available:*
+*May 21. 2013: [Fragmentation Analyzer v1.5.11](http://genesis.ugent.be/uvpublicdata/fragmentation-analyzer/FragmentationAnalyzer-1.5.11.zip) is now available:*
 
  * Updated the Mascot dat file parser version.
  * See [ReleaseNotes](https://github.com/compomics/fragmentation-analyzer/wiki/ReleaseNotes) for complete list of changes.
 
-*_April 26. 2013:_ Fragmentation Analyzer v1.5.10 is now available:*
+*April 26. 2013: Fragmentation Analyzer v1.5.10 is now available:*
 
  * Fixed a problem with starting the tool on the latest Java release.
  * See [ReleaseNotes](https://github.com/compomics/fragmentation-analyzer/wiki/ReleaseNotes) for complete list of changes.
 
-*_April 4. 2013:_ Fragmentation Analyzer v1.5.9 is now available:*
+*April 4. 2013: Fragmentation Analyzer v1.5.9 is now available:*
 
  * Improved the look and feel of the spectra.
  * Updated ms-lims to version 7.7.7.
