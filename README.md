@@ -1,5 +1,4 @@
 # Fragmentation Analyzer
-![logo](http://genesis.ugent.be/uvpublicdata/fragmentation-analyzer/fragmentation-analyzer_logo.jpg) 
 
  * [What is Fragmentation Analyzer?](#what-is-fragmentation-analyzer)
  * [Supported Input Data](#supported-input-data)
