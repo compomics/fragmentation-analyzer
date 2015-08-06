@@ -1,7 +1,6 @@
 # Fragmentation Analyzer
 ![logo](http://genesis.ugent.be/uvpublicdata/fragmentation-analyzer/fragmentation-analyzer_logo.jpg) 
 
- * [News](#news)
  * [What is Fragmentation Analyzer?](#what-is-fragmentation-analyzer)
  * [Supported Input Data](#supported-input-data)
  * [Downloading and Installing](#downloading-and-installing)
@@ -25,31 +24,6 @@
 ----
 
 *NEW!* For further analysis of proteomics data we also recommend checking out [SearchGUI](http://searchgui.googlecode.com) and [PeptideShaker](http://peptide-shaker.googlecode.com).
-
-----
-
-## News
-
-*May 21. 2013: [Fragmentation Analyzer v1.5.11](http://genesis.ugent.be/uvpublicdata/fragmentation-analyzer/FragmentationAnalyzer-1.5.11.zip) is now available:*
-
- * Updated the Mascot dat file parser version.
- * See [ReleaseNotes](https://github.com/compomics/fragmentation-analyzer/wiki/ReleaseNotes) for complete list of changes.
-
-*April 26. 2013: Fragmentation Analyzer v1.5.10 is now available:*
-
- * Fixed a problem with starting the tool on the latest Java release.
- * See [ReleaseNotes](https://github.com/compomics/fragmentation-analyzer/wiki/ReleaseNotes) for complete list of changes.
-
-*April 4. 2013: Fragmentation Analyzer v1.5.9 is now available:*
-
- * Improved the look and feel of the spectra.
- * Updated ms-lims to version 7.7.7.
- * Updated ommsa parser to version 1.5.9.
- * Updated mascotdatfile to version 3.4.10.
- * The project now supports Maven 3. 
- * See [ReleaseNotes](https://github.com/compomics/fragmentation-analyzer/wiki/ReleaseNotes) for complete list of changes.
-
-[Go to top of page](#fragmentation-analyzer)
 
 ----
 
@@ -101,7 +75,7 @@ In addition any files that can be converted to the [supported text file format](
 
 ### Downloading
 
-Download the latest version of `FragmentationAnalyzer_X.Y.zip` (where X and Y represent the version of the software) [here](http://genesis.ugent.be/uvpublicdata/fragmentation-analyzer/FragmentationAnalyzer-1.5.11.zip). Unzipping the file, creates the following directory structure:
+Download the latest version of `FragmentationAnalyzer_X.Y.zip` (where X and Y represent the version of the software) [here](http://genesis.ugent.be/maven2/no/uib/FragmentationAnalyzer/1.5.12/FragmentationAnalyzer-1.5.12.zip). Unzipping the file, creates the following directory structure:
 
 ```
   FragmentationAnalyzer_X.Y
