@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<Form version="1.5" maxVersion="1.7" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
+<Form version="1.9" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
   <NonVisualComponents>
     <Component class="javax.swing.ButtonGroup" name="searchButtonGroup">
     </Component>
@@ -347,6 +347,7 @@
   <SyntheticProperties>
     <SyntheticProperty name="menuBar" type="java.lang.String" value="jMenuBar"/>
     <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
+    <SyntheticProperty name="generateCenter" type="boolean" value="false"/>
   </SyntheticProperties>
   <Events>
     <EventHandler event="windowClosing" listener="java.awt.event.WindowListener" parameters="java.awt.event.WindowEvent" handler="formWindowClosing"/>
@@ -368,7 +369,7 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="mainJSplitPane" alignment="0" pref="1230" max="32767" attributes="0"/>
+          <Component id="mainJSplitPane" alignment="0" pref="1231" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
@@ -407,6 +408,12 @@
           <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
           <SubComponents>
             <Container class="org.jdesktop.swingx.JXTaskPaneContainer" name="searchSettingsJXTaskPaneContainer">
+              <Properties>
+                <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                  <Color blue="ff" green="ff" red="ff" type="rgb"/>
+                </Property>
+                <Property name="inheritAlpha" type="boolean" value="false"/>
+              </Properties>
               <SubComponents>
                 <Container class="org.jdesktop.swingx.JXTaskPane" name="instrumentJXTaskPane">
                   <Properties>
@@ -901,6 +908,11 @@
                     <Property name="background" type="java.awt.Color" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                       <Connection code="instrumentJXTaskPane.getBackground()" type="code"/>
                     </Property>
+                    <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                      <Border info="org.netbeans.modules.form.compat2.border.LineBorderInfo">
+                        <LineBorder/>
+                      </Border>
+                    </Property>
                   </Properties>
 
                   <Layout>
@@ -908,7 +920,7 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace min="-2" pref="28" max="-2" attributes="0"/>
-                              <Component id="searchJButton" pref="284" max="32767" attributes="0"/>
+                              <Component id="searchJButton" pref="282" max="32767" attributes="0"/>
                               <EmptySpace min="-2" pref="35" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
@@ -917,7 +929,7 @@
                                   <Component id="generalSearchJRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="modificationSearchJRadioButton" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace pref="164" max="32767" attributes="0"/>
+                              <EmptySpace pref="162" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -975,6 +987,50 @@
                   </SubComponents>
                 </Container>
               </SubComponents>
+              <LayoutCode>
+                <CodeStatement>
+                  <CodeExpression id="1_verticalLayout1">
+                    <CodeVariable name="verticalLayout1" type="4096" declaredType="org.jdesktop.swingx.VerticalLayout"/>
+                    <ExpressionOrigin>
+                      <ExpressionProvider type="CodeConstructor">
+                        <CodeConstructor class="org.jdesktop.swingx.VerticalLayout" parameterTypes=""/>
+                      </ExpressionProvider>
+                    </ExpressionOrigin>
+                  </CodeExpression>
+                  <StatementProvider type="CodeExpression">
+                    <CodeExpression id="1_verticalLayout1"/>
+                  </StatementProvider>
+                </CodeStatement>
+                <CodeStatement>
+                  <CodeExpression id="1_verticalLayout1"/>
+                  <StatementProvider type="CodeMethod">
+                    <CodeMethod name="setGap" class="org.jdesktop.swingx.VerticalLayout" parameterTypes="int"/>
+                  </StatementProvider>
+                  <Parameters>
+                    <CodeExpression id="2">
+                      <ExpressionOrigin>
+                        <Value type="int" value="14"/>
+                      </ExpressionOrigin>
+                    </CodeExpression>
+                  </Parameters>
+                </CodeStatement>
+                <CodeStatement>
+                  <CodeExpression id="3_searchSettingsJXTaskPaneContainer">
+                    <CodeVariable name="searchSettingsJXTaskPaneContainer" type="8194" declaredType="org.jdesktop.swingx.JXTaskPaneContainer"/>
+                    <ExpressionOrigin>
+                      <ExpressionProvider type="ComponentRef">
+                        <ComponentRef name="searchSettingsJXTaskPaneContainer"/>
+                      </ExpressionProvider>
+                    </ExpressionOrigin>
+                  </CodeExpression>
+                  <StatementProvider type="CodeMethod">
+                    <CodeMethod name="setLayout" class="java.awt.Container" parameterTypes="java.awt.LayoutManager"/>
+                  </StatementProvider>
+                  <Parameters>
+                    <CodeExpression id="1_verticalLayout1"/>
+                  </Parameters>
+                </CodeStatement>
+              </LayoutCode>
             </Container>
           </SubComponents>
         </Container>
@@ -994,6 +1050,10 @@
           <SubComponents>
             <Container class="org.jdesktop.swingx.JXTaskPaneContainer" name="resultsJXTaskPaneContainer">
               <Properties>
+                <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                  <Color blue="ff" green="ff" red="ff" type="rgb"/>
+                </Property>
+                <Property name="inheritAlpha" type="boolean" value="false"/>
                 <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                   <Dimension value="[805, 632]"/>
                 </Property>
@@ -1021,7 +1081,7 @@
                         <DimensionLayout dim="0">
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="1" attributes="0">
-                                  <Component id="searchResultsJComboBox" pref="297" max="32767" attributes="0"/>
+                                  <Component id="searchResultsJComboBox" pref="298" max="32767" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="daOrPpmSearchResultsJComboBox" linkSize="4" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
@@ -1029,7 +1089,7 @@
                                   <EmptySpace min="-2" pref="46" max="-2" attributes="0"/>
                                   <Component id="searchResultsJButton" pref="300" max="32767" attributes="0"/>
                               </Group>
-                              <Component id="searchResultsJScrollPane" alignment="1" pref="787" max="32767" attributes="2"/>
+                              <Component id="searchResultsJScrollPane" alignment="1" pref="788" max="32767" attributes="2"/>
                           </Group>
                         </DimensionLayout>
                         <DimensionLayout dim="1">
@@ -1168,7 +1228,7 @@
                         <DimensionLayout dim="0">
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="0" attributes="0">
-                                  <Component id="spectraJComboBox" pref="295" max="32767" attributes="0"/>
+                                  <Component id="spectraJComboBox" pref="296" max="32767" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="daOrPpmSpectraJComboBox" min="-2" pref="65" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
@@ -1176,7 +1236,7 @@
                                   <EmptySpace min="-2" pref="50" max="-2" attributes="0"/>
                                   <Component id="spectraJButton" pref="299" max="32767" attributes="0"/>
                               </Group>
-                              <Component id="spectraJScrollPane" alignment="0" pref="787" max="32767" attributes="2"/>
+                              <Component id="spectraJScrollPane" alignment="0" pref="788" max="32767" attributes="2"/>
                           </Group>
                         </DimensionLayout>
                         <DimensionLayout dim="1">
@@ -1293,8 +1353,12 @@
                 </Container>
                 <Container class="org.jdesktop.swingx.JXTaskPane" name="plotsAnalysesJXTaskPane">
                   <Properties>
+                    <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                      <Color blue="ff" green="ff" red="ff" type="rgb"/>
+                    </Property>
                     <Property name="title" type="java.lang.String" value="Plots / Analyses"/>
                     <Property name="animated" type="boolean" value="false"/>
+                    <Property name="opaque" type="boolean" value="true"/>
                   </Properties>
                   <Events>
                     <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="plotsAnalysesJXTaskPaneMouseClicked"/>
@@ -1315,13 +1379,12 @@
                       <SubComponents>
                         <Container class="javax.swing.JDesktopPane" name="plotsAndAnalysesJDesktopPane">
                           <Properties>
-                            <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                              <Color blue="f3" green="dc" id="tab_focus_fill_dark" palette="3" red="d2" type="palette"/>
-                            </Property>
                             <Property name="dragMode" type="int" value="1"/>
                           </Properties>
 
-                          <Layout class="org.netbeans.modules.form.compat2.layouts.support.JLayeredPaneSupportLayout"/>
+                          <Layout class="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout">
+                            <Property name="useNullLayout" type="boolean" value="true"/>
+                          </Layout>
                           <SubComponents>
                             <Container class="javax.swing.JInternalFrame" name="spectrumPanelToolBarJInternalFrame">
                               <Properties>
@@ -1332,9 +1395,12 @@
                                 </Property>
                                 <Property name="visible" type="boolean" value="true"/>
                               </Properties>
+                              <AuxValues>
+                                <AuxValue name="JLayeredPane.layer" type="java.lang.Integer" value="300"/>
+                              </AuxValues>
                               <Constraints>
-                                <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JLayeredPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JLayeredPaneSupportLayout$JLayeredPaneConstraintsDescription">
-                                  <JLayeredPaneConstraints x="670" y="30" width="80" height="370" layer="300" position="-1"/>
+                                <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
+                                  <AbsoluteConstraints x="670" y="30" width="80" height="370"/>
                                 </Constraint>
                               </Constraints>
 
@@ -1668,9 +1734,12 @@
                                 </Property>
                                 <Property name="visible" type="boolean" value="true"/>
                               </Properties>
+                              <AuxValues>
+                                <AuxValue name="JLayeredPane.layer" type="java.lang.Integer" value="300"/>
+                              </AuxValues>
                               <Constraints>
-                                <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JLayeredPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JLayeredPaneSupportLayout$JLayeredPaneConstraintsDescription">
-                                  <JLayeredPaneConstraints x="630" y="80" width="100" height="290" layer="300" position="-1"/>
+                                <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
+                                  <AbsoluteConstraints x="630" y="80" width="100" height="290"/>
                                 </Constraint>
                               </Constraints>
 
@@ -1854,11 +1923,14 @@
                                     <Font component="internalFrameTipJLabel" italic="true" property="font" relativeSize="true" size="-3"/>
                                   </FontInfo>
                                 </Property>
+                                <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                                  <Color blue="ff" green="ff" red="ff" type="rgb"/>
+                                </Property>
                                 <Property name="text" type="java.lang.String" value="Right click in the plot or on the plot title bar for plot options"/>
                               </Properties>
                               <Constraints>
-                                <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JLayeredPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JLayeredPaneSupportLayout$JLayeredPaneConstraintsDescription">
-                                  <JLayeredPaneConstraints x="30" y="0" width="470" height="20" layer="0" position="-1"/>
+                                <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
+                                  <AbsoluteConstraints x="30" y="0" width="470" height="20"/>
                                 </Constraint>
                               </Constraints>
                             </Component>
@@ -1869,6 +1941,50 @@
                   </SubComponents>
                 </Container>
               </SubComponents>
+              <LayoutCode>
+                <CodeStatement>
+                  <CodeExpression id="4_verticalLayout2">
+                    <CodeVariable name="verticalLayout2" type="4096" declaredType="org.jdesktop.swingx.VerticalLayout"/>
+                    <ExpressionOrigin>
+                      <ExpressionProvider type="CodeConstructor">
+                        <CodeConstructor class="org.jdesktop.swingx.VerticalLayout" parameterTypes=""/>
+                      </ExpressionProvider>
+                    </ExpressionOrigin>
+                  </CodeExpression>
+                  <StatementProvider type="CodeExpression">
+                    <CodeExpression id="4_verticalLayout2"/>
+                  </StatementProvider>
+                </CodeStatement>
+                <CodeStatement>
+                  <CodeExpression id="4_verticalLayout2"/>
+                  <StatementProvider type="CodeMethod">
+                    <CodeMethod name="setGap" class="org.jdesktop.swingx.VerticalLayout" parameterTypes="int"/>
+                  </StatementProvider>
+                  <Parameters>
+                    <CodeExpression id="5">
+                      <ExpressionOrigin>
+                        <Value type="int" value="14"/>
+                      </ExpressionOrigin>
+                    </CodeExpression>
+                  </Parameters>
+                </CodeStatement>
+                <CodeStatement>
+                  <CodeExpression id="6_resultsJXTaskPaneContainer">
+                    <CodeVariable name="resultsJXTaskPaneContainer" type="8194" declaredType="org.jdesktop.swingx.JXTaskPaneContainer"/>
+                    <ExpressionOrigin>
+                      <ExpressionProvider type="ComponentRef">
+                        <ComponentRef name="resultsJXTaskPaneContainer"/>
+                      </ExpressionProvider>
+                    </ExpressionOrigin>
+                  </CodeExpression>
+                  <StatementProvider type="CodeMethod">
+                    <CodeMethod name="setLayout" class="java.awt.Container" parameterTypes="java.awt.LayoutManager"/>
+                  </StatementProvider>
+                  <Parameters>
+                    <CodeExpression id="4_verticalLayout2"/>
+                  </Parameters>
+                </CodeStatement>
+              </LayoutCode>
             </Container>
           </SubComponents>
         </Container>

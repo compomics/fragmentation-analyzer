@@ -78,18 +78,108 @@ public class PlotLabelSelection extends javax.swing.JDialog {
     private void initComponents() {
 
         buttonGroup = new javax.swing.ButtonGroup();
-        okJButton = new javax.swing.JButton();
-        cancelJButton = new javax.swing.JButton();
-        jPanel1 = new javax.swing.JPanel();
+        backgroundPanel = new javax.swing.JPanel();
+        optionsPanel = new javax.swing.JPanel();
         instrumentNameJRadioButton = new javax.swing.JRadioButton();
         fragmentIonTypeJRadioButton = new javax.swing.JRadioButton();
         fragmentIonScoringTypeJRadioButton = new javax.swing.JRadioButton();
         fragmentIonThresholdJRadioButton = new javax.swing.JRadioButton();
         spectrumIdJRadioButton = new javax.swing.JRadioButton();
+        okJButton = new javax.swing.JButton();
+        cancelJButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Select the Data Point Label");
         setResizable(false);
+
+        backgroundPanel.setBackground(new java.awt.Color(230, 230, 230));
+
+        optionsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Options"));
+        optionsPanel.setOpaque(false);
+
+        buttonGroup.add(instrumentNameJRadioButton);
+        instrumentNameJRadioButton.setText("Instrument Name");
+        instrumentNameJRadioButton.setToolTipText("<html>\nUse the instrument name as the data<br>\npoint label and and coloring scheme\n</html>");
+        instrumentNameJRadioButton.setIconTextGap(15);
+        instrumentNameJRadioButton.setOpaque(false);
+        instrumentNameJRadioButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                instrumentNameJRadioButtonActionPerformed(evt);
+            }
+        });
+
+        buttonGroup.add(fragmentIonTypeJRadioButton);
+        fragmentIonTypeJRadioButton.setText("Fragment Ion Type");
+        fragmentIonTypeJRadioButton.setToolTipText("<html>\nUse the fragment ion type as the data<br>\npoint label and coloring scheme.\n</html>");
+        fragmentIonTypeJRadioButton.setIconTextGap(15);
+        fragmentIonTypeJRadioButton.setOpaque(false);
+        fragmentIonTypeJRadioButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fragmentIonTypeJRadioButtonActionPerformed(evt);
+            }
+        });
+
+        buttonGroup.add(fragmentIonScoringTypeJRadioButton);
+        fragmentIonScoringTypeJRadioButton.setText("Fragment Ion Scoring Type (requires ms_lims)");
+        fragmentIonScoringTypeJRadioButton.setToolTipText("<html>\nUse the fragment ion scoring type as the data<br>\npoint label and coloring scheme.\n</html>");
+        fragmentIonScoringTypeJRadioButton.setIconTextGap(15);
+        fragmentIonScoringTypeJRadioButton.setOpaque(false);
+        fragmentIonScoringTypeJRadioButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fragmentIonScoringTypeJRadioButtonActionPerformed(evt);
+            }
+        });
+
+        buttonGroup.add(fragmentIonThresholdJRadioButton);
+        fragmentIonThresholdJRadioButton.setText("Fragment Ion Threshold (requires ms_lims)");
+        fragmentIonThresholdJRadioButton.setToolTipText("<html>\nUse the fragment ion threshold as the data<br>\npoint label and coloring scheme.\n</html>");
+        fragmentIonThresholdJRadioButton.setIconTextGap(15);
+        fragmentIonThresholdJRadioButton.setOpaque(false);
+        fragmentIonThresholdJRadioButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fragmentIonThresholdJRadioButtonActionPerformed(evt);
+            }
+        });
+
+        buttonGroup.add(spectrumIdJRadioButton);
+        spectrumIdJRadioButton.setText("Identification ID");
+        spectrumIdJRadioButton.setToolTipText("<html>\nUse the identification ID as the data<br>\npoint label and and coloring scheme\n</html>");
+        spectrumIdJRadioButton.setIconTextGap(15);
+        spectrumIdJRadioButton.setOpaque(false);
+
+        org.jdesktop.layout.GroupLayout optionsPanelLayout = new org.jdesktop.layout.GroupLayout(optionsPanel);
+        optionsPanel.setLayout(optionsPanelLayout);
+        optionsPanelLayout.setHorizontalGroup(
+            optionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(optionsPanelLayout.createSequentialGroup()
+                .add(27, 27, 27)
+                .add(optionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(optionsPanelLayout.createSequentialGroup()
+                        .add(optionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                            .add(spectrumIdJRadioButton)
+                            .add(fragmentIonTypeJRadioButton)
+                            .add(instrumentNameJRadioButton))
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 158, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, optionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                        .add(fragmentIonThresholdJRadioButton)
+                        .add(fragmentIonScoringTypeJRadioButton)))
+                .addContainerGap(77, Short.MAX_VALUE))
+        );
+        optionsPanelLayout.setVerticalGroup(
+            optionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(optionsPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .add(instrumentNameJRadioButton)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(fragmentIonTypeJRadioButton)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(spectrumIdJRadioButton)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(fragmentIonScoringTypeJRadioButton)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(fragmentIonThresholdJRadioButton)
+                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
 
         okJButton.setText("OK");
         okJButton.setEnabled(false);
@@ -106,114 +196,44 @@ public class PlotLabelSelection extends javax.swing.JDialog {
             }
         });
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Options"));
-
-        buttonGroup.add(instrumentNameJRadioButton);
-        instrumentNameJRadioButton.setText("Instrument Name");
-        instrumentNameJRadioButton.setToolTipText("<html>\nUse the instrument name as the data<br>\npoint label and and coloring scheme\n</html>");
-        instrumentNameJRadioButton.setIconTextGap(15);
-        instrumentNameJRadioButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                instrumentNameJRadioButtonActionPerformed(evt);
-            }
-        });
-
-        buttonGroup.add(fragmentIonTypeJRadioButton);
-        fragmentIonTypeJRadioButton.setText("Fragment Ion Type");
-        fragmentIonTypeJRadioButton.setToolTipText("<html>\nUse the fragment ion type as the data<br>\npoint label and coloring scheme.\n</html>");
-        fragmentIonTypeJRadioButton.setIconTextGap(15);
-        fragmentIonTypeJRadioButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                fragmentIonTypeJRadioButtonActionPerformed(evt);
-            }
-        });
-
-        buttonGroup.add(fragmentIonScoringTypeJRadioButton);
-        fragmentIonScoringTypeJRadioButton.setText("Fragment Ion Scoring Type (requires ms_lims)");
-        fragmentIonScoringTypeJRadioButton.setToolTipText("<html>\nUse the fragment ion scoring type as the data<br>\npoint label and coloring scheme.\n</html>");
-        fragmentIonScoringTypeJRadioButton.setIconTextGap(15);
-        fragmentIonScoringTypeJRadioButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                fragmentIonScoringTypeJRadioButtonActionPerformed(evt);
-            }
-        });
-
-        buttonGroup.add(fragmentIonThresholdJRadioButton);
-        fragmentIonThresholdJRadioButton.setText("Fragment Ion Threshold (requires ms_lims)");
-        fragmentIonThresholdJRadioButton.setToolTipText("<html>\nUse the fragment ion threshold as the data<br>\npoint label and coloring scheme.\n</html>");
-        fragmentIonThresholdJRadioButton.setIconTextGap(15);
-        fragmentIonThresholdJRadioButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                fragmentIonThresholdJRadioButtonActionPerformed(evt);
-            }
-        });
-
-        buttonGroup.add(spectrumIdJRadioButton);
-        spectrumIdJRadioButton.setText("Identification ID");
-        spectrumIdJRadioButton.setToolTipText("<html>\nUse the identification ID as the data<br>\npoint label and and coloring scheme\n</html>");
-        spectrumIdJRadioButton.setIconTextGap(15);
-
-        org.jdesktop.layout.GroupLayout jPanel1Layout = new org.jdesktop.layout.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jPanel1Layout.createSequentialGroup()
-                .add(27, 27, 27)
-                .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(jPanel1Layout.createSequentialGroup()
-                        .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                            .add(spectrumIdJRadioButton)
-                            .add(fragmentIonTypeJRadioButton)
-                            .add(instrumentNameJRadioButton))
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 158, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                    .add(org.jdesktop.layout.GroupLayout.TRAILING, jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                        .add(fragmentIonThresholdJRadioButton)
-                        .add(fragmentIonScoringTypeJRadioButton)))
-                .addContainerGap(77, Short.MAX_VALUE))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jPanel1Layout.createSequentialGroup()
+        org.jdesktop.layout.GroupLayout backgroundPanelLayout = new org.jdesktop.layout.GroupLayout(backgroundPanel);
+        backgroundPanel.setLayout(backgroundPanelLayout);
+        backgroundPanelLayout.setHorizontalGroup(
+            backgroundPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(backgroundPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .add(instrumentNameJRadioButton)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(fragmentIonTypeJRadioButton)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(spectrumIdJRadioButton)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(fragmentIonScoringTypeJRadioButton)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(fragmentIonThresholdJRadioButton)
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(layout.createSequentialGroup()
-                .addContainerGap()
-                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(org.jdesktop.layout.GroupLayout.TRAILING, jPanel1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
+                .add(backgroundPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, optionsPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, backgroundPanelLayout.createSequentialGroup()
                         .add(okJButton)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(cancelJButton)))
                 .addContainerGap())
         );
 
-        layout.linkSize(new java.awt.Component[] {cancelJButton, okJButton}, org.jdesktop.layout.GroupLayout.HORIZONTAL);
+        backgroundPanelLayout.linkSize(new java.awt.Component[] {cancelJButton, okJButton}, org.jdesktop.layout.GroupLayout.HORIZONTAL);
 
-        layout.setVerticalGroup(
-            layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(layout.createSequentialGroup()
+        backgroundPanelLayout.setVerticalGroup(
+            backgroundPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(backgroundPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .add(jPanel1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .add(18, 18, 18)
-                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                .add(optionsPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                .add(backgroundPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(okJButton)
                     .add(cancelJButton))
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+
+        org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(backgroundPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(backgroundPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
@@ -288,14 +308,15 @@ public class PlotLabelSelection extends javax.swing.JDialog {
     }//GEN-LAST:event_fragmentIonThresholdJRadioButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel backgroundPanel;
     private javax.swing.ButtonGroup buttonGroup;
     private javax.swing.JButton cancelJButton;
     private javax.swing.JRadioButton fragmentIonScoringTypeJRadioButton;
     private javax.swing.JRadioButton fragmentIonThresholdJRadioButton;
     private javax.swing.JRadioButton fragmentIonTypeJRadioButton;
     private javax.swing.JRadioButton instrumentNameJRadioButton;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JButton okJButton;
+    private javax.swing.JPanel optionsPanel;
     private javax.swing.JRadioButton spectrumIdJRadioButton;
     // End of variables declaration//GEN-END:variables
 }

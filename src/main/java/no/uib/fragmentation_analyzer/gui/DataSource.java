@@ -319,6 +319,10 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
             }
         });
 
+        jXTaskPaneContainer1.setBackground(new java.awt.Color(255, 255, 255));
+        jXTaskPaneContainer1.setInheritAlpha(false);
+
+        jXTaskPane1.setBackground(new java.awt.Color(255, 255, 255));
         jXTaskPane1.setTitle("Import New Data Set");
 
         jXPanel1.setBackground(javax.swing.UIManager.getDefaults().getColor("tab_focus_fill_dark"));

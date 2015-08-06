@@ -1534,7 +1534,7 @@ public class PlotUtil {
                 new Font("SansSerif", Font.BOLD, 10),
                 plot,
                 true);
-
+        
         chart.setBackgroundPaint(chartBackgroundColor);
 
         // make sure the legend is not shown if 'hide legends' is currently selected
@@ -1659,7 +1659,7 @@ public class PlotUtil {
     }
 
     /**
-     * Updates the average sequence depedent fragment ions counters.
+     * Updates the average sequence dependent fragment ions counters.
      *
      * @param averageSequenceDependentFragmentIons
      * @param sequenceDependentFragmentIons

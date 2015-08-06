@@ -4,7 +4,7 @@
     <groupId>no.uib</groupId>
     <artifactId>FragmentationAnalyzer</artifactId>
     <packaging>jar</packaging>
-    <version>1.5.11</version>
+    <version>1.5.12</version>
     <name>FragmentationAnalyzer</name>
     <description>Standalone Java tool for analyzing MS/MS fragmentation data</description>
     <url>http://fragmentation-analyzer.googlecode.com</url>
@@ -17,6 +17,11 @@
             <url>LICENSE-2.0.txt</url>
         </license>
     </licenses>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    </properties>
 
 
     <!-- Developers -->
@@ -294,7 +299,7 @@
         <dependency>
             <groupId>com.compomics</groupId>
             <artifactId>utilities</artifactId>
-            <version>3.14.9</version>
+            <version>3.49.19</version>
             <exclusions>
                 <exclusion>
                     <artifactId>jmzml</artifactId>
@@ -400,6 +405,15 @@
         </dependency>
         
     </dependencies>
+    
+    <!-- The deployment maven2 repository-->
+    <distributionManagement>
+        <repository>
+            <id>genesis-maven2-repo</id>
+            <name>Genesis Maven Repository</name>
+            <url>scp://genesis.ugent.be/home/maven/public_html/maven2</url>
+        </repository>
+    </distributionManagement>
 
 </project>
 

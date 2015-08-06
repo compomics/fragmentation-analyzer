@@ -1,6 +1,6 @@
 package no.uib.fragmentation_analyzer.util;
 
-import com.compomics.util.gui.spectrum.DefaultSpectrumAnnotation;
+import com.compomics.util.gui.interfaces.SpectrumAnnotation;
 import com.compomics.util.gui.spectrum.SpectrumPanel;
 import java.awt.Color;
 import java.io.IOException;
@@ -51,7 +51,7 @@ public class Properties {
     private HashMap<Integer, ReducedIdentification> allIdentifications = new HashMap<Integer, ReducedIdentification>();
     private HashMap<Integer, SpectrumPanel> linkedSpectrumPanels = new HashMap<Integer, SpectrumPanel>();
     private HashMap<Integer, JFreeChart> allChartFrames = new HashMap<Integer, JFreeChart>();
-    private HashMap<Integer, Vector<DefaultSpectrumAnnotation>> allAnnotations = new HashMap<Integer, Vector<DefaultSpectrumAnnotation>>();
+    private HashMap<Integer, Vector<SpectrumAnnotation>> allAnnotations = new HashMap<Integer, Vector<SpectrumAnnotation>>();
     private HashMap<Integer, FragmentationAnalyzerJInternalFrame> allInternalFrames = new HashMap<Integer, FragmentationAnalyzerJInternalFrame>();
     private ArrayList<IdentificationTableRow> currentlySelectedRowsInSearchTable = new ArrayList<IdentificationTableRow>();
     private ArrayList<SpectrumTableRow> currentlySelectedRowsInSpectraTable = new ArrayList<SpectrumTableRow>();
@@ -276,14 +276,14 @@ public class Properties {
     /**
      * @return the allAnnotations
      */
-    public HashMap<Integer, Vector<DefaultSpectrumAnnotation>> getAllAnnotations() {
+    public HashMap<Integer, Vector<SpectrumAnnotation>> getAllAnnotations() {
         return allAnnotations;
     }
 
     /**
      * @param allAnnotations the allAnnotations to set
      */
-    public void setAllAnnotations(HashMap<Integer, Vector<DefaultSpectrumAnnotation>> allAnnotations) {
+    public void setAllAnnotations(HashMap<Integer, Vector<SpectrumAnnotation>> allAnnotations) {
         this.allAnnotations = allAnnotations;
     }
 
