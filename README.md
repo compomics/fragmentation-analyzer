@@ -285,23 +285,3 @@ Screenshot 7: Fragment Ion Probability Plot.
 Screenshot 8: Fragment Ion Heat Map - analyze the correlation of different fragmentation patterns.
 
 [Go to top of page](#fragmentation-analyzer)
-
-----
-
-## Project Support
-
-The fragmentation-analyzer project is grateful for the support by:
-
-| Compomics | VIB | Ghent University|
-|:--:|:--:|:--:|
-| [![compomics](http://genesis.ugent.be/public_data/image/compomics.png)](http://www.compomics.com) | [![vib](http://genesis.ugent.be/public_data/image/vib.png)](http://www.vib.be) | [![ugent](http://genesis.ugent.be/public_data/image/ugent.png)](http://www.ugent.be/en) |
-
-[Go to top of page](#fragmentation-analyzer)
-
-----
-
-| IntelliJ | Netbeans | Java | Maven |
-|:--:|:--:|:--:|:--:|
-| [![intellij](https://www.jetbrains.com/idea/docs/logo_intellij_idea.png)](https://www.jetbrains.com/idea/) | [![netbeans](https://netbeans.org/images_www/visual-guidelines/NB-logo-single.jpg)](https://netbeans.org/) | [![java](http://genesis.ugent.be/public_data/image/java.png)](http://java.com/en/) | [![maven](http://genesis.ugent.be/public_data/image/maven.png)](http://maven.apache.org/) |
-
-[Go to top of page](#fragmentation-analyzer)
