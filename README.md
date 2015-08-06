@@ -11,7 +11,6 @@
  * [Supported Text File Format](#supported-text-file-format)
  * [Support](#support)
  * [Screenshots](#screenshots)
- * [Project Support](#project-support)
 
 ----
 
