@@ -5,7 +5,7 @@
 
 
    For updated information about FragmentationAnalyzer please visit:
-   http://fragmentation-analyzer.googlecode.com
+   http://compomics.github.io/projects/fragmentation-analyzer.html
 
 
 
@@ -32,9 +32,9 @@
    limitations under the License.
 
 
-   The License applies to all files in the FragmentationAnalyzer SVN 
+   The License applies to all files in the FragmentationAnalyzer code 
    archive. Except the FragmentationAnalyzer icons, and the third-party 
-   icons which may have separate licences.
+   icons which may have separate licenses.
 
 
    Please note that some of the JAR files used by the FragmentationAnalyzer 
