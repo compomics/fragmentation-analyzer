@@ -21,7 +21,7 @@
 
 ----
 
-*NEW!* For further analysis of proteomics data we also recommend checking out [SearchGUI](http://searchgui.googlecode.com) and [PeptideShaker](http://peptide-shaker.googlecode.com).
+*NEW!* For further analysis of proteomics data we also recommend checking out [SearchGUI](http://compomics.github.io/projects/searchgui.html) and [PeptideShaker](http://compomics.github.io/projects/peptide-shaker.html).
 
 ----
 
