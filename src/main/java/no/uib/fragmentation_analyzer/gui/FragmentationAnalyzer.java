@@ -1643,9 +1643,9 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
             .add(jPanel5, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 325, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
         );
 
+        plotsAndAnalysesJDesktopPane.setLayer(spectrumPanelToolBarJInternalFrame, javax.swing.JLayeredPane.POPUP_LAYER);
         plotsAndAnalysesJDesktopPane.add(spectrumPanelToolBarJInternalFrame);
         spectrumPanelToolBarJInternalFrame.setBounds(670, 30, 80, 370);
-        plotsAndAnalysesJDesktopPane.setLayer(spectrumPanelToolBarJInternalFrame, javax.swing.JLayeredPane.POPUP_LAYER);
 
         boxPlotPanelToolBarJInternalFrame.setClosable(true);
         boxPlotPanelToolBarJInternalFrame.setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
@@ -1787,13 +1787,13 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
                 .addContainerGap())
         );
 
+        plotsAndAnalysesJDesktopPane.setLayer(boxPlotPanelToolBarJInternalFrame, javax.swing.JLayeredPane.POPUP_LAYER);
         plotsAndAnalysesJDesktopPane.add(boxPlotPanelToolBarJInternalFrame);
         boxPlotPanelToolBarJInternalFrame.setBounds(630, 80, 100, 290);
-        plotsAndAnalysesJDesktopPane.setLayer(boxPlotPanelToolBarJInternalFrame, javax.swing.JLayeredPane.POPUP_LAYER);
 
         internalFrameTipJLabel.setFont(internalFrameTipJLabel.getFont().deriveFont((internalFrameTipJLabel.getFont().getStyle() | java.awt.Font.ITALIC), internalFrameTipJLabel.getFont().getSize()-3));
         internalFrameTipJLabel.setForeground(new java.awt.Color(255, 255, 255));
-        internalFrameTipJLabel.setText("Right click in the plot or on the plot title bar for plot options");
+        internalFrameTipJLabel.setText("For plot options: select the wanted plot and then right click in the plot or on the plot title bar");
         plotsAndAnalysesJDesktopPane.add(internalFrameTipJLabel);
         internalFrameTipJLabel.setBounds(30, 0, 470, 20);
 
@@ -8031,6 +8031,16 @@ public class FragmentationAnalyzer extends javax.swing.JFrame implements Progres
         ((BasicInternalFrameUI) internalFrame.getUI()).getNorthPane().addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
+                internalFrameMouseClicked(evt);
+            }
+
+            @Override
+            public void mousePressed(MouseEvent evt) {
+                internalFrameMouseClicked(evt);
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent evt) {
                 internalFrameMouseClicked(evt);
             }
         });

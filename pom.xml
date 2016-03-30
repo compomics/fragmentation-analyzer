@@ -4,7 +4,7 @@
     <groupId>no.uib</groupId>
     <artifactId>FragmentationAnalyzer</artifactId>
     <packaging>jar</packaging>
-    <version>1.5.13</version>
+    <version>1.5.14</version>
     <name>FragmentationAnalyzer</name>
     <description>Standalone Java tool for analyzing MS/MS fragmentation data</description>
     <url>http://fragmentation-analyzer.googlecode.com</url>
@@ -403,7 +403,11 @@
             <artifactId>jsparklines</artifactId>
             <version>0.5.45</version>
         </dependency>
-        
+        <dependency>
+            <groupId>org.swinglabs</groupId>
+            <artifactId>swing-layout</artifactId>
+            <version>1.0.3</version>
+        </dependency>
     </dependencies>
     
     <!-- The deployment maven2 repository-->
