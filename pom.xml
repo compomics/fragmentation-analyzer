@@ -7,7 +7,7 @@
     <version>1.5.14</version>
     <name>FragmentationAnalyzer</name>
     <description>Standalone Java tool for analyzing MS/MS fragmentation data</description>
-    <url>http://fragmentation-analyzer.googlecode.com</url>
+    <url>https://github.com/compomics/fragmentation-analyzer</url>
 
 
     <!-- License -->
