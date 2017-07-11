@@ -498,7 +498,6 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
         path = path + "/DataSets";
         path = path.replace("%20", " ");
 
-
         new DataSetNameDialog(this, true);
 
         String currentDatasetName = FragmentationAnalyzer.getProperties().getCurrentDataSetName();
@@ -838,7 +837,7 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
      * @param fragmentIonCounter
      * @param identificationsBufferedWriter
      * @param fragmentIonsBufferedWriter
-     * @return the number of identificatins in the file
+     * @return the number of identifications in the file
      * @throws IOException
      * @throws OutOfMemoryError
      */

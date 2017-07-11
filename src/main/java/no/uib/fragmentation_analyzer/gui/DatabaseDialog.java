@@ -329,7 +329,7 @@ public class DatabaseDialog extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     /**
-     * Tries to connect to the database. If successfull the dialog is closed.
+     * Tries to connect to the database. If successful the dialog is closed.
      * 
      * @param evt
      */
