@@ -919,7 +919,7 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
                     String peptideSequence = currentMSHit.MSHits_pepstring;
                     String modifiedSequence = getModifiedOmssaSequence(peptideSequence, omssaOmxFile, currentMSHit);
                     String precursorCharge = "" + currentSpectrum.MSSpectrum_charge.MSSpectrum_charge_E.get(0);
-
+                    
                     double precursorMz = ((double) currentSpectrum.MSSpectrum_precursormz) / omssaResponseScale;
                     double precursorIntensity = 0; // not provided
 
@@ -1138,39 +1138,33 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
      */
     private String getModifiedOmssaSequence(String peptideSequence, OmssaOmxFile omssaOmxFile, MSHits currentMSHit) {
 
-        String[] modifications = new String[peptideSequence.length()];
+        // get omssa modification mapping
+        HashMap<Integer, OmssaModification> omssaModifications = omssaOmxFile.getModifications();
 
+        String[] modifications = new String[peptideSequence.length()];
         for (int i = 0; i < modifications.length; i++) {
             modifications[i] = "";
         }
 
-        String modifiedSequence = "";
-        String nTerminal = "";
-        String cTerminal = "";
+        String modifiedSequence = "", nTerminal = "", cTerminal = "";
 
         // get the list of fixed modifications
-        List<Integer> fixedModifications =
-                omssaOmxFile.getParserResult().MSSearch_request.MSRequest.get(0).MSRequest_settings.MSSearchSettings.MSSearchSettings_fixed.MSMod;
+        List<Integer> fixedModifications = omssaOmxFile.getParserResult().MSSearch_request.MSRequest.get(0).MSRequest_settings.MSSearchSettings.MSSearchSettings_fixed.MSMod;
 
-        // handle modifications
-        if (omssaOmxFile.getModifications().size() > 0) {
+        // handle the modifications
+        if (omssaModifications.size() > 0) {
 
+            // fixed modifications
             if (fixedModifications.size() > 0) {
 
                 for (int i = 0; i < fixedModifications.size(); i++) {
 
-                    Vector<String> modifiedResidues =
-                            omssaOmxFile.getModifications().get(fixedModifications.get(i)).getModResidues();
+                    Vector<String> modifiedResidues = omssaModifications.get(fixedModifications.get(i)).getModResidues();
 
                     for (int j = 0; j < modifiedResidues.size(); j++) {
-
                         int index = peptideSequence.indexOf(modifiedResidues.get(j));
-
                         while (index != -1) {
-
-                            modifications[index] +=
-                                    "<" + omssaOmxFile.getModifications().get(fixedModifications.get(i)).getModNumber() + ">";
-
+                            modifications[index] += "<" + omssaModifications.get(fixedModifications.get(i)).getModNumber() + ">";
                             index = peptideSequence.indexOf(modifiedResidues.get(j), index + 1);
                         }
                     }
@@ -1181,11 +1175,8 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
             Iterator<MSModHit> modsIterator = currentMSHit.MSHits_mods.MSModHit.iterator();
 
             while (modsIterator.hasNext()) {
-
                 MSModHit currentMSModHit = modsIterator.next();
-
-                modifications[currentMSModHit.MSModHit_site] +=
-                        "<" + currentMSModHit.MSModHit_modtype.MSMod + ">";
+                modifications[currentMSModHit.MSModHit_site] += "<" + omssaModifications.get(currentMSModHit.MSModHit_modtype.MSMod).getModNumber() + ">";
             }
 
             // cycle through all the modifications and extract the modification type if possible
@@ -1199,32 +1190,24 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
                     // have to check for multiple modifications on one residue
                     String[] residueMods = modifications[i].split(">");
 
-                    for (int j = 0; j < residueMods.length; j++) {
+                    for (String residueMod : residueMods) {
 
-                        String currentMod = residueMods[j] + ">";
-
-                        OmssaModification tempOmssaModification = omssaOmxFile.getModifications().get(
-                                new Integer(residueMods[j].substring(1)));
+                        OmssaModification tempOmssaModification = omssaModifications.get(new Integer(residueMod.substring(1)));
+                        String currentMod = "<" + tempOmssaModification.getModName() + ">";
 
                         if (tempOmssaModification != null) {
 
-                            if (tempOmssaModification.getModType() == OmssaModification.MODAA) {
-
-                                // "normal" modification
+                            if (tempOmssaModification.getModType() == OmssaModification.MODAA) { // "normal" modification
                                 modifiedSequence += currentMod;
                             } else if (tempOmssaModification.getModType() == OmssaModification.MODN
                                     || tempOmssaModification.getModType() == OmssaModification.MODNAA
                                     || tempOmssaModification.getModType() == OmssaModification.MODNP
-                                    || tempOmssaModification.getModType() == OmssaModification.MODNPAA) {
-
-                                // n-terminal modification
+                                    || tempOmssaModification.getModType() == OmssaModification.MODNPAA) { // n-terminal modification
                                 nTerminal += currentMod;
                             } else if (tempOmssaModification.getModType() == OmssaModification.MODC
                                     || tempOmssaModification.getModType() == OmssaModification.MODCAA
                                     || tempOmssaModification.getModType() == OmssaModification.MODCP
-                                    || tempOmssaModification.getModType() == OmssaModification.MODCPAA) {
-
-                                // c-terminal modification
+                                    || tempOmssaModification.getModType() == OmssaModification.MODCPAA) { // c-terminal modification 
                                 cTerminal += currentMod;
                             }
                         } else {
@@ -1233,7 +1216,6 @@ public class DataSource extends javax.swing.JDialog implements ProgressDialogPar
                     }
                 }
             }
-
 
             // set the n-terminal
             if (nTerminal.length() == 0) {

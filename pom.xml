@@ -4,7 +4,7 @@
     <groupId>no.uib</groupId>
     <artifactId>FragmentationAnalyzer</artifactId>
     <packaging>jar</packaging>
-    <version>1.5.16</version>
+    <version>1.5.17</version>
     <name>FragmentationAnalyzer</name>
     <description>Standalone Java tool for analyzing MS/MS fragmentation data</description>
     <url>https://github.com/compomics/fragmentation-analyzer</url>
@@ -29,8 +29,8 @@
         <developer>
             <name>Harald Barsnes</name>
             <id>harald</id>
-            <email>harald.barsnes@biomed.uib.no</email>
-            <organization>Department of Biomedicine University of Bergen, Norway</organization>
+            <email>harald.barsnes@uib.no</email>
+            <organization>University of Bergen, Norway</organization>
         </developer>
         <developer>
             <name>Lennart Martens</name>
