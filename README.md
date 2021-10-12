@@ -73,7 +73,7 @@ In addition any files that can be converted to the [supported text file format](
 
 ### Downloading
 
-Download the latest version of `FragmentationAnalyzer_X.Y.zip` (where X and Y represent the version of the software) [here](http://genesis.ugent.be/maven2/no/uib/FragmentationAnalyzer/1.5.17/FragmentationAnalyzer-1.5.17.zip). Unzipping the file, creates the following directory structure:
+Download the latest version of `FragmentationAnalyzer_X.Y.zip` (where X and Y represent the version of the software) [here](https://genesis.ugent.be/maven2/no/uib/FragmentationAnalyzer/1.5.17/FragmentationAnalyzer-1.5.17.zip). Unzipping the file, creates the following directory structure:
 
 ```
   FragmentationAnalyzer_X.Y
